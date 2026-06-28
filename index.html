@@ -218,8 +218,8 @@
 
   /* AZIONI MINIMALI SEGNALAZIONE */
   .icon-action {
-    width: 34px;
-    height: 28px;
+    width: 28px;
+    height: 24px;
     border: 1px solid rgba(255,255,255,0.14);
     background: transparent;
     color: var(--muted);
@@ -236,8 +236,8 @@
     background: rgba(255,255,255,0.05);
   }
   .icon-action svg {
-    width: 13px;
-    height: 13px;
+    width: 11px;
+    height: 11px;
     stroke: currentColor;
     fill: none;
     stroke-width: 2;
@@ -279,8 +279,8 @@
     color: var(--muted);
   }
   .anomalia-dot svg {
-    width: 18px;
-    height: 18px;
+    width: 17px;
+    height: 17px;
     stroke: currentColor;
     fill: none;
     stroke-width: 2;
@@ -300,10 +300,22 @@
   .date-details summary::-webkit-details-marker { display: none; }
   .date-toggle {
     color: var(--muted);
-    font-size: 0.72rem;
+    font-size: 0.68rem;
     font-family: var(--font-mono);
     white-space: nowrap;
-    padding-left: 8px;
+    padding: 4px 9px;
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 86px;
+    transition: all 0.15s ease;
+  }
+  .date-details summary:hover .date-toggle {
+    color: var(--text);
+    border-color: rgba(255,255,255,0.28);
+    background: rgba(255,255,255,0.05);
   }
   .date-details[open] .toggle-closed { display: none; }
   .date-details:not([open]) .toggle-open { display: none; }
@@ -658,6 +670,8 @@ window.selectBus = function(mat) {
   selectedBus = mat;
   document.getElementById('busGrid').style.display = 'none';
   document.getElementById('addBusArea').style.display = 'none';
+  const statsBar = document.querySelector('.stats-bar');
+  if (statsBar) statsBar.style.display = 'none';
   showBusDetail(mat);
 }
 
@@ -666,6 +680,8 @@ window.closeDetail = function() {
   document.getElementById('busDetail').classList.remove('open');
   document.getElementById('busGrid').style.display = '';
   document.getElementById('addBusArea').style.display = '';
+  const statsBar = document.querySelector('.stats-bar');
+  if (statsBar) statsBar.style.display = '';
   renderBusGrid();
 }
 
@@ -704,7 +720,7 @@ function showBusDetail(mat) {
       ) : '<div style="margin-top:8px;font-size:0.75rem;color:var(--muted);font-family:var(--font-mono);">Nessuna data registrata</div>';
       html += `<div class="seg-row" style="flex-direction:column;align-items:stretch;">
         <div class="anomalia-line">
-          <span class="anomalia-dot" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5 5L4 17v3h3l5.7-5.7a4 4 0 0 0 5-5l-2.2 2.2-2.8-2.8 2.2-2.2z"/></svg></span>
+          <span class="anomalia-dot" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 4h8"/><path d="M9 3h6a1 1 0 0 1 1 1v2H8V4a1 1 0 0 1 1-1z"/><path d="M6 5h12a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"/><path d="M8 11h8"/><path d="M8 15h8"/><path d="M8 19h5"/></svg></span>
           <div class="seg-row-desc">${s.desc}</div>
         </div>
         ${datesHtml}
