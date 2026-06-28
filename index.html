@@ -379,6 +379,58 @@
   .piano-code { color:var(--green); font-family:var(--font-mono); font-weight:700; font-size:0.86rem; white-space:nowrap; }
   .piano-muted { color:var(--muted); font-size:0.76rem; }
 
+
+
+  /* REVISIONE: anomalie compatte e Piano Bus pulito */
+  .seg-row.anomalia-chiusa {
+    padding: 10px 12px;
+  }
+  .anomalia-main-summary {
+    list-style: none;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+  }
+  .anomalia-main-summary::-webkit-details-marker { display: none; }
+  .anomalia-title-wrap {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    min-width: 0;
+    flex: 1;
+  }
+  .anomalia-chevron {
+    color: var(--muted);
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 999px;
+    width: 28px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.78rem;
+    line-height: 1;
+    flex: 0 0 28px;
+  }
+  .anomalia-main[open] .anomalia-chevron .closed { display: none; }
+  .anomalia-main:not([open]) .anomalia-chevron .open { display: none; }
+  .anomalia-body { margin-top: 10px; }
+  .date-details summary { padding-top: 2px; }
+  .piano-bus-head {
+    align-items: flex-start !important;
+  }
+  .piano-bus-actions {
+    margin-top: 8px;
+    justify-content: flex-start;
+  }
+  .piano-bus-sub { display: none !important; }
+  .piano-bus-status:empty { display: none; }
+  .piano-bus-results-title { color: var(--muted) !important; }
+
   /* FIX MENU IMPOSTAZIONI SOPRA TUTTO */
   header { overflow: visible !important; z-index: 100000 !important; }
   .settings-wrap { position: relative; z-index: 100001 !important; }
@@ -454,14 +506,13 @@
   <div class="piano-bus-area" id="pianoBusArea">
     <div class="piano-bus-head">
       <div class="piano-bus-title">Piano Bus</div>
-      <button class="piano-bus-btn" onclick="document.getElementById('pianoBusInput').click()">Carica foto</button>
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end;">
+        <button class="piano-bus-btn" onclick="document.getElementById('pianoBusInput').click()">Carica foto</button>
+        <button class="piano-bus-btn" onclick="pulisciPianoBus()">Pulisci</button>
+      </div>
     </div>
-    <div class="piano-bus-sub">Carica una foto del piano bus: l’app proverà a leggere le matricole e ti mostrerà quelle con segnalazioni presenti.</div>
-    <div class="piano-bus-actions">
-      <input type="file" id="pianoBusInput" accept="image/*" style="display:none;" onchange="analizzaPianoBus(event)">
-      <button class="piano-bus-btn" onclick="pulisciPianoBus()">Pulisci</button>
-    </div>
-    <div class="piano-bus-status" id="pianoBusStatus">Nessuna foto caricata.</div>
+    <input type="file" id="pianoBusInput" accept="image/*" style="display:none;" onchange="analizzaPianoBus(event)">
+    <div class="piano-bus-status" id="pianoBusStatus"></div>
     <div class="piano-bus-results" id="pianoBusResults"></div>
   </div>
 
@@ -801,28 +852,34 @@ function showBusDetail(mat) {
         + (rightDates.length ? '<div style="width:1px;background:var(--border);margin:0 10px;"></div><div style="display:flex;flex-direction:column;gap:4px;flex:1;">' + rightHtml + '</div>' : '')
         + '</div></details>'
       ) : '<div style="margin-top:8px;font-size:0.75rem;color:var(--muted);font-family:var(--font-mono);">Nessuna data registrata</div>';
-      html += `<div class="seg-row" style="flex-direction:column;align-items:stretch;">
-        <div class="anomalia-line">
-          <span class="anomalia-dot" aria-hidden="true"></span>
-          <div class="seg-row-desc">${s.desc}</div>
-        </div>
-        ${datesHtml}
-        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;align-items:center;">
-          <span style="display:flex;align-items:center;gap:6px;">
-            <span class="date-plus">+</span>
-            <input type="text" id="date-${s.id}" class="date-input-single" placeholder="" maxlength="8" inputmode="numeric" pattern="[0-9/]*" autocomplete="off" onfocus="openDateDetails('${s.id}')" oninput="autoSaveSingleDate('${s.id}', this)" onkeydown="if(event.key==='Enter')aggiungiDataManuale('${s.id}')">
-            <input type="hidden" id="editidx-${s.id}" value="">
+
+      html += `<details class="seg-row anomalia-main anomalia-chiusa" style="flex-direction:column;align-items:stretch;">
+        <summary class="anomalia-main-summary">
+          <span class="anomalia-title-wrap">
+            <span class="anomalia-dot" aria-hidden="true"></span>
+            <span class="seg-row-desc">${s.desc}</span>
           </span>
+          <span class="anomalia-chevron" aria-hidden="true"><span class="closed">▾</span><span class="open">▴</span></span>
+        </summary>
+        <div class="anomalia-body">
+          ${datesHtml}
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;align-items:center;">
+            <span style="display:flex;align-items:center;gap:6px;">
+              <span class="date-plus">+</span>
+              <input type="text" id="date-${s.id}" class="date-input-single" placeholder="" maxlength="8" inputmode="numeric" pattern="[0-9/]*" autocomplete="off" onfocus="openDateDetails('${s.id}')" oninput="autoSaveSingleDate('${s.id}', this)" onkeydown="if(event.key==='Enter')aggiungiDataManuale('${s.id}')">
+              <input type="hidden" id="editidx-${s.id}" value="">
+            </span>
+          </div>
+          <div class="seg-actions">
+            <button class="icon-action" onclick="editSeg('${s.id}')" title="Modifica" aria-label="Modifica">
+              <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+            </button>
+            <button class="icon-action" onclick="deleteSeg('${s.id}')" title="Elimina" aria-label="Elimina">
+              <svg viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M6 6l1 15h10l1-15"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+            </button>
+          </div>
         </div>
-        <div class="seg-actions">
-          <button class="icon-action" onclick="editSeg('${s.id}')" title="Modifica" aria-label="Modifica">
-            <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
-          </button>
-          <button class="icon-action" onclick="deleteSeg('${s.id}')" title="Elimina" aria-label="Elimina">
-            <svg viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M6 6l1 15h10l1-15"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
-          </button>
-        </div>
-      </div>`;
+      </details>`;
     });
   }
   html += `
@@ -830,7 +887,6 @@ function showBusDetail(mat) {
   document.getElementById('detailContent').innerHTML = html;
   panel.classList.add('open');
 }
-
 
 
 window.openDateDetails = function(id) {
@@ -987,7 +1043,7 @@ function renderPianoBusMatches(assignments) {
     results.innerHTML = '';
     return;
   }
-  status.textContent = 'Matricole lette: ' + assignments.length + ' — Coincidenze con segnalazioni: ' + matches.length;
+  status.textContent = matches.length ? '' : 'Nessuna coincidenza trovata.';
   if (!matches.length) {
     results.classList.add('open');
     results.innerHTML = '<div class="piano-muted">Nessun autobus del piano risulta presente tra le segnalazioni aperte.</div>';
@@ -996,12 +1052,12 @@ function renderPianoBusMatches(assignments) {
   const rows = matches.map(a => {
     const count = segnalazioni.filter(s => s.bus === a.bus).length;
     return '<div class="piano-bus-row" onclick="selectBus(\'' + a.bus + '\')">'
-      + '<div><div class="piano-driver">' + a.driver + '</div><div class="piano-muted">' + count + ' segnalazioni</div></div>'
+      + '<div class="piano-driver">' + a.driver + '</div>'
       + '<div class="piano-code">' + a.bus + '</div>'
       + '</div>';
   }).join('');
   results.classList.add('open');
-  results.innerHTML = '<div class="piano-bus-results-title">Autobus attenzionati nel piano bus</div>' + rows;
+  results.innerHTML = '<div class="piano-bus-results-title">Autobus attenzionati</div>' + rows;
 }
 
 window.analizzaPianoBus = async function(event) {
@@ -1036,7 +1092,7 @@ window.pulisciPianoBus = function() {
   const results = document.getElementById('pianoBusResults');
   const input = document.getElementById('pianoBusInput');
   if (input) input.value = '';
-  if (status) status.textContent = 'Nessuna foto caricata.';
+  if (status) status.textContent = '';
   if (results) { results.classList.remove('open'); results.innerHTML = ''; }
 }
 
