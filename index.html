@@ -254,19 +254,45 @@
     justify-content: center;
     width: 18px;
   }
+  .anomalia-dot {
+    width: 18px !important;
+    height: 18px !important;
+    border-radius: 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+    flex: 0 0 18px !important;
+    margin-top: 2px !important;
+    color: var(--muted);
+  }
+  .anomalia-dot svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
   .date-details summary {
     list-style: none;
     cursor: pointer;
     user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
   }
   .date-details summary::-webkit-details-marker { display: none; }
-  .date-details summary::after {
-    content: "⌄";
+  .date-toggle {
     color: var(--muted);
-    margin-left: 6px;
-    font-size: 0.8rem;
+    font-size: 0.72rem;
+    font-family: var(--font-mono);
+    white-space: nowrap;
+    padding-left: 8px;
   }
-  .date-details[open] summary::after { content: "⌃"; }
+  .date-details[open] .toggle-closed { display: none; }
+  .date-details:not([open]) .toggle-open { display: none; }
 
   /* FIX MENU IMPOSTAZIONI SOPRA TUTTO */
   header { overflow: visible !important; z-index: 100000 !important; }
@@ -653,7 +679,10 @@ function showBusDetail(mat) {
       const rightHtml = rightDates.map((d, i) => makeDateTag(d, i + half)).join('');
       const datesHtml = dates.length ? (
         '<details class="date-details" style="margin-top:8px;">'
-        + '<summary style="font-size:0.75rem;color:var(--muted);font-family:var(--font-mono);">' + (dates.length === 1 ? 'Segnalato <strong style="color:var(--green);font-weight:700;">1</strong> volta il giorno:' : 'Segnalato <strong style="color:var(--green);font-weight:700;">' + dates.length + '</strong> volte il giorno:') + '</summary>'
+        + '<summary style="font-size:0.75rem;color:var(--muted);font-family:var(--font-mono);">'
+        + '<span>' + (dates.length === 1 ? 'Segnalato <strong style="color:var(--red);font-weight:700;">1</strong> volta' : 'Segnalato <strong style="color:var(--red);font-weight:700;">' + dates.length + '</strong> volte') + '</span>'
+        + '<span class="date-toggle"><span class="toggle-closed">Mostra date</span><span class="toggle-open">Nascondi date</span></span>'
+        + '</summary>'
         + '<div style="display:flex;gap:0;margin-top:8px;">'
         + '<div style="display:flex;flex-direction:column;gap:4px;flex:1;">' + leftHtml + '</div>'
         + (rightDates.length ? '<div style="width:1px;background:var(--border);margin:0 10px;"></div><div style="display:flex;flex-direction:column;gap:4px;flex:1;">' + rightHtml + '</div>' : '')
@@ -661,7 +690,7 @@ function showBusDetail(mat) {
       ) : '<div style="margin-top:8px;font-size:0.75rem;color:var(--muted);font-family:var(--font-mono);">Nessuna data registrata</div>';
       html += `<div class="seg-row" style="flex-direction:column;align-items:stretch;">
         <div class="anomalia-line">
-          <span class="anomalia-dot"></span>
+          <span class="anomalia-dot" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5 5L4 17v3h3l5.7-5.7a4 4 0 0 0 5-5l-2.2 2.2-2.8-2.8 2.2-2.2z"/></svg></span>
           <div class="seg-row-desc">${s.desc}</div>
         </div>
         ${datesHtml}
