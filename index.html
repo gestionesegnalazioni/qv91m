@@ -33,6 +33,7 @@
 </style>
 <title>Gestione Segnalazioni Autobus</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <style>
   :root {
     --bg: #0e0f13;
@@ -316,6 +317,47 @@
   .date-details[open] .toggle-closed { display: none; }
   .date-details:not([open]) .toggle-open { display: none; }
 
+
+
+  /* PIANO BUS */
+  .piano-bus-area {
+    margin-bottom: 20px;
+    background: linear-gradient(145deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 20px;
+    padding: 14px;
+    box-shadow: 0 14px 40px rgba(0,0,0,0.18);
+    backdrop-filter: blur(16px);
+  }
+  .piano-bus-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; }
+  .piano-bus-title { font-family:var(--font-mono); color:var(--text); font-size:0.82rem; letter-spacing:0.5px; }
+  .piano-bus-sub { color:var(--muted); font-size:0.76rem; line-height:1.35; margin-bottom:10px; }
+  .piano-bus-actions { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .piano-bus-btn {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.14);
+    color: var(--muted);
+    border-radius: 999px;
+    padding: 8px 12px;
+    font-size: 0.72rem;
+    font-family: var(--font-mono);
+    cursor: pointer;
+  }
+  .piano-bus-btn:hover { border-color: rgba(255,255,255,0.28); color: var(--text); }
+  .piano-bus-status { margin-top:10px; color:var(--muted); font-size:0.75rem; font-family:var(--font-mono); }
+  .piano-bus-results { margin-top:12px; display:none; }
+  .piano-bus-results.open { display:block; }
+  .piano-bus-results-title { font-family:var(--font-mono); color:var(--green); font-size:0.76rem; margin-bottom:8px; }
+  .piano-bus-row {
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:8px 10px; border:1px solid rgba(255,255,255,0.10); border-radius:12px;
+    margin-bottom:6px; background:rgba(0,0,0,0.12); cursor:pointer;
+  }
+  .piano-bus-row:hover { border-color:rgba(52,211,153,0.35); }
+  .piano-driver { color:var(--text); font-size:0.82rem; }
+  .piano-code { color:var(--green); font-family:var(--font-mono); font-weight:700; font-size:0.86rem; white-space:nowrap; }
+  .piano-muted { color:var(--muted); font-size:0.76rem; }
+
   /* FIX MENU IMPOSTAZIONI SOPRA TUTTO */
   header { overflow: visible !important; z-index: 100000 !important; }
   .settings-wrap { position: relative; z-index: 100001 !important; }
@@ -385,6 +427,22 @@
     </div>
   </div>
 
+
+
+
+  <div class="piano-bus-area" id="pianoBusArea">
+    <div class="piano-bus-head">
+      <div class="piano-bus-title">Piano Bus</div>
+      <button class="piano-bus-btn" onclick="document.getElementById('pianoBusInput').click()">Carica foto</button>
+    </div>
+    <div class="piano-bus-sub">Carica una foto del piano bus: l’app proverà a leggere le matricole e ti mostrerà quelle con segnalazioni presenti.</div>
+    <div class="piano-bus-actions">
+      <input type="file" id="pianoBusInput" accept="image/*" style="display:none;" onchange="analizzaPianoBus(event)">
+      <button class="piano-bus-btn" onclick="pulisciPianoBus()">Pulisci</button>
+    </div>
+    <div class="piano-bus-status" id="pianoBusStatus">Nessuna foto caricata.</div>
+    <div class="piano-bus-results" id="pianoBusResults"></div>
+  </div>
 
   <div class="add-bus-area" id="addBusArea">
     <button class="btn-aggiungi-autobus" onclick="toggleAddForm()">+ Aggiungi autobus</button>
@@ -670,6 +728,8 @@ window.selectBus = function(mat) {
   selectedBus = mat;
   document.getElementById('busGrid').style.display = 'none';
   document.getElementById('addBusArea').style.display = 'none';
+  const pianoBusArea = document.getElementById('pianoBusArea');
+  if (pianoBusArea) pianoBusArea.style.display = 'none';
   const statsBar = document.querySelector('.stats-bar');
   if (statsBar) statsBar.style.display = 'none';
   showBusDetail(mat);
@@ -680,6 +740,8 @@ window.closeDetail = function() {
   document.getElementById('busDetail').classList.remove('open');
   document.getElementById('busGrid').style.display = '';
   document.getElementById('addBusArea').style.display = '';
+  const pianoBusArea = document.getElementById('pianoBusArea');
+  if (pianoBusArea) pianoBusArea.style.display = '';
   const statsBar = document.querySelector('.stats-bar');
   if (statsBar) statsBar.style.display = '';
   renderBusGrid();
@@ -851,6 +913,110 @@ window.aggiungiDataManuale = async function(id) {
   await updateDoc(doc(db, 'segnalazioni', id), { date: dates });
   input.value = '';
   input.focus();
+}
+
+
+// PIANO BUS OCR - tentativo sperimentale
+function normalizzaBusCode(code) {
+  return (code || '').toUpperCase().replace(/\s+/g, '').replace(/O/g, '0');
+}
+
+function pulisciNomeDaRiga(line, busCode) {
+  let cleaned = (line || '').replace(busCode, ' ');
+  cleaned = cleaned.replace(/\b[A-Z]{1,3}\s?\d{3,4}\b/g, ' ');
+  cleaned = cleaned.replace(/\b\d{1,2}[:.]\d{2}\b/g, ' ');
+  cleaned = cleaned.replace(/\b\d{3,6}\b/g, ' ');
+  cleaned = cleaned.replace(/\s+/g, ' ').trim();
+  const pieces = cleaned.split(' ');
+  if (pieces.length > 5) cleaned = pieces.slice(0, 5).join(' ');
+  return cleaned || 'Autista non riconosciuto';
+}
+
+function estraiAssegnazioniDaOCR(text) {
+  const lines = (text || '').split(/\n+/).map(l => l.trim()).filter(Boolean);
+  const out = [];
+  const busRegex = /\b[AKL]\s?\d{4}\b/gi;
+  for (const line of lines) {
+    const matches = [...line.matchAll(busRegex)];
+    for (const m of matches) {
+      const bus = normalizzaBusCode(m[0]);
+      const driver = pulisciNomeDaRiga(line, m[0]);
+      out.push({ bus, driver, raw: line });
+    }
+  }
+  const seen = new Set();
+  return out.filter(x => {
+    const key = x.bus + '|' + x.driver;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function renderPianoBusMatches(assignments) {
+  const results = document.getElementById('pianoBusResults');
+  const status = document.getElementById('pianoBusStatus');
+  if (!results || !status) return;
+
+  const segBus = new Set(segnalazioni.map(s => s.bus));
+  const matches = assignments.filter(a => segBus.has(a.bus));
+  if (!assignments.length) {
+    status.textContent = 'Non sono riuscito a leggere matricole dalla foto. Prova con una foto più dritta e nitida.';
+    results.classList.remove('open');
+    results.innerHTML = '';
+    return;
+  }
+  status.textContent = 'Matricole lette: ' + assignments.length + ' — Coincidenze con segnalazioni: ' + matches.length;
+  if (!matches.length) {
+    results.classList.add('open');
+    results.innerHTML = '<div class="piano-muted">Nessun autobus del piano risulta presente tra le segnalazioni aperte.</div>';
+    return;
+  }
+  const rows = matches.map(a => {
+    const count = segnalazioni.filter(s => s.bus === a.bus).length;
+    return '<div class="piano-bus-row" onclick="selectBus(\'' + a.bus + '\')">'
+      + '<div><div class="piano-driver">' + a.driver + '</div><div class="piano-muted">' + count + ' segnalazioni</div></div>'
+      + '<div class="piano-code">' + a.bus + '</div>'
+      + '</div>';
+  }).join('');
+  results.classList.add('open');
+  results.innerHTML = '<div class="piano-bus-results-title">Autobus attenzionati nel piano bus</div>' + rows;
+}
+
+window.analizzaPianoBus = async function(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+  const status = document.getElementById('pianoBusStatus');
+  const results = document.getElementById('pianoBusResults');
+  if (results) { results.classList.remove('open'); results.innerHTML = ''; }
+  if (!window.Tesseract) {
+    status.textContent = 'OCR non disponibile. Controlla la connessione e riprova.';
+    return;
+  }
+  try {
+    status.textContent = 'Lettura foto in corso... attendi qualche secondo.';
+    const { data } = await Tesseract.recognize(file, 'ita+eng', {
+      logger: m => {
+        if (m.status === 'recognizing text' && status) {
+          status.textContent = 'Lettura foto... ' + Math.round((m.progress || 0) * 100) + '%';
+        }
+      }
+    });
+    const assignments = estraiAssegnazioniDaOCR(data.text);
+    renderPianoBusMatches(assignments);
+  } catch (err) {
+    console.error(err);
+    status.textContent = 'Errore durante la lettura della foto. Prova con un’immagine più nitida.';
+  }
+}
+
+window.pulisciPianoBus = function() {
+  const status = document.getElementById('pianoBusStatus');
+  const results = document.getElementById('pianoBusResults');
+  const input = document.getElementById('pianoBusInput');
+  if (input) input.value = '';
+  if (status) status.textContent = 'Nessuna foto caricata.';
+  if (results) { results.classList.remove('open'); results.innerHTML = ''; }
 }
 
 function showToast(msg) {
