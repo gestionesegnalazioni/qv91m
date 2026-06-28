@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<style>* { max-width: 100% !important; } body { overflow-x: hidden !important; }
+  /* PASSWORD */
+  .pwd-screen {
+    position: fixed; inset: 0; background: var(--bg);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    z-index: 9999; gap: 24px;
+  }
+  .pwd-screen.hidden { display: none; }
+  .pwd-title { font-family: var(--font-mono); font-size: 1rem; color: var(--accent); letter-spacing: 2px; }
+  .pwd-dots { display: flex; gap: 16px; }
+  .pwd-dot { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--border); background: none; transition: background 0.15s; }
+  .pwd-dot.filled { background: var(--accent); border-color: var(--accent); }
+  .pwd-grid { display: grid; grid-template-columns: repeat(3, 72px); gap: 12px; }
+  .pwd-btn {
+    width: 72px; height: 72px; border-radius: 50%; background: var(--card);
+    border: 1px solid var(--border); color: var(--text); font-family: var(--font-mono);
+    font-size: 1.3rem; cursor: pointer; transition: all 0.15s;
+  }
+  .pwd-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .pwd-clear {
+    background: none; border: 1px solid var(--border); color: var(--muted);
+    border-radius: 8px; padding: 8px 16px; font-family: var(--font-mono);
+    font-size: 0.78rem; cursor: pointer; letter-spacing: 0.5px;
+  }
+  .pwd-clear:hover { border-color: var(--accent); color: var(--accent); }
+  .pwd-error { color: var(--red); font-family: var(--font-mono); font-size: 0.8rem; opacity: 0; transition: opacity 0.2s; }
+  .pwd-error.show { opacity: 1; }
+</style>
+<title>Gestione Segnalazioni Autobus</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0f13;
+    --panel: #16181f;
+    --card: #1c1f2a;
+    --border: #2a2d3a;
+    --accent: #f0c040;
+    --red: #ef4444;
+    --green: #22c55e;
+    --orange: #f97316;
+    --text: #e8eaf0;
+    --muted: #6b7280;
+    --font-mono: 'Space Mono', monospace;
+    --font-sans: 'DM Sans', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 100%; overflow-x: hidden; max-width: 100vw; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-sans); min-height: 100vh; display: flex; flex-direction: column; }
+
+  header {
+    display: flex; align-items: center; justify-content: flex-end;
+    padding: 18px 24px; border-bottom: 1px solid var(--border);
+    background: var(--panel); position: sticky; top: 0; z-index: 100;
+    width: 100%; max-width: 100vw; overflow: hidden;
+  }
+  .logo { font-family: var(--font-mono); font-size: 1.1rem; color: var(--accent); letter-spacing: 2px; }
+  .header-right { display: flex; align-items: center; gap: 16px; }
+  .header-date { font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); }
+
+  .wrapper { width: 100%; max-width: 640px; margin: 0 auto; padding: 24px 16px 60px; overflow: hidden; }
+
+  /* STAT */
+  .stats-bar { margin-bottom: 24px; }
+  .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; display: inline-flex; flex-direction: column; gap: 6px; min-width: 160px; }
+  .stat-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; font-family: var(--font-mono); }
+  .stat-value { font-size: 2rem; font-weight: 600; font-family: var(--font-mono); line-height: 1; color: var(--green); }
+
+  /* ADD BUS */
+  .add-bus-area { margin-bottom: 20px; }
+  .btn-aggiungi-autobus { background: var(--green); color: #000; border: none; border-radius: 8px; padding: 11px 22px; font-family: var(--font-mono); font-weight: 700; font-size: 0.82rem; cursor: pointer; letter-spacing: 0.5px; transition: opacity 0.15s; }
+  .btn-aggiungi-autobus:hover { opacity: 0.85; }
+  .add-bus-form { display: none; margin-top: 12px; background: var(--card); border: 1px solid var(--accent); border-radius: 10px; padding: 16px; flex-direction: row; align-items: flex-end; gap: 10px; flex-wrap: wrap; }
+  .add-bus-form.open { display: flex; }
+  .add-bus-form .field { display: flex; flex-direction: column; gap: 5px; }
+  .add-bus-form label { font-family: var(--font-mono); font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+  .add-bus-input { background: var(--panel); border: 1px solid var(--border); color: var(--text); padding: 10px 16px; border-radius: 8px; font-family: var(--font-mono); font-size: 0.9rem; outline: none; transition: border-color 0.15s; width: 220px; }
+  .add-bus-input::placeholder { color: var(--muted); }
+  .add-bus-input:focus { border-color: var(--accent); }
+  .btn-save-bus { background: var(--accent); color: #000; border: none; border-radius: 8px; padding: 10px 18px; font-family: var(--font-mono); font-weight: 700; font-size: 0.78rem; cursor: pointer; transition: opacity 0.15s; }
+  .btn-save-bus:hover { opacity: 0.85; }
+  .btn-cancel-bus { background: none; border: 1px solid var(--border); color: var(--muted); border-radius: 8px; padding: 10px 14px; font-family: var(--font-mono); font-size: 0.78rem; cursor: pointer; }
+  .btn-cancel-bus:hover { color: var(--text); border-color: var(--muted); }
+
+  /* BUS GRID */
+  .bus-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; margin-bottom: 24px; width: 100%; }
+  .bus-tile { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 12px; cursor: pointer; transition: all 0.15s; width: 100%; overflow: hidden; }
+  .bus-tile:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .bus-tile.has-issues { }
+  .bus-number { font-family: var(--font-mono); font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bus-count { font-size: 0.75rem; color: var(--muted); display: flex; align-items: center; gap: 5px; }
+  .dot-red { display: none; }
+
+  /* BUS DETAIL */
+  .bus-detail { background: var(--card); border: 1px solid var(--green); border-radius: 12px; padding: 16px; margin-bottom: 20px; display: none; width: 100%; overflow: hidden; max-width: 100%; }
+  .bus-detail.open { display: block; }
+  .bus-detail-num { font-family: var(--font-mono); font-size: 1.3rem; font-weight: 700; color: var(--green); margin-bottom: 14px; }
+
+  /* BACK BUTTON */
+  .btn-back { background: none; border: none; color: var(--green); font-family: var(--font-mono); font-size: 0.85rem; cursor: pointer; padding: 0; display: flex; align-items: center; gap: 8px; transition: opacity 0.15s; }
+  .btn-back:hover { opacity: 0.75; }
+
+  /* SEGNALAZIONE ROW */
+  .seg-row { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; display: flex; align-items: flex-start; gap: 10px; width: 100%; overflow: hidden; }
+  .seg-row-desc { flex: 1; font-size: 0.88rem; font-weight: 500; overflow: hidden; white-space: normal; word-break: break-word; }
+  .seg-btns { display: flex; gap: 6px; flex-shrink: 0; }
+  .btn-edit { background: none; border: 1px solid var(--border); color: var(--muted); padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-family: var(--font-mono); transition: all 0.15s; white-space: nowrap; }
+  .btn-edit:hover { color: var(--text); border-color: var(--muted); }
+  .btn-del { background: none; border: 1px solid var(--border); color: var(--muted); padding: 4px 8px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; transition: all 0.15s; }
+  .btn-del:hover { color: var(--red); border-color: var(--red); }
+
+  /* MODAL */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; align-items: center; justify-content: center; padding: 16px; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 28px; width: 100%; max-width: 460px; max-height: 90vh; overflow-y: auto; }
+  .modal h2 { font-family: var(--font-mono); font-size: 0.95rem; color: var(--accent); margin-bottom: 20px; letter-spacing: 1px; }
+  .form-group { margin-bottom: 14px; }
+  .form-label { display: block; font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; font-family: var(--font-mono); margin-bottom: 6px; }
+  .form-control { width: 100%; background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 10px 14px; border-radius: 8px; font-family: var(--font-sans); font-size: 0.9rem; outline: none; transition: border-color 0.15s; }
+  .form-control:focus { border-color: var(--accent); }
+  textarea.form-control { resize: vertical; min-height: 100px; }
+  .btn-primary { background: var(--accent); color: #000; border: none; padding: 10px 22px; border-radius: 8px; font-weight: 700; font-family: var(--font-sans); font-size: 0.9rem; cursor: pointer; transition: opacity 0.15s; }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-ghost { background: none; border: 1px solid var(--border); color: var(--muted); padding: 10px 18px; border-radius: 8px; font-family: var(--font-sans); font-size: 0.9rem; cursor: pointer; transition: all 0.15s; }
+  .btn-ghost:hover { color: var(--text); border-color: var(--muted); }
+  .modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+
+  /* SETTINGS */
+  .settings-wrap { position: relative; }
+  .btn-gear { background: none; border: 1px solid var(--border); color: var(--muted); width: 36px; height: 36px; border-radius: 50%; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+  .btn-gear:hover { border-color: var(--accent); color: var(--accent); }
+  .settings-menu { display: none; position: fixed; right: 16px; top: 70px; background: var(--panel); border: 1px solid var(--accent); border-radius: 10px; padding: 8px; min-width: 180px; z-index: 9999; box-shadow: 0 8px 24px rgba(0,0,0,0.6); }
+  .settings-menu.open { display: block; }
+  .settings-btn { width: 100%; background: none; border: none; color: var(--text); padding: 10px 14px; text-align: left; cursor: pointer; font-family: var(--font-mono); font-size: 0.75rem; border-radius: 6px; transition: background 0.15s; }
+  .settings-btn:hover { background: var(--card); }
+  .settings-divider { height: 1px; background: var(--border); margin: 4px 0; }
+
+  /* LOADING */
+  .loading { text-align: center; padding: 40px; color: var(--muted); font-family: var(--font-mono); font-size: 0.82rem; }
+
+  /* EMPTY */
+  .empty-state { text-align: center; padding: 40px 20px; color: var(--muted); }
+  .empty-state .icon { font-size: 2.5rem; margin-bottom: 10px; }
+  .empty-state p { font-size: 0.88rem; }
+
+  /* TOAST */
+  .toast { position: fixed; bottom: 24px; right: 24px; background: var(--green); color: #000; padding: 10px 18px; border-radius: 8px; font-weight: 600; font-size: 0.82rem; z-index: 400; display: none; }
+
+
+
+  /* RESTYLING GESTIONE BUS 2.0 */
+  :root {
+    --bg: #080b12;
+    --panel: rgba(16, 22, 35, 0.82);
+    --card: rgba(24, 32, 48, 0.78);
+    --border: rgba(255,255,255,0.10);
+    --accent: #f5c84b;
+    --green: #34d399;
+    --text: #f4f7fb;
+    --muted: #9aa4b2;
+  }
+  body {
+    background: #080b12;
+  }
+  header {
+    background: rgba(8, 11, 18, 0.72);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .wrapper { max-width: 720px; padding-top: 20px; }
+  .stat-card, .add-bus-form, .bus-tile, .bus-detail, .modal, .seg-row {
+    background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.035));
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: 0 14px 40px rgba(0,0,0,0.24);
+    backdrop-filter: blur(16px);
+  }
+  .stat-card { border-radius: 20px; min-width: 100%; padding: 18px 20px; }
+  .stat-label { color: var(--muted); }
+  .stat-value { color: var(--green); font-size: 2.3rem; }
+  .bus-grid { grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: 12px; }
+  .bus-tile { border-radius: 20px; padding: 18px 14px; min-height: 82px; }
+  .bus-tile:hover { transform: translateY(-3px) scale(1.01); border-color: rgba(245,200,75,0.55); }
+  .bus-number { font-size: 1.08rem; margin-bottom: 8px; }
+  .bus-count { color: var(--green); font-weight: 600; }
+  .bus-detail { border-radius: 24px; border-color: rgba(52,211,153,0.42); padding: 18px; }
+  .bus-detail.open { animation: riseIn .22s ease-out; }
+  .bus-detail-num { font-size: 1.65rem; letter-spacing: 1px; }
+  .seg-row { border-radius: 18px; padding: 14px; margin-bottom: 12px; }
+  .seg-row-desc { font-size: 0.95rem; line-height: 1.35; }
+  .anomalia-line { display:flex; align-items:flex-start; gap:10px; width:100%; }
+  .anomalia-dot { width:9px; height:9px; border-radius:50%; background:var(--red); flex:0 0 9px; margin-top:7px; box-shadow:0 0 0 4px rgba(239,68,68,0.12); }
+  .seg-actions { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:14px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.10); }
+  .btn-aggiungi-autobus, .btn-primary, .btn-save-bus {
+    border-radius: 999px;
+    box-shadow: 0 10px 26px rgba(52,211,153,0.18);
+  }
+  .btn-edit, .btn-del, .btn-ghost, .btn-cancel-bus { border-radius: 999px; }
+  .form-control, .add-bus-input { border-radius: 14px; }
+  .pwd-screen {
+    background:
+      radial-gradient(circle at center top, rgba(245,200,75,0.16), transparent 38%),
+      #080b12;
+  }
+  .pwd-btn { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.14); }
+  @keyframes riseIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 480px) {
+    .add-bus-input { width: 100%; }
+    .header-date { font-size: 0.65rem; }
+  }
+
+  /* FIX MENU IMPOSTAZIONI SOPRA TUTTO */
+  header { overflow: visible !important; z-index: 100000 !important; }
+  .settings-wrap { position: relative; z-index: 100001 !important; }
+  .settings-menu {
+    position: fixed !important;
+    top: 64px !important;
+    right: 14px !important;
+    z-index: 2147483647 !important;
+    background: #101623 !important;
+    border: 1px solid rgba(245,200,75,0.75) !important;
+    box-shadow: 0 22px 60px rgba(0,0,0,0.65) !important;
+    backdrop-filter: blur(18px);
+  }
+  .settings-menu.open { display: block !important; }
+  .wrapper, .bus-detail, .bus-grid, .seg-row { position: relative; z-index: 1; }
+
+</style>
+</head>
+<body>
+
+<!-- PASSWORD SCREEN -->
+<div class="pwd-screen" id="pwdScreen">
+  <div class="pwd-title">INSERISCI CODICE</div>
+  <div class="pwd-dots">
+    <div class="pwd-dot" id="dot0"></div>
+    <div class="pwd-dot" id="dot1"></div>
+    <div class="pwd-dot" id="dot2"></div>
+    <div class="pwd-dot" id="dot3"></div>
+  </div>
+  <div class="pwd-error" id="pwdError">Codice errato</div>
+  <div class="pwd-grid">
+    <button class="pwd-btn" onclick="pwdPress('1')">1</button>
+    <button class="pwd-btn" onclick="pwdPress('2')">2</button>
+    <button class="pwd-btn" onclick="pwdPress('3')">3</button>
+    <button class="pwd-btn" onclick="pwdPress('4')">4</button>
+    <button class="pwd-btn" onclick="pwdPress('5')">5</button>
+    <button class="pwd-btn" onclick="pwdPress('6')">6</button>
+    <button class="pwd-btn" onclick="pwdPress('7')">7</button>
+    <button class="pwd-btn" onclick="pwdPress('8')">8</button>
+    <button class="pwd-btn" onclick="pwdPress('9')">9</button>
+    <button class="pwd-btn" onclick="pwdPress('0')" style="grid-column:2;">0</button>
+  </div>
+  <button class="pwd-clear" onclick="pwdPress('C')">✕ Cancella</button>
+</div>
+
+<header>
+  <div class="header-right">
+    <div class="header-date" id="headerDate"></div>
+    <div class="settings-wrap">
+      <button class="btn-gear" onclick="toggleSettings()">⚙️</button>
+      <div class="settings-menu" id="settingsMenu">
+        <button class="settings-btn" onclick="esportaDati()">⬇️ Esporta dati</button>
+        <div class="settings-divider"></div>
+        <button class="settings-btn" onclick="document.getElementById('importInput').click()">⬆️ Importa dati</button>
+        <input type="file" id="importInput" accept=".json" style="display:none;" onchange="importaDati(event)">
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="wrapper">
+
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="stat-label">Autobus Totali</div>
+      <div class="stat-value" id="stat-total">0</div>
+    </div>
+  </div>
+
+
+  <div class="add-bus-area" id="addBusArea">
+    <button class="btn-aggiungi-autobus" onclick="toggleAddForm()">+ Aggiungi autobus</button>
+    <div class="add-bus-form" id="addBusForm">
+      <div class="field">
+        <label>Matricola</label>
+        <input class="add-bus-input" id="inputMatricola" type="text" placeholder="Es. A4148" maxlength="20">
+      </div>
+      <button class="btn-save-bus" onclick="addBus()">Salva</button>
+      <button class="btn-cancel-bus" onclick="toggleAddForm()">Annulla</button>
+    </div>
+  </div>
+
+  <div class="bus-grid" id="busGrid"><div class="loading">Caricamento...</div></div>
+
+  <div class="bus-detail" id="busDetail">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <button class="btn-back" onclick="closeDetail()">← Indietro</button>
+      <button onclick="deleteBus()" style="background:none;border:1px solid rgba(239,68,68,0.4);color:var(--red);padding:5px 12px;border-radius:6px;cursor:pointer;font-size:0.78rem;font-family:var(--font-mono);transition:all 0.15s;">✕ Elimina bus</button>
+    </div>
+    <div class="bus-detail-num" id="detailNum"></div>
+    <div id="detailContent"></div>
+  </div>
+
+</div>
+
+<!-- MODAL NUOVA SEGNALAZIONE -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h2>NUOVA SEGNALAZIONE</h2>
+    <div class="form-group">
+      <label class="form-label">Descrizione *</label>
+      <textarea class="form-control" id="formDesc" placeholder="Descrivi il problema..."></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeModal()">Annulla</button>
+      <button class="btn-primary" onclick="saveSegnalazione()">Salva segnalazione</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL MODIFICA -->
+<div class="modal-overlay" id="editModalOverlay">
+  <div class="modal">
+    <h2>MODIFICA SEGNALAZIONE</h2>
+    <div class="form-group">
+      <label class="form-label">Descrizione *</label>
+      <textarea class="form-control" id="editFormDesc"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeEditModal()">Annulla</button>
+      <button class="btn-primary" onclick="saveEditSeg()">Salva modifiche</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+import { getFirestore, collection, doc, onSnapshot, addDoc, updateDoc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBdwNH43PZFgSfKZOEfJtBrF-ooC4NOnGc",
+  authDomain: "gestionesegnalazioni.firebaseapp.com",
+  projectId: "gestionesegnalazioni",
+  storageBucket: "gestionesegnalazioni.firebasestorage.app",
+  messagingSenderId: "930504240088",
+  appId: "1:930504240088:web:60e43f95f82883b43b20ad",
+  measurementId: "G-59G37GQX9J"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let buses = [];
+let segnalazioni = [];
+let selectedBus = null;
+let editingSegId = null;
+let currentBusForModal = null;
+
+// PASSWORD
+const CORRECT = '8400';
+let pwdInput = '';
+
+window.pwdPress = function(val) {
+  if (val === 'C') {
+    pwdInput = '';
+  } else {
+    if (pwdInput.length < 4) pwdInput += val;
+    if (pwdInput.length === 4) {
+      if (pwdInput === CORRECT) {
+        document.getElementById('pwdScreen').classList.add('hidden');
+      } else {
+        document.getElementById('pwdError').classList.add('show');
+        setTimeout(() => document.getElementById('pwdError').classList.remove('show'), 1500);
+        pwdInput = '';
+      }
+    }
+  }
+
+  for (let i = 0; i < 4; i++) {
+    document.getElementById('dot' + i).classList.toggle('filled', i < pwdInput.length);
+  }
+};
+
+// Richiedi sempre il PIN a ogni apertura dell'app
+localStorage.removeItem('auth');
+
+
+document.getElementById('headerDate').textContent = new Date().toLocaleDateString('it-IT', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+
+// LOAD CACHE IMMEDIATELY
+const cachedBuses = localStorage.getItem('cache_buses');
+const cachedSeg = localStorage.getItem('cache_seg');
+if (cachedBuses) { buses = JSON.parse(cachedBuses); renderAll(); }
+if (cachedSeg) { segnalazioni = JSON.parse(cachedSeg); renderAll(); }
+
+// REALTIME LISTENERS
+onSnapshot(collection(db, 'buses'), snap => {
+  buses = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  buses.sort((a, b) => a.matricola.localeCompare(b.matricola));
+  localStorage.setItem('cache_buses', JSON.stringify(buses));
+  renderAll();
+});
+
+onSnapshot(collection(db, 'segnalazioni'), snap => {
+  segnalazioni = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  localStorage.setItem('cache_seg', JSON.stringify(segnalazioni));
+  renderAll();
+  if (selectedBus) showBusDetail(selectedBus);
+});
+
+// SETTINGS
+window.toggleSettings = function() {
+  document.getElementById('settingsMenu').classList.toggle('open');
+}
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.settings-wrap')) {
+    document.getElementById('settingsMenu').classList.remove('open');
+  }
+});
+
+window.esportaDati = function() {
+  const data = { buses: buses.map(b => b.matricola), segnalazioni };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'autobus-dati.json'; a.click();
+  URL.revokeObjectURL(url);
+  document.getElementById('settingsMenu').classList.remove('open');
+  showToast('Dati esportati!');
+}
+
+window.importaDati = async function(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = async function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      // Delete all existing buses
+      const existingBuses = await getDocs(collection(db, 'buses'));
+      for (const d of existingBuses.docs) await deleteDoc(doc(db, 'buses', d.id));
+      // Delete all existing segnalazioni
+      const existingSeg = await getDocs(collection(db, 'segnalazioni'));
+      for (const d of existingSeg.docs) await deleteDoc(doc(db, 'segnalazioni', d.id));
+      // Import new buses
+      if (data.buses) {
+        for (const mat of data.buses) {
+          await addDoc(collection(db, 'buses'), { matricola: mat });
+        }
+      }
+      // Import new segnalazioni
+      if (data.segnalazioni) {
+        for (const seg of data.segnalazioni) {
+          const { id, ...segData } = seg;
+          await addDoc(collection(db, 'segnalazioni'), segData);
+        }
+      }
+      document.getElementById('settingsMenu').classList.remove('open');
+      showToast('Dati importati!');
+    } catch(err) { alert('File non valido!'); }
+  };
+  reader.readAsText(file);
+}
+
+// ADD BUS
+window.toggleAddForm = function() {
+  const form = document.getElementById('addBusForm');
+  const isOpen = form.classList.toggle('open');
+  if (isOpen) document.getElementById('inputMatricola').focus();
+  else document.getElementById('inputMatricola').value = '';
+}
+
+window.addBus = async function() {
+  const inp = document.getElementById('inputMatricola');
+  const mat = inp.value.trim();
+  if (!mat) return;
+  if (buses.find(b => b.matricola.toLowerCase() === mat.toLowerCase())) { showToast('Matricola già presente!'); return; }
+  await addDoc(collection(db, 'buses'), { matricola: mat });
+  toggleAddForm(); showToast('Autobus aggiunto!');
+}
+document.getElementById('inputMatricola').addEventListener('keydown', e => { if (e.key === 'Enter') addBus(); });
+
+// MODAL NUOVA
+window.openModal = function(mat) {
+  currentBusForModal = mat;
+  document.getElementById('formDesc').value = '';
+  document.getElementById('modalOverlay').classList.add('open');
+  setTimeout(() => document.getElementById('formDesc').focus(), 100);
+}
+window.closeModal = function() { document.getElementById('modalOverlay').classList.remove('open'); }
+window.saveSegnalazione = async function() {
+  const desc = document.getElementById('formDesc').value.trim();
+  if (!desc) { alert('Inserisci una descrizione.'); return; }
+  await addDoc(collection(db, 'segnalazioni'), {
+    bus: currentBusForModal, desc, stato: 'aperta', createdAt: new Date().toISOString()
+  });
+  closeModal(); showToast('Segnalazione salvata!');
+}
+
+// MODAL MODIFICA
+window.editSeg = function(id) {
+  const s = segnalazioni.find(x => x.id === id);
+  if (!s) return;
+  editingSegId = id;
+  document.getElementById('editFormDesc').value = s.desc;
+  document.getElementById('editModalOverlay').classList.add('open');
+}
+window.closeEditModal = function() { document.getElementById('editModalOverlay').classList.remove('open'); editingSegId = null; }
+window.saveEditSeg = async function() {
+  const desc = document.getElementById('editFormDesc').value.trim();
+  if (!desc) { alert('La descrizione non può essere vuota.'); return; }
+  await updateDoc(doc(db, 'segnalazioni', editingSegId), { desc });
+  closeEditModal(); showToast('Segnalazione aggiornata!');
+}
+
+// DELETE
+window.deleteSeg = async function(id) {
+  await deleteDoc(doc(db, 'segnalazioni', id));
+}
+
+window.deleteBus = async function() {
+  if (!confirm('Eliminare questo autobus e tutte le sue segnalazioni?')) return;
+  const busDoc = buses.find(b => b.matricola === selectedBus);
+  if (busDoc) await deleteDoc(doc(db, 'buses', busDoc.id));
+  const segsToDelete = segnalazioni.filter(s => s.bus === selectedBus);
+  for (const s of segsToDelete) await deleteDoc(doc(db, 'segnalazioni', s.id));
+  closeDetail(); showToast('Autobus eliminato.');
+}
+
+// RENDER
+function renderAll() {
+  document.getElementById('stat-total').textContent = buses.length;
+  renderBusGrid();
+}
+
+function renderBusGrid() {
+  const grid = document.getElementById('busGrid');
+  if (!buses.length) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="icon">🚌</div><p>Nessun autobus ancora.<br>Premi "Aggiungi autobus" per iniziare.</p></div>`;
+    return;
+  }
+  grid.innerHTML = '';
+  buses.forEach(bus => {
+    const open = segnalazioni.filter(s => s.bus === bus.matricola);
+    const tile = document.createElement('div');
+    tile.className = 'bus-tile';
+    tile.onclick = () => selectBus(bus.matricola);
+    tile.innerHTML = `
+      <div class="bus-number">${bus.matricola}</div>
+      ${open.length ? `<div class="bus-count">${open.length} ${open.length > 1 ? 'aperte' : 'aperta'}</div>` : ''}`;
+    grid.appendChild(tile);
+  });
+}
+
+window.selectBus = function(mat) {
+  selectedBus = mat;
+  document.getElementById('busGrid').style.display = 'none';
+  document.getElementById('addBusArea').style.display = 'none';
+  showBusDetail(mat);
+}
+
+window.closeDetail = function() {
+  selectedBus = null;
+  document.getElementById('busDetail').classList.remove('open');
+  document.getElementById('busGrid').style.display = '';
+  document.getElementById('addBusArea').style.display = '';
+  renderBusGrid();
+}
+
+function showBusDetail(mat) {
+  const panel = document.getElementById('busDetail');
+  const segs = segnalazioni.filter(s => s.bus === mat);
+  document.getElementById('detailNum').textContent = mat;
+  let html = '';
+  if (!segs.length) {
+    html = '<p style="color:var(--muted);font-size:0.85rem;padding:4px 0 12px;">Nessuna segnalazione per questo autobus.</p>';
+  } else {
+    segs.slice().reverse().forEach(s => {
+      const dates = s.date || [];
+      const half = dates.length > 5 ? Math.ceil(dates.length / 2) : dates.length;
+      const leftDates = dates.slice(0, half);
+      const rightDates = dates.slice(half);
+      const makeDateTag = (d, idx) => {
+        const p = d.split('-');
+        return '<span style="background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:3px 4px 3px 8px;font-size:0.72rem;font-family:var(--font-mono);color:var(--muted);display:inline-flex;align-items:center;gap:6px;width:fit-content;">'
+          + '<span onclick="editDate(\'' + s.id + '\',' + idx + ')" style="cursor:pointer;" onmouseover="this.parentElement.style.borderColor=\'var(--accent)\'" onmouseout="this.parentElement.style.borderColor=\'var(--border)\'">' + p[2] + '/' + p[1] + '/' + p[0].slice(-2) + '</span>'
+          + '<span onclick="rimuoviData(\'' + s.id + '\',' + idx + ')" style="cursor:pointer;color:var(--muted);padding:0 4px;" onmouseover="this.style.color=\'var(--red)\'" onmouseout="this.style.color=\'var(--muted)\'">✕</span>'
+          + '</span>';
+      };
+      const leftHtml = leftDates.map((d, i) => makeDateTag(d, i)).join('');
+      const rightHtml = rightDates.map((d, i) => makeDateTag(d, i + half)).join('');
+      const datesHtml = dates.length ? (
+        '<div style="margin-top:8px;">'
+        + '<div style="margin-bottom:8px;"><span style="font-size:0.75rem;color:var(--muted);font-family:var(--font-mono);">' + (dates.length === 1 ? 'Censito <strong style="color:var(--green);font-weight:700;">1</strong> volta il giorno:' : 'Censito <strong style="color:var(--green);font-weight:700;">' + dates.length + '</strong> volte il giorno:') + '</span></div>'
+        + '<div style="display:flex;gap:0;">'
+        + '<div style="display:flex;flex-direction:column;gap:4px;flex:1;">' + leftHtml + '</div>'
+        + (rightDates.length ? '<div style="width:1px;background:var(--border);margin:0 10px;"></div><div style="display:flex;flex-direction:column;gap:4px;flex:1;">' + rightHtml + '</div>' : '')
+        + '</div></div>'
+      ) : '<div style="margin-top:8px;font-size:0.75rem;color:var(--muted);font-family:var(--font-mono);">Nessuna data registrata</div>';
+      html += `<div class="seg-row" style="flex-direction:column;align-items:stretch;">
+        <div class="anomalia-line">
+          <span class="anomalia-dot"></span>
+          <div class="seg-row-desc">${s.desc}</div>
+        </div>
+        ${datesHtml}
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;align-items:center;">
+          <span style="display:flex;align-items:center;gap:3px;">
+            <input type="text" id="day-${s.id}" placeholder="GG" maxlength="2" inputmode="numeric" oninput="autoAdvance(this,'month-${s.id}',2)" onkeydown="if(event.key==='Enter')aggiungiDataManuale('${s.id}')" style="width:34px;background:var(--panel);border:1px dashed var(--border);color:var(--text);padding:4px 4px;border-radius:6px;font-size:0.72rem;font-family:var(--font-mono);text-align:center;">
+            <span style="color:var(--muted);">/</span>
+            <input type="text" id="month-${s.id}" placeholder="MM" maxlength="2" inputmode="numeric" oninput="autoAdvance(this,'year-${s.id}',2)" onkeydown="if(event.key==='Enter')aggiungiDataManuale('${s.id}')" style="width:34px;background:var(--panel);border:1px dashed var(--border);color:var(--text);padding:4px 4px;border-radius:6px;font-size:0.72rem;font-family:var(--font-mono);text-align:center;">
+            <span style="color:var(--muted);">/</span>
+            <input type="text" id="year-${s.id}" placeholder="AA" maxlength="2" inputmode="numeric" oninput="autoSaveDateIfComplete('${s.id}', this)" onkeydown="if(event.key==='Enter')aggiungiDataManuale('${s.id}')" style="width:34px;background:var(--panel);border:1px dashed var(--border);color:var(--text);padding:4px 4px;border-radius:6px;font-size:0.72rem;font-family:var(--font-mono);text-align:center;">
+            <input type="hidden" id="editidx-${s.id}" value="">
+          </span>
+        </div>
+        <div class="seg-actions">
+          <button class="btn-edit" onclick="editSeg('${s.id}')"><span style="font-size:1rem;line-height:1;">✏️</span> Modifica</button>
+          <button class="btn-del" onclick="deleteSeg('${s.id}')">🗑 Elimina</button>
+        </div>
+      </div>`;
+    });
+  }
+  html += `
+    <button class="btn-primary" style="margin-top:16px;font-size:0.82rem;padding:10px 18px;background:var(--green);color:#000;" onclick="openModal('${mat}')">+ Aggiungi segnalazione</button>`;
+  document.getElementById('detailContent').innerHTML = html;
+  panel.classList.add('open');
+}
+
+
+window.rimuoviData = async function(id, idx) {
+  const s = segnalazioni.find(x => x.id === id);
+  if (!s || !s.date) return;
+  const dates = s.date.filter((_, i) => i !== idx);
+  await updateDoc(doc(db, 'segnalazioni', id), { date: dates });
+  showToast('Data rimossa!');
+}
+
+window.autoAdvance = function(input, nextId, len) {
+  input.value = input.value.replace(/\D/g, '').slice(0, len);
+  if (input.value.length >= len && nextId) {
+    document.getElementById(nextId).focus();
+  }
+}
+
+window.autoSaveDateIfComplete = function(id, input) {
+  input.value = input.value.replace(/\D/g, '').slice(0, 2);
+  if (input.value.length === 2) {
+    aggiungiDataManuale(id);
+  }
+}
+
+window.editDate = function(id, idx) {
+  const s = segnalazioni.find(x => x.id === id);
+  if (!s || !s.date || !s.date[idx]) return;
+  const [year, month, day] = s.date[idx].split('-');
+  document.getElementById('day-' + id).value = day;
+  document.getElementById('month-' + id).value = month;
+  document.getElementById('year-' + id).value = year.slice(-2);
+  document.getElementById('editidx-' + id).value = idx;
+  showToast('Modifica la data: si salva automaticamente dopo GG/MM/AA');
+}
+
+window.aggiungiDataManuale = async function(id) {
+  const dayEl = document.getElementById('day-' + id);
+  const monthEl = document.getElementById('month-' + id);
+  const yearEl = document.getElementById('year-' + id);
+
+  const day = dayEl.value.replace(/\D/g, '').trim().padStart(2, '0');
+  const month = monthEl.value.replace(/\D/g, '').trim().padStart(2, '0');
+  const yearShort = yearEl.value.replace(/\D/g, '').trim();
+
+  if (!day || !month || yearShort.length !== 2) {
+    showToast('Inserisci GG/MM/AA completi!');
+    return;
+  }
+
+  const year = '20' + yearShort;
+  const d = parseInt(day), m = parseInt(month), y = parseInt(year);
+  if (d < 1 || d > 31 || m < 1 || m > 12 || y < 2000 || y > 2099) {
+    showToast('Data non valida!');
+    return;
+  }
+
+  const data = `${year}-${month}-${day}`;
+  const s = segnalazioni.find(x => x.id === id);
+  if (!s) return;
+
+  let dates = s.date || [];
+  const editIdxField = document.getElementById('editidx-' + id);
+  const editIdx = editIdxField.value;
+
+  if (editIdx !== '') {
+    dates = [...dates];
+    dates[parseInt(editIdx)] = data;
+    dates.sort();
+    editIdxField.value = '';
+    showToast('Data modificata!');
+  } else {
+    if (dates.includes(data)) {
+      showToast('Data già presente!');
+      yearEl.value = '';
+      yearEl.focus();
+      return;
+    }
+    dates = [...dates, data].sort();
+    showToast('Data registrata!');
+  }
+
+  await updateDoc(doc(db, 'segnalazioni', id), { date: dates });
+  dayEl.value = '';
+  monthEl.value = '';
+  yearEl.value = '';
+  dayEl.focus();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 2500);
+}
+window.showToast = showToast;
+
+</script>
+</body>
+</html>
