@@ -447,6 +447,28 @@
   .settings-menu.open { display: block !important; }
   .wrapper, .bus-detail, .bus-grid, .seg-row { position: relative; z-index: 1; }
 
+
+  /* AGGIORNAMENTO: pulizia UI e riordino anomalie */
+  .pwd-screen { display: none !important; }
+  .piano-bus-area { display: none !important; }
+  .date-input-single {
+    background: rgba(255,255,255,0.10) !important;
+    border: 1px solid rgba(255,255,255,0.26) !important;
+    color: var(--text) !important;
+    min-width: 92px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+  }
+  .date-input-single:focus {
+    border-color: rgba(245,200,75,0.70) !important;
+    background: rgba(255,255,255,0.14) !important;
+  }
+  #anomalieList { display: flex; flex-direction: column; gap: 0; }
+  .sortable-ghost { opacity: .42; }
+  .sortable-chosen { transform: scale(1.01); }
+  .sortable-drag { box-shadow: 0 18px 46px rgba(0,0,0,.45); }
+  .anomalia-main-summary { touch-action: manipulation; }
+
+
 </style>
 </head>
 <body>
@@ -573,6 +595,7 @@
 
 <div class="toast" id="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 import { getFirestore, collection, doc, onSnapshot, addDoc, updateDoc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
@@ -597,31 +620,25 @@ let editingSegId = null;
 let currentBusForModal = null;
 let openDateDetailsIds = new Set();
 let openAnomaliaIds = new Set();
-let forceOpenAfterSaveIds = new Set();
 let isRenderingDetail = false;
 
 function markSegnalazioneAperta(id) {
   openAnomaliaIds.add(id);
   openDateDetailsIds.add(id);
-  forceOpenAfterSaveIds.add(id);
   try {
     sessionStorage.setItem('anomalia-open-' + id, '1');
     sessionStorage.setItem('dates-open-' + id, '1');
   } catch(e) {}
 }
 
-function clearForcedSegnalazione(id) {
-  forceOpenAfterSaveIds.delete(id);
-}
-
 function isSegnalazioneAperta(id) {
   try { if (sessionStorage.getItem('anomalia-open-' + id) === '1') return true; } catch(e) {}
-  return openAnomaliaIds.has(id) || openDateDetailsIds.has(id) || forceOpenAfterSaveIds.has(id);
+  return openAnomaliaIds.has(id) || openDateDetailsIds.has(id);
 }
 
 function areDateAperte(id) {
   try { if (sessionStorage.getItem('dates-open-' + id) === '1') return true; } catch(e) {}
-  return openDateDetailsIds.has(id) || forceOpenAfterSaveIds.has(id);
+  return openDateDetailsIds.has(id);
 }
 
 // PASSWORD
@@ -783,10 +800,18 @@ window.saveEditSeg = async function() {
 
 // DELETE
 window.deleteSeg = async function(id) {
+  const s = segnalazioni.find(x => x.id === id);
+  if (!s) return;
   const ok = confirm("Eliminare questa anomalia?\n\nL'operazione eliminerà l'anomalia e tutte le date associate.");
   if (!ok) return;
+  const busMat = s.bus;
   await deleteDoc(doc(db, 'segnalazioni', id));
-  showToast('Anomalia eliminata.');
+  const remaining = segnalazioni.filter(x => x.bus === busMat && x.id !== id);
+  if (remaining.length === 0) {
+    const busDoc = buses.find(b => b.matricola === busMat);
+    if (busDoc) await deleteDoc(doc(db, 'buses', busDoc.id));
+    if (selectedBus === busMat) closeDetail();
+  }
 }
 
 window.deleteBus = async function() {
@@ -849,13 +874,21 @@ window.closeDetail = function() {
 function showBusDetail(mat) {
   isRenderingDetail = true;
   const panel = document.getElementById('busDetail');
-  const segs = segnalazioni.filter(s => s.bus === mat);
+  const segs = segnalazioni.filter(s => s.bus === mat).slice().sort((a, b) => {
+    const ao = (typeof a.order === 'number') ? a.order : 999999;
+    const bo = (typeof b.order === 'number') ? b.order : 999999;
+    if (ao !== bo) return ao - bo;
+    const ad = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+    const bd = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+    return bd - ad;
+  });
   document.getElementById('detailNum').textContent = mat;
   let html = '';
   if (!segs.length) {
     html = '<p style="color:var(--muted);font-size:0.85rem;padding:4px 0 12px;">Nessuna segnalazione per questo autobus.</p>';
   } else {
-    segs.slice().reverse().forEach(s => {
+    html += '<div id="anomalieList">';
+    segs.forEach(s => {
       const dates = s.date || [];
       const half = dates.length > 5 ? Math.ceil(dates.length / 2) : dates.length;
       const leftDates = dates.slice(0, half);
@@ -869,19 +902,21 @@ function showBusDetail(mat) {
       };
       const leftHtml = leftDates.map((d, i) => makeDateTag(d, i)).join('');
       const rightHtml = rightDates.map((d, i) => makeDateTag(d, i + half)).join('');
-      const datesHtml = dates.length ? (
-        '<details id="details-' + s.id + '" class="date-details" style="margin-top:8px;" ontoggle="trackDateDetailsOpen(\'' + s.id + '\', this)"' + (areDateAperte(s.id) ? ' open' : '') + '>'
-        + '<summary style="font-size:0.75rem;color:var(--muted);font-family:var(--font-mono);">'
-        + '<span>' + (dates.length === 1 ? 'Segnalato <strong style="color:var(--red);font-weight:700;">1</strong> volta' : 'Segnalato <strong style="color:var(--red);font-weight:700;">' + dates.length + '</strong> volte') + '</span>'
-        + '<span class="date-toggle"><span class="toggle-closed"><span>Mostra</span><span>Date</span></span><span class="toggle-open"><span>Nascondi</span><span>Date</span></span></span>'
-        + '</summary>'
-        + '<div style="display:flex;gap:0;margin-top:8px;">'
+      const countHtml = dates.length === 1
+        ? 'Segnalato <strong style="color:var(--red);font-weight:700;">1</strong> volta'
+        : 'Segnalato <strong style="color:var(--red);font-weight:700;">' + dates.length + '</strong> volte';
+      const dateListHtml = dates.length ? (
+        '<div style="display:flex;gap:0;margin-top:8px;">'
         + '<div style="display:flex;flex-direction:column;gap:4px;flex:1;">' + leftHtml + '</div>'
         + (rightDates.length ? '<div style="width:1px;background:var(--border);margin:0 10px;"></div><div style="display:flex;flex-direction:column;gap:4px;flex:1;">' + rightHtml + '</div>' : '')
-        + '</div></details>'
+        + '</div>'
       ) : '<div style="margin-top:8px;font-size:0.75rem;color:var(--muted);font-family:var(--font-mono);">Nessuna data registrata</div>';
+      const datesHtml = '<div class="date-block" style="margin-top:8px;">'
+        + '<div style="font-size:0.75rem;color:var(--muted);font-family:var(--font-mono);">' + countHtml + '</div>'
+        + dateListHtml
+        + '</div>';
 
-      html += `<details id="anomalia-${s.id}" class="seg-row anomalia-main anomalia-chiusa" style="flex-direction:column;align-items:stretch;" ${isSegnalazioneAperta(s.id) ? 'open' : ''} ontoggle="trackAnomaliaOpen('${s.id}', this)">
+      html += `<details id="anomalia-${s.id}" data-id="${s.id}" class="seg-row anomalia-main anomalia-chiusa" style="flex-direction:column;align-items:stretch;" ${isSegnalazioneAperta(s.id) ? 'open' : ''} ontoggle="trackAnomaliaOpen('${s.id}', this)">
         <summary class="anomalia-main-summary">
           <span class="anomalia-title-wrap">
             <span class="anomalia-dot" aria-hidden="true"></span>
@@ -909,6 +944,7 @@ function showBusDetail(mat) {
         </div>
       </details>`;
     });
+    html += '</div>';
   }
   html += `
     <button class="btn-primary" style="margin-top:16px;font-size:0.82rem;padding:10px 18px;background:var(--green);color:#000;" onclick="openModal('${mat}')">+ Aggiungi segnalazione</button>`;
@@ -929,16 +965,13 @@ function showBusDetail(mat) {
   ripristinaAperture();
   setTimeout(ripristinaAperture, 50);
   setTimeout(ripristinaAperture, 250);
+  initAnomalieSortable(mat);
   setTimeout(() => { isRenderingDetail = false; }, 300);
 }
 
 
 window.trackAnomaliaOpen = function(id, el) {
   if (isRenderingDetail) return;
-  if (forceOpenAfterSaveIds.has(id) && el && !el.open) {
-    setTimeout(() => { el.open = true; }, 0);
-    return;
-  }
   if (el && el.open) {
     openAnomaliaIds.add(id);
     try { sessionStorage.setItem('anomalia-open-' + id, '1'); } catch(e) {}
@@ -954,10 +987,6 @@ window.trackAnomaliaOpen = function(id, el) {
 
 window.trackDateDetailsOpen = function(id, el) {
   if (isRenderingDetail) return;
-  if (forceOpenAfterSaveIds.has(id) && el && !el.open) {
-    setTimeout(() => { el.open = true; }, 0);
-    return;
-  }
   if (el && el.open) {
     openDateDetailsIds.add(id);
     openAnomaliaIds.add(id);
@@ -982,9 +1011,12 @@ window.openDateDetails = function(id) {
 window.rimuoviData = async function(id, idx) {
   const s = segnalazioni.find(x => x.id === id);
   if (!s || !s.date) return;
+  const ok = confirm('Sei sicuro di voler eliminare la data?');
+  if (!ok) return;
+  markSegnalazioneAperta(id);
   const dates = s.date.filter((_, i) => i !== idx);
   await updateDoc(doc(db, 'segnalazioni', id), { date: dates });
-  showToast('Data rimossa!');
+  setTimeout(() => openDateDetails(id), 80);
 }
 
 window.autoAdvance = function(input, nextId, len) {
@@ -1087,7 +1119,6 @@ window.aggiungiDataManuale = async function(id) {
       freshInput.value = '';
       freshInput.focus();
     }
-    setTimeout(() => { clearForcedSegnalazione(id); }, 10000);
   }, 120);
 }
 
@@ -1126,6 +1157,35 @@ function estraiAssegnazioniDaOCR(text) {
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
+  });
+}
+
+
+function initAnomalieSortable(mat) {
+  const list = document.getElementById('anomalieList');
+  if (!list || !window.Sortable) return;
+  if (list._sortable) list._sortable.destroy();
+  list._sortable = new Sortable(list, {
+    animation: 160,
+    delay: 250,
+    delayOnTouchOnly: true,
+    touchStartThreshold: 5,
+    ghostClass: 'sortable-ghost',
+    chosenClass: 'sortable-chosen',
+    dragClass: 'sortable-drag',
+    onStart: function() {
+      document.body.style.overflow = 'hidden';
+    },
+    onEnd: async function() {
+      document.body.style.overflow = '';
+      const ids = Array.from(list.querySelectorAll('[data-id]')).map(el => el.getAttribute('data-id'));
+      for (let i = 0; i < ids.length; i++) {
+        const s = segnalazioni.find(x => x.id === ids[i]);
+        if (s && s.order !== i) {
+          try { await updateDoc(doc(db, 'segnalazioni', ids[i]), { order: i }); } catch(e) {}
+        }
+      }
+    }
   });
 }
 
@@ -1196,9 +1256,7 @@ window.pulisciPianoBus = function() {
 }
 
 function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.style.display = 'block';
-  setTimeout(() => t.style.display = 'none', 2500);
+  // Notifiche verdi disattivate per scelta dell'utente.
 }
 window.showToast = showToast;
 
