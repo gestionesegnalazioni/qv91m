@@ -626,9 +626,7 @@ window.saveEditSeg = async function() {
 
 // DELETE
 window.deleteSeg = async function(id) {
-  const ok = confirm('Eliminare questa anomalia?
-
-L'operazione eliminerà l'anomalia e tutte le date associate.');
+  const ok = confirm("Eliminare questa anomalia?\n\nL'operazione eliminerà l'anomalia e tutte le date associate.");
   if (!ok) return;
   await deleteDoc(doc(db, 'segnalazioni', id));
   showToast('Anomalia eliminata.');
