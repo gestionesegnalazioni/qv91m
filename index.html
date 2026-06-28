@@ -727,7 +727,7 @@ function showBusDetail(mat) {
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;align-items:center;">
           <span style="display:flex;align-items:center;gap:6px;">
             <span class="date-plus">+</span>
-            <input type="text" id="date-${s.id}" class="date-input-single" placeholder="" maxlength="6" inputmode="numeric" pattern="[0-9]*" autocomplete="off" oninput="autoSaveSingleDate('${s.id}', this)" onkeydown="if(event.key==='Enter')aggiungiDataManuale('${s.id}')">
+            <input type="text" id="date-${s.id}" class="date-input-single" placeholder="" maxlength="8" inputmode="numeric" pattern="[0-9/]*" autocomplete="off" oninput="autoSaveSingleDate('${s.id}', this)" onkeydown="if(event.key==='Enter')aggiungiDataManuale('${s.id}')">
             <input type="hidden" id="editidx-${s.id}" value="">
           </span>
         </div>
@@ -764,9 +764,17 @@ window.autoAdvance = function(input, nextId, len) {
   }
 }
 
+function formatDateInputValue(value) {
+  const raw = (value || '').replace(/\D/g, '').slice(0, 6);
+  if (raw.length <= 2) return raw;
+  if (raw.length <= 4) return raw.slice(0, 2) + '/' + raw.slice(2);
+  return raw.slice(0, 2) + '/' + raw.slice(2, 4) + '/' + raw.slice(4);
+}
+
 window.autoSaveSingleDate = function(id, input) {
-  input.value = input.value.replace(/\D/g, '').slice(0, 6);
-  if (input.value.length === 6) {
+  const raw = (input.value || '').replace(/\D/g, '').slice(0, 6);
+  input.value = formatDateInputValue(raw);
+  if (raw.length === 6) {
     aggiungiDataManuale(id);
   }
 }
@@ -776,7 +784,7 @@ window.editDate = function(id, idx) {
   if (!s || !s.date || !s.date[idx]) return;
   const [year, month, day] = s.date[idx].split('-');
   const input = document.getElementById('date-' + id);
-  input.value = day + month + year.slice(-2);
+  input.value = formatDateInputValue(day + month + year.slice(-2));
   document.getElementById('editidx-' + id).value = idx;
   input.focus();
   showToast('Modifica la data: si salva automaticamente dopo 6 numeri');
