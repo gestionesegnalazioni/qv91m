@@ -30,6 +30,74 @@
   .pwd-clear:hover { border-color: var(--accent); color: var(--accent); }
   .pwd-error { color: var(--red); font-family: var(--font-mono); font-size: 0.8rem; opacity: 0; transition: opacity 0.2s; }
   .pwd-error.show { opacity: 1; }
+
+  /* RIFINITURA RIORDINO: scheda sollevata e trascinabile quasi ovunque */
+  .anomalia-main {
+    touch-action: pan-y;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .anomalia-main:active {
+    -webkit-tap-highlight-color: transparent;
+  }
+  .touch-dragging-card {
+    background: linear-gradient(145deg, rgba(255,255,255,0.13), rgba(255,255,255,0.055)) !important;
+    box-shadow: 0 28px 70px rgba(0,0,0,.72) !important;
+    opacity: .99 !important;
+    border-color: rgba(255,255,255,.22) !important;
+    will-change: transform;
+  }
+  .anomalia-placeholder {
+    transition: transform 180ms cubic-bezier(.2,0,0,1), height 160ms ease;
+  }
+
+
+  /* FUORI SERVIZIO */
+  .bus-section-title {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 18px 0 10px;
+  }
+  .bus-grid-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+    gap: 12px;
+    width: 100%;
+  }
+  .bus-tile.fuori-servizio {
+    border-color: rgba(59,130,246,0.85) !important;
+    box-shadow: 0 14px 40px rgba(59,130,246,0.10);
+  }
+  .bus-tile.fuori-servizio .bus-number { color: #93c5fd; }
+  .bus-fuori-label {
+    font-size: 0.68rem;
+    color: #93c5fd;
+    font-family: var(--font-mono);
+    margin-top: 6px;
+  }
+  .bus-detail-actions {
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    align-items:flex-end;
+  }
+  .btn-delete-bus, .btn-fuori-servizio {
+    background:none;
+    padding:5px 12px;
+    border-radius:6px;
+    cursor:pointer;
+    font-size:0.78rem;
+    font-family:var(--font-mono);
+    transition:all 0.15s;
+    min-width:116px;
+    text-align:center;
+  }
+  .btn-delete-bus { border:1px solid rgba(239,68,68,0.4); color:var(--red); }
+  .btn-fuori-servizio { border:1px solid rgba(59,130,246,0.72); color:#93c5fd; }
+
 </style>
 <title>Gestione Segnalazioni Autobus</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -614,9 +682,12 @@
   <div class="bus-grid" id="busGrid"><div class="loading">Caricamento...</div></div>
 
   <div class="bus-detail" id="busDetail">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;gap:12px;">
       <button class="btn-back" onclick="closeDetail()">← Indietro</button>
-      <button onclick="deleteBus()" style="background:none;border:1px solid rgba(239,68,68,0.4);color:var(--red);padding:5px 12px;border-radius:6px;cursor:pointer;font-size:0.78rem;font-family:var(--font-mono);transition:all 0.15s;">✕ Elimina Bus</button>
+      <div class="bus-detail-actions">
+        <button class="btn-delete-bus" onclick="deleteBus()">✕ Elimina Bus</button>
+        <button class="btn-fuori-servizio" id="btnFuoriServizio" onclick="toggleFuoriServizio()">Fuori servizio</button>
+      </div>
     </div>
     <div class="bus-detail-num" id="detailNum"></div>
     <div id="detailContent"></div>
@@ -765,7 +836,7 @@ document.addEventListener('click', function(e) {
 });
 
 window.esportaDati = function() {
-  const data = { buses: buses.map(b => b.matricola), segnalazioni };
+  const data = { buses: buses.map(b => ({ matricola: b.matricola, fuoriServizio: !!b.fuoriServizio })), segnalazioni };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -790,8 +861,13 @@ window.importaDati = async function(event) {
       for (const d of existingSeg.docs) await deleteDoc(doc(db, 'segnalazioni', d.id));
       // Import new buses
       if (data.buses) {
-        for (const mat of data.buses) {
-          await addDoc(collection(db, 'buses'), { matricola: mat });
+        for (const item of data.buses) {
+          const mat = typeof item === 'string' ? item : item.matricola;
+          if (!mat) continue;
+          await addDoc(collection(db, 'buses'), {
+            matricola: mat,
+            fuoriServizio: typeof item === 'object' ? !!item.fuoriServizio : false
+          });
         }
       }
       // Import new segnalazioni
@@ -821,7 +897,7 @@ window.addBus = async function() {
   const mat = inp.value.trim();
   if (!mat) return;
   if (buses.find(b => b.matricola.toLowerCase() === mat.toLowerCase())) { showToast('Matricola già presente!'); return; }
-  await addDoc(collection(db, 'buses'), { matricola: mat });
+  await addDoc(collection(db, 'buses'), { matricola: mat, fuoriServizio: false });
   toggleAddForm(); showToast('Autobus aggiunto!');
 }
 document.getElementById('inputMatricola').addEventListener('keydown', e => { if (e.key === 'Enter') addBus(); });
@@ -884,6 +960,16 @@ window.deleteBus = async function() {
   closeDetail(); showToast('Autobus eliminato.');
 }
 
+window.toggleFuoriServizio = async function() {
+  const busObj = buses.find(b => b.matricola === selectedBus);
+  if (!busObj) return;
+  const nuovoStato = !busObj.fuoriServizio;
+  await updateDoc(doc(db, 'buses', busObj.id), { fuoriServizio: nuovoStato });
+  const btn = document.getElementById('btnFuoriServizio');
+  if (btn) btn.textContent = nuovoStato ? 'Rimetti in servizio' : 'Fuori servizio';
+  renderBusGrid();
+}
+
 // RENDER
 function renderAll() {
   document.getElementById('stat-total').textContent = buses.length;
@@ -896,17 +982,34 @@ function renderBusGrid() {
     grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="icon">🚌</div><p>Nessun autobus ancora.<br>Premi "Aggiungi autobus" per iniziare.</p></div>`;
     return;
   }
-  grid.innerHTML = '';
-  buses.forEach(bus => {
+
+  const attivi = buses.filter(b => !b.fuoriServizio);
+  const fuori = buses.filter(b => !!b.fuoriServizio);
+
+  const makeTile = (bus, isFuori) => {
     const open = segnalazioni.filter(s => s.bus === bus.matricola);
-    const tile = document.createElement('div');
-    tile.className = 'bus-tile';
-    tile.onclick = () => selectBus(bus.matricola);
-    tile.innerHTML = `
-      <div class="bus-number">${bus.matricola}</div>
-      ${open.length ? `<div class="bus-count">${open.length} ${open.length > 1 ? 'aperte' : 'aperta'}</div>` : ''}`;
-    grid.appendChild(tile);
-  });
+    return `
+      <div class="bus-tile ${isFuori ? 'fuori-servizio' : ''}" onclick="selectBus('${bus.matricola.replace(/'/g, "\\'")}')">
+        <div class="bus-number">${bus.matricola}</div>
+        ${open.length ? `<div class="bus-count">${open.length} ${open.length > 1 ? 'aperte' : 'aperta'}</div>` : ''}
+        ${isFuori ? `<div class="bus-fuori-label">Fuori servizio</div>` : ''}
+      </div>`;
+  };
+
+  let html = '';
+  html += `<div class="bus-section-title">Autobus</div>`;
+  html += `<div class="bus-grid-section">`;
+  html += attivi.length
+    ? attivi.map(bus => makeTile(bus, false)).join('')
+    : `<div class="empty-state" style="grid-column:1/-1;padding:18px 10px;"><p>Nessun autobus in servizio.</p></div>`;
+  html += `</div>`;
+
+  if (fuori.length) {
+    html += `<div class="bus-section-title">Fuori servizio</div>`;
+    html += `<div class="bus-grid-section">` + fuori.map(bus => makeTile(bus, true)).join('') + `</div>`;
+  }
+
+  grid.innerHTML = html;
 }
 
 window.selectBus = function(mat) {
@@ -944,6 +1047,9 @@ function showBusDetail(mat) {
     return bd - ad;
   });
   document.getElementById('detailNum').textContent = mat;
+  const busObjDetail = buses.find(b => b.matricola === mat);
+  const btnFuori = document.getElementById('btnFuoriServizio');
+  if (btnFuori) btnFuori.textContent = busObjDetail && busObjDetail.fuoriServizio ? 'Rimetti in servizio' : 'Fuori servizio';
   let html = '';
   if (!segs.length) {
     html = '<p style="color:var(--muted);font-size:0.85rem;padding:4px 0 12px;">Nessuna segnalazione per questo autobus.</p>';
@@ -1226,14 +1332,10 @@ function initAnomalieSortable(mat) {
   const list = document.getElementById('anomalieList');
   if (!list) return;
 
-  // Disattiva eventuali vecchie istanze SortableJS: su iPhone il drag HTML5
-  // dentro <details>/<summary> può diventare instabile.
   if (list._sortable && typeof list._sortable.destroy === 'function') {
     try { list._sortable.destroy(); } catch(e) {}
     list._sortable = null;
   }
-
-  // Evita doppie inizializzazioni dopo i refresh Firebase.
   if (list._touchReorderCleanup) {
     try { list._touchReorderCleanup(); } catch(e) {}
   }
@@ -1242,16 +1344,23 @@ function initAnomalieSortable(mat) {
   let dragging = false;
   let dragged = null;
   let placeholder = null;
-  let offsetY = 0;
   let offsetX = 0;
+  let offsetY = 0;
   let startX = 0;
   let startY = 0;
+  let currentX = 0;
+  let currentY = 0;
+  let rafId = null;
   let suppressNextClick = false;
   const cleanups = [];
 
   function getPoint(e) {
     const t = e.touches && e.touches[0] ? e.touches[0] : (e.changedTouches && e.changedTouches[0] ? e.changedTouches[0] : e);
     return { x: t.clientX, y: t.clientY };
+  }
+
+  function isControlTarget(target) {
+    return !!(target && target.closest && target.closest('input, textarea, select, button, a, .icon-action'));
   }
 
   function resetCardStyle(el) {
@@ -1261,8 +1370,47 @@ function initAnomalieSortable(mat) {
     el.style.left = '';
     el.style.top = '';
     el.style.width = '';
+    el.style.height = '';
     el.style.zIndex = '';
     el.style.margin = '';
+    el.style.transform = '';
+    el.style.transition = '';
+  }
+
+  function setDraggedPosition() {
+    rafId = null;
+    if (!dragging || !dragged) return;
+    const x = currentX - offsetX;
+    const y = currentY - offsetY;
+    dragged.style.transform = `translate3d(${x}px, ${y}px, 0) scale(1.025)`;
+  }
+
+  function requestDraggedPosition(point) {
+    currentX = point.x;
+    currentY = point.y;
+    if (!rafId) rafId = requestAnimationFrame(setDraggedPosition);
+  }
+
+  function animateListMove(callback) {
+    const items = Array.from(list.querySelectorAll('.anomalia-main, .anomalia-placeholder'));
+    const first = new Map(items.map(el => [el, el.getBoundingClientRect()]));
+    callback();
+    const after = Array.from(list.querySelectorAll('.anomalia-main, .anomalia-placeholder'));
+    after.forEach(el => {
+      if (el === dragged) return;
+      const old = first.get(el);
+      if (!old) return;
+      const now = el.getBoundingClientRect();
+      const dx = old.left - now.left;
+      const dy = old.top - now.top;
+      if (Math.abs(dx) < 1 && Math.abs(dy) < 1) return;
+      el.style.transition = 'none';
+      el.style.transform = `translate3d(${dx}px, ${dy}px, 0)`;
+      requestAnimationFrame(() => {
+        el.style.transition = 'transform 180ms cubic-bezier(.2,0,0,1)';
+        el.style.transform = '';
+      });
+    });
   }
 
   async function persistOrder() {
@@ -1270,7 +1418,7 @@ function initAnomalieSortable(mat) {
     for (let i = 0; i < ids.length; i++) {
       const s = segnalazioni.find(x => x.id === ids[i]);
       if (s && s.order !== i) {
-        s.order = i; // aggiorna subito lo stato locale per evitare scatti al refresh
+        s.order = i;
         try { await updateDoc(doc(db, 'segnalazioni', ids[i]), { order: i }); } catch(e) {}
       }
     }
@@ -1282,44 +1430,55 @@ function initAnomalieSortable(mat) {
     dragged = el;
     suppressNextClick = true;
 
+    try { if (navigator.vibrate) navigator.vibrate(12); } catch(e) {}
+
     const rect = el.getBoundingClientRect();
     offsetX = point.x - rect.left;
     offsetY = point.y - rect.top;
+    currentX = point.x;
+    currentY = point.y;
 
     placeholder = document.createElement('div');
     placeholder.className = 'anomalia-placeholder';
     placeholder.style.height = rect.height + 'px';
+    placeholder.style.marginBottom = getComputedStyle(el).marginBottom || '12px';
     el.parentNode.insertBefore(placeholder, el);
 
+    document.body.appendChild(el);
     el.classList.add('touch-dragging-card');
     el.style.position = 'fixed';
-    el.style.left = rect.left + 'px';
-    el.style.top = rect.top + 'px';
+    el.style.left = '0px';
+    el.style.top = '0px';
     el.style.width = rect.width + 'px';
+    el.style.height = rect.height + 'px';
     el.style.margin = '0';
+    el.style.transition = 'none';
     document.body.classList.add('reordering-anomalie');
+    requestDraggedPosition(point);
   }
 
   function movePlaceholder(y) {
+    if (!placeholder) return;
     const siblings = Array.from(list.querySelectorAll('.anomalia-main')).filter(el => el !== dragged);
-    let placed = false;
+    let before = null;
     for (const child of siblings) {
       const r = child.getBoundingClientRect();
       const midpoint = r.top + r.height / 2;
-      if (y < midpoint) {
-        list.insertBefore(placeholder, child);
-        placed = true;
-        break;
-      }
+      if (y < midpoint) { before = child; break; }
     }
-    if (!placed) list.appendChild(placeholder);
+    const currentNext = placeholder.nextElementSibling;
+    if (before && currentNext !== before) {
+      animateListMove(() => list.insertBefore(placeholder, before));
+    } else if (!before && placeholder.parentNode && placeholder !== list.lastElementChild) {
+      animateListMove(() => list.appendChild(placeholder));
+    }
   }
 
   function onMove(e) {
     const point = getPoint(e);
 
     if (!dragging) {
-      if (pressTimer && (Math.abs(point.x - startX) > 8 || Math.abs(point.y - startY) > 8)) {
+      if (pressTimer && (Math.abs(point.x - startX) > 10 || Math.abs(point.y - startY) > 10)) {
         clearTimeout(pressTimer);
         pressTimer = null;
       }
@@ -1327,26 +1486,31 @@ function initAnomalieSortable(mat) {
     }
 
     e.preventDefault();
-    dragged.style.left = (point.x - offsetX) + 'px';
-    dragged.style.top = (point.y - offsetY) + 'px';
+    requestDraggedPosition(point);
     movePlaceholder(point.y);
 
-    // Piccolo auto-scroll quando trascini vicino ai bordi dello schermo.
     const h = window.innerHeight || document.documentElement.clientHeight;
-    if (point.y < 70) window.scrollBy(0, -10);
-    else if (point.y > h - 70) window.scrollBy(0, 10);
+    if (point.y < 72) window.scrollBy(0, -12);
+    else if (point.y > h - 72) window.scrollBy(0, 12);
   }
 
-  function endDrag(e) {
+  function endDrag() {
     if (pressTimer) {
       clearTimeout(pressTimer);
       pressTimer = null;
     }
     if (!dragging) return;
 
+    if (rafId) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+
     if (placeholder && dragged) {
-      placeholder.parentNode.insertBefore(dragged, placeholder);
-      placeholder.remove();
+      animateListMove(() => {
+        list.insertBefore(dragged, placeholder);
+        placeholder.remove();
+      });
     }
     resetCardStyle(dragged);
     document.body.classList.remove('reordering-anomalie');
@@ -1356,22 +1520,19 @@ function initAnomalieSortable(mat) {
     placeholder = null;
     persistOrder();
 
-    setTimeout(() => { suppressNextClick = false; }, 250);
+    setTimeout(() => { suppressNextClick = false; }, 300);
   }
 
   function onStart(e) {
-    const summary = e.target.closest && e.target.closest('.anomalia-main-summary');
-    if (!summary || !list.contains(summary)) return;
-    if (e.target.closest('input,button,a,svg,path')) return;
-
-    const el = summary.closest('.anomalia-main');
-    if (!el) return;
+    if (isControlTarget(e.target)) return;
+    const el = e.target.closest && e.target.closest('.anomalia-main');
+    if (!el || !list.contains(el)) return;
 
     const point = getPoint(e);
     startX = point.x;
     startY = point.y;
     clearTimeout(pressTimer);
-    pressTimer = setTimeout(() => beginDrag(el, point), 360);
+    pressTimer = setTimeout(() => beginDrag(el, point), 330);
   }
 
   function onClickCapture(e) {
@@ -1390,7 +1551,6 @@ function initAnomalieSortable(mat) {
   document.addEventListener('touchcancel', endDrag, optsPassive);
   list.addEventListener('click', onClickCapture, true);
 
-  // Supporto anche per mouse/trackpad su PC.
   list.addEventListener('mousedown', onStart);
   document.addEventListener('mousemove', onMove);
   document.addEventListener('mouseup', endDrag);
@@ -1408,7 +1568,6 @@ function initAnomalieSortable(mat) {
     cleanups.forEach(fn => { try { fn(); } catch(e) {} });
   };
 }
-
 
 function renderPianoBusMatches(assignments) {
   const results = document.getElementById('pianoBusResults');
