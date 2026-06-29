@@ -63,9 +63,10 @@
   }
   .bus-grid-section {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
     width: 100%;
+    grid-column: 1 / -1;
   }
   .bus-tile.fuori-servizio {
     border-color: rgba(59,130,246,0.85) !important;
@@ -1005,7 +1006,6 @@ function renderBusGrid() {
   };
 
   let html = '';
-  html += `<div class="bus-section-title">Autobus</div>`;
   html += `<div class="bus-grid-section">`;
   html += attivi.length
     ? attivi.map(bus => makeTile(bus, false)).join('')
