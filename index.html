@@ -87,17 +87,25 @@
   }
   .btn-delete-bus, .btn-fuori-servizio {
     background:none;
-    padding:5px 12px;
-    border-radius:6px;
+    width:132px;
+    height:34px;
+    padding:0 10px;
+    border-radius:8px;
     cursor:pointer;
     font-size:0.78rem;
     font-family:var(--font-mono);
-    transition:all 0.15s;
-    min-width:116px;
+    transition:none;
     text-align:center;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    line-height:1;
+    box-sizing:border-box;
+    white-space:nowrap;
   }
-  .btn-delete-bus { border:1px solid rgba(239,68,68,0.4); color:var(--red); }
+  .btn-delete-bus { border:1px solid rgba(239,68,68,0.55); color:var(--red); }
   .btn-fuori-servizio { border:1px solid rgba(59,130,246,0.72); color:#93c5fd; }
+  .btn-fuori-servizio.in-servizio { border-color: rgba(34,197,94,0.72); color:#86efac; }
 
 </style>
 <title>Gestione Segnalazioni Autobus</title>
@@ -694,7 +702,7 @@
     <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;gap:12px;">
       <button class="btn-back" onclick="closeDetail()">← Indietro</button>
       <div class="bus-detail-actions">
-        <button class="btn-delete-bus" onclick="deleteBus()">✕ Elimina Bus</button>
+        <button class="btn-delete-bus" onclick="deleteBus()">Elimina Bus</button>
         <button class="btn-fuori-servizio" id="btnFuoriServizio" onclick="toggleFuoriServizio()">Fuori servizio</button>
       </div>
     </div>
@@ -975,7 +983,7 @@ window.toggleFuoriServizio = async function() {
   const nuovoStato = !busObj.fuoriServizio;
   await updateDoc(doc(db, 'buses', busObj.id), { fuoriServizio: nuovoStato });
   const btn = document.getElementById('btnFuoriServizio');
-  if (btn) btn.textContent = nuovoStato ? 'Rimetti in servizio' : 'Fuori servizio';
+  if (btn) { btn.textContent = nuovoStato ? 'In servizio' : 'Fuori servizio'; btn.classList.toggle('in-servizio', nuovoStato); }
   renderBusGrid();
 }
 
@@ -1057,7 +1065,7 @@ function showBusDetail(mat) {
   document.getElementById('detailNum').textContent = mat;
   const busObjDetail = buses.find(b => b.matricola === mat);
   const btnFuori = document.getElementById('btnFuoriServizio');
-  if (btnFuori) btnFuori.textContent = busObjDetail && busObjDetail.fuoriServizio ? 'Rimetti in servizio' : 'Fuori servizio';
+  if (btnFuori) { const isFuori = busObjDetail && busObjDetail.fuoriServizio; btnFuori.textContent = isFuori ? 'In servizio' : 'Fuori servizio'; btnFuori.classList.toggle('in-servizio', !!isFuori); }
   let html = '';
   if (!segs.length) {
     html = '<p style="color:var(--muted);font-size:0.85rem;padding:4px 0 12px;">Nessuna segnalazione per questo autobus.</p>';
