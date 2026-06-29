@@ -304,6 +304,14 @@
     border-color: rgba(255,255,255,0.28);
     background: rgba(255,255,255,0.05);
   }
+
+  .icon-action.reorder-action {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    line-height: 1;
+    font-weight: 700;
+  }
+
   .icon-action svg {
     width: 11px;
     height: 11px;
@@ -1101,6 +1109,8 @@ function showBusDetail(mat) {
             </span>
           </div>
           <div class="seg-actions">
+            <button class="icon-action reorder-action" onclick="moveSeg('${s.id}', -1)" title="Sposta su" aria-label="Sposta su">↑</button>
+            <button class="icon-action reorder-action" onclick="moveSeg('${s.id}', 1)" title="Sposta giù" aria-label="Sposta giù">↓</button>
             <button class="icon-action" onclick="editSeg('${s.id}')" title="Modifica" aria-label="Modifica">
               <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
             </button>
@@ -1132,7 +1142,7 @@ function showBusDetail(mat) {
   ripristinaAperture();
   setTimeout(ripristinaAperture, 50);
   setTimeout(ripristinaAperture, 250);
-  initAnomalieSortable(mat);
+  // Riordino tramite frecce ↑/↓: niente trascinamento instabile su iPhone.
   setTimeout(() => { isRenderingDetail = false; }, 300);
 }
 
@@ -1567,6 +1577,47 @@ function initAnomalieSortable(mat) {
   list._touchReorderCleanup = function() {
     cleanups.forEach(fn => { try { fn(); } catch(e) {} });
   };
+}
+
+
+window.moveSeg = async function(id, direction) {
+  if (!selectedBus) return;
+  const segs = segnalazioni.filter(s => s.bus === selectedBus).slice().sort((a, b) => {
+    const ao = (typeof a.order === 'number') ? a.order : 999999;
+    const bo = (typeof b.order === 'number') ? b.order : 999999;
+    if (ao !== bo) return ao - bo;
+    const ad = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+    const bd = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+    return bd - ad;
+  });
+  const idx = segs.findIndex(s => s.id === id);
+  if (idx < 0) return;
+  const target = idx + direction;
+  if (target < 0 || target >= segs.length) return;
+
+  const movedId = segs[idx].id;
+  const opened = new Set(openAnomaliaIds);
+  opened.add(movedId);
+  openAnomaliaIds = opened;
+
+  const reordered = segs.slice();
+  const [item] = reordered.splice(idx, 1);
+  reordered.splice(target, 0, item);
+
+  // Aggiornamento locale immediato per rendere lo spostamento visibile subito.
+  reordered.forEach((seg, order) => {
+    const local = segnalazioni.find(x => x.id === seg.id);
+    if (local) local.order = order;
+  });
+  showBusDetail(selectedBus);
+
+  // Salvataggio stabile su Firebase.
+  try {
+    await Promise.all(reordered.map((seg, order) => updateDoc(doc(db, 'segnalazioni', seg.id), { order })));
+  } catch (e) {
+    console.error('Errore salvataggio ordine anomalie', e);
+    alert('Errore nel salvataggio del nuovo ordine. Riprova.');
+  }
 }
 
 function renderPianoBusMatches(assignments) {
