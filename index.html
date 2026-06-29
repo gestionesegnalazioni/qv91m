@@ -615,6 +615,26 @@
     overflow-x: hidden;
   }
 
+
+
+  /* FIX DEFINITIVO: bordo blu fisso per mezzi fuori servizio in tutti gli stati */
+  .bus-tile.fuori-servizio,
+  .bus-tile.fuori-servizio:hover,
+  .bus-tile.fuori-servizio:active,
+  .bus-tile.fuori-servizio:focus,
+  .bus-tile.fuori-servizio:focus-visible {
+    border-color: rgba(59,130,246,0.95) !important;
+    box-shadow: 0 14px 40px rgba(59,130,246,0.10) !important;
+    transform: none !important;
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+  .bus-tile.fuori-servizio .bus-number,
+  .bus-tile.fuori-servizio:hover .bus-number,
+  .bus-tile.fuori-servizio:active .bus-number,
+  .bus-tile.fuori-servizio:focus .bus-number {
+    color: #93c5fd !important;
+  }
 </style>
 </head>
 <body>
