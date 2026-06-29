@@ -508,6 +508,28 @@
     box-shadow: 0 22px 54px rgba(0,0,0,.55) !important;
     pointer-events: none !important;
   }
+
+
+  /* RIORDINO TOUCH NATIVO - più stabile su iPhone */
+  .anomalia-placeholder {
+    border: 1px dashed rgba(255,255,255,0.24);
+    border-radius: 18px;
+    background: rgba(255,255,255,0.035);
+    margin-bottom: 12px;
+  }
+  .touch-dragging-card {
+    opacity: .98 !important;
+    box-shadow: 0 24px 60px rgba(0,0,0,.62) !important;
+    transform: scale(1.015) !important;
+    z-index: 2147483000 !important;
+    pointer-events: none !important;
+  }
+  body.reordering-anomalie {
+    -webkit-user-select: none;
+    user-select: none;
+    overflow-x: hidden;
+  }
+
 </style>
 </head>
 <body>
@@ -1202,49 +1224,191 @@ function estraiAssegnazioniDaOCR(text) {
 
 function initAnomalieSortable(mat) {
   const list = document.getElementById('anomalieList');
-  if (!list || !window.Sortable) return;
-  if (list._sortable) list._sortable.destroy();
-  list._sortable = new Sortable(list, {
-    animation: 240,
-    easing: 'cubic-bezier(.2,0,0,1)',
-    delay: 180,
-    delayOnTouchOnly: true,
-    touchStartThreshold: 8,
-    handle: '.anomalia-main-summary',
-    draggable: '.anomalia-main',
-    fallbackOnBody: true,
-    forceFallback: true,
-    fallbackTolerance: 6,
-    scroll: true,
-    scrollSensitivity: 70,
-    scrollSpeed: 12,
-    swapThreshold: 0.65,
-    ghostClass: 'sortable-ghost',
-    chosenClass: 'sortable-chosen',
-    dragClass: 'sortable-drag',
-    onChoose: function() {
-      list.classList.add('sorting-active');
-    },
-    onStart: function() {
-      document.body.classList.add('dragging-anomalia');
-    },
-    onEnd: async function() {
-      document.body.classList.remove('dragging-anomalia');
-      list.classList.remove('sorting-active');
-      const ids = Array.from(list.querySelectorAll('[data-id]')).map(el => el.getAttribute('data-id'));
-      for (let i = 0; i < ids.length; i++) {
-        const s = segnalazioni.find(x => x.id === ids[i]);
-        if (s && s.order !== i) {
-          try { await updateDoc(doc(db, 'segnalazioni', ids[i]), { order: i }); } catch(e) {}
-        }
+  if (!list) return;
+
+  // Disattiva eventuali vecchie istanze SortableJS: su iPhone il drag HTML5
+  // dentro <details>/<summary> può diventare instabile.
+  if (list._sortable && typeof list._sortable.destroy === 'function') {
+    try { list._sortable.destroy(); } catch(e) {}
+    list._sortable = null;
+  }
+
+  // Evita doppie inizializzazioni dopo i refresh Firebase.
+  if (list._touchReorderCleanup) {
+    try { list._touchReorderCleanup(); } catch(e) {}
+  }
+
+  let pressTimer = null;
+  let dragging = false;
+  let dragged = null;
+  let placeholder = null;
+  let offsetY = 0;
+  let offsetX = 0;
+  let startX = 0;
+  let startY = 0;
+  let suppressNextClick = false;
+  const cleanups = [];
+
+  function getPoint(e) {
+    const t = e.touches && e.touches[0] ? e.touches[0] : (e.changedTouches && e.changedTouches[0] ? e.changedTouches[0] : e);
+    return { x: t.clientX, y: t.clientY };
+  }
+
+  function resetCardStyle(el) {
+    if (!el) return;
+    el.classList.remove('touch-dragging-card');
+    el.style.position = '';
+    el.style.left = '';
+    el.style.top = '';
+    el.style.width = '';
+    el.style.zIndex = '';
+    el.style.margin = '';
+  }
+
+  async function persistOrder() {
+    const ids = Array.from(list.querySelectorAll('.anomalia-main[data-id]')).map(el => el.getAttribute('data-id'));
+    for (let i = 0; i < ids.length; i++) {
+      const s = segnalazioni.find(x => x.id === ids[i]);
+      if (s && s.order !== i) {
+        s.order = i; // aggiorna subito lo stato locale per evitare scatti al refresh
+        try { await updateDoc(doc(db, 'segnalazioni', ids[i]), { order: i }); } catch(e) {}
       }
-    },
-    onCancel: function() {
-      document.body.classList.remove('dragging-anomalia');
-      list.classList.remove('sorting-active');
     }
-  });
+  }
+
+  function beginDrag(el, point) {
+    if (!el || dragging) return;
+    dragging = true;
+    dragged = el;
+    suppressNextClick = true;
+
+    const rect = el.getBoundingClientRect();
+    offsetX = point.x - rect.left;
+    offsetY = point.y - rect.top;
+
+    placeholder = document.createElement('div');
+    placeholder.className = 'anomalia-placeholder';
+    placeholder.style.height = rect.height + 'px';
+    el.parentNode.insertBefore(placeholder, el);
+
+    el.classList.add('touch-dragging-card');
+    el.style.position = 'fixed';
+    el.style.left = rect.left + 'px';
+    el.style.top = rect.top + 'px';
+    el.style.width = rect.width + 'px';
+    el.style.margin = '0';
+    document.body.classList.add('reordering-anomalie');
+  }
+
+  function movePlaceholder(y) {
+    const siblings = Array.from(list.querySelectorAll('.anomalia-main')).filter(el => el !== dragged);
+    let placed = false;
+    for (const child of siblings) {
+      const r = child.getBoundingClientRect();
+      const midpoint = r.top + r.height / 2;
+      if (y < midpoint) {
+        list.insertBefore(placeholder, child);
+        placed = true;
+        break;
+      }
+    }
+    if (!placed) list.appendChild(placeholder);
+  }
+
+  function onMove(e) {
+    const point = getPoint(e);
+
+    if (!dragging) {
+      if (pressTimer && (Math.abs(point.x - startX) > 8 || Math.abs(point.y - startY) > 8)) {
+        clearTimeout(pressTimer);
+        pressTimer = null;
+      }
+      return;
+    }
+
+    e.preventDefault();
+    dragged.style.left = (point.x - offsetX) + 'px';
+    dragged.style.top = (point.y - offsetY) + 'px';
+    movePlaceholder(point.y);
+
+    // Piccolo auto-scroll quando trascini vicino ai bordi dello schermo.
+    const h = window.innerHeight || document.documentElement.clientHeight;
+    if (point.y < 70) window.scrollBy(0, -10);
+    else if (point.y > h - 70) window.scrollBy(0, 10);
+  }
+
+  function endDrag(e) {
+    if (pressTimer) {
+      clearTimeout(pressTimer);
+      pressTimer = null;
+    }
+    if (!dragging) return;
+
+    if (placeholder && dragged) {
+      placeholder.parentNode.insertBefore(dragged, placeholder);
+      placeholder.remove();
+    }
+    resetCardStyle(dragged);
+    document.body.classList.remove('reordering-anomalie');
+
+    dragging = false;
+    dragged = null;
+    placeholder = null;
+    persistOrder();
+
+    setTimeout(() => { suppressNextClick = false; }, 250);
+  }
+
+  function onStart(e) {
+    const summary = e.target.closest && e.target.closest('.anomalia-main-summary');
+    if (!summary || !list.contains(summary)) return;
+    if (e.target.closest('input,button,a,svg,path')) return;
+
+    const el = summary.closest('.anomalia-main');
+    if (!el) return;
+
+    const point = getPoint(e);
+    startX = point.x;
+    startY = point.y;
+    clearTimeout(pressTimer);
+    pressTimer = setTimeout(() => beginDrag(el, point), 360);
+  }
+
+  function onClickCapture(e) {
+    if (suppressNextClick) {
+      e.preventDefault();
+      e.stopPropagation();
+      suppressNextClick = false;
+    }
+  }
+
+  const optsPassive = { passive: true };
+  const optsActive = { passive: false };
+  list.addEventListener('touchstart', onStart, optsPassive);
+  document.addEventListener('touchmove', onMove, optsActive);
+  document.addEventListener('touchend', endDrag, optsPassive);
+  document.addEventListener('touchcancel', endDrag, optsPassive);
+  list.addEventListener('click', onClickCapture, true);
+
+  // Supporto anche per mouse/trackpad su PC.
+  list.addEventListener('mousedown', onStart);
+  document.addEventListener('mousemove', onMove);
+  document.addEventListener('mouseup', endDrag);
+
+  cleanups.push(() => list.removeEventListener('touchstart', onStart, optsPassive));
+  cleanups.push(() => document.removeEventListener('touchmove', onMove, optsActive));
+  cleanups.push(() => document.removeEventListener('touchend', endDrag, optsPassive));
+  cleanups.push(() => document.removeEventListener('touchcancel', endDrag, optsPassive));
+  cleanups.push(() => list.removeEventListener('click', onClickCapture, true));
+  cleanups.push(() => list.removeEventListener('mousedown', onStart));
+  cleanups.push(() => document.removeEventListener('mousemove', onMove));
+  cleanups.push(() => document.removeEventListener('mouseup', endDrag));
+
+  list._touchReorderCleanup = function() {
+    cleanups.forEach(fn => { try { fn(); } catch(e) {} });
+  };
 }
+
 
 function renderPianoBusMatches(assignments) {
   const results = document.getElementById('pianoBusResults');
