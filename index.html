@@ -469,6 +469,45 @@
   .anomalia-main-summary { touch-action: manipulation; }
 
 
+
+
+  /* RIFINITURA: niente evidenziazione gialla sulle tessere autobus */
+  .bus-tile,
+  .bus-tile:hover,
+  .bus-tile:active,
+  .bus-tile:focus,
+  .bus-tile:focus-visible {
+    border-color: rgba(255,255,255,0.12) !important;
+    transform: none !important;
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+
+  /* RIFINITURA: riordino anomalie più fluido su iPhone */
+  .anomalia-main {
+    transition: transform 180ms cubic-bezier(.2,0,0,1), opacity 160ms ease, box-shadow 160ms ease;
+    will-change: transform;
+  }
+  .anomalia-main-summary {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+  .sortable-ghost {
+    opacity: .20 !important;
+    transform: scale(.985) !important;
+    border-style: dashed !important;
+  }
+  .sortable-chosen {
+    opacity: .98 !important;
+    transform: scale(1.012) !important;
+  }
+  .sortable-drag {
+    opacity: .98 !important;
+    transform: scale(1.018) !important;
+    box-shadow: 0 22px 54px rgba(0,0,0,.55) !important;
+    pointer-events: none !important;
+  }
 </style>
 </head>
 <body>
@@ -1166,18 +1205,32 @@ function initAnomalieSortable(mat) {
   if (!list || !window.Sortable) return;
   if (list._sortable) list._sortable.destroy();
   list._sortable = new Sortable(list, {
-    animation: 160,
-    delay: 250,
+    animation: 240,
+    easing: 'cubic-bezier(.2,0,0,1)',
+    delay: 180,
     delayOnTouchOnly: true,
-    touchStartThreshold: 5,
+    touchStartThreshold: 8,
+    handle: '.anomalia-main-summary',
+    draggable: '.anomalia-main',
+    fallbackOnBody: true,
+    forceFallback: true,
+    fallbackTolerance: 6,
+    scroll: true,
+    scrollSensitivity: 70,
+    scrollSpeed: 12,
+    swapThreshold: 0.65,
     ghostClass: 'sortable-ghost',
     chosenClass: 'sortable-chosen',
     dragClass: 'sortable-drag',
+    onChoose: function() {
+      list.classList.add('sorting-active');
+    },
     onStart: function() {
-      document.body.style.overflow = 'hidden';
+      document.body.classList.add('dragging-anomalia');
     },
     onEnd: async function() {
-      document.body.style.overflow = '';
+      document.body.classList.remove('dragging-anomalia');
+      list.classList.remove('sorting-active');
       const ids = Array.from(list.querySelectorAll('[data-id]')).map(el => el.getAttribute('data-id'));
       for (let i = 0; i < ids.length; i++) {
         const s = segnalazioni.find(x => x.id === ids[i]);
@@ -1185,6 +1238,10 @@ function initAnomalieSortable(mat) {
           try { await updateDoc(doc(db, 'segnalazioni', ids[i]), { order: i }); } catch(e) {}
         }
       }
+    },
+    onCancel: function() {
+      document.body.classList.remove('dragging-anomalia');
+      list.classList.remove('sorting-active');
     }
   });
 }
