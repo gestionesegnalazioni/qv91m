@@ -478,8 +478,13 @@
   }
 
   .small-action.notes {
+    color:var(--muted);
+    border-color:rgba(255,255,255,.14);
+  }
+
+  .small-action.notes.has-note {
     color:var(--blue);
-    border-color:rgba(59,130,246,.38);
+    border-color:rgba(59,130,246,.45);
   }
 
   .notes-box {
@@ -1023,7 +1028,7 @@ function renderSeg(s, pregressa = false) {
           ` : `
             <button class="small-action restore" onclick="ripristinaSeg('${s.id}')">Ripristina</button>
           `}
-          <button class="small-action notes" onclick="toggleNote('${s.id}')">Vedi note</button>
+          <button class="small-action notes ${String(s.note || '').trim() ? 'has-note' : ''}" onclick="toggleNote('${s.id}')">📝 Note${String(s.note || '').trim() ? ' (1)' : ''}</button>
           <button class="small-action icon" onclick="editSeg('${s.id}')" title="Modifica">✎</button>
           <button class="small-action icon" onclick="deleteSeg('${s.id}')" title="Elimina">🗑</button>
         </div>
