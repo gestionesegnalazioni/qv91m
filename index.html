@@ -773,6 +773,8 @@ let selectedBus = null;
 let editingSegId = null;
 let currentBusForModal = null;
 let archiveVisible = false;
+let openSegIds = new Set();
+let openNoteIds = new Set();
 
 document.getElementById('headerDate').textContent =
   new Date().toLocaleDateString('it-IT', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
@@ -984,7 +986,7 @@ function renderSeg(s, pregressa = false) {
     : '<div class="date-columns"><div class="date-column"><span class="date-tag">Nessuna data registrata</span></div><div></div><div></div></div>';
 
   return `
-    <details class="seg-card ${pregressa ? 'pregressa' : ''}" id="seg-${s.id}">
+    <details class="seg-card ${pregressa ? 'pregressa' : ''}" id="seg-${s.id}" ${openSegIds.has(s.id) ? 'open' : ''} ontoggle="trackSegOpen(\'${s.id}\', this)">
       <summary>
         <span class="seg-title-wrap">
           <span class="seg-dot"></span>
@@ -1016,7 +1018,7 @@ function renderSeg(s, pregressa = false) {
           <button class="small-action icon" onclick="deleteSeg('${s.id}')" title="Elimina">🗑</button>
         </div>
 
-        <div class="notes-box" id="notes-${s.id}">
+        <div class="notes-box ${openNoteIds.has(s.id) ? 'open' : ''}" id="notes-${s.id}">
           <div class="notes-label">Note libere</div>
           <textarea class="notes-textarea" placeholder="Scrivi qui le tue note..." oninput="autoSaveNote('${s.id}', this)">${esc(s.note || '')}</textarea>
         </div>
@@ -1139,10 +1141,34 @@ window.ripristinaSeg = async function(id) {
   showToast('Anomalia ripristinata');
 };
 
+
+window.trackSegOpen = function(id, el) {
+  if (el && el.open) {
+    openSegIds.add(id);
+  } else {
+    openSegIds.delete(id);
+    openNoteIds.delete(id);
+  }
+};
+
 window.toggleNote = function(id) {
+  const seg = document.getElementById('seg-' + id);
+  if (seg) {
+    seg.open = true;
+    openSegIds.add(id);
+  }
+
   const box = document.getElementById('notes-' + id);
   if (!box) return;
+
   box.classList.toggle('open');
+
+  if (box.classList.contains('open')) {
+    openNoteIds.add(id);
+  } else {
+    openNoteIds.delete(id);
+  }
+
   const txt = box.querySelector('textarea');
   if (box.classList.contains('open') && txt) {
     setTimeout(() => txt.focus(), 50);
@@ -1151,6 +1177,9 @@ window.toggleNote = function(id) {
 
 let noteTimers = {};
 window.autoSaveNote = function(id, textarea) {
+  openSegIds.add(id);
+  openNoteIds.add(id);
+
   clearTimeout(noteTimers[id]);
   noteTimers[id] = setTimeout(async () => {
     try {
@@ -1187,6 +1216,7 @@ window.autoSaveDate = async function(id, input) {
   showToast('Data registrata');
 
   setTimeout(() => {
+    openSegIds.add(id);
     const el = document.getElementById('seg-' + id);
     if (el) el.open = true;
   }, 80);
