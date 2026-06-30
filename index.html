@@ -651,6 +651,71 @@
     color: #93c5fd !important;
   }
 </style>
+
+<style>
+  /* ARCHIVIO / ANOMALIE PREGRESSE */
+  .bus-tile.has-active-issues,
+  .bus-tile.has-active-issues:hover,
+  .bus-tile.has-active-issues:active,
+  .bus-tile.has-active-issues:focus,
+  .bus-tile.has-active-issues:focus-visible {
+    border-color: rgba(239,68,68,0.92) !important;
+    box-shadow: 0 14px 40px rgba(239,68,68,0.10) !important;
+    transform: none !important;
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+  .bus-tile.has-active-issues .bus-number { color: #fecaca !important; }
+  .bus-tile.fuori-servizio.has-active-issues,
+  .bus-tile.fuori-servizio.has-active-issues:hover,
+  .bus-tile.fuori-servizio.has-active-issues:active,
+  .bus-tile.fuori-servizio.has-active-issues:focus,
+  .bus-tile.fuori-servizio.has-active-issues:focus-visible {
+    border-color: rgba(59,130,246,0.95) !important;
+    box-shadow: 0 14px 40px rgba(59,130,246,0.10) !important;
+  }
+  .btn-pregresse {
+    background: transparent;
+    border: 1px solid rgba(245,200,75,0.38);
+    color: var(--accent);
+    border-radius: 999px;
+    padding: 10px 18px;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    cursor: pointer;
+    margin-top: 16px;
+    margin-right: 8px;
+  }
+  .pregresse-box {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .pregresse-title {
+    font-family: var(--font-mono);
+    color: var(--accent);
+    font-size: 0.76rem;
+    margin: 8px 0 10px;
+  }
+  .seg-row.anomalia-pregressa {
+    border-color: rgba(245,200,75,0.38) !important;
+    opacity: 0.92;
+  }
+  .icon-action.archive-action, .icon-action.restore-action {
+    width: auto;
+    min-width: 68px;
+    padding: 0 10px;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    color: var(--accent);
+    border-color: rgba(245,200,75,0.38);
+  }
+  .icon-action.restore-action {
+    color: #86efac;
+    border-color: rgba(34,197,94,0.42);
+  }
+  .bus-detail-actions .btn-delete-bus { display: none !important; }
+</style>
 </head>
 <body>
 
@@ -737,7 +802,6 @@
     <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;gap:12px;">
       <button class="btn-back" onclick="closeDetail()">← Indietro</button>
       <div class="bus-detail-actions">
-        <button class="btn-delete-bus" onclick="deleteBus()">Elimina Bus</button>
         <button class="btn-fuori-servizio" id="btnFuoriServizio" onclick="toggleFuoriServizio()">Fuori servizio</button>
       </div>
     </div>
@@ -805,6 +869,7 @@ let currentBusForModal = null;
 let openDateDetailsIds = new Set();
 let openAnomaliaIds = new Set();
 let isRenderingDetail = false;
+let pregresseVisibleBus = null;
 
 function markSegnalazioneAperta(id) {
   openAnomaliaIds.add(id);
@@ -998,16 +1063,11 @@ window.toggleStandby = async function(id) {
 window.deleteSeg = async function(id) {
   const s = segnalazioni.find(x => x.id === id);
   if (!s) return;
-  const ok = confirm("Eliminare questa anomalia?\n\nL'operazione eliminerà l'anomalia e tutte le date associate.");
+  const ok = confirm("Eliminare questa anomalia?
+
+L'operazione eliminerà l'anomalia e tutte le date associate.");
   if (!ok) return;
-  const busMat = s.bus;
   await deleteDoc(doc(db, 'segnalazioni', id));
-  const remaining = segnalazioni.filter(x => x.bus === busMat && x.id !== id);
-  if (remaining.length === 0) {
-    const busDoc = buses.find(b => b.matricola === busMat);
-    if (busDoc) await deleteDoc(doc(db, 'buses', busDoc.id));
-    if (selectedBus === busMat) closeDetail();
-  }
 }
 
 window.deleteBus = async function() {
@@ -1046,11 +1106,16 @@ function renderBusGrid() {
   const fuori = buses.filter(b => !!b.fuoriServizio);
 
   const makeTile = (bus, isFuori) => {
-    const open = segnalazioni.filter(s => s.bus === bus.matricola);
+    const active = segnalazioni.filter(s => s.bus === bus.matricola && !s.pregressa);
+    const archived = segnalazioni.filter(s => s.bus === bus.matricola && !!s.pregressa);
+    const cls = [isFuori ? 'fuori-servizio' : '', active.length ? 'has-active-issues' : ''].filter(Boolean).join(' ');
+    const countText = active.length
+      ? `<div class="bus-count">${active.length} ${active.length > 1 ? 'attive' : 'attiva'}</div>`
+      : (archived.length ? `<div class="bus-count" style="color:var(--muted);">${archived.length} ${archived.length > 1 ? 'pregresse' : 'pregressa'}</div>` : '');
     return `
-      <div class="bus-tile ${isFuori ? 'fuori-servizio' : ''}" onclick="selectBus('${bus.matricola.replace(/'/g, "\\'")}')">
+      <div class="bus-tile ${cls}" onclick="selectBus('${bus.matricola.replace(/'/g, "\'")}')">
         <div class="bus-number">${bus.matricola}</div>
-        ${open.length ? `<div class="bus-count">${open.length} ${open.length > 1 ? 'aperte' : 'aperta'}</div>` : ''}
+        ${countText}
         ${isFuori ? `<div class="bus-fuori-label">Fuori servizio</div>` : ''}
       </div>`;
   };
@@ -1197,6 +1262,27 @@ function showBusDetail(mat) {
   setTimeout(() => { isRenderingDetail = false; }, 300);
 }
 
+
+
+window.togglePregresse = function(mat) {
+  pregresseVisibleBus = (pregresseVisibleBus === mat) ? null : mat;
+  showBusDetail(mat);
+}
+
+window.archiviaSeg = async function(id) {
+  const s = segnalazioni.find(x => x.id === id);
+  if (!s) return;
+  const ok = confirm('Spostare questa anomalia nelle anomalie pregresse?');
+  if (!ok) return;
+  await updateDoc(doc(db, 'segnalazioni', id), { pregressa: true, standby: false });
+}
+
+window.ripristinaSeg = async function(id) {
+  const s = segnalazioni.find(x => x.id === id);
+  if (!s) return;
+  await updateDoc(doc(db, 'segnalazioni', id), { pregressa: false, standby: false });
+  markSegnalazioneAperta(id);
+}
 
 window.trackAnomaliaOpen = function(id, el) {
   if (isRenderingDetail) return;
@@ -1628,7 +1714,7 @@ function initAnomalieSortable(mat) {
 
 window.moveSeg = async function(id, direction) {
   if (!selectedBus) return;
-  const segs = segnalazioni.filter(s => s.bus === selectedBus).slice().sort((a, b) => {
+  const segs = segnalazioni.filter(s => s.bus === selectedBus && !s.pregressa).slice().sort((a, b) => {
     const ao = (typeof a.order === 'number') ? a.order : 999999;
     const bo = (typeof b.order === 'number') ? b.order : 999999;
     if (ao !== bo) return ao - bo;
