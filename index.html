@@ -1063,9 +1063,7 @@ window.toggleStandby = async function(id) {
 window.deleteSeg = async function(id) {
   const s = segnalazioni.find(x => x.id === id);
   if (!s) return;
-  const ok = confirm("Eliminare questa anomalia?
-
-L'operazione eliminerà l'anomalia e tutte le date associate.");
+  const ok = confirm("Eliminare questa anomalia?\n\nL'operazione eliminerà l'anomalia e tutte le date associate.");
   if (!ok) return;
   await deleteDoc(doc(db, 'segnalazioni', id));
 }
