@@ -824,7 +824,17 @@ onSnapshot(collection(db, 'buses'), snap => {
 onSnapshot(collection(db, 'segnalazioni'), snap => {
   segnalazioni = snap.docs.map(d => ({ id:d.id, ...d.data() }));
   localStorage.setItem('cache_seg', JSON.stringify(segnalazioni));
-  renderAll();
+
+  const activeEl = document.activeElement;
+  const isWritingNote = activeEl && activeEl.classList && activeEl.classList.contains('notes-textarea');
+
+  if (isWritingNote && selectedBus) {
+    // Durante la scrittura delle note non ridisegno il dettaglio:
+    // altrimenti la textarea viene ricreata e la scheda sembra chiudersi.
+    renderBusGrid();
+  } else {
+    renderAll();
+  }
 }, err => {
   console.error(err);
   document.getElementById('busGrid').innerHTML = '<div class="empty">Errore caricamento segnalazioni.</div>';
@@ -1020,7 +1030,7 @@ function renderSeg(s, pregressa = false) {
 
         <div class="notes-box ${openNoteIds.has(s.id) ? 'open' : ''}" id="notes-${s.id}">
           <div class="notes-label">Note libere</div>
-          <textarea class="notes-textarea" placeholder="Scrivi qui le tue note..." oninput="autoSaveNote('${s.id}', this)">${esc(s.note || '')}</textarea>
+          <textarea class="notes-textarea" placeholder="Scrivi qui le tue note..." onclick="event.stopPropagation()" onmousedown="event.stopPropagation()" ontouchstart="event.stopPropagation()" oninput="autoSaveNote('${s.id}', this)">${esc(s.note || '')}</textarea>
         </div>
       </div>
     </details>`;
@@ -1180,14 +1190,18 @@ window.autoSaveNote = function(id, textarea) {
   openSegIds.add(id);
   openNoteIds.add(id);
 
+  const local = segnalazioni.find(x => x.id === id);
+  if (local) local.note = textarea.value;
+
   clearTimeout(noteTimers[id]);
   noteTimers[id] = setTimeout(async () => {
     try {
       await updateDoc(doc(db, 'segnalazioni', id), { note:textarea.value });
     } catch(e) {
       console.error(e);
+      showToast('Errore salvataggio note');
     }
-  }, 500);
+  }, 900);
 };
 
 window.autoSaveDate = async function(id, input) {
