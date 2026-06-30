@@ -314,6 +314,21 @@
     background: rgba(255,255,255,0.05);
   }
 
+
+  .icon-action.standby-action {
+    color: var(--accent);
+    border-color: rgba(245,200,75,0.42);
+  }
+  .icon-action.standby-action:hover {
+    color: var(--accent);
+    border-color: rgba(245,200,75,0.70);
+    background: rgba(245,200,75,0.08);
+  }
+  .seg-row.anomalia-standby {
+    border-color: rgba(245,200,75,0.78) !important;
+    box-shadow: 0 0 0 1px rgba(245,200,75,0.10), 0 14px 40px rgba(0,0,0,0.24);
+  }
+
   .icon-action.reorder-action {
     font-family: var(--font-mono);
     font-size: 0.78rem;
@@ -972,6 +987,13 @@ window.saveEditSeg = async function() {
   closeEditModal(); showToast('Segnalazione aggiornata!');
 }
 
+window.toggleStandby = async function(id) {
+  const s = segnalazioni.find(x => x.id === id);
+  if (!s) return;
+  markSegnalazioneAperta(id);
+  await updateDoc(doc(db, 'segnalazioni', id), { standby: !s.standby });
+}
+
 // DELETE
 window.deleteSeg = async function(id) {
   const s = segnalazioni.find(x => x.id === id);
@@ -1119,7 +1141,7 @@ function showBusDetail(mat) {
         + dateListHtml
         + '</div>';
 
-      html += `<details id="anomalia-${s.id}" data-id="${s.id}" class="seg-row anomalia-main anomalia-chiusa" style="flex-direction:column;align-items:stretch;" ${isSegnalazioneAperta(s.id) ? 'open' : ''} ontoggle="trackAnomaliaOpen('${s.id}', this)">
+      html += `<details id="anomalia-${s.id}" data-id="${s.id}" class="seg-row anomalia-main anomalia-chiusa ${s.standby ? 'anomalia-standby' : ''}" style="flex-direction:column;align-items:stretch;" ${isSegnalazioneAperta(s.id) ? 'open' : ''} ontoggle="trackAnomaliaOpen('${s.id}', this)">
         <summary class="anomalia-main-summary">
           <span class="anomalia-title-wrap">
             <span class="anomalia-dot" aria-hidden="true"></span>
@@ -1139,6 +1161,7 @@ function showBusDetail(mat) {
           <div class="seg-actions">
             <button class="icon-action reorder-action" onclick="moveSeg('${s.id}', -1)" title="Sposta su" aria-label="Sposta su">↑</button>
             <button class="icon-action reorder-action" onclick="moveSeg('${s.id}', 1)" title="Sposta giù" aria-label="Sposta giù">↓</button>
+            <button class="icon-action standby-action" onclick="toggleStandby('${s.id}')" title="${s.standby ? 'Togli stand-by' : 'Metti in stand-by'}" aria-label="${s.standby ? 'Togli stand-by' : 'Metti in stand-by'}">${s.standby ? '↺' : '⏸'}</button>
             <button class="icon-action" onclick="editSeg('${s.id}')" title="Modifica" aria-label="Modifica">
               <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
             </button>
@@ -1299,12 +1322,7 @@ window.aggiungiDataManuale = async function(id) {
     editIdxField.value = '';
     showToast('Data modificata!');
   } else {
-    if (dates.includes(data)) {
-      showToast('Data già presente!');
-      input.value = '';
-      input.focus();
-      return;
-    }
+    // Consenti date duplicate: ogni inserimento rappresenta una segnalazione distinta
     dates = [...dates, data].sort();
     showToast('Data registrata!');
   }
