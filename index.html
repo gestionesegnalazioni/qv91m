@@ -3,83 +3,701 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Gestione Bus v5 stabile</title>
+<title>Gestione Bus v5.3</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg:#080b12; --panel:#101623; --card:#182030; --border:rgba(255,255,255,.12);
-    --text:#f4f7fb; --muted:#9aa4b2; --green:#34d399; --red:#ef4444;
-    --accent:#f5c84b; --blue:#93c5fd; --font-mono:'Space Mono',monospace; --font-sans:'DM Sans',sans-serif;
+    --bg:#080b12;
+    --panel:#101623;
+    --card:#182030;
+    --border:rgba(255,255,255,.12);
+    --text:#f4f7fb;
+    --muted:#9aa4b2;
+    --green:#34d399;
+    --red:#ef4444;
+    --accent:#f5c84b;
+    --blue:#93c5fd;
+    --font-mono:'Space Mono',monospace;
+    --font-sans:'DM Sans',sans-serif;
   }
-  *{box-sizing:border-box;margin:0;padding:0;max-width:100%}
-  body{background:var(--bg);color:var(--text);font-family:var(--font-sans);min-height:100vh;overflow-x:hidden}
-  header{position:sticky;top:0;z-index:10;background:rgba(8,11,18,.78);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.08);padding:16px;display:flex;justify-content:flex-end;align-items:center}
-  .header-date{font-family:var(--font-mono);font-size:.72rem;color:var(--muted);margin-right:12px;text-align:right}
-  .wrapper{width:100%;max-width:720px;margin:0 auto;padding:20px 16px 70px}
-  .stat-card,.bus-tile,.bus-detail,.modal,.add-bus-form,.seg-card{background:linear-gradient(145deg,rgba(255,255,255,.08),rgba(255,255,255,.035));border:1px solid var(--border);box-shadow:0 14px 40px rgba(0,0,0,.24);backdrop-filter:blur(16px)}
-  .stat-card{border-radius:20px;padding:18px 20px;margin-bottom:22px}
-  .stat-label{font-family:var(--font-mono);font-size:.72rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
-  .stat-value{font-family:var(--font-mono);font-size:2.3rem;color:var(--green);font-weight:700;line-height:1;margin-top:6px}
-  .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;align-items:center}
-  button{font-family:var(--font-mono);cursor:pointer;border:none}
-  .btn-primary{background:var(--green);color:#000;border-radius:999px;padding:11px 18px;font-weight:700;font-size:.82rem}
-  .btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:999px;padding:10px 14px;font-size:.76rem}
-  .btn-ghost:hover{color:var(--text);border-color:rgba(255,255,255,.28)}
-  .btn-yellow{background:transparent;color:var(--accent);border:1px solid rgba(245,200,75,.42);border-radius:999px;padding:10px 14px;font-size:.76rem}
-  .btn-red{background:transparent;color:#fecaca;border:1px solid rgba(239,68,68,.45);border-radius:999px;padding:8px 12px;font-size:.72rem}
-  .btn-blue{background:transparent;color:var(--blue);border:1px solid rgba(59,130,246,.55);border-radius:999px;padding:8px 12px;font-size:.72rem}
-  .add-bus-form{display:none;border-radius:18px;padding:14px;margin:-4px 0 18px;gap:8px;align-items:center;flex-wrap:wrap}
-  .add-bus-form.open{display:flex}
-  input,textarea{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:14px;color:var(--text);outline:none;font-family:var(--font-sans)}
-  input:focus,textarea:focus{border-color:rgba(245,200,75,.65)}
-  .bus-input{padding:11px 14px;font-family:var(--font-mono);width:190px;text-transform:uppercase}
-  .bus-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:12px}
-  .bus-grid-section{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;grid-column:1/-1;width:100%}
-  .bus-section-title{font-family:var(--font-mono);font-size:.72rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin:18px 0 10px;grid-column:1/-1}
-  .bus-tile{border-radius:20px;min-height:88px;padding:18px 14px;position:relative;overflow:hidden;text-align:left}
-  .bus-number{font-family:var(--font-mono);font-size:1.08rem;font-weight:700;margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .bus-count{font-size:.75rem;color:var(--muted)}
-  .bus-tile.has-active{border-color:rgba(239,68,68,.92)!important;box-shadow:0 14px 40px rgba(239,68,68,.10)!important}
-  .bus-tile.has-active .bus-number{color:var(--text)!important}
-  .bus-tile.fuori-servizio{border-color:rgba(59,130,246,.95)!important;box-shadow:0 14px 40px rgba(59,130,246,.10)!important}
-  .bus-tile.fuori-servizio .bus-number{color:var(--blue)!important}
-  .bus-fuori-label{font-family:var(--font-mono);font-size:.68rem;color:var(--blue);margin-top:6px}
-  .bus-detail{display:none;background:transparent!important;border:none!important;box-shadow:none!important;backdrop-filter:none!important;padding:0!important}
-  .bus-detail.open{display:block}
-  .detail-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px}
-  .detail-num{font-family:var(--font-mono);font-size:1.65rem;color:var(--green);font-weight:700;letter-spacing:1px;margin-bottom:14px}
-  .detail-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-  .seg-list{display:flex;flex-direction:column;gap:10px}
-  .seg-card{border-radius:18px;padding:12px}
-  .seg-card.pregressa{border-color:rgba(245,200,75,.38);opacity:.92}
-  details summary{list-style:none;cursor:pointer;display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
-  details summary::-webkit-details-marker{display:none}
-  .seg-title-wrap{display:flex;gap:10px;align-items:flex-start;min-width:0;flex:1}
-  .seg-dot{width:7px;height:7px;border-radius:50%;background:var(--red);flex:0 0 7px;margin-top:7px}
-  .seg-card.pregressa .seg-dot{background:var(--accent)}
-  .seg-desc{font-size:.95rem;line-height:1.35;word-break:break-word}
-  .chev{color:var(--muted);border:1px solid rgba(255,255,255,.14);border-radius:999px;width:28px;height:24px;display:inline-flex;align-items:center;justify-content:center;font-size:.78rem;flex:0 0 28px}
-  details[open] .chev .closed{display:none} details:not([open]) .chev .open{display:none}
-  .seg-body{margin-top:10px}
-  .date-info{font-family:var(--font-mono);font-size:.75rem;color:var(--muted);margin-bottom:8px}
-  .date-list{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
-  .date-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;padding:4px 7px;font-family:var(--font-mono);font-size:.72rem;color:var(--muted)}
-  .date-x{cursor:pointer;padding:0 2px}.date-x:hover{color:var(--red)}
-  .date-input{width:92px;padding:6px 8px;text-align:center;font-family:var(--font-mono);font-size:.78rem}
-  .seg-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px;padding-top:9px;border-top:1px solid rgba(255,255,255,.08);justify-content:center}
-  .small-action{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,.14);border-radius:999px;min-width:30px;height:26px;padding:0 9px;font-size:.68rem;display:inline-flex;align-items:center;justify-content:center}
-  .small-action.archive{color:var(--accent);border-color:rgba(245,200,75,.42)}
-  .small-action.restore{color:#86efac;border-color:rgba(34,197,94,.42)}
-  .empty{color:var(--muted);font-size:.88rem;padding:10px 0 16px;text-align:center}
-  .archive-box{margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,255,255,.08)}
-  .archive-title{font-family:var(--font-mono);font-size:.76rem;color:var(--accent);margin-bottom:10px}
-  .settings-wrap{position:relative}.settings-btn{width:38px;height:38px;border-radius:50%;background:transparent;border:1px solid var(--border);color:var(--muted);font-size:1rem}
-  .settings-menu{display:none;position:fixed;right:14px;top:64px;z-index:99999;background:#101623;border:1px solid rgba(245,200,75,.75);border-radius:12px;padding:8px;box-shadow:0 22px 60px rgba(0,0,0,.65);min-width:180px}
-  .settings-menu.open{display:block}.settings-menu button{display:block;width:100%;background:transparent;color:var(--text);padding:10px 12px;text-align:left;border-radius:8px;font-size:.75rem}.settings-menu button:hover{background:rgba(255,255,255,.06)}
-  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:200;align-items:center;justify-content:center;padding:16px}
-  .modal-overlay.open{display:flex}.modal{border-radius:18px;padding:22px;width:100%;max-width:480px}.modal h2{font-family:var(--font-mono);font-size:.95rem;color:var(--accent);margin-bottom:16px}.modal textarea{width:100%;min-height:110px;padding:12px;resize:vertical}.modal-footer{display:flex;justify-content:flex-end;gap:10px;margin-top:14px}
-  .loading{text-align:center;padding:40px;color:var(--muted);font-family:var(--font-mono);font-size:.82rem}.toast{position:fixed;bottom:22px;right:18px;background:var(--green);color:#000;border-radius:10px;padding:10px 14px;font-weight:700;display:none;z-index:300;font-size:.82rem}
-  @media(max-width:480px){.bus-grid-section{grid-template-columns:repeat(2,minmax(0,1fr))}.bus-tile{padding:16px 12px}.header-date{font-size:.65rem}.detail-actions{flex-direction:column}.bus-input{width:100%}}
+
+  * {
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    max-width:100%;
+  }
+
+  body {
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font-sans);
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+
+  header {
+    position:sticky;
+    top:0;
+    z-index:10;
+    background:rgba(8,11,18,.78);
+    backdrop-filter:blur(18px);
+    border-bottom:1px solid rgba(255,255,255,.08);
+    padding:16px;
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+  }
+
+  .header-date {
+    font-family:var(--font-mono);
+    font-size:.72rem;
+    color:var(--muted);
+    margin-right:12px;
+    text-align:right;
+  }
+
+  .wrapper {
+    width:100%;
+    max-width:720px;
+    margin:0 auto;
+    padding:20px 16px 70px;
+  }
+
+  .bus-tile,
+  .bus-detail,
+  .modal,
+  .add-bus-form,
+  .seg-card {
+    background:linear-gradient(145deg,rgba(255,255,255,.08),rgba(255,255,255,.035));
+    border:1px solid var(--border);
+    box-shadow:0 14px 40px rgba(0,0,0,.24);
+    backdrop-filter:blur(16px);
+  }
+
+  button {
+    font-family:var(--font-mono);
+    cursor:pointer;
+    border:none;
+  }
+
+  .home-bottom-actions {
+    margin-top:24px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+
+  .btn-primary {
+    background:var(--green);
+    color:#000;
+    border-radius:999px;
+    padding:11px 18px;
+    font-weight:700;
+    font-size:.82rem;
+    min-height:40px;
+  }
+
+  .btn-yellow-main {
+    background:var(--accent);
+    color:#000;
+    border-radius:999px;
+    padding:11px 18px;
+    font-weight:700;
+    font-size:.82rem;
+    min-height:40px;
+    width:100%;
+  }
+
+  .btn-ghost,
+  .btn-blue {
+    background:transparent;
+    border:1px solid var(--border);
+    border-radius:999px;
+    padding:0 14px;
+    height:38px;
+    min-width:136px;
+    font-size:.76rem;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    white-space:nowrap;
+  }
+
+  .btn-ghost {
+    color:var(--muted);
+  }
+
+  .btn-blue {
+    color:var(--blue);
+    border-color:rgba(59,130,246,.55);
+  }
+
+  .btn-blue.in-service {
+    color:#86efac;
+    border-color:rgba(34,197,94,.52);
+  }
+
+  .btn-ghost:hover {
+    color:var(--text);
+    border-color:rgba(255,255,255,.28);
+  }
+
+  .add-bus-form {
+    display:none;
+    border-radius:18px;
+    padding:14px;
+    margin-top:10px;
+    gap:8px;
+    align-items:center;
+    flex-wrap:wrap;
+  }
+
+  .add-bus-form.open {
+    display:flex;
+  }
+
+  input,
+  textarea {
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.18);
+    border-radius:14px;
+    color:var(--text);
+    outline:none;
+    font-family:var(--font-sans);
+  }
+
+  input:focus,
+  textarea:focus {
+    border-color:rgba(245,200,75,.65);
+  }
+
+  .bus-input {
+    padding:11px 14px;
+    font-family:var(--font-mono);
+    width:190px;
+    text-transform:uppercase;
+  }
+
+  .bus-grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(132px,1fr));
+    gap:12px;
+  }
+
+  .bus-grid-section {
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px;
+    grid-column:1/-1;
+    width:100%;
+  }
+
+  .bus-section-title {
+    font-family:var(--font-mono);
+    font-size:.72rem;
+    color:var(--muted);
+    letter-spacing:1px;
+    text-transform:uppercase;
+    margin:18px 0 10px;
+    grid-column:1/-1;
+  }
+
+  .bus-section-title:first-child {
+    margin-top:0;
+  }
+
+  .bus-tile {
+    border-radius:20px;
+    min-height:88px;
+    padding:18px 14px;
+    position:relative;
+    overflow:hidden;
+    text-align:left;
+    border-color:rgba(255,255,255,.12)!important;
+  }
+
+  .bus-number {
+    font-family:var(--font-mono);
+    font-size:1.08rem;
+    font-weight:700;
+    margin-bottom:8px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    color:var(--text)!important;
+  }
+
+  .bus-count {
+    font-size:.75rem;
+    color:var(--muted);
+  }
+
+  .bus-count.active {
+    color:var(--red);
+    font-weight:700;
+  }
+
+  .bus-count.zero {
+    color:var(--muted);
+  }
+
+  .bus-tile.fuori-servizio {
+    border-color:rgba(255,255,255,.12)!important;
+  }
+
+  .bus-fuori-label {
+    font-family:var(--font-mono);
+    font-size:.68rem;
+    color:var(--blue);
+    margin-top:6px;
+  }
+
+  .bus-detail {
+    display:none;
+    background:transparent!important;
+    border:none!important;
+    box-shadow:none!important;
+    backdrop-filter:none!important;
+    padding:0!important;
+  }
+
+  .bus-detail.open {
+    display:block;
+  }
+
+  .detail-top {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    margin-bottom:16px;
+  }
+
+  .detail-num {
+    font-family:var(--font-mono);
+    font-size:1.65rem;
+    color:var(--green);
+    font-weight:700;
+    letter-spacing:1px;
+    margin-bottom:14px;
+  }
+
+  .seg-list {
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+
+  .seg-card {
+    border-radius:18px;
+    padding:12px;
+  }
+
+  .seg-card.pregressa {
+    border-color:rgba(245,200,75,.38);
+    opacity:.94;
+  }
+
+  details summary {
+    list-style:none;
+    cursor:pointer;
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:10px;
+  }
+
+  details summary::-webkit-details-marker {
+    display:none;
+  }
+
+  .seg-title-wrap {
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    min-width:0;
+    flex:1;
+  }
+
+  .seg-dot {
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:var(--muted);
+    flex:0 0 7px;
+    margin-top:7px;
+  }
+
+  .seg-desc {
+    font-size:.95rem;
+    line-height:1.35;
+    word-break:break-word;
+  }
+
+  .chev {
+    color:var(--muted);
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:999px;
+    width:28px;
+    height:24px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    font-size:.78rem;
+    flex:0 0 28px;
+  }
+
+  details[open] .chev .closed {
+    display:none;
+  }
+
+  details:not([open]) .chev .open {
+    display:none;
+  }
+
+  .seg-body {
+    margin-top:10px;
+  }
+
+  .date-info {
+    font-family:var(--font-mono);
+    font-size:.75rem;
+    color:var(--muted);
+    margin-bottom:8px;
+  }
+
+  .date-columns {
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:8px;
+    margin-bottom:10px;
+  }
+
+  .date-column {
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+    min-width:0;
+  }
+
+  .date-tag {
+    display:inline-flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:6px;
+    background:rgba(255,255,255,.05);
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:4px 7px;
+    font-family:var(--font-mono);
+    font-size:.72rem;
+    color:var(--muted);
+    min-width:0;
+  }
+
+  .date-x {
+    cursor:pointer;
+    padding:0 2px;
+    flex:0 0 auto;
+  }
+
+  .date-x:hover {
+    color:var(--red);
+  }
+
+  .date-add-row {
+    display:flex;
+    align-items:center;
+    gap:7px;
+    margin-top:6px;
+  }
+
+  .date-plus {
+    color:var(--green);
+    font-family:var(--font-mono);
+    font-size:1rem;
+    font-weight:700;
+    line-height:1;
+    pointer-events:none;
+    user-select:none;
+  }
+
+  .date-input {
+    width:92px;
+    padding:6px 8px;
+    text-align:center;
+    font-family:var(--font-mono);
+    font-size:.78rem;
+  }
+
+  .seg-actions {
+    display:flex;
+    gap:6px;
+    flex-wrap:nowrap;
+    margin-top:10px;
+    padding-top:9px;
+    border-top:1px solid rgba(255,255,255,.08);
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+  }
+
+  .small-action {
+    background:transparent;
+    color:var(--muted);
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:999px;
+    min-width:28px;
+    height:26px;
+    padding:0 8px;
+    font-size:.66rem;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    white-space:nowrap;
+    flex:0 0 auto;
+  }
+
+  .small-action.archive {
+    color:var(--accent);
+    border-color:rgba(245,200,75,.42);
+  }
+
+  .small-action.restore {
+    color:#86efac;
+    border-color:rgba(34,197,94,.42);
+  }
+
+  .small-action.icon {
+    color:var(--muted);
+    width:28px;
+    min-width:28px;
+    padding:0;
+    font-size:.78rem;
+  }
+
+  .small-action.notes {
+    color:var(--blue);
+    border-color:rgba(59,130,246,.38);
+  }
+
+  .notes-box {
+    display:none;
+    margin-top:10px;
+    padding-top:10px;
+    border-top:1px solid rgba(255,255,255,.08);
+  }
+
+  .notes-box.open {
+    display:block;
+  }
+
+  .notes-label {
+    font-family:var(--font-mono);
+    color:var(--muted);
+    font-size:.7rem;
+    margin-bottom:6px;
+    text-transform:uppercase;
+    letter-spacing:.5px;
+  }
+
+  .notes-textarea {
+    width:100%;
+    min-height:96px;
+    padding:10px;
+    resize:vertical;
+    font-size:.88rem;
+    line-height:1.35;
+  }
+
+  .empty {
+    color:var(--muted);
+    font-size:.88rem;
+    padding:10px 0 16px;
+    text-align:center;
+  }
+
+  .detail-main-actions {
+    margin-top:16px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+
+  .archive-box {
+    margin-top:18px;
+    padding-top:14px;
+    border-top:1px solid rgba(255,255,255,.08);
+  }
+
+  .archive-title {
+    font-family:var(--font-mono);
+    font-size:.76rem;
+    color:var(--accent);
+    margin-bottom:10px;
+  }
+
+  .settings-wrap {
+    position:relative;
+  }
+
+  .settings-btn {
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    background:transparent;
+    border:1px solid var(--border);
+    color:var(--muted);
+    font-size:1rem;
+  }
+
+  .settings-menu {
+    display:none;
+    position:fixed;
+    right:14px;
+    top:64px;
+    z-index:99999;
+    background:#101623;
+    border:1px solid rgba(245,200,75,.75);
+    border-radius:12px;
+    padding:8px;
+    box-shadow:0 22px 60px rgba(0,0,0,.65);
+    min-width:180px;
+  }
+
+  .settings-menu.open {
+    display:block;
+  }
+
+  .settings-menu button {
+    display:block;
+    width:100%;
+    background:transparent;
+    color:var(--text);
+    padding:10px 12px;
+    text-align:left;
+    border-radius:8px;
+    font-size:.75rem;
+  }
+
+  .settings-menu button:hover {
+    background:rgba(255,255,255,.06);
+  }
+
+  .modal-overlay {
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.72);
+    z-index:200;
+    align-items:center;
+    justify-content:center;
+    padding:16px;
+  }
+
+  .modal-overlay.open {
+    display:flex;
+  }
+
+  .modal {
+    border-radius:18px;
+    padding:22px;
+    width:100%;
+    max-width:480px;
+  }
+
+  .modal h2 {
+    font-family:var(--font-mono);
+    font-size:.95rem;
+    color:var(--accent);
+    margin-bottom:16px;
+  }
+
+  .modal textarea {
+    width:100%;
+    min-height:110px;
+    padding:12px;
+    resize:vertical;
+  }
+
+  .modal-footer {
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-top:14px;
+  }
+
+  .loading {
+    text-align:center;
+    padding:40px;
+    color:var(--muted);
+    font-family:var(--font-mono);
+    font-size:.82rem;
+  }
+
+  .toast {
+    position:fixed;
+    bottom:22px;
+    right:18px;
+    background:var(--green);
+    color:#000;
+    border-radius:10px;
+    padding:10px 14px;
+    font-weight:700;
+    display:none;
+    z-index:300;
+    font-size:.82rem;
+  }
+
+  @media(max-width:480px) {
+    .bus-grid-section {
+      grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
+    .bus-tile {
+      padding:16px 12px;
+    }
+
+    .header-date {
+      font-size:.65rem;
+    }
+
+    .detail-top {
+      gap:8px;
+    }
+
+    .btn-ghost,
+    .btn-blue {
+      min-width:132px;
+      height:38px;
+      padding:0 10px;
+      font-size:.72rem;
+    }
+
+    .bus-input {
+      width:100%;
+    }
+
+    .date-columns {
+      gap:6px;
+    }
+
+    .date-tag {
+      font-size:.66rem;
+      padding:4px 5px;
+    }
+
+    .small-action {
+      padding:0 6px;
+      font-size:.62rem;
+    }
+
+    .small-action.icon {
+      width:26px;
+      min-width:26px;
+    }
+  }
 </style>
 </head>
 <body>
@@ -94,59 +712,569 @@
     </div>
   </div>
 </header>
+
 <div class="wrapper">
-  <div class="stats-bar"><div class="stat-card"><div class="stat-label">Autobus Totali</div><div class="stat-value" id="statTotal">0</div></div></div>
   <div id="homeView">
-    <div class="toolbar"><button class="btn-primary" onclick="toggleAddForm()">+ Aggiungi autobus</button></div>
-    <div class="add-bus-form" id="addBusForm"><input id="inputMatricola" class="bus-input" placeholder="Es. A4148" maxlength="20"><button class="btn-primary" onclick="addBus()">Salva</button><button class="btn-ghost" onclick="toggleAddForm()">Annulla</button></div>
     <div class="bus-grid" id="busGrid"><div class="loading">Caricamento...</div></div>
+
+    <div class="home-bottom-actions">
+      <button class="btn-primary" onclick="toggleAddForm()">+ Aggiungi autobus</button>
+      <div class="add-bus-form" id="addBusForm">
+        <input id="inputMatricola" class="bus-input" placeholder="Es. A4148" maxlength="20">
+        <button class="btn-primary" onclick="addBus()">Salva</button>
+        <button class="btn-ghost" onclick="toggleAddForm()">Annulla</button>
+      </div>
+    </div>
   </div>
+
   <div class="bus-detail" id="detailView">
-    <div class="detail-top"><button class="btn-ghost" onclick="closeDetail()">← Indietro</button><div class="detail-actions"><button class="btn-blue" id="btnFuoriServizio" onclick="toggleFuoriServizio()">Fuori servizio</button></div></div>
+    <div class="detail-top">
+      <button class="btn-ghost" onclick="closeDetail()">← Indietro</button>
+      <button class="btn-blue" id="btnFuoriServizio" onclick="toggleFuoriServizio()">Fuori servizio</button>
+    </div>
     <div class="detail-num" id="detailNum"></div>
     <div id="detailContent"></div>
   </div>
 </div>
-<div class="modal-overlay" id="modalOverlay"><div class="modal"><h2 id="modalTitle">NUOVA SEGNALAZIONE</h2><textarea id="formDesc" placeholder="Descrivi il problema..."></textarea><div class="modal-footer"><button class="btn-ghost" onclick="closeModal()">Annulla</button><button class="btn-primary" onclick="saveSegnalazione()">Salva</button></div></div></div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h2 id="modalTitle">NUOVA SEGNALAZIONE</h2>
+    <textarea id="formDesc" placeholder="Descrivi il problema..."></textarea>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeModal()">Annulla</button>
+      <button class="btn-primary" onclick="saveSegnalazione()">Salva</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 import { getFirestore, collection, doc, onSnapshot, addDoc, updateDoc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
-const firebaseConfig={apiKey:"AIzaSyBdwNH43PZFgSfKZOEfJtBrF-ooC4NOnGc",authDomain:"gestionesegnalazioni.firebaseapp.com",projectId:"gestionesegnalazioni",storageBucket:"gestionesegnalazioni.firebasestorage.app",messagingSenderId:"930504240088",appId:"1:930504240088:web:60e43f95f82883b43b20ad",measurementId:"G-59G37GQX9J"};
-const app=initializeApp(firebaseConfig);const db=getFirestore(app);
-let buses=[];let segnalazioni=[];let selectedBus=null;let editingSegId=null;let currentBusForModal=null;let archiveVisible=false;
-document.getElementById('headerDate').textContent=new Date().toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-function byMat(a,b){return String(a.matricola||'').localeCompare(String(b.matricola||''),'it',{numeric:true});}
-function bySeg(a,b){const ao=typeof a.order==='number'?a.order:999999;const bo=typeof b.order==='number'?b.order:999999;if(ao!==bo)return ao-bo;const ad=a.createdAt?new Date(a.createdAt).getTime():0;const bd=b.createdAt?new Date(b.createdAt).getTime():0;return bd-ad;}
-function esc(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',1600);} window.showToast=showToast;
-function renderAll(){document.getElementById('statTotal').textContent=buses.length;renderBusGrid();if(selectedBus)showBusDetail(selectedBus);} window.renderAll=renderAll;
-onSnapshot(collection(db,'buses'),snap=>{buses=snap.docs.map(d=>({id:d.id,...d.data()})).sort(byMat);localStorage.setItem('cache_buses',JSON.stringify(buses));renderAll();},err=>{console.error(err);document.getElementById('busGrid').innerHTML='<div class="empty">Errore caricamento autobus.</div>';});
-onSnapshot(collection(db,'segnalazioni'),snap=>{segnalazioni=snap.docs.map(d=>({id:d.id,...d.data()}));localStorage.setItem('cache_seg',JSON.stringify(segnalazioni));renderAll();},err=>{console.error(err);document.getElementById('busGrid').innerHTML='<div class="empty">Errore caricamento segnalazioni.</div>';});
-try{const cb=localStorage.getItem('cache_buses');const cs=localStorage.getItem('cache_seg');if(cb)buses=JSON.parse(cb);if(cs)segnalazioni=JSON.parse(cs);renderAll();}catch(e){}
-window.toggleSettings=function(){document.getElementById('settingsMenu').classList.toggle('open')};document.addEventListener('click',e=>{if(!e.target.closest('.settings-wrap'))document.getElementById('settingsMenu').classList.remove('open')});
-window.toggleAddForm=function(){const f=document.getElementById('addBusForm');f.classList.toggle('open');if(f.classList.contains('open'))document.getElementById('inputMatricola').focus();};
-window.addBus=async function(){const inp=document.getElementById('inputMatricola');const mat=inp.value.trim().toUpperCase();if(!mat)return;if(buses.some(b=>String(b.matricola).toLowerCase()===mat.toLowerCase())){showToast('Matricola già presente');return;}await addDoc(collection(db,'buses'),{matricola:mat,fuoriServizio:false});inp.value='';document.getElementById('addBusForm').classList.remove('open');showToast('Autobus aggiunto');};
-document.getElementById('inputMatricola').addEventListener('keydown',e=>{if(e.key==='Enter')addBus()});
-function renderBusGrid(){const grid=document.getElementById('busGrid');if(!grid)return;if(!buses.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1">Nessun autobus ancora.</div>';return;}const attivi=buses.filter(b=>!b.fuoriServizio);const fuori=buses.filter(b=>!!b.fuoriServizio);function tile(bus,isFuori){const active=segnalazioni.filter(s=>s.bus===bus.matricola&&!s.pregressa);const arch=segnalazioni.filter(s=>s.bus===bus.matricola&&!!s.pregressa);const cls=[isFuori?'fuori-servizio':'',active.length?'has-active':''].filter(Boolean).join(' ');const count=active.length?`${active.length} ${active.length>1?'attive':'attiva'}`:(arch.length?`${arch.length} ${arch.length>1?'pregresse':'pregressa'}`:'');return `<button class="bus-tile ${cls}" onclick="selectBus('${esc(bus.matricola)}')"><div class="bus-number">${esc(bus.matricola)}</div>${count?`<div class="bus-count">${count}</div>`:''}${isFuori?'<div class="bus-fuori-label">Fuori servizio</div>':''}</button>`;}let html='<div class="bus-grid-section">'+(attivi.length?attivi.map(b=>tile(b,false)).join(''):'<div class="empty" style="grid-column:1/-1">Nessun autobus in servizio.</div>')+'</div>';if(fuori.length)html+='<div class="bus-section-title">Fuori servizio</div><div class="bus-grid-section">'+fuori.map(b=>tile(b,true)).join('')+'</div>';grid.innerHTML=html;}
-window.selectBus=function(mat){selectedBus=mat;archiveVisible=false;document.getElementById('homeView').style.display='none';document.querySelector('.stats-bar').style.display='none';document.getElementById('detailView').classList.add('open');showBusDetail(mat);};
-window.closeDetail=function(){selectedBus=null;document.getElementById('detailView').classList.remove('open');document.getElementById('homeView').style.display='block';document.querySelector('.stats-bar').style.display='block';renderBusGrid();};
-function fmtDate(d){if(!d)return'';const p=String(d).split('-');return p.length===3?`${p[2]}/${p[1]}/${p[0].slice(-2)}`:esc(d);}function normalizeDate(raw){raw=String(raw||'').replace(/\D/g,'').slice(0,6);if(raw.length!==6)return null;const day=raw.slice(0,2),month=raw.slice(2,4),year='20'+raw.slice(4,6);const dt=new Date(+year,+month-1,+day);if(dt.getFullYear()!=+year||dt.getMonth()!=+month-1||dt.getDate()!=+day)return null;return `${year}-${month}-${day}`;}
-function renderSeg(s,pregressa=false){const dates=Array.isArray(s.date)?s.date:[];const dateTags=dates.map((d,i)=>`<span class="date-tag"><span>${fmtDate(d)}</span><span class="date-x" onclick="rimuoviData('${s.id}',${i})">✕</span></span>`).join('');return `<details class="seg-card ${pregressa?'pregressa':''}" id="seg-${s.id}"><summary><span class="seg-title-wrap"><span class="seg-dot"></span><span class="seg-desc">${esc(s.desc)}</span></span><span class="chev"><span class="closed">▾</span><span class="open">▴</span></span></summary><div class="seg-body"><div class="date-info">Segnalato <strong style="color:var(--red)">${dates.length}</strong> ${dates.length===1?'volta':'volte'}</div><div class="date-list">${dateTags||'<span class="date-tag">Nessuna data registrata</span>'}</div>${!pregressa?`<input class="date-input" id="date-${s.id}" placeholder="GGMMAA" maxlength="8" inputmode="numeric" oninput="autoSaveDate('${s.id}',this)">`:''}<div class="seg-actions">${!pregressa?`<button class="small-action" onclick="moveSeg('${s.id}',-1)">↑</button><button class="small-action" onclick="moveSeg('${s.id}',1)">↓</button><button class="small-action archive" onclick="archiviaSeg('${s.id}')">Archivio</button>`:`<button class="small-action restore" onclick="ripristinaSeg('${s.id}')">Ripristina</button>`}<button class="small-action" onclick="editSeg('${s.id}')">Modifica</button><button class="small-action" onclick="deleteSeg('${s.id}')">Elimina</button></div></div></details>`;}
-function showBusDetail(mat){const bus=buses.find(b=>b.matricola===mat);document.getElementById('detailNum').textContent=mat;const btn=document.getElementById('btnFuoriServizio');if(btn){btn.textContent=bus&&bus.fuoriServizio?'In servizio':'Fuori servizio';}const all=segnalazioni.filter(s=>s.bus===mat);const active=all.filter(s=>!s.pregressa).sort(bySeg);const arch=all.filter(s=>!!s.pregressa).sort(bySeg);let html='';html+=active.length?`<div class="seg-list">${active.map(s=>renderSeg(s,false)).join('')}</div>`:'<div class="empty">Nessuna anomalia attiva per questo autobus.</div>';html+=`<button class="btn-primary" style="margin-top:16px" onclick="openModal('${esc(mat)}')">+ Aggiungi segnalazione</button>`;html+=` <button class="btn-yellow" style="margin-top:16px;margin-left:8px" onclick="togglePregresse()">${archiveVisible?'Nascondi archivio':'Archivio'} (${arch.length})</button>`;if(archiveVisible){html+=`<div class="archive-box"><div class="archive-title">Anomalie pregresse</div>${arch.length?`<div class="seg-list">${arch.map(s=>renderSeg(s,true)).join('')}</div>`:'<div class="empty">Archivio vuoto.</div>'}</div>`;}document.getElementById('detailContent').innerHTML=html;}
-window.togglePregresse=function(){archiveVisible=!archiveVisible;if(selectedBus)showBusDetail(selectedBus);};
-window.openModal=function(mat){currentBusForModal=mat;editingSegId=null;document.getElementById('modalTitle').textContent='NUOVA SEGNALAZIONE';document.getElementById('formDesc').value='';document.getElementById('modalOverlay').classList.add('open');setTimeout(()=>document.getElementById('formDesc').focus(),80);};window.closeModal=function(){document.getElementById('modalOverlay').classList.remove('open');editingSegId=null;};
-window.saveSegnalazione=async function(){const desc=document.getElementById('formDesc').value.trim();if(!desc){alert('Inserisci una descrizione.');return;}if(editingSegId){await updateDoc(doc(db,'segnalazioni',editingSegId),{desc});showToast('Segnalazione aggiornata');}else{await addDoc(collection(db,'segnalazioni'),{bus:currentBusForModal,desc,stato:'aperta',pregressa:false,standby:false,createdAt:new Date().toISOString()});showToast('Segnalazione salvata');}closeModal();};
-window.editSeg=function(id){const s=segnalazioni.find(x=>x.id===id);if(!s)return;editingSegId=id;currentBusForModal=s.bus;document.getElementById('modalTitle').textContent='MODIFICA SEGNALAZIONE';document.getElementById('formDesc').value=s.desc||'';document.getElementById('modalOverlay').classList.add('open');};
-window.deleteSeg=async function(id){const ok=confirm("Eliminare questa anomalia?\n\nL'operazione eliminerà l'anomalia e tutte le date associate.");if(!ok)return;await deleteDoc(doc(db,'segnalazioni',id));showToast('Anomalia eliminata');};
-window.archiviaSeg=async function(id){const ok=confirm('Spostare questa anomalia nell\'archivio delle pregresse?');if(!ok)return;await updateDoc(doc(db,'segnalazioni',id),{pregressa:true,standby:false});archiveVisible=true;showToast('Spostata in archivio');};
-window.ripristinaSeg=async function(id){await updateDoc(doc(db,'segnalazioni',id),{pregressa:false,standby:false});showToast('Anomalia ripristinata');};
-window.autoSaveDate=async function(id,input){const raw=input.value.replace(/\D/g,'').slice(0,6);input.value=raw.length<=2?raw:(raw.length<=4?raw.slice(0,2)+'/'+raw.slice(2):raw.slice(0,2)+'/'+raw.slice(2,4)+'/'+raw.slice(4));if(raw.length!==6)return;const data=normalizeDate(raw);if(!data){showToast('Data non valida');input.value='';return;}const s=segnalazioni.find(x=>x.id===id);if(!s)return;const dates=Array.isArray(s.date)?[...s.date]:[];dates.push(data);dates.sort();await updateDoc(doc(db,'segnalazioni',id),{date:dates});showToast('Data registrata');setTimeout(()=>{const el=document.getElementById('seg-'+id);if(el)el.open=true;},80);};
-window.rimuoviData=async function(id,idx){const s=segnalazioni.find(x=>x.id===id);if(!s||!Array.isArray(s.date))return;if(!confirm('Eliminare questa data?'))return;const dates=s.date.filter((_,i)=>i!==idx);await updateDoc(doc(db,'segnalazioni',id),{date:dates});};
-window.moveSeg=async function(id,dir){if(!selectedBus)return;const list=segnalazioni.filter(s=>s.bus===selectedBus&&!s.pregressa).sort(bySeg);const idx=list.findIndex(s=>s.id===id);const target=idx+dir;if(idx<0||target<0||target>=list.length)return;const reordered=list.slice();const [item] = reordered.splice(idx,1);reordered.splice(target,0,item);await Promise.all(reordered.map((s,i)=>updateDoc(doc(db,'segnalazioni',s.id),{order:i})));};
-window.toggleFuoriServizio=async function(){if(!selectedBus)return;const bus=buses.find(b=>b.matricola===selectedBus);if(!bus)return;await updateDoc(doc(db,'buses',bus.id),{fuoriServizio:!bus.fuoriServizio});};
-window.esportaDati=function(){const data={buses:buses.map(b=>({matricola:b.matricola,fuoriServizio:!!b.fuoriServizio})),segnalazioni};const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='gestione-bus-dati.json';a.click();URL.revokeObjectURL(url);};
-window.importaDati=async function(event){const file=event.target.files&&event.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=async e=>{try{const data=JSON.parse(e.target.result);if(!confirm('Importare i dati? I dati attuali verranno sostituiti.'))return;const oldB=await getDocs(collection(db,'buses'));for(const d of oldB.docs)await deleteDoc(doc(db,'buses',d.id));const oldS=await getDocs(collection(db,'segnalazioni'));for(const d of oldS.docs)await deleteDoc(doc(db,'segnalazioni',d.id));for(const item of data.buses||[]){const mat=typeof item==='string'?item:item.matricola;if(mat)await addDoc(collection(db,'buses'),{matricola:mat,fuoriServizio:!!item.fuoriServizio});}for(const seg of data.segnalazioni||[]){const {id,...rest}=seg;await addDoc(collection(db,'segnalazioni'),rest);}showToast('Dati importati');}catch(err){alert('File non valido');}};reader.readAsText(file);};
+
+const firebaseConfig = {
+  apiKey:"AIzaSyBdwNH43PZFgSfKZOEfJtBrF-ooC4NOnGc",
+  authDomain:"gestionesegnalazioni.firebaseapp.com",
+  projectId:"gestionesegnalazioni",
+  storageBucket:"gestionesegnalazioni.firebasestorage.app",
+  messagingSenderId:"930504240088",
+  appId:"1:930504240088:web:60e43f95f82883b43b20ad",
+  measurementId:"G-59G37GQX9J"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let buses = [];
+let segnalazioni = [];
+let selectedBus = null;
+let editingSegId = null;
+let currentBusForModal = null;
+let archiveVisible = false;
+
+document.getElementById('headerDate').textContent =
+  new Date().toLocaleDateString('it-IT', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+
+function byMat(a, b) {
+  return String(a.matricola || '').localeCompare(String(b.matricola || ''), 'it', { numeric:true });
+}
+
+function bySeg(a, b) {
+  const ao = typeof a.order === 'number' ? a.order : 999999;
+  const bo = typeof b.order === 'number' ? b.order : 999999;
+  if (ao !== bo) return ao - bo;
+  const ad = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+  const bd = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+  return bd - ad;
+}
+
+function esc(v) {
+  return String(v ?? '').replace(/[&<>'"]/g, c => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;'
+  }[c]));
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 1600);
+}
+window.showToast = showToast;
+
+function renderAll() {
+  renderBusGrid();
+  if (selectedBus) showBusDetail(selectedBus);
+}
+window.renderAll = renderAll;
+
+onSnapshot(collection(db, 'buses'), snap => {
+  buses = snap.docs.map(d => ({ id:d.id, ...d.data() })).sort(byMat);
+  localStorage.setItem('cache_buses', JSON.stringify(buses));
+  renderAll();
+}, err => {
+  console.error(err);
+  document.getElementById('busGrid').innerHTML = '<div class="empty">Errore caricamento autobus.</div>';
+});
+
+onSnapshot(collection(db, 'segnalazioni'), snap => {
+  segnalazioni = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+  localStorage.setItem('cache_seg', JSON.stringify(segnalazioni));
+  renderAll();
+}, err => {
+  console.error(err);
+  document.getElementById('busGrid').innerHTML = '<div class="empty">Errore caricamento segnalazioni.</div>';
+});
+
+try {
+  const cb = localStorage.getItem('cache_buses');
+  const cs = localStorage.getItem('cache_seg');
+  if (cb) buses = JSON.parse(cb);
+  if (cs) segnalazioni = JSON.parse(cs);
+  renderAll();
+} catch(e) {}
+
+window.toggleSettings = function() {
+  document.getElementById('settingsMenu').classList.toggle('open');
+};
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.settings-wrap')) {
+    document.getElementById('settingsMenu').classList.remove('open');
+  }
+});
+
+window.toggleAddForm = function() {
+  const f = document.getElementById('addBusForm');
+  f.classList.toggle('open');
+  if (f.classList.contains('open')) document.getElementById('inputMatricola').focus();
+};
+
+window.addBus = async function() {
+  const inp = document.getElementById('inputMatricola');
+  const mat = inp.value.trim().toUpperCase();
+  if (!mat) return;
+
+  if (buses.some(b => String(b.matricola).toLowerCase() === mat.toLowerCase())) {
+    showToast('Matricola già presente');
+    return;
+  }
+
+  await addDoc(collection(db, 'buses'), { matricola:mat, fuoriServizio:false });
+  inp.value = '';
+  document.getElementById('addBusForm').classList.remove('open');
+  showToast('Autobus aggiunto');
+};
+
+document.getElementById('inputMatricola').addEventListener('keydown', e => {
+  if (e.key === 'Enter') addBus();
+});
+
+function renderBusGrid() {
+  const grid = document.getElementById('busGrid');
+  if (!grid) return;
+
+  if (!buses.length) {
+    grid.innerHTML = '<div class="empty" style="grid-column:1/-1">Nessun autobus ancora.</div>';
+    return;
+  }
+
+  const attivi = buses.filter(b => !b.fuoriServizio);
+  const fuori = buses.filter(b => !!b.fuoriServizio);
+
+  function tile(bus, isFuori) {
+    const active = segnalazioni.filter(s => s.bus === bus.matricola && !s.pregressa);
+    const countHtml = active.length
+      ? `<div class="bus-count active">${active.length} ${active.length === 1 ? 'segnalazione' : 'segnalazioni'}</div>`
+      : `<div class="bus-count zero">0 segnalazioni</div>`;
+
+    return `
+      <button class="bus-tile ${isFuori ? 'fuori-servizio' : ''}" onclick="selectBus('${esc(bus.matricola)}')">
+        <div class="bus-number">${esc(bus.matricola)}</div>
+        ${countHtml}
+        ${isFuori ? '<div class="bus-fuori-label">Fuori servizio</div>' : ''}
+      </button>`;
+  }
+
+  let html = '';
+
+  html += '<div class="bus-section-title">In servizio</div>';
+  html += '<div class="bus-grid-section">';
+  html += attivi.length
+    ? attivi.map(b => tile(b, false)).join('')
+    : '<div class="empty" style="grid-column:1/-1">Nessun autobus in servizio.</div>';
+  html += '</div>';
+
+  if (fuori.length) {
+    html += '<div class="bus-section-title">Fuori servizio</div>';
+    html += '<div class="bus-grid-section">' + fuori.map(b => tile(b, true)).join('') + '</div>';
+  }
+
+  grid.innerHTML = html;
+}
+
+window.selectBus = function(mat) {
+  selectedBus = mat;
+  archiveVisible = false;
+  document.getElementById('homeView').style.display = 'none';
+  document.getElementById('detailView').classList.add('open');
+  showBusDetail(mat);
+};
+
+window.closeDetail = function() {
+  selectedBus = null;
+  document.getElementById('detailView').classList.remove('open');
+  document.getElementById('homeView').style.display = 'block';
+  renderBusGrid();
+};
+
+function fmtDate(d) {
+  if (!d) return '';
+  const p = String(d).split('-');
+  return p.length === 3 ? `${p[2]}/${p[1]}/${p[0].slice(-2)}` : esc(d);
+}
+
+function normalizeDate(raw) {
+  raw = String(raw || '').replace(/\D/g, '').slice(0, 6);
+  if (raw.length !== 6) return null;
+
+  const day = raw.slice(0, 2);
+  const month = raw.slice(2, 4);
+  const year = '20' + raw.slice(4, 6);
+  const dt = new Date(+year, +month - 1, +day);
+
+  if (dt.getFullYear() !== +year || dt.getMonth() !== +month - 1 || dt.getDate() !== +day) {
+    return null;
+  }
+
+  return `${year}-${month}-${day}`;
+}
+
+function renderDateColumns(dates, segId) {
+  const sorted = [...dates].sort();
+  const perColumn = 4;
+  const columns = [[], [], []];
+
+  sorted.forEach((d, i) => {
+    const col = Math.min(2, Math.floor(i / perColumn));
+    columns[col].push({ date:d, originalIndex:dates.indexOf(d) });
+  });
+
+  return `
+    <div class="date-columns">
+      ${columns.map(col => `
+        <div class="date-column">
+          ${col.map(item => `
+            <span class="date-tag">
+              <span>${fmtDate(item.date)}</span>
+              <span class="date-x" onclick="rimuoviData('${segId}',${item.originalIndex})">✕</span>
+            </span>
+          `).join('')}
+        </div>
+      `).join('')}
+    </div>`;
+}
+
+function renderSeg(s, pregressa = false) {
+  const dates = Array.isArray(s.date) ? s.date : [];
+  const datesHtml = dates.length
+    ? renderDateColumns(dates, s.id)
+    : '<div class="date-columns"><div class="date-column"><span class="date-tag">Nessuna data registrata</span></div><div></div><div></div></div>';
+
+  return `
+    <details class="seg-card ${pregressa ? 'pregressa' : ''}" id="seg-${s.id}">
+      <summary>
+        <span class="seg-title-wrap">
+          <span class="seg-dot"></span>
+          <span class="seg-desc">${esc(s.desc)}</span>
+        </span>
+        <span class="chev"><span class="closed">▾</span><span class="open">▴</span></span>
+      </summary>
+
+      <div class="seg-body">
+        <div class="date-info">Segnalato <strong style="color:var(--red)">${dates.length}</strong> ${dates.length === 1 ? 'volta' : 'volte'}</div>
+        ${datesHtml}
+
+        ${!pregressa ? `
+          <div class="date-add-row">
+            <span class="date-plus">+</span>
+            <input class="date-input" id="date-${s.id}" placeholder="GGMMAA" maxlength="8" inputmode="numeric" oninput="autoSaveDate('${s.id}',this)">
+          </div>` : ''}
+
+        <div class="seg-actions">
+          ${!pregressa ? `
+            <button class="small-action" onclick="moveSeg('${s.id}',-1)">↑</button>
+            <button class="small-action" onclick="moveSeg('${s.id}',1)">↓</button>
+            <button class="small-action archive" onclick="archiviaSeg('${s.id}')">Archivio</button>
+          ` : `
+            <button class="small-action restore" onclick="ripristinaSeg('${s.id}')">Ripristina</button>
+          `}
+          <button class="small-action notes" onclick="toggleNote('${s.id}')">Vedi note</button>
+          <button class="small-action icon" onclick="editSeg('${s.id}')" title="Modifica">✎</button>
+          <button class="small-action icon" onclick="deleteSeg('${s.id}')" title="Elimina">🗑</button>
+        </div>
+
+        <div class="notes-box" id="notes-${s.id}">
+          <div class="notes-label">Note libere</div>
+          <textarea class="notes-textarea" placeholder="Scrivi qui le tue note..." oninput="autoSaveNote('${s.id}', this)">${esc(s.note || '')}</textarea>
+        </div>
+      </div>
+    </details>`;
+}
+
+function showBusDetail(mat) {
+  const bus = buses.find(b => b.matricola === mat);
+  document.getElementById('detailNum').textContent = mat;
+
+  const btn = document.getElementById('btnFuoriServizio');
+  if (btn) {
+    const isFuori = bus && bus.fuoriServizio;
+    btn.textContent = isFuori ? 'In servizio' : 'Fuori servizio';
+    btn.classList.toggle('in-service', !!isFuori);
+  }
+
+  const all = segnalazioni.filter(s => s.bus === mat);
+  const active = all.filter(s => !s.pregressa).sort(bySeg);
+  const arch = all.filter(s => !!s.pregressa).sort(bySeg);
+
+  let html = '';
+  html += active.length
+    ? `<div class="seg-list">${active.map(s => renderSeg(s, false)).join('')}</div>`
+    : '<div class="empty">Nessuna anomalia attiva per questo autobus.</div>';
+
+  html += `
+    <div class="detail-main-actions">
+      <button class="btn-primary" onclick="openModal('${esc(mat)}')">+ Aggiungi segnalazione</button>
+      <button class="btn-yellow-main" onclick="togglePregresse()">Vecchie segnalazioni (${arch.length})</button>
+    </div>`;
+
+  if (archiveVisible) {
+    html += `
+      <div class="archive-box">
+        <div class="archive-title">Vecchie segnalazioni</div>
+        ${arch.length ? `<div class="seg-list">${arch.map(s => renderSeg(s, true)).join('')}</div>` : '<div class="empty">Archivio vuoto.</div>'}
+      </div>`;
+  }
+
+  document.getElementById('detailContent').innerHTML = html;
+}
+
+window.togglePregresse = function() {
+  archiveVisible = !archiveVisible;
+  if (selectedBus) showBusDetail(selectedBus);
+};
+
+window.openModal = function(mat) {
+  currentBusForModal = mat;
+  editingSegId = null;
+  document.getElementById('modalTitle').textContent = 'NUOVA SEGNALAZIONE';
+  document.getElementById('formDesc').value = '';
+  document.getElementById('modalOverlay').classList.add('open');
+  setTimeout(() => document.getElementById('formDesc').focus(), 80);
+};
+
+window.closeModal = function() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  editingSegId = null;
+};
+
+window.saveSegnalazione = async function() {
+  const desc = document.getElementById('formDesc').value.trim();
+  if (!desc) {
+    alert('Inserisci una descrizione.');
+    return;
+  }
+
+  if (editingSegId) {
+    await updateDoc(doc(db, 'segnalazioni', editingSegId), { desc });
+    showToast('Segnalazione aggiornata');
+  } else {
+    await addDoc(collection(db, 'segnalazioni'), {
+      bus:currentBusForModal,
+      desc,
+      stato:'aperta',
+      pregressa:false,
+      standby:false,
+      note:'',
+      createdAt:new Date().toISOString()
+    });
+    showToast('Segnalazione salvata');
+  }
+
+  closeModal();
+};
+
+window.editSeg = function(id) {
+  const s = segnalazioni.find(x => x.id === id);
+  if (!s) return;
+
+  editingSegId = id;
+  currentBusForModal = s.bus;
+  document.getElementById('modalTitle').textContent = 'MODIFICA SEGNALAZIONE';
+  document.getElementById('formDesc').value = s.desc || '';
+  document.getElementById('modalOverlay').classList.add('open');
+};
+
+window.deleteSeg = async function(id) {
+  const ok = confirm("Eliminare questa anomalia?\n\nL'operazione eliminerà l'anomalia e tutte le date associate.");
+  if (!ok) return;
+
+  await deleteDoc(doc(db, 'segnalazioni', id));
+  showToast('Anomalia eliminata');
+};
+
+window.archiviaSeg = async function(id) {
+  const ok = confirm("Spostare questa anomalia nelle vecchie segnalazioni?");
+  if (!ok) return;
+
+  await updateDoc(doc(db, 'segnalazioni', id), { pregressa:true, standby:false });
+  archiveVisible = true;
+  showToast('Spostata in archivio');
+};
+
+window.ripristinaSeg = async function(id) {
+  await updateDoc(doc(db, 'segnalazioni', id), { pregressa:false, standby:false });
+  showToast('Anomalia ripristinata');
+};
+
+window.toggleNote = function(id) {
+  const box = document.getElementById('notes-' + id);
+  if (!box) return;
+  box.classList.toggle('open');
+  const txt = box.querySelector('textarea');
+  if (box.classList.contains('open') && txt) {
+    setTimeout(() => txt.focus(), 50);
+  }
+};
+
+let noteTimers = {};
+window.autoSaveNote = function(id, textarea) {
+  clearTimeout(noteTimers[id]);
+  noteTimers[id] = setTimeout(async () => {
+    try {
+      await updateDoc(doc(db, 'segnalazioni', id), { note:textarea.value });
+    } catch(e) {
+      console.error(e);
+    }
+  }, 500);
+};
+
+window.autoSaveDate = async function(id, input) {
+  const raw = input.value.replace(/\D/g, '').slice(0, 6);
+  input.value = raw.length <= 2
+    ? raw
+    : (raw.length <= 4 ? raw.slice(0,2) + '/' + raw.slice(2) : raw.slice(0,2) + '/' + raw.slice(2,4) + '/' + raw.slice(4));
+
+  if (raw.length !== 6) return;
+
+  const data = normalizeDate(raw);
+  if (!data) {
+    showToast('Data non valida');
+    input.value = '';
+    return;
+  }
+
+  const s = segnalazioni.find(x => x.id === id);
+  if (!s) return;
+
+  const dates = Array.isArray(s.date) ? [...s.date] : [];
+  dates.push(data);
+  dates.sort();
+
+  await updateDoc(doc(db, 'segnalazioni', id), { date:dates });
+  showToast('Data registrata');
+
+  setTimeout(() => {
+    const el = document.getElementById('seg-' + id);
+    if (el) el.open = true;
+  }, 80);
+};
+
+window.rimuoviData = async function(id, idx) {
+  const s = segnalazioni.find(x => x.id === id);
+  if (!s || !Array.isArray(s.date)) return;
+  if (!confirm('Eliminare questa data?')) return;
+
+  const dates = s.date.filter((_, i) => i !== idx);
+  await updateDoc(doc(db, 'segnalazioni', id), { date:dates });
+};
+
+window.moveSeg = async function(id, dir) {
+  if (!selectedBus) return;
+
+  const list = segnalazioni.filter(s => s.bus === selectedBus && !s.pregressa).sort(bySeg);
+  const idx = list.findIndex(s => s.id === id);
+  const target = idx + dir;
+
+  if (idx < 0 || target < 0 || target >= list.length) return;
+
+  const reordered = list.slice();
+  const item = reordered.splice(idx, 1)[0];
+  reordered.splice(target, 0, item);
+
+  await Promise.all(reordered.map((s, i) => updateDoc(doc(db, 'segnalazioni', s.id), { order:i })));
+};
+
+window.toggleFuoriServizio = async function() {
+  if (!selectedBus) return;
+
+  const bus = buses.find(b => b.matricola === selectedBus);
+  if (!bus) return;
+
+  await updateDoc(doc(db, 'buses', bus.id), { fuoriServizio:!bus.fuoriServizio });
+};
+
+window.esportaDati = function() {
+  const data = {
+    buses:buses.map(b => ({ matricola:b.matricola, fuoriServizio:!!b.fuoriServizio })),
+    segnalazioni
+  };
+
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type:'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'gestione-bus-dati.json';
+  a.click();
+  URL.revokeObjectURL(url);
+};
+
+window.importaDati = async function(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = async e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!confirm('Importare i dati? I dati attuali verranno sostituiti.')) return;
+
+      const oldB = await getDocs(collection(db, 'buses'));
+      for (const d of oldB.docs) await deleteDoc(doc(db, 'buses', d.id));
+
+      const oldS = await getDocs(collection(db, 'segnalazioni'));
+      for (const d of oldS.docs) await deleteDoc(doc(db, 'segnalazioni', d.id));
+
+      for (const item of data.buses || []) {
+        const mat = typeof item === 'string' ? item : item.matricola;
+        if (mat) await addDoc(collection(db, 'buses'), { matricola:mat, fuoriServizio:!!item.fuoriServizio });
+      }
+
+      for (const seg of data.segnalazioni || []) {
+        const { id, ...rest } = seg;
+        await addDoc(collection(db, 'segnalazioni'), rest);
+      }
+
+      showToast('Dati importati');
+    } catch(err) {
+      alert('File non valido');
+    }
+  };
+
+  reader.readAsText(file);
+};
 </script>
 </body>
 </html>
