@@ -109,6 +109,24 @@
     width:100%;
   }
 
+  .btn-service-main {
+    background:transparent;
+    color:var(--blue);
+    border:1px solid rgba(59,130,246,.55);
+    border-radius:999px;
+    padding:11px 18px;
+    font-weight:700;
+    font-size:.82rem;
+    min-height:40px;
+    width:100%;
+  }
+
+  .btn-service-main.in-service {
+    color:#000;
+    background:var(--green);
+    border-color:var(--green);
+  }
+
   .btn-ghost,
   .btn-blue {
     background:transparent;
@@ -273,7 +291,7 @@
 
   .detail-top {
     display:flex;
-    justify-content:space-between;
+    justify-content:flex-start;
     align-items:center;
     gap:12px;
     margin-bottom:16px;
@@ -740,7 +758,6 @@
   <div class="bus-detail" id="detailView">
     <div class="detail-top">
       <button class="btn-ghost" onclick="closeDetail()">← Indietro</button>
-      <button class="btn-blue" id="btnFuoriServizio" onclick="toggleFuoriServizio()">Fuori servizio</button>
     </div>
     <div class="detail-num" id="detailNum"></div>
     <div id="detailContent"></div>
@@ -1050,12 +1067,9 @@ function showBusDetail(mat) {
   const bus = buses.find(b => b.matricola === mat);
   document.getElementById('detailNum').textContent = mat;
 
-  const btn = document.getElementById('btnFuoriServizio');
-  if (btn) {
-    const isFuori = bus && bus.fuoriServizio;
-    btn.textContent = isFuori ? 'In servizio' : 'Fuori servizio';
-    btn.classList.toggle('in-service', !!isFuori);
-  }
+  const isFuori = !!(bus && bus.fuoriServizio);
+  const serviceButtonText = isFuori ? 'Metti in Servizio' : 'Metti in Fuori Servizio';
+  const serviceButtonClass = isFuori ? 'btn-service-main in-service' : 'btn-service-main';
 
   const all = segnalazioni.filter(s => s.bus === mat);
   const active = all.filter(s => !s.pregressa).sort(bySeg);
@@ -1070,6 +1084,7 @@ function showBusDetail(mat) {
     <div class="detail-main-actions">
       <button class="btn-primary" onclick="openModal('${esc(mat)}')">+ Aggiungi segnalazione</button>
       <button class="btn-yellow-main" onclick="togglePregresse()">Vecchie segnalazioni (${arch.length})</button>
+      <button class="${serviceButtonClass}" onclick="toggleFuoriServizio()">${serviceButtonText}</button>
     </div>`;
 
   if (archiveVisible) {
