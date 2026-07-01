@@ -243,7 +243,12 @@
   }
 
   .bus-tile.fuori-servizio {
-    border-color:rgba(255,255,255,.12)!important;
+    border-color:rgba(59,130,246,.95)!important;
+    box-shadow:0 14px 40px rgba(59,130,246,.10)!important;
+  }
+
+  .bus-tile.fuori-servizio .bus-number{
+    color:var(--blue)!important;
   }
 
   .bus-fuori-label {
@@ -911,7 +916,7 @@ function renderBusGrid() {
       <button class="bus-tile ${isFuori ? 'fuori-servizio' : ''}" onclick="selectBus('${esc(bus.matricola)}')">
         <div class="bus-number">${esc(bus.matricola)}</div>
         ${countHtml}
-        ${isFuori ? '<div class="bus-fuori-label">Fuori servizio</div>' : ''}
+        
       </button>`;
   }
 
