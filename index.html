@@ -61,7 +61,7 @@
     width:100%;
     max-width:720px;
     margin:0 auto;
-    padding:20px 16px 70px;
+    padding:20px 16px 260px;
   }
 
   .bus-tile,
@@ -219,6 +219,7 @@
     text-transform:uppercase;
     margin:18px 0 10px;
     grid-column:1/-1;
+    text-align:center;
   }
 
   .bus-section-title:first-child {
@@ -287,6 +288,7 @@
 
   .bus-detail.open {
     display:block;
+    padding-bottom:45vh!important;
   }
 
   .detail-top {
@@ -303,7 +305,12 @@
     color:var(--green);
     font-weight:700;
     letter-spacing:1px;
-    margin-bottom:14px;
+    min-height:64px;
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+    margin:6px 0 18px;
+    text-align:left;
   }
 
   .seg-list {
