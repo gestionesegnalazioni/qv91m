@@ -161,6 +161,29 @@
     border-color:rgba(255,255,255,.28);
   }
 
+  .btn-back-round {
+    width:40px;
+    height:40px;
+    min-width:40px;
+    border-radius:50%;
+    background:transparent;
+    color:var(--muted);
+    border:1px solid rgba(255,255,255,.18);
+    font-size:1.15rem;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:0;
+    line-height:1;
+  }
+
+  .btn-back-round:hover,
+  .btn-back-round:active {
+    background:rgba(255,255,255,.06);
+    border-color:rgba(255,255,255,.28);
+    color:var(--text);
+  }
+
   .add-bus-form {
     display:none;
     border-radius:18px;
@@ -785,7 +808,7 @@
 
   <div class="bus-detail" id="detailView">
     <div class="detail-top">
-      <button class="btn-ghost" onclick="closeDetail()">← Indietro</button>
+      <button class="btn-back-round" onclick="closeDetail()" title="Indietro" aria-label="Indietro">←</button>
     </div>
     <div class="detail-num" id="detailNum"></div>
     <div id="detailContent"></div>
@@ -866,6 +889,16 @@ function renderAll() {
   if (selectedBus) showBusDetail(selectedBus);
 }
 window.renderAll = renderAll;
+
+function forzaScrollInAlto() {
+  try {
+    window.scrollTo({ top:0, left:0, behavior:'auto' });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  } catch(e) {
+    window.scrollTo(0, 0);
+  }
+}
 
 onSnapshot(collection(db, 'buses'), snap => {
   buses = snap.docs.map(d => ({ id:d.id, ...d.data() })).sort(byMat);
@@ -988,6 +1021,9 @@ window.selectBus = function(mat) {
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('detailView').classList.add('open');
   showBusDetail(mat);
+  forzaScrollInAlto();
+  requestAnimationFrame(forzaScrollInAlto);
+  setTimeout(forzaScrollInAlto, 80);
 };
 
 window.closeDetail = function() {
@@ -995,6 +1031,8 @@ window.closeDetail = function() {
   document.getElementById('detailView').classList.remove('open');
   document.getElementById('homeView').style.display = 'block';
   renderBusGrid();
+  forzaScrollInAlto();
+  requestAnimationFrame(forzaScrollInAlto);
 };
 
 function fmtDate(d) {
