@@ -127,6 +127,56 @@
     border-color:var(--green);
   }
 
+  .btn-share-main {
+    background:rgba(255,255,255,.10);
+    color:var(--text);
+    border:1px solid rgba(255,255,255,.24);
+    border-radius:999px;
+    padding:11px 18px;
+    font-weight:700;
+    font-size:.82rem;
+    min-height:40px;
+    width:100%;
+  }
+
+  .share-list {
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin:10px 0 14px;
+    max-height:52vh;
+    overflow:auto;
+    padding-right:2px;
+  }
+
+  .share-item {
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:10px;
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:12px;
+    background:rgba(255,255,255,.04);
+    color:var(--text);
+    font-size:.88rem;
+    line-height:1.35;
+  }
+
+  .share-item input {
+    width:18px;
+    height:18px;
+    flex:0 0 18px;
+    margin-top:2px;
+  }
+
+  .share-actions-row {
+    display:flex;
+    gap:8px;
+    justify-content:flex-end;
+    flex-wrap:wrap;
+    margin-bottom:8px;
+  }
+
   .btn-ghost,
   .btn-blue {
     background:transparent;
@@ -826,6 +876,22 @@
   </div>
 </div>
 
+
+<div class="modal-overlay" id="shareModalOverlay">
+  <div class="modal">
+    <h2>CONDIVIDI ANOMALIE</h2>
+    <div class="share-actions-row">
+      <button class="btn-ghost" onclick="selezionaTutteAnomalie()">Seleziona tutte</button>
+      <button class="btn-ghost" onclick="deselezionaTutteAnomalie()">Deseleziona</button>
+    </div>
+    <div id="shareList" class="share-list"></div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeShareModal()">Annulla</button>
+      <button class="btn-primary" onclick="condividiAnomalieSelezionate()">Condividi</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script type="module">
@@ -1159,6 +1225,7 @@ function showBusDetail(mat) {
       <button class="btn-primary" onclick="openModal('${esc(mat)}')">+ Aggiungi segnalazione</button>
       <button class="btn-yellow-main" onclick="togglePregresse()">Vecchie segnalazioni (${arch.length})</button>
       <button class="${serviceButtonClass}" onclick="toggleFuoriServizio()">${serviceButtonText}</button>
+      <button class="btn-share-main" onclick="openShareModal()">📤 Condividi anomalie</button>
     </div>`;
 
   document.getElementById('detailContent').innerHTML = html;
@@ -1360,6 +1427,93 @@ window.toggleFuoriServizio = async function() {
 
   await updateDoc(doc(db, 'buses', bus.id), { fuoriServizio:!bus.fuoriServizio });
 };
+
+
+function testoCondivisioneAnomalie(bus, anomalie) {
+  const righe = anomalie
+    .map(a => '• ' + String(a.desc || '').trim())
+    .filter(Boolean);
+
+  return 'Autobus ' + bus + '\n\n'
+    + 'Verifica e nel caso segnala:\n\n'
+    + righe.join('\n')
+    + '\n\nGrazie';
+}
+
+async function condividiTesto(text) {
+  try {
+    if (navigator.share) {
+      await navigator.share({ text });
+      return;
+    }
+  } catch(e) {
+    if (e && (e.name === 'AbortError' || e.name === 'NotAllowedError')) return;
+  }
+
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(text);
+      showToast('Testo copiato');
+      return;
+    }
+  } catch(e) {}
+
+  alert(text);
+}
+
+window.openShareModal = function() {
+  if (!selectedBus) return;
+
+  const active = segnalazioni
+    .filter(s => s.bus === selectedBus && !s.pregressa)
+    .sort(bySeg);
+
+  const list = document.getElementById('shareList');
+
+  if (!active.length) {
+    list.innerHTML = '<div class="empty">Nessuna anomalia attiva da condividere.</div>';
+  } else {
+    list.innerHTML = active.map(s => `
+      <label class="share-item">
+        <input type="checkbox" class="share-check" value="${esc(s.id)}">
+        <span>${esc(s.desc)}</span>
+      </label>
+    `).join('');
+  }
+
+  document.getElementById('shareModalOverlay').classList.add('open');
+};
+
+window.closeShareModal = function() {
+  document.getElementById('shareModalOverlay').classList.remove('open');
+};
+
+window.selezionaTutteAnomalie = function() {
+  document.querySelectorAll('.share-check').forEach(c => c.checked = true);
+};
+
+window.deselezionaTutteAnomalie = function() {
+  document.querySelectorAll('.share-check').forEach(c => c.checked = false);
+};
+
+window.condividiAnomalieSelezionate = async function() {
+  if (!selectedBus) return;
+
+  const ids = Array.from(document.querySelectorAll('.share-check:checked')).map(c => c.value);
+  if (!ids.length) {
+    showToast('Seleziona almeno una anomalia');
+    return;
+  }
+
+  const selected = segnalazioni
+    .filter(s => ids.includes(s.id))
+    .sort(bySeg);
+
+  const text = testoCondivisioneAnomalie(selectedBus, selected);
+  await condividiTesto(text);
+  closeShareModal();
+};
+
 
 window.esportaDati = function() {
   const data = {
