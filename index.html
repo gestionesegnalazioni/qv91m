@@ -858,7 +858,7 @@
 
   <div class="bus-detail" id="detailView">
     <div class="detail-top">
-      <button class="btn-back-round" onclick="closeDetail()" title="Indietro" aria-label="Indietro">←</button>
+      <button class="btn-ghost" onclick="closeDetail()">← Indietro</button>
     </div>
     <div class="detail-num" id="detailNum"></div>
     <div id="detailContent"></div>
@@ -1434,10 +1434,10 @@ function testoCondivisioneAnomalie(bus, anomalie) {
     .map(a => '• ' + String(a.desc || '').trim())
     .filter(Boolean);
 
-  return 'Autobus ' + bus + '\n\n'
+  return bus + '\n\n'
     + 'Verifica e nel caso segnala:\n\n'
     + righe.join('\n')
-    + '\n\nGrazie';
+    + '\n\nGrazie.';
 }
 
 async function condividiTesto(text) {
