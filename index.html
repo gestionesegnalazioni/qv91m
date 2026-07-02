@@ -501,6 +501,21 @@
     min-width:0;
   }
 
+  .date-main {
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    min-width:0;
+    white-space:nowrap;
+  }
+
+  .date-num {
+    color:rgba(255,255,255,.72);
+    font-weight:700;
+    min-width:18px;
+    text-align:right;
+  }
+
   .date-x {
     cursor:pointer;
     padding:0 2px;
@@ -1125,12 +1140,22 @@ function normalizeDate(raw) {
 
 function renderDateColumns(dates, segId) {
   const sorted = [...dates].sort();
-  const perColumn = 4;
+  const total = sorted.length;
+  const perColumn = Math.max(1, Math.ceil(total / 3));
   const columns = [[], [], []];
+  const usedOriginalIndexes = new Set();
 
   sorted.forEach((d, i) => {
     const col = Math.min(2, Math.floor(i / perColumn));
-    columns[col].push({ date:d, originalIndex:dates.indexOf(d) });
+    let originalIndex = dates.findIndex((value, idx) => value === d && !usedOriginalIndexes.has(idx));
+    if (originalIndex < 0) originalIndex = dates.indexOf(d);
+    usedOriginalIndexes.add(originalIndex);
+
+    columns[col].push({
+      date:d,
+      num:i + 1,
+      originalIndex
+    });
   });
 
   return `
@@ -1139,7 +1164,7 @@ function renderDateColumns(dates, segId) {
         <div class="date-column">
           ${col.map(item => `
             <span class="date-tag">
-              <span>${fmtDate(item.date)}</span>
+              <span class="date-main"><span class="date-num">${item.num}.</span><span>${fmtDate(item.date)}</span></span>
               <span class="date-x" onclick="rimuoviData('${segId}',${item.originalIndex})">✕</span>
             </span>
           `).join('')}
