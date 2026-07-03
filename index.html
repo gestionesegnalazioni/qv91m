@@ -487,39 +487,55 @@
   }
 
   .date-tag {
-    display:inline-flex;
+    display:grid;
+    grid-template-columns:minmax(0,1fr) 18px;
     align-items:center;
-    justify-content:space-between;
-    gap:6px;
+    gap:4px;
     background:rgba(255,255,255,.05);
     border:1px solid var(--border);
     border-radius:8px;
-    padding:4px 7px;
+    padding:4px 5px 4px 6px;
     font-family:var(--font-mono);
-    font-size:.72rem;
+    font-size:.68rem;
     color:var(--muted);
     min-width:0;
+    width:100%;
   }
 
   .date-main {
     display:inline-flex;
     align-items:center;
-    gap:4px;
+    gap:3px;
     min-width:0;
     white-space:nowrap;
+    overflow:hidden;
+  }
+
+  .date-main span:last-child {
+    overflow:hidden;
+    text-overflow:clip;
   }
 
   .date-num {
     color:rgba(255,255,255,.72);
     font-weight:700;
-    min-width:18px;
+    min-width:16px;
     text-align:right;
+    flex:0 0 16px;
   }
 
   .date-x {
     cursor:pointer;
-    padding:0 2px;
-    flex:0 0 auto;
+    width:18px;
+    height:18px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    justify-self:end;
+    padding:0;
+    flex:0 0 18px;
+    font-size:.72rem;
+    line-height:1;
   }
 
   .date-x:hover {
@@ -1140,8 +1156,7 @@ function normalizeDate(raw) {
 
 function renderDateColumns(dates, segId) {
   const sorted = [...dates].sort();
-  const total = sorted.length;
-  const perColumn = Math.max(1, Math.ceil(total / 3));
+  const perColumn = 4;
   const columns = [[], [], []];
   const usedOriginalIndexes = new Set();
 
