@@ -474,7 +474,7 @@
 
   .date-columns {
     display:grid;
-    grid-template-columns:repeat(3,minmax(0,1fr));
+    grid-template-columns:repeat(2,minmax(0,1fr));
     gap:8px;
     margin-bottom:10px;
   }
@@ -488,15 +488,15 @@
 
   .date-tag {
     display:grid;
-    grid-template-columns:minmax(0,1fr) 18px;
+    grid-template-columns:minmax(0,1fr) 20px;
     align-items:center;
-    gap:4px;
+    gap:6px;
     background:rgba(255,255,255,.05);
     border:1px solid var(--border);
     border-radius:8px;
-    padding:4px 5px 4px 6px;
+    padding:5px 6px 5px 7px;
     font-family:var(--font-mono);
-    font-size:.68rem;
+    font-size:.72rem;
     color:var(--muted);
     min-width:0;
     width:100%;
@@ -505,23 +505,18 @@
   .date-main {
     display:inline-flex;
     align-items:center;
-    gap:3px;
+    gap:4px;
     min-width:0;
     white-space:nowrap;
-    overflow:hidden;
-  }
-
-  .date-main span:last-child {
-    overflow:hidden;
-    text-overflow:clip;
+    overflow:visible;
   }
 
   .date-num {
     color:rgba(255,255,255,.72);
     font-weight:700;
-    min-width:16px;
+    min-width:20px;
     text-align:right;
-    flex:0 0 16px;
+    flex:0 0 20px;
   }
 
   .date-x {
@@ -840,12 +835,18 @@
     }
 
     .date-columns {
-      gap:6px;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:7px;
     }
 
     .date-tag {
-      font-size:.66rem;
-      padding:4px 5px;
+      font-size:.68rem;
+      padding:5px 5px 5px 6px;
+    }
+
+    .date-num {
+      min-width:18px;
+      flex-basis:18px;
     }
 
     .small-action {
@@ -1156,12 +1157,12 @@ function normalizeDate(raw) {
 
 function renderDateColumns(dates, segId) {
   const sorted = [...dates].sort();
-  const perColumn = 4;
-  const columns = [[], [], []];
+  const perColumn = Math.ceil(sorted.length / 2);
+  const columns = [[], []];
   const usedOriginalIndexes = new Set();
 
   sorted.forEach((d, i) => {
-    const col = Math.min(2, Math.floor(i / perColumn));
+    const col = i < perColumn ? 0 : 1;
     let originalIndex = dates.findIndex((value, idx) => value === d && !usedOriginalIndexes.has(idx));
     if (originalIndex < 0) originalIndex = dates.indexOf(d);
     usedOriginalIndexes.add(originalIndex);
