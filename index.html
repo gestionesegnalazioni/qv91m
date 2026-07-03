@@ -472,12 +472,13 @@
     margin-bottom:8px;
   }
 
-  .date-columns {
-    display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:8px;
-    margin-bottom:10px;
-  }
+  .date-columns{
+display:grid;
+grid-template-columns:repeat(2,minmax(0,1fr));
+gap:8px;
+margin-bottom:10px;
+width:100%;
+}
 
   .date-column {
     display:flex;
@@ -1156,37 +1157,35 @@ function normalizeDate(raw) {
 }
 
 function renderDateColumns(dates, segId) {
-  const sorted = [...dates].sort();
-  const perColumn = Math.ceil(sorted.length / 2);
-  const columns = [[], []];
-  const usedOriginalIndexes = new Set();
+  const sorted=[...dates].sort();
+  const leftCount=Math.ceil(sorted.length/2);
+  const columns=[[],[]];
+  const used=new Set();
 
-  sorted.forEach((d, i) => {
-    const col = i < perColumn ? 0 : 1;
-    let originalIndex = dates.findIndex((value, idx) => value === d && !usedOriginalIndexes.has(idx));
-    if (originalIndex < 0) originalIndex = dates.indexOf(d);
-    usedOriginalIndexes.add(originalIndex);
-
-    columns[col].push({
-      date:d,
-      num:i + 1,
-      originalIndex
-    });
+  sorted.forEach((d,i)=>{
+    const col=i<leftCount?0:1;
+    let originalIndex=dates.findIndex((v,idx)=>v===d && !used.has(idx));
+    if(originalIndex<0) originalIndex=dates.indexOf(d);
+    used.add(originalIndex);
+    columns[col].push({date:d,num:i+1,originalIndex});
   });
 
   return `
-    <div class="date-columns">
-      ${columns.map(col => `
-        <div class="date-column">
-          ${col.map(item => `
-            <span class="date-tag">
-              <span class="date-main"><span class="date-num">${item.num}.</span><span>${fmtDate(item.date)}</span></span>
-              <span class="date-x" onclick="rimuoviData('${segId}',${item.originalIndex})">✕</span>
+  <div class="date-columns">
+    ${columns.map(col=>`
+      <div class="date-column">
+        ${col.map(item=>`
+          <span class="date-tag">
+            <span class="date-main">
+              <span class="date-num">${item.num}.</span>
+              <span>${fmtDate(item.date)}</span>
             </span>
-          `).join('')}
-        </div>
-      `).join('')}
-    </div>`;
+            <span class="date-x" onclick="rimuoviData('${segId}',${item.originalIndex})">✕</span>
+          </span>
+        `).join('')}
+      </div>
+    `).join('')}
+  </div>`;
 }
 
 function renderSeg(s, pregressa = false) {
