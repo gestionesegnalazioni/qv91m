@@ -472,13 +472,12 @@
     margin-bottom:8px;
   }
 
-  .date-columns{
-display:grid;
-grid-template-columns:repeat(2,minmax(0,1fr));
-gap:8px;
-margin-bottom:10px;
-width:100%;
-}
+  .date-columns {
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:8px;
+    margin-bottom:10px;
+  }
 
   .date-column {
     display:flex;
@@ -1158,33 +1157,29 @@ function normalizeDate(raw) {
 
 function renderDateColumns(dates, segId) {
   const sorted=[...dates].sort();
-  const leftCount=Math.ceil(sorted.length/2);
-  const columns=[[],[]];
+  const total=sorted.length;
   const used=new Set();
 
-  sorted.forEach((d,i)=>{
-    const col=i<leftCount?0:1;
-    let originalIndex=dates.findIndex((v,idx)=>v===d && !used.has(idx));
-    if(originalIndex<0) originalIndex=dates.indexOf(d);
-    used.add(originalIndex);
-    columns[col].push({date:d,num:i+1,originalIndex});
-  });
+  const renderItem=(d,num)=>{
+    let idx=dates.findIndex((v,n)=>v===d&&!used.has(n));
+    if(idx<0) idx=dates.indexOf(d);
+    used.add(idx);
+    return `<span class="date-tag"><span class="date-main"><span class="date-num>${num}.</span><span>${fmtDate(d)}</span></span><span class="date-x" onclick="rimuoviData('${segId}',${idx})">✕</span></span>`;
+  };
 
-  return `
-  <div class="date-columns">
-    ${columns.map(col=>`
-      <div class="date-column">
-        ${col.map(item=>`
-          <span class="date-tag">
-            <span class="date-main">
-              <span class="date-num">${item.num}.</span>
-              <span>${fmtDate(item.date)}</span>
-            </span>
-            <span class="date-x" onclick="rimuoviData('${segId}',${item.originalIndex})">✕</span>
-          </span>
-        `).join('')}
-      </div>
-    `).join('')}
+  if(total<=4){
+    return `<div class="date-columns" style="grid-template-columns:1fr;"><div class="date-column">${sorted.map((d,i)=>renderItem(d,i+1)).join('')}</div></div>`;
+  }
+
+  const leftCount=Math.ceil(total/2);
+  const left=sorted.slice(0,leftCount);
+  const right=sorted.slice(leftCount);
+
+  used.clear();
+
+  return `<div class="date-columns">
+    <div class="date-column">${left.map((d,i)=>renderItem(d,i+1)).join('')}</div>
+    <div class="date-column">${right.map((d,i)=>renderItem(d,leftCount+i+1)).join('')}</div>
   </div>`;
 }
 
