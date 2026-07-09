@@ -1536,13 +1536,18 @@ window.toggleFuoriServizio = async function() {
 
 function testoCondivisioneAnomalie(bus, anomalie) {
   const righe = anomalie
-    .map(a => '• ' + String(a.desc || '').trim())
+    .map(a => {
+      const desc = String(a.desc || '').trim();
+      const count = Array.isArray(a.date) ? a.date.length : 0;
+      const volte = count === 1 ? 'segnalato 1 volta' : 'segnalato ' + count + ' volte';
+      return desc ? '• ' + desc + ' (' + volte + ')' : '';
+    })
     .filter(Boolean);
 
   return bus + '\n\n'
     + 'Verifica e nel caso segnala:\n\n'
-    + righe.join('\n')
-    + '\n\nGrazie.';
+    + righe.join('\n\n')
+    + '\n\nGrazie';
 }
 
 async function condividiTesto(text) {
