@@ -477,6 +477,11 @@
     grid-template-columns:repeat(2,minmax(0,1fr));
     gap:8px;
     margin-bottom:10px;
+    width:100%;
+  }
+
+  .date-columns-single {
+    grid-template-columns:minmax(0,1fr);
   }
 
   .date-column {
@@ -488,7 +493,7 @@
 
   .date-tag {
     display:grid;
-    grid-template-columns:minmax(0,1fr) 20px;
+    grid-template-columns:minmax(0,1fr) 22px;
     align-items:center;
     gap:6px;
     background:rgba(255,255,255,.05);
@@ -496,7 +501,7 @@
     border-radius:8px;
     padding:5px 6px 5px 7px;
     font-family:var(--font-mono);
-    font-size:.72rem;
+    font-size:.70rem;
     color:var(--muted);
     min-width:0;
     width:100%;
@@ -519,16 +524,20 @@
     flex:0 0 20px;
   }
 
+  .date-value {
+    white-space:nowrap;
+  }
+
   .date-x {
     cursor:pointer;
-    width:18px;
-    height:18px;
+    width:22px;
+    height:20px;
     display:inline-flex;
     align-items:center;
     justify-content:center;
     justify-self:end;
     padding:0;
-    flex:0 0 18px;
+    flex:0 0 22px;
     font-size:.72rem;
     line-height:1;
   }
@@ -859,6 +868,34 @@
       min-width:26px;
     }
   }
+
+  @media(max-width:480px) {
+    .date-columns {
+      grid-template-columns:repeat(2,minmax(0,1fr))!important;
+      gap:7px;
+    }
+
+    .date-columns-single {
+      grid-template-columns:minmax(0,1fr)!important;
+    }
+
+    .date-tag {
+      grid-template-columns:minmax(0,1fr) 20px!important;
+      font-size:.66rem;
+      padding:5px 5px 5px 6px;
+    }
+
+    .date-num {
+      min-width:18px;
+      flex-basis:18px;
+    }
+
+    .date-x {
+      width:20px;
+      flex-basis:20px;
+    }
+  }
+
 </style>
 </head>
 <body>
@@ -1156,32 +1193,65 @@ function normalizeDate(raw) {
 }
 
 function renderDateColumns(dates, segId) {
-  const sorted=[...dates].sort();
-  const total=sorted.length;
-  const used=new Set();
+  const sorted = [...dates].sort();
+  const total = sorted.length;
+  const usedIndexes = new Set();
 
-  const renderItem=(d,num)=>{
-    let idx=dates.findIndex((v,n)=>v===d&&!used.has(n));
-    if(idx<0) idx=dates.indexOf(d);
-    used.add(idx);
-    return `<span class="date-tag"><span class="date-main"><span class="date-num>${num}.</span><span>${fmtDate(d)}</span></span><span class="date-x" onclick="rimuoviData('${segId}',${idx})">✕</span></span>`;
-  };
-
-  if(total<=4){
-    return `<div class="date-columns" style="grid-template-columns:1fr;"><div class="date-column">${sorted.map((d,i)=>renderItem(d,i+1)).join('')}</div></div>`;
+  function originalIndexFor(dateValue) {
+    let idx = dates.findIndex((v, i) => v === dateValue && !usedIndexes.has(i));
+    if (idx < 0) idx = dates.indexOf(dateValue);
+    usedIndexes.add(idx);
+    return idx;
   }
 
-  const leftCount=Math.ceil(total/2);
-  const left=sorted.slice(0,leftCount);
-  const right=sorted.slice(leftCount);
+  function renderItem(item) {
+    return `
+      <span class="date-tag">
+        <span class="date-main">
+          <span class="date-num">${item.num}.</span>
+          <span class="date-value">${fmtDate(item.date)}</span>
+        </span>
+        <span class="date-x" onclick="rimuoviData('${segId}',${item.originalIndex})">✕</span>
+      </span>`;
+  }
 
-  used.clear();
+  if (total <= 4) {
+    const items = sorted.map((d, i) => ({
+      date: d,
+      num: i + 1,
+      originalIndex: originalIndexFor(d)
+    }));
 
-  return `<div class="date-columns">
-    <div class="date-column">${left.map((d,i)=>renderItem(d,i+1)).join('')}</div>
-    <div class="date-column">${right.map((d,i)=>renderItem(d,leftCount+i+1)).join('')}</div>
-  </div>`;
+    return `
+      <div class="date-columns date-columns-single">
+        <div class="date-column">
+          ${items.map(renderItem).join('')}
+        </div>
+      </div>`;
+  }
+
+  const leftCount = Math.ceil(total / 2);
+  const left = [];
+  const right = [];
+
+  sorted.forEach((d, i) => {
+    const item = {
+      date: d,
+      num: i + 1,
+      originalIndex: originalIndexFor(d)
+    };
+
+    if (i < leftCount) left.push(item);
+    else right.push(item);
+  });
+
+  return `
+    <div class="date-columns">
+      <div class="date-column">${left.map(renderItem).join('')}</div>
+      <div class="date-column">${right.map(renderItem).join('')}</div>
+    </div>`;
 }
+
 
 function renderSeg(s, pregressa = false) {
   const dates = Array.isArray(s.date) ? s.date : [];
