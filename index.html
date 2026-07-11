@@ -481,6 +481,15 @@
     padding-bottom:22vh!important;
   }
 
+  .bus-detail.swiping {
+    transition:none!important;
+    will-change:transform, opacity;
+  }
+
+  .bus-detail.swipe-back {
+    transition:transform .18s ease, opacity .18s ease;
+  }
+
   .detail-top {
     display:none;
   }
@@ -1798,6 +1807,91 @@ window.condividiAnomalieSelezionate = async function() {
   await condividiTesto(text);
   closeShareModal();
 };
+
+
+
+let swipeStartX = 0;
+let swipeStartY = 0;
+let swipeCurrentX = 0;
+let swipeTracking = false;
+
+function resetSwipeVisual() {
+  const detail = document.getElementById('detailView');
+  if (!detail) return;
+
+  detail.classList.remove('swiping');
+  detail.classList.add('swipe-back');
+  detail.style.transform = '';
+  detail.style.opacity = '';
+
+  setTimeout(() => {
+    detail.classList.remove('swipe-back');
+  }, 200);
+}
+
+document.addEventListener('touchstart', e => {
+  if (!selectedBus || e.touches.length !== 1) return;
+
+  const touch = e.touches[0];
+  if (touch.clientX > 42) return;
+
+  swipeStartX = touch.clientX;
+  swipeStartY = touch.clientY;
+  swipeCurrentX = touch.clientX;
+  swipeTracking = true;
+
+  const detail = document.getElementById('detailView');
+  if (detail) {
+    detail.classList.add('swiping');
+    detail.classList.remove('swipe-back');
+  }
+}, { passive:true });
+
+document.addEventListener('touchmove', e => {
+  if (!swipeTracking || !selectedBus || e.touches.length !== 1) return;
+
+  const touch = e.touches[0];
+  const deltaX = touch.clientX - swipeStartX;
+  const deltaY = touch.clientY - swipeStartY;
+
+  if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 18) {
+    swipeTracking = false;
+    resetSwipeVisual();
+    return;
+  }
+
+  if (deltaX <= 0) return;
+
+  swipeCurrentX = touch.clientX;
+
+  const detail = document.getElementById('detailView');
+  if (detail) {
+    const visualX = Math.min(deltaX, 150);
+    detail.style.transform = `translateX(${visualX * 0.35}px)`;
+    detail.style.opacity = String(Math.max(0.72, 1 - deltaX / 420));
+  }
+}, { passive:true });
+
+document.addEventListener('touchend', () => {
+  if (!swipeTracking || !selectedBus) {
+    swipeTracking = false;
+    return;
+  }
+
+  const distance = swipeCurrentX - swipeStartX;
+  swipeTracking = false;
+
+  if (distance >= 90) {
+    closeDetail();
+  } else {
+    resetSwipeVisual();
+  }
+}, { passive:true });
+
+document.addEventListener('touchcancel', () => {
+  swipeTracking = false;
+  resetSwipeVisual();
+}, { passive:true });
 
 
 window.esportaDati = function() {
