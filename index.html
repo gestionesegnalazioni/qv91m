@@ -1925,13 +1925,17 @@ function testoCondivisioneAnomalie(bus, anomalie) {
     .map(a => {
       const desc = String(a.desc || '').trim();
       const count = Array.isArray(a.date) ? a.date.length : 0;
-      const volte = count === 1 ? 'segnalato 1 volta' : 'segnalato ' + count + ' volte';
-      return desc ? '• ' + desc + ' (' + volte + ')' : '';
+      const volte = count === 1 ? 'Segnalato 1 volta' : 'Segnalato ' + count + ' volte';
+
+      if (!desc) return '';
+
+      return '• *' + desc + '*\n'
+        + '【 ' + volte + ' 】';
     })
     .filter(Boolean);
 
   return bus + '\n\n'
-    + 'Verifica e nel caso segnala:\n\n'
+    + 'Verifica e, nel caso, segnala:\n\n'
     + righe.join('\n\n')
     + '\n\nGrazie';
 }
