@@ -300,29 +300,59 @@
   }
 
   .bus-tile {
-    border-radius:20px;
-    min-height:88px;
-    padding:18px 14px;
+    border-radius:22px;
+    min-height:112px;
+    padding:16px 16px 14px;
     position:relative;
     overflow:hidden;
     text-align:left;
-    border-color:rgba(255,255,255,.12)!important;
+    border:1px solid rgba(255,255,255,.12)!important;
+    background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.025));
+    box-shadow:0 14px 34px rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.035);
+    transition:transform .16s ease, border-color .16s ease, background .16s ease;
+  }
+
+  .bus-tile:active {
+    transform:scale(.975);
+    background:linear-gradient(145deg,rgba(255,255,255,.095),rgba(255,255,255,.035));
+  }
+
+  .bus-card-top {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
   }
 
   .bus-number {
     font-family:var(--font-mono);
-    font-size:1.08rem;
+    font-size:1.18rem;
     font-weight:700;
-    margin-bottom:8px;
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
     color:var(--text)!important;
   }
 
+  .bus-icon {
+    width:25px;
+    height:25px;
+    flex:0 0 25px;
+    color:rgba(255,255,255,.62);
+  }
+
+  .bus-card-line {
+    height:1px;
+    background:rgba(255,255,255,.10);
+    margin:12px 0 10px;
+    width:100%;
+  }
+
   .bus-count {
-    font-size:.75rem;
+    font-family:var(--font-mono);
+    font-size:.72rem;
     color:var(--muted);
+    font-weight:500;
   }
 
   .bus-count.active {
@@ -332,15 +362,20 @@
 
   .bus-count.zero {
     color:var(--muted);
+    font-weight:500;
   }
 
   .bus-tile.fuori-servizio {
-    border-color:rgba(59,130,246,.95)!important;
-    box-shadow:0 14px 40px rgba(59,130,246,.10)!important;
+    border-color:rgba(59,130,246,.72)!important;
+    box-shadow:0 14px 34px rgba(59,130,246,.10), inset 0 1px 0 rgba(255,255,255,.035)!important;
   }
 
-  .bus-tile.fuori-servizio .bus-number{
+  .bus-tile.fuori-servizio .bus-number {
     color:var(--blue)!important;
+  }
+
+  .bus-tile.fuori-servizio .bus-icon {
+    color:var(--blue);
   }
 
   .bus-fuori-label {
@@ -438,6 +473,25 @@
     font-size:.95rem;
     line-height:1.35;
     word-break:break-word;
+  }
+
+  .seg-title-text {
+    display:flex;
+    flex-direction:column;
+    gap:3px;
+    min-width:0;
+  }
+
+  .seg-count-preview {
+    font-family:var(--font-mono);
+    font-size:.70rem;
+    color:var(--muted);
+    line-height:1.2;
+  }
+
+  .seg-count-preview strong {
+    color:var(--red);
+    font-weight:700;
   }
 
   .chev {
@@ -820,7 +874,18 @@
     }
 
     .bus-tile {
-      padding:16px 12px;
+      min-height:108px;
+      padding:15px 14px 13px;
+    }
+
+    .bus-number {
+      font-size:1.12rem;
+    }
+
+    .bus-icon {
+      width:23px;
+      height:23px;
+      flex-basis:23px;
     }
 
     .header-date {
@@ -1127,9 +1192,14 @@ function renderBusGrid() {
 
     return `
       <button class="bus-tile ${isFuori ? 'fuori-servizio' : ''}" onclick="selectBus('${esc(bus.matricola)}')">
-        <div class="bus-number">${esc(bus.matricola)}</div>
+        <div class="bus-card-top">
+          <div class="bus-number">${esc(bus.matricola)}</div>
+          <svg class="bus-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor" d="M7 2h10a4 4 0 0 1 4 4v9a3 3 0 0 1-2 2.83V20a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-2H8v2a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-2.17A3 3 0 0 1 3 15V6a4 4 0 0 1 4-4Zm0 2a2 2 0 0 0-2 2v5h14V6a2 2 0 0 0-2-2H7Zm-1 9a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Zm12 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3ZM8 6h8v3H8V6Z"/>
+          </svg>
+        </div>
+        <div class="bus-card-line"></div>
         ${countHtml}
-        
       </button>`;
   }
 
@@ -1264,13 +1334,15 @@ function renderSeg(s, pregressa = false) {
       <summary>
         <span class="seg-title-wrap">
           <span class="seg-dot"></span>
-          <span class="seg-desc">${esc(s.desc)}</span>
+          <span class="seg-title-text">
+            <span class="seg-desc">${esc(s.desc)}</span>
+            <span class="seg-count-preview">Segnalato <strong>${dates.length}</strong> ${dates.length === 1 ? 'volta' : 'volte'}</span>
+          </span>
         </span>
         <span class="chev"><span class="closed">▾</span><span class="open">▴</span></span>
       </summary>
 
       <div class="seg-body">
-        <div class="date-info">Segnalato <strong style="color:var(--red)">${dates.length}</strong> ${dates.length === 1 ? 'volta' : 'volte'}</div>
         ${datesHtml}
 
         ${!pregressa ? `
