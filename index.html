@@ -167,15 +167,16 @@
   }
 
   .btn-service-main {
-    background:#3b82f6;
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
     color:#ffffff;
-    border:1px solid #3b82f6;
+    border:1px solid #2563eb;
     border-radius:999px;
     padding:11px 18px;
     font-weight:700;
     font-size:.82rem;
     min-height:40px;
     width:100%;
+    box-shadow:0 10px 24px rgba(37,99,235,.20);
   }
 
   .btn-service-main.in-service {
@@ -185,16 +186,16 @@
   }
 
   .btn-share-main {
-    background:linear-gradient(135deg,#8b5cf6,#6d28d9);
+    background:linear-gradient(135deg,#c026d3,#86198f);
     color:#ffffff;
-    border:1px solid #7c3aed;
+    border:1px solid #a21caf;
     border-radius:999px;
     padding:11px 18px;
     font-weight:700;
     font-size:.82rem;
     min-height:40px;
     width:100%;
-    box-shadow:0 10px 24px rgba(124,58,237,.22);
+    box-shadow:0 10px 24px rgba(192,38,211,.22);
   }
 
   .btn-share-main:active {
@@ -365,17 +366,57 @@
 
   .bus-section-title {
     font-family:var(--font-mono);
-    font-size:.72rem;
+    font-size:.74rem;
     color:var(--muted);
-    letter-spacing:1px;
+    letter-spacing:1.6px;
     text-transform:uppercase;
-    margin:18px 0 10px;
+    margin:24px 0 12px;
     grid-column:1/-1;
     text-align:center;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+  }
+
+  .bus-section-title::before,
+  .bus-section-title::after {
+    content:'';
+    height:1px;
+    flex:1;
+    max-width:72px;
+    background:rgba(255,255,255,.12);
   }
 
   .bus-section-title:first-child {
     margin-top:0;
+  }
+
+  .bus-section-title.urbani-title {
+    color:#e5e7eb;
+  }
+
+  .bus-section-title.urbani-title::before,
+  .bus-section-title.urbani-title::after {
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.55));
+  }
+
+  .bus-section-title.extra-title {
+    color:#93c5fd;
+  }
+
+  .bus-section-title.extra-title::before,
+  .bus-section-title.extra-title::after {
+    background:linear-gradient(90deg,transparent,rgba(59,130,246,.78));
+  }
+
+  .bus-section-title.fuori-title {
+    color:#fca5a5;
+  }
+
+  .bus-section-title.fuori-title::before,
+  .bus-section-title.fuori-title::after {
+    background:linear-gradient(90deg,transparent,rgba(239,68,68,.78));
   }
 
   .bus-tile {
@@ -467,17 +508,44 @@
     font-weight:500;
   }
 
-  .bus-tile.fuori-servizio {
-    border-color:rgba(59,130,246,.72)!important;
-    box-shadow:0 14px 34px rgba(59,130,246,.10), inset 0 1px 0 rgba(255,255,255,.035)!important;
+  .bus-tile.urbano {
+    border-color:rgba(255,255,255,.23)!important;
+    box-shadow:
+      0 15px 38px rgba(0,0,0,.27),
+      inset 3px 0 0 rgba(255,255,255,.75),
+      inset 0 1px 0 rgba(255,255,255,.12)!important;
   }
 
-  .bus-tile.fuori-servizio .bus-number {
-    color:var(--blue)!important;
+  .bus-tile.urbano .bus-icon {
+    color:rgba(255,255,255,.88);
+  }
+
+  .bus-tile.extraurbano {
+    border-color:rgba(59,130,246,.48)!important;
+    background:
+      linear-gradient(145deg,rgba(59,130,246,.15),rgba(255,255,255,.035) 58%,rgba(37,99,235,.04));
+    box-shadow:
+      0 15px 38px rgba(30,64,175,.15),
+      inset 3px 0 0 rgba(59,130,246,.94),
+      inset 0 1px 0 rgba(255,255,255,.10)!important;
+  }
+
+  .bus-tile.extraurbano .bus-icon {
+    color:#93c5fd;
+  }
+
+  .bus-tile.fuori-servizio {
+    border-color:rgba(239,68,68,.52)!important;
+    background:
+      linear-gradient(145deg,rgba(239,68,68,.14),rgba(255,255,255,.03) 58%,rgba(127,29,29,.04));
+    box-shadow:
+      0 15px 38px rgba(185,28,28,.14),
+      inset 3px 0 0 rgba(239,68,68,.95),
+      inset 0 1px 0 rgba(255,255,255,.08)!important;
   }
 
   .bus-tile.fuori-servizio .bus-icon {
-    color:var(--blue);
+    color:#fca5a5;
   }
 
   .bus-fuori-label {
@@ -1321,17 +1389,39 @@ function renderBusGrid() {
     return;
   }
 
-  const attivi = buses.filter(b => !b.fuoriServizio);
+  const inServizio = buses.filter(b => !b.fuoriServizio);
+
+  const urbani = inServizio.filter(b => {
+    const iniziale = String(b.matricola || '').trim().charAt(0).toUpperCase();
+    return iniziale === 'A' || iniziale === 'F';
+  });
+
+  const extraurbani = inServizio.filter(b => {
+    const iniziale = String(b.matricola || '').trim().charAt(0).toUpperCase();
+    return iniziale === 'K' || iniziale === 'L';
+  });
+
+  const altri = inServizio.filter(b => {
+    const iniziale = String(b.matricola || '').trim().charAt(0).toUpperCase();
+    return !['A', 'F', 'K', 'L'].includes(iniziale);
+  });
+
   const fuori = buses.filter(b => !!b.fuoriServizio);
 
-  function tile(bus, isFuori) {
+  function tile(bus, tipo) {
     const active = segnalazioni.filter(s => s.bus === bus.matricola && !s.pregressa);
+
     const countHtml = active.length
       ? `<div class="bus-count active">${active.length} ${active.length === 1 ? 'segnalazione' : 'segnalazioni'}</div>`
       : `<div class="bus-count zero">0 segnalazioni</div>`;
 
+    const typeClass =
+      tipo === 'urbano' ? 'urbano' :
+      tipo === 'extraurbano' ? 'extraurbano' :
+      tipo === 'fuori' ? 'fuori-servizio' : '';
+
     return `
-      <button class="bus-tile ${isFuori ? 'fuori-servizio' : ''}" onclick="selectBus('${esc(bus.matricola)}')">
+      <button class="bus-tile ${typeClass}" onclick="selectBus('${esc(bus.matricola)}')">
         <div class="bus-card-top">
           <div class="bus-number">${esc(bus.matricola)}</div>
           <svg class="bus-icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -1343,25 +1433,60 @@ function renderBusGrid() {
       </button>`;
   }
 
+  function section(title, titleClass, items, type, emptyText) {
+    return `
+      <div class="bus-section-title ${titleClass}">${title}</div>
+      <div class="bus-grid-section">
+        ${items.length
+          ? items.map(b => tile(b, type)).join('')
+          : `<div class="empty" style="grid-column:1/-1">${emptyText}</div>`}
+      </div>`;
+  }
+
   let html = '';
 
-  html += '<div class="bus-section-title">In servizio</div>';
-  html += '<div class="bus-grid-section">';
-  html += attivi.length
-    ? attivi.map(b => tile(b, false)).join('')
-    : '<div class="empty" style="grid-column:1/-1">Nessun autobus in servizio.</div>';
-  html += '</div>';
+  html += section(
+    'Urbani',
+    'urbani-title',
+    urbani,
+    'urbano',
+    'Nessun autobus urbano in servizio.'
+  );
 
-  if (fuori.length) {
-    html += '<div class="bus-section-title">Fuori servizio</div>';
-    html += '<div class="bus-grid-section">' + fuori.map(b => tile(b, true)).join('') + '</div>';
+  html += section(
+    'Extraurbani',
+    'extra-title',
+    extraurbani,
+    'extraurbano',
+    'Nessun autobus extraurbano in servizio.'
+  );
+
+  if (altri.length) {
+    html += section(
+      'Altri autobus',
+      '',
+      altri,
+      '',
+      ''
+    );
   }
+
+  html += section(
+    'Fuori servizio',
+    'fuori-title',
+    fuori,
+    'fuori',
+    'Nessun autobus fuori servizio.'
+  );
 
   grid.innerHTML = html;
 }
 
+
 window.selectBus = function(mat) {
   hardResetSwipeVisual();
+  openSegIds.clear();
+  openNoteIds.clear();
   selectedBus = mat;
   archiveVisible = false;
   document.getElementById('homeView').style.display = 'none';
@@ -1382,6 +1507,8 @@ window.selectBus = function(mat) {
 
 window.closeDetail = function() {
   hardResetSwipeVisual();
+  openSegIds.clear();
+  openNoteIds.clear();
   selectedBus = null;
   document.getElementById('detailView').classList.remove('open');
   document.getElementById('homeView').style.display = 'block';
