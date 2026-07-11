@@ -490,6 +490,14 @@
     transition:transform .18s ease, opacity .18s ease;
   }
 
+  .bus-detail {
+    transform:translateX(0);
+    opacity:1;
+    width:100%;
+    margin-left:auto;
+    margin-right:auto;
+  }
+
   .detail-top {
     display:none;
   }
@@ -1331,25 +1339,38 @@ function renderBusGrid() {
 }
 
 window.selectBus = function(mat) {
+  hardResetSwipeVisual();
   selectedBus = mat;
   archiveVisible = false;
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('detailView').classList.add('open');
   document.getElementById('headerBackBtn').classList.add('visible');
   showBusDetail(mat);
+  hardResetSwipeVisual();
   forzaScrollInAlto();
-  requestAnimationFrame(forzaScrollInAlto);
-  setTimeout(forzaScrollInAlto, 80);
+  requestAnimationFrame(() => {
+    hardResetSwipeVisual();
+    forzaScrollInAlto();
+  });
+  setTimeout(() => {
+    hardResetSwipeVisual();
+    forzaScrollInAlto();
+  }, 80);
 };
 
 window.closeDetail = function() {
+  hardResetSwipeVisual();
   selectedBus = null;
   document.getElementById('detailView').classList.remove('open');
   document.getElementById('homeView').style.display = 'block';
   document.getElementById('headerBackBtn').classList.remove('visible');
   renderBusGrid();
+  hardResetSwipeVisual();
   forzaScrollInAlto();
-  requestAnimationFrame(forzaScrollInAlto);
+  requestAnimationFrame(() => {
+    hardResetSwipeVisual();
+    forzaScrollInAlto();
+  });
 };
 
 function fmtDate(d) {
@@ -1815,17 +1836,29 @@ let swipeStartY = 0;
 let swipeCurrentX = 0;
 let swipeTracking = false;
 
+function hardResetSwipeVisual() {
+  const detail = document.getElementById('detailView');
+  if (!detail) return;
+
+  detail.classList.remove('swiping', 'swipe-back');
+  detail.style.transform = 'translateX(0)';
+  detail.style.opacity = '1';
+  detail.style.width = '100%';
+  detail.style.marginLeft = 'auto';
+  detail.style.marginRight = 'auto';
+}
+
 function resetSwipeVisual() {
   const detail = document.getElementById('detailView');
   if (!detail) return;
 
   detail.classList.remove('swiping');
   detail.classList.add('swipe-back');
-  detail.style.transform = '';
-  detail.style.opacity = '';
+  detail.style.transform = 'translateX(0)';
+  detail.style.opacity = '1';
 
   setTimeout(() => {
-    detail.classList.remove('swipe-back');
+    hardResetSwipeVisual();
   }, 200);
 }
 
@@ -1882,6 +1915,7 @@ document.addEventListener('touchend', () => {
   swipeTracking = false;
 
   if (distance >= 90) {
+    hardResetSwipeVisual();
     closeDetail();
   } else {
     resetSwipeVisual();
@@ -1893,6 +1927,13 @@ document.addEventListener('touchcancel', () => {
   resetSwipeVisual();
 }, { passive:true });
 
+
+
+window.addEventListener('resize', hardResetSwipeVisual);
+window.addEventListener('orientationchange', hardResetSwipeVisual);
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) hardResetSwipeVisual();
+});
 
 window.esportaDati = function() {
   const data = {
