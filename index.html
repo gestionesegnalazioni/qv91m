@@ -1921,23 +1921,21 @@ window.toggleFuoriServizio = async function() {
 
 
 function testoCondivisioneAnomalie(bus, anomalie) {
-  const righe = anomalie
-    .map(a => {
-      const desc = String(a.desc || '').trim();
-      const count = Array.isArray(a.date) ? a.date.length : 0;
-      const volte = count === 1 ? 'Segnalato 1 volta' : 'Segnalato ' + count + ' volte';
+  const righe = anomalie.map(a => {
+    const desc = String(a.desc || '').trim();
+    if (!desc) return '';
+    const count = Array.isArray(a.date) ? a.date.length : 0;
+    const label = count === 1 ? 'segnalato 1 volta' : `segnalato ${count} volte`;
+    return `• *${desc}*\n_(${label})_`;
+  }).filter(Boolean);
 
-      if (!desc) return '';
+  return `${bus}
 
-      return '• *' + desc + '*\n'
-        + '【 ' + volte + ' 】';
-    })
-    .filter(Boolean);
+Verifica e nel caso segnala:
 
-  return bus + '\n\n'
-    + 'Verifica e, nel caso, segnala:\n\n'
-    + righe.join('\n\n')
-    + '\n\nGrazie';
+${righe.join('\n\n')}
+
+Grazie`;
 }
 
 async function condividiTesto(text) {
