@@ -7,6 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
+    --visual-viewport-top:0px;
     --bg:#080b12;
     --panel:#101623;
     --card:#182030;
@@ -1174,13 +1175,15 @@
 
   body.detail-mode header {
     position:fixed;
-    top:0;
+    top:var(--visual-viewport-top, 0px);
     left:0;
     right:0;
     width:100%;
     min-height:calc(58px + env(safe-area-inset-top));
     padding:calc(8px + env(safe-area-inset-top)) 12px 8px;
-    z-index:1000;
+    z-index:10000;
+    transform:translateZ(0);
+    will-change:top;
   }
 
   body.detail-mode .wrapper {
@@ -1534,6 +1537,7 @@ function renderBusGrid() {
 window.selectBus = function(mat) {
   homeScrollPosition = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
   document.body.classList.add('detail-mode');
+  aggiornaPosizioneHeaderVisuale();
   hardResetSwipeVisual();
   openSegIds.clear();
   openNoteIds.clear();
@@ -1563,6 +1567,7 @@ window.closeDetail = function() {
   openNoteIds.clear();
   selectedBus = null;
   document.body.classList.remove('detail-mode');
+  document.documentElement.style.setProperty('--visual-viewport-top', '0px');
   document.getElementById('detailView').classList.remove('open');
   document.getElementById('homeView').style.display = 'block';
   document.getElementById('headerBackBtn').classList.remove('visible');
@@ -2172,6 +2177,37 @@ document.addEventListener('touchcancel', () => {
 }, { passive:true });
 
 
+
+
+function aggiornaPosizioneHeaderVisuale() {
+  if (!window.visualViewport) {
+    document.documentElement.style.setProperty('--visual-viewport-top', '0px');
+    return;
+  }
+
+  const offsetTop = Math.max(0, window.visualViewport.offsetTop || 0);
+  document.documentElement.style.setProperty('--visual-viewport-top', offsetTop + 'px');
+}
+
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', aggiornaPosizioneHeaderVisuale);
+  window.visualViewport.addEventListener('scroll', aggiornaPosizioneHeaderVisuale);
+}
+
+window.addEventListener('focusin', e => {
+  if (e.target && (e.target.matches('input') || e.target.matches('textarea'))) {
+    requestAnimationFrame(aggiornaPosizioneHeaderVisuale);
+    setTimeout(aggiornaPosizioneHeaderVisuale, 80);
+    setTimeout(aggiornaPosizioneHeaderVisuale, 250);
+  }
+});
+
+window.addEventListener('focusout', () => {
+  requestAnimationFrame(aggiornaPosizioneHeaderVisuale);
+  setTimeout(aggiornaPosizioneHeaderVisuale, 120);
+});
+
+aggiornaPosizioneHeaderVisuale();
 
 window.addEventListener('resize', hardResetSwipeVisual);
 window.addEventListener('orientationchange', hardResetSwipeVisual);
