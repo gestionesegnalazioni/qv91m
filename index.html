@@ -792,6 +792,22 @@
     margin-top:6px;
   }
 
+  .date-add-wrap {
+    margin-top:6px;
+  }
+
+  .today-inline {
+    display:none;
+    font-family:var(--font-mono);
+    font-size:.68rem;
+    color:var(--muted);
+    margin:0 0 7px 29px;
+  }
+
+  .today-inline.visible {
+    display:block;
+  }
+
   .date-plus {
     color:var(--green);
     font-family:var(--font-mono);
@@ -1667,9 +1683,15 @@ function renderSeg(s, pregressa = false) {
         ${datesHtml}
 
         ${!pregressa ? `
-          <div class="date-add-row">
-            <span class="date-plus">+</span>
-            <input class="date-input" id="date-${s.id}" placeholder="GGMMAA" maxlength="8" inputmode="numeric" oninput="autoSaveDate('${s.id}',this)">
+          <div class="date-add-wrap">
+            <div class="today-inline" id="today-${s.id}"></div>
+            <div class="date-add-row">
+              <span class="date-plus">+</span>
+              <input class="date-input" id="date-${s.id}" placeholder="GGMMAA" maxlength="8" inputmode="numeric"
+                onfocus="showTodayInline('${s.id}')"
+                onblur="hideTodayInline('${s.id}')"
+                oninput="autoSaveDate('${s.id}',this)">
+            </div>
           </div>` : ''}
 
         <div class="seg-actions">
@@ -1859,6 +1881,29 @@ window.autoSaveNote = function(id, textarea) {
       showToast('Errore salvataggio note');
     }
   }, 900);
+};
+
+
+function dataOggiEstesa() {
+  return new Date().toLocaleDateString('it-IT', {
+    weekday:'long',
+    day:'numeric',
+    month:'long',
+    year:'numeric'
+  });
+}
+
+window.showTodayInline = function(id) {
+  const el = document.getElementById('today-' + id);
+  if (!el) return;
+  el.textContent = 'Oggi: ' + dataOggiEstesa();
+  el.classList.add('visible');
+};
+
+window.hideTodayInline = function(id) {
+  const el = document.getElementById('today-' + id);
+  if (!el) return;
+  setTimeout(() => el.classList.remove('visible'), 120);
 };
 
 window.autoSaveDate = async function(id, input) {
