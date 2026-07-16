@@ -1161,6 +1161,52 @@
     }
   }
 
+
+  /* Barra superiore: normale nella Home, fissa solo nel dettaglio autobus */
+  header {
+    position:sticky;
+    top:0;
+    left:auto;
+    right:auto;
+    min-height:66px;
+    padding:10px 14px;
+  }
+
+  body.detail-mode header {
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    width:100%;
+    min-height:calc(58px + env(safe-area-inset-top));
+    padding:calc(8px + env(safe-area-inset-top)) 12px 8px;
+    z-index:1000;
+  }
+
+  body.detail-mode .wrapper {
+    padding-top:calc(78px + env(safe-area-inset-top));
+  }
+
+  body:not(.detail-mode) .wrapper {
+    padding-top:20px;
+  }
+
+  @media(max-width:480px) {
+    header {
+      min-height:64px;
+      padding:9px 12px;
+    }
+
+    body.detail-mode header {
+      min-height:calc(56px + env(safe-area-inset-top));
+      padding:calc(7px + env(safe-area-inset-top)) 11px 7px;
+    }
+
+    body.detail-mode .wrapper {
+      padding-top:calc(72px + env(safe-area-inset-top));
+    }
+  }
+
 </style>
 </head>
 <body>
@@ -1487,6 +1533,7 @@ function renderBusGrid() {
 
 window.selectBus = function(mat) {
   homeScrollPosition = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
+  document.body.classList.add('detail-mode');
   hardResetSwipeVisual();
   openSegIds.clear();
   openNoteIds.clear();
@@ -1515,6 +1562,7 @@ window.closeDetail = function() {
   openSegIds.clear();
   openNoteIds.clear();
   selectedBus = null;
+  document.body.classList.remove('detail-mode');
   document.getElementById('detailView').classList.remove('open');
   document.getElementById('homeView').style.display = 'block';
   document.getElementById('headerBackBtn').classList.remove('visible');
