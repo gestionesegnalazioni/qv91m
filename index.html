@@ -37,8 +37,9 @@
   }
 
   header {
-    position:sticky;
+    position:fixed;
     top:0;
+    padding-top:env(safe-area-inset-top);
     z-index:100;
     min-height:70px;
     background:rgba(8,11,18,.68);
@@ -1261,6 +1262,7 @@ let currentBusForModal = null;
 let archiveVisible = false;
 let openSegIds = new Set();
 let openNoteIds = new Set();
+let homeScrollPosition = 0;
 
 document.getElementById('headerDate').textContent =
   new Date().toLocaleDateString('it-IT', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
@@ -1484,6 +1486,7 @@ function renderBusGrid() {
 
 
 window.selectBus = function(mat) {
+  homeScrollPosition = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
   hardResetSwipeVisual();
   openSegIds.clear();
   openNoteIds.clear();
@@ -1506,6 +1509,8 @@ window.selectBus = function(mat) {
 };
 
 window.closeDetail = function() {
+  const posizioneDaRipristinare = homeScrollPosition;
+
   hardResetSwipeVisual();
   openSegIds.clear();
   openNoteIds.clear();
@@ -1515,11 +1520,19 @@ window.closeDetail = function() {
   document.getElementById('headerBackBtn').classList.remove('visible');
   renderBusGrid();
   hardResetSwipeVisual();
-  forzaScrollInAlto();
+
+  const ripristinaHome = () => {
+    window.scrollTo({ top:posizioneDaRipristinare, left:0, behavior:'auto' });
+    document.documentElement.scrollTop = posizioneDaRipristinare;
+    document.body.scrollTop = posizioneDaRipristinare;
+  };
+
   requestAnimationFrame(() => {
-    hardResetSwipeVisual();
-    forzaScrollInAlto();
+    ripristinaHome();
+    requestAnimationFrame(ripristinaHome);
   });
+
+  setTimeout(ripristinaHome, 80);
 };
 
 function fmtDate(d) {
