@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Gestione Bus v5.3</title>
+<title>Gestione Bus v7.0</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -35,85 +35,6 @@
     font-family:var(--font-sans);
     min-height:100vh;
     overflow-x:hidden;
-  }
-
-  header {
-    position:fixed;
-    top:0;
-    padding-top:env(safe-area-inset-top);
-    z-index:100;
-    min-height:70px;
-    background:rgba(8,11,18,.68);
-    backdrop-filter:blur(22px) saturate(145%);
-    -webkit-backdrop-filter:blur(22px) saturate(145%);
-    border-bottom:1px solid rgba(255,255,255,.09);
-    box-shadow:0 10px 30px rgba(0,0,0,.18);
-    padding:12px 14px;
-    display:grid;
-    grid-template-columns:48px minmax(0,1fr) 48px;
-    align-items:center;
-    gap:8px;
-  }
-
-  .header-date {
-    font-family:var(--font-mono);
-    font-size:.72rem;
-    color:var(--muted);
-    text-align:center;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    margin:0;
-  }
-
-  .header-side {
-    display:flex;
-    align-items:center;
-    min-width:0;
-  }
-
-  .header-side-left {
-    justify-content:flex-start;
-  }
-
-  .header-side-right {
-    justify-content:flex-end;
-  }
-
-  .header-back-btn {
-    width:42px;
-    height:42px;
-    min-width:42px;
-    border-radius:50%;
-    display:none;
-    align-items:center;
-    justify-content:center;
-    padding:0;
-    color:#f4f7fb;
-    background:
-      linear-gradient(145deg,rgba(255,255,255,.13),rgba(255,255,255,.045));
-    border:1px solid rgba(255,255,255,.16);
-    box-shadow:
-      0 10px 26px rgba(0,0,0,.26),
-      inset 0 1px 0 rgba(255,255,255,.10);
-    backdrop-filter:blur(16px) saturate(145%);
-    -webkit-backdrop-filter:blur(16px) saturate(145%);
-    transition:transform .15s ease, background .15s ease;
-  }
-
-  .header-back-btn.visible {
-    display:inline-flex;
-  }
-
-  .header-back-btn svg {
-    width:21px;
-    height:21px;
-  }
-
-  .header-back-btn:active {
-    transform:scale(.92);
-    background:
-      linear-gradient(145deg,rgba(255,255,255,.18),rgba(255,255,255,.065));
   }
 
   .wrapper {
@@ -1122,12 +1043,6 @@
       min-height:66px;
       padding:10px 12px;
     }
-
-    .header-back-btn {
-      width:40px;
-      height:40px;
-      min-width:40px;
-    }
   }
 
 
@@ -1141,98 +1056,79 @@
     padding:10px 14px;
   }
 
-  body.detail-mode header {
-    position:fixed;
-    top:var(--visual-viewport-top, 0px);
-    left:0;
-    right:0;
-    width:100%;
-    min-height:calc(58px + env(safe-area-inset-top));
-    padding:calc(8px + env(safe-area-inset-top)) 12px 8px;
-    z-index:10000;
-    transform:translateZ(0);
-    will-change:top;
-  }
-
-  body.detail-mode .wrapper {
-    padding-top:calc(78px + env(safe-area-inset-top));
-  }
-
-  body:not(.detail-mode) .wrapper {
-    padding-top:20px;
-  }
-
   @media(max-width:480px) {
     header {
       min-height:64px;
       padding:9px 12px;
-    }
-
-    body.detail-mode header {
-      min-height:calc(56px + env(safe-area-inset-top));
-      padding:calc(7px + env(safe-area-inset-top)) 11px 7px;
-    }
-
-    body.detail-mode .wrapper {
-      padding-top:calc(72px + env(safe-area-inset-top));
     }
   }
 
 
 
   /* Barra sticky nel dettaglio autobus: più stabile con la tastiera iPhone */
-  body.detail-mode {
-    overflow:auto!important;
-    height:auto!important;
+
+
+  .detail-heading {
+    display:grid;
+    grid-template-columns:42px minmax(0,1fr) 42px;
+    align-items:center;
+    gap:10px;
+    margin:0 0 18px;
   }
 
-  body.detail-mode header {
-    position:sticky!important;
-    top:0!important;
-    left:auto!important;
-    right:auto!important;
-    width:100%!important;
-    transform:none!important;
-    will-change:auto!important;
-    z-index:1000;
+  .detail-back-btn {
+    width:42px;
+    height:42px;
+    min-width:42px;
+    border-radius:50%;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:0;
+    color:#f4f7fb;
+    background:linear-gradient(145deg,rgba(255,255,255,.13),rgba(255,255,255,.045));
+    border:1px solid rgba(255,255,255,.16);
+    box-shadow:0 10px 26px rgba(0,0,0,.26), inset 0 1px 0 rgba(255,255,255,.10);
+    backdrop-filter:blur(16px) saturate(145%);
+    -webkit-backdrop-filter:blur(16px) saturate(145%);
   }
 
-  body.detail-mode .wrapper {
-    height:auto!important;
-    overflow:visible!important;
-    padding-top:20px!important;
-    padding-bottom:260px!important;
+  .detail-back-btn svg {
+    width:21px;
+    height:21px;
   }
 
-  body.detail-mode #detailView {
-    height:auto!important;
-    overflow:visible!important;
-    padding-bottom:22vh!important;
-    transform:none!important;
-    opacity:1!important;
+  .detail-back-btn:active {
+    transform:scale(.92);
   }
 
-  body.detail-mode #homeView {
-    display:none!important;
+  .detail-heading .detail-num {
+    margin:0;
+    min-height:42px;
+  }
+
+  .detail-heading-spacer {
+    width:42px;
+    height:42px;
+  }
+
+  @media(max-width:480px) {
+    .detail-heading {
+      grid-template-columns:40px minmax(0,1fr) 40px;
+      gap:8px;
+    }
+
+    .detail-back-btn,
+    .detail-heading-spacer {
+      width:40px;
+      height:40px;
+      min-width:40px;
+    }
   }
 
 </style>
 </head>
 <body>
-<header>
-  <div class="header-side header-side-left">
-    <button class="header-back-btn" id="headerBackBtn" onclick="closeDetail()" aria-label="Indietro" title="Indietro">
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M15.5 5.5 9 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </button>
-  </div>
-
-  <div class="header-date" id="headerDate"></div>
-
-  <div class="header-side header-side-right" aria-hidden="true"></div>
-</header>
-
 <div class="wrapper">
   <div id="homeView">
     <div class="bus-grid" id="busGrid"><div class="loading">Caricamento...</div></div>
@@ -1248,8 +1144,15 @@
   </div>
 
   <div class="bus-detail" id="detailView">
-    <div class="detail-top" aria-hidden="true"></div>
-    <div class="detail-num" id="detailNum"></div>
+    <div class="detail-heading">
+      <button class="detail-back-btn" onclick="closeDetail()" aria-label="Indietro" title="Indietro">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M15.5 5.5 9 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="detail-num" id="detailNum"></div>
+      <div class="detail-heading-spacer" aria-hidden="true"></div>
+    </div>
     <div id="detailContent"></div>
   </div>
 </div>
@@ -1310,8 +1213,6 @@ let openSegIds = new Set();
 let openNoteIds = new Set();
 let homeScrollPosition = 0;
 
-document.getElementById('headerDate').textContent =
-  new Date().toLocaleDateString('it-IT', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
 
 function byMat(a, b) {
   return String(a.matricola || '').localeCompare(String(b.matricola || ''), 'it', { numeric:true });
@@ -1523,8 +1424,6 @@ function renderBusGrid() {
 
 window.selectBus = function(mat) {
   homeScrollPosition = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
-  document.body.classList.add('detail-mode');
-  aggiornaPosizioneHeaderVisuale();
   hardResetSwipeVisual();
   openSegIds.clear();
   openNoteIds.clear();
@@ -1532,7 +1431,6 @@ window.selectBus = function(mat) {
   archiveVisible = false;
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('detailView').classList.add('open');
-  document.getElementById('headerBackBtn').classList.add('visible');
   showBusDetail(mat);
   hardResetSwipeVisual();
   forzaScrollInAlto();
@@ -1555,11 +1453,8 @@ window.closeDetail = function() {
   openSegIds.clear();
   openNoteIds.clear();
   selectedBus = null;
-  document.body.classList.remove('detail-mode');
-  document.documentElement.style.setProperty('--visual-viewport-top', '0px');
   document.getElementById('detailView').classList.remove('open');
   document.getElementById('homeView').style.display = 'block';
-  document.getElementById('headerBackBtn').classList.remove('visible');
   renderBusGrid();
   hardResetSwipeVisual();
 
@@ -2197,9 +2092,6 @@ document.addEventListener('touchcancel', () => {
 
 
 
-function aggiornaPosizioneHeaderVisuale() {
-  document.documentElement.style.setProperty('--visual-viewport-top', '0px');
-}
 
 aggiornaPosizioneHeaderVisuale();
 
