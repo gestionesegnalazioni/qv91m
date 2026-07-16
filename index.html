@@ -196,7 +196,7 @@
   }
 
   .btn-ghost {
-    color:var(--muted);
+    color:#22c55e;
   }
 
   .btn-blue {
@@ -1791,7 +1791,7 @@ function dataOggiEstesa() {
 window.showTodayInline = function(id) {
   const el = document.getElementById('today-' + id);
   if (!el) return;
-  el.textContent = 'Oggi: ' + dataOggiEstesa();
+  const d=new Date(); el.textContent='Oggi: '+d.getDate()+'/'+(d.getMonth()+1)+'/'+String(d.getFullYear()).slice(-2);
   el.classList.add('visible');
 };
 
