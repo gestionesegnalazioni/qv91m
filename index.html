@@ -719,14 +719,40 @@
 
   .today-inline {
     display:none;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    width:100%;
     font-family:var(--font-mono);
-    font-size:.68rem;
-    color:var(--muted);
-    margin:0 0 7px 29px;
+    font-size:.72rem;
+    font-weight:700;
+    color:#22c55e;
+    margin:0 0 9px;
+    text-align:center;
+    white-space:nowrap;
   }
 
   .today-inline.visible {
-    display:block;
+    display:flex;
+  }
+
+  .today-arrow {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:28px;
+    min-width:28px;
+    height:22px;
+    font-size:1.15rem;
+    line-height:1;
+    color:#22c55e;
+    font-family:Arial, Helvetica, sans-serif;
+    font-weight:700;
+  }
+
+  .today-text {
+    display:inline-block;
+    color:#22c55e;
   }
 
   .date-plus {
@@ -1791,7 +1817,12 @@ function dataOggiEstesa() {
 window.showTodayInline = function(id) {
   const el = document.getElementById('today-' + id);
   if (!el) return;
-  const d=new Date(); el.textContent='Oggi: '+d.getDate()+'/'+(d.getMonth()+1)+'/'+String(d.getFullYear()).slice(-2);
+  const d = new Date();
+  const data = d.getDate() + '/' + (d.getMonth() + 1) + '/' + String(d.getFullYear()).slice(-2);
+  el.innerHTML =
+    '<span class="today-arrow" aria-hidden="true">→</span>' +
+    '<span class="today-text">OGGI È IL ' + data + '</span>' +
+    '<span class="today-arrow" aria-hidden="true">←</span>';
   el.classList.add('visible');
 };
 
