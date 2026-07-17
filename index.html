@@ -1842,7 +1842,10 @@ window.showTodayInline = function(id) {
   const el = document.getElementById('today-' + id);
   if (!el) return;
   const d = new Date();
-  const data = d.getDate() + '/' + (d.getMonth() + 1) + '/' + String(d.getFullYear()).slice(-2);
+  const gg = String(d.getDate()).padStart(2,'0');
+  const mm = String(d.getMonth() + 1).padStart(2,'0');
+  const aa = String(d.getFullYear()).slice(-2);
+  const data = `${gg}/${mm}/${aa}`;
   el.innerHTML =
     '<span class="today-arrow" aria-hidden="true">→</span>' +
     '<span class="today-text">OGGI È IL ' + data + '</span>' +
