@@ -38,6 +38,23 @@
     overflow-x:hidden;
   }
 
+  html.home-scroll-locked,
+  body.home-scroll-locked {
+    height:100%;
+    overflow:hidden;
+    overscroll-behavior:none;
+  }
+
+  body.home-scroll-locked {
+    position:fixed;
+    inset:0;
+    width:100%;
+  }
+
+  body.home-scroll-locked .wrapper {
+    padding-bottom:0;
+  }
+
   .wrapper {
     width:100%;
     max-width:720px;
@@ -1695,6 +1712,13 @@ function forzaScrollInAlto() {
   }
 }
 
+function setHomeScrollLocked(locked) {
+  document.documentElement.classList.toggle('home-scroll-locked', locked);
+  document.body.classList.toggle('home-scroll-locked', locked);
+}
+
+setHomeScrollLocked(true);
+
 onSnapshot(collection(db, 'buses'), snap => {
   buses = snap.docs.map(d => ({ id:d.id, ...d.data() })).sort(byMat);
   localStorage.setItem('cache_buses', JSON.stringify(buses));
@@ -1873,6 +1897,7 @@ function renderTopics() {
 }
 
 window.openTopics = function() {
+  setHomeScrollLocked(false);
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('topicsView').classList.add('open');
   renderTopics();
@@ -1882,6 +1907,7 @@ window.openTopics = function() {
 window.closeTopics = function() {
   document.getElementById('topicsView').classList.remove('open');
   document.getElementById('homeView').style.display = 'block';
+  setHomeScrollLocked(true);
   document.getElementById('topicInput').value = '';
   renderBusGrid();
   forzaScrollInAlto();
@@ -1908,6 +1934,7 @@ document.getElementById('topicInput').addEventListener('keydown', e => {
 });
 
 window.openCategory = function(category) {
+  setHomeScrollLocked(false);
   currentCategory = category;
   categoryScrollPosition = 0;
   document.getElementById('homeView').style.display = 'none';
@@ -1920,6 +1947,7 @@ window.closeCategory = function() {
   currentCategory = null;
   document.getElementById('categoryView').classList.remove('open');
   document.getElementById('homeView').style.display = 'block';
+  setHomeScrollLocked(true);
   document.getElementById('addBusForm').classList.remove('open');
   renderBusGrid();
   forzaScrollInAlto();
