@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="app-version" content="8.00">
-<title>Gestione Bus v8.00</title>
+<meta name="app-version" content="8.01">
+<title>Gestione Bus v8.01</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -2512,6 +2512,8 @@ window.importaDati = async function(event) {
 
   reader.readAsText(file);
 };
+
+(function(){let sx=0,sy=0,tr=false;document.addEventListener('touchstart',e=>{let t=e.touches[0];tr=t.clientX<24;if(tr){sx=t.clientX;sy=t.clientY;}},{passive:true});document.addEventListener('touchend',e=>{if(!tr)return;let t=e.changedTouches[0],dx=t.clientX-sx,dy=Math.abs(t.clientY-sy);tr=false;if(dx>70&&dy<40){const d=document.getElementById('detailView'),c=document.getElementById('categoryView');if(d&&d.classList.contains('open')&&window.closeDetail){closeDetail();return;}if(c&&c.classList.contains('open')&&window.closeCategory){closeCategory();}}},{passive:true});})();
 </script>
 </body>
 </html>
