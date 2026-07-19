@@ -2690,7 +2690,51 @@ window.importaDati = async function(event) {
   reader.readAsText(file);
 };
 
-(function(){let sx=0,sy=0,tr=false;document.addEventListener('touchstart',e=>{let t=e.touches[0];tr=t.clientX<24;if(tr){sx=t.clientX;sy=t.clientY;}},{passive:true});document.addEventListener('touchend',e=>{if(!tr)return;let t=e.changedTouches[0],dx=t.clientX-sx,dy=Math.abs(t.clientY-sy);tr=false;if(dx>70&&dy<40){const d=document.getElementById('detailView'),c=document.getElementById('categoryView');if(d&&d.classList.contains('open')&&window.closeDetail){closeDetail();return;}if(c&&c.classList.contains('open')&&window.closeCategory){closeCategory();}}},{passive:true});})();
+let categorySwipeStartX = 0;
+let categorySwipeStartY = 0;
+let categorySwipeCurrentX = 0;
+let categorySwipeTracking = false;
+
+document.addEventListener('touchstart', e => {
+  const categoryView = document.getElementById('categoryView');
+  if (!categoryView?.classList.contains('open') || e.touches.length !== 1) return;
+
+  const touch = e.touches[0];
+  if (touch.clientX > 42) return;
+
+  categorySwipeStartX = touch.clientX;
+  categorySwipeStartY = touch.clientY;
+  categorySwipeCurrentX = touch.clientX;
+  categorySwipeTracking = true;
+}, { passive:true });
+
+document.addEventListener('touchmove', e => {
+  if (!categorySwipeTracking || e.touches.length !== 1) return;
+
+  const touch = e.touches[0];
+  const deltaX = touch.clientX - categorySwipeStartX;
+  const deltaY = touch.clientY - categorySwipeStartY;
+
+  if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 18) {
+    categorySwipeTracking = false;
+    return;
+  }
+
+  if (deltaX > 0) categorySwipeCurrentX = touch.clientX;
+}, { passive:true });
+
+document.addEventListener('touchend', () => {
+  if (!categorySwipeTracking) return;
+
+  const distance = categorySwipeCurrentX - categorySwipeStartX;
+  categorySwipeTracking = false;
+
+  if (distance >= 90) closeCategory();
+}, { passive:true });
+
+document.addEventListener('touchcancel', () => {
+  categorySwipeTracking = false;
+}, { passive:true });
 </script>
 </body>
 </html>
