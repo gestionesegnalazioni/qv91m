@@ -2728,7 +2728,6 @@ document.addEventListener('touchstart', e => {
   if (!categoryView?.classList.contains('open') || e.touches.length !== 1) return;
 
   const touch = e.touches[0];
-  if (touch.clientX > 42) return;
 
   categorySwipeStartX = touch.clientX;
   categorySwipeStartY = touch.clientY;
