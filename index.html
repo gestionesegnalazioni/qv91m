@@ -1042,7 +1042,1058 @@
     }
 
     .btn-ghost,
-    .btn-blu…7118 tokens truncated…otal / 2);
+    .btn-blue {
+      min-width:132px;
+      height:38px;
+      padding:0 10px;
+      font-size:.72rem;
+    }
+
+    .bus-input {
+      width:100%;
+    }
+
+    .date-columns {
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:7px;
+    }
+
+    .date-tag {
+      font-size:.68rem;
+      padding:5px 5px 5px 6px;
+    }
+
+    .date-num {
+      min-width:18px;
+      flex-basis:18px;
+    }
+
+    .small-action {
+      padding:0 6px;
+      font-size:.62rem;
+    }
+
+    .small-action.icon {
+      width:26px;
+      min-width:26px;
+    }
+  }
+
+  @media(max-width:480px) {
+    .date-columns {
+      grid-template-columns:repeat(2,minmax(0,1fr))!important;
+      gap:7px;
+    }
+
+    .date-columns-single {
+      grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    }
+
+    .date-tag {
+      grid-template-columns:minmax(0,1fr) 20px!important;
+      font-size:.66rem;
+      padding:5px 5px 5px 6px;
+    }
+
+    .date-num {
+      min-width:18px;
+      flex-basis:18px;
+    }
+
+    .date-x {
+      width:20px;
+      flex-basis:20px;
+    }
+  }
+
+
+  @media(max-width:480px) {
+    header {
+      grid-template-columns:46px minmax(0,1fr) 46px;
+      min-height:66px;
+      padding:10px 12px;
+    }
+  }
+
+
+  /* Barra superiore: normale nella Home, fissa solo nel dettaglio autobus */
+  header {
+    position:sticky;
+    top:0;
+    left:auto;
+    right:auto;
+    min-height:66px;
+    padding:10px 14px;
+  }
+
+  @media(max-width:480px) {
+    header {
+      min-height:64px;
+      padding:9px 12px;
+    }
+  }
+
+
+
+  /* Barra sticky nel dettaglio autobus: più stabile con la tastiera iPhone */
+
+
+  .detail-heading {
+    display:grid;
+    grid-template-columns:42px minmax(0,1fr) 42px;
+    align-items:center;
+    gap:10px;
+    margin:0 0 18px;
+  }
+
+  .detail-back-btn {
+    width:42px;
+    height:42px;
+    min-width:42px;
+    border-radius:50%;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:0;
+    color:#f4f7fb;
+    background:linear-gradient(145deg,rgba(255,255,255,.13),rgba(255,255,255,.045));
+    border:1px solid rgba(255,255,255,.16);
+    box-shadow:0 10px 26px rgba(0,0,0,.26), inset 0 1px 0 rgba(255,255,255,.10);
+    backdrop-filter:blur(16px) saturate(145%);
+    -webkit-backdrop-filter:blur(16px) saturate(145%);
+  }
+
+  .detail-back-btn svg {
+    width:21px;
+    height:21px;
+  }
+
+  .detail-back-btn:active {
+    transform:scale(.92);
+  }
+
+  .detail-heading .detail-num {
+    margin:0;
+    min-height:42px;
+  }
+
+  .detail-heading-spacer {
+    width:42px;
+    height:42px;
+  }
+
+  @media(max-width:480px) {
+    .detail-heading {
+      grid-template-columns:40px minmax(0,1fr) 40px;
+      gap:8px;
+    }
+
+    .detail-back-btn,
+    .detail-heading-spacer {
+      width:40px;
+      height:40px;
+      min-width:40px;
+    }
+  }
+
+
+  /* ===== Gestione Bus v7.09 — Home ridisegnata ===== */
+  .wrapper {
+    max-width:760px;
+    padding-left:16px;
+    padding-right:16px;
+  }
+
+  .bus-grid {
+    display:block;
+    width:100%;
+  }
+
+  .bus-grid-section {
+    display:grid;
+    grid-template-columns:minmax(0,1fr) !important;
+    gap:16px;
+    width:100%;
+  }
+
+  .bus-section-title {
+    margin-top:30px;
+    margin-bottom:14px;
+    font-size:.78rem;
+    letter-spacing:1.7px;
+  }
+
+  .bus-tile {
+    width:100%;
+    min-height:142px;
+    padding:22px 21px 18px;
+    border-radius:26px;
+    transition:transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease;
+  }
+
+  .bus-tile:active {
+    transform:scale(.985);
+  }
+
+  .bus-card-top {
+    gap:16px;
+  }
+
+  .bus-number {
+    font-size:1.62rem;
+    line-height:1.05;
+    letter-spacing:.3px;
+  }
+
+  .bus-icon {
+    width:36px;
+    height:36px;
+    flex:0 0 36px;
+  }
+
+  .bus-card-line {
+    margin:18px 0 13px;
+  }
+
+  .bus-count {
+    font-size:.82rem;
+    line-height:1.25;
+  }
+
+  .bus-count.active {
+    font-size:.86rem;
+  }
+
+  .bus-tile.urbano {
+    box-shadow:
+      0 17px 42px rgba(0,0,0,.28),
+      inset 4px 0 0 rgba(255,255,255,.82),
+      inset 0 1px 0 rgba(255,255,255,.13) !important;
+  }
+
+  .bus-tile.extraurbano {
+    box-shadow:
+      0 17px 42px rgba(30,64,175,.16),
+      inset 4px 0 0 rgba(59,130,246,.96),
+      inset 0 1px 0 rgba(255,255,255,.11) !important;
+  }
+
+  .bus-tile.fuori-servizio {
+    box-shadow:
+      0 17px 42px rgba(185,28,28,.15),
+      inset 4px 0 0 rgba(239,68,68,.96),
+      inset 0 1px 0 rgba(255,255,255,.09) !important;
+  }
+
+  .bus-tile:has(.bus-count.active) {
+    border-color:rgba(239,68,68,.34) !important;
+  }
+
+  @media(max-width:480px) {
+    .wrapper {
+      padding-left:14px;
+      padding-right:14px;
+    }
+
+    .bus-grid-section {
+      grid-template-columns:minmax(0,1fr) !important;
+      gap:14px;
+    }
+
+    .bus-tile {
+      min-height:132px;
+      padding:20px 18px 17px;
+      border-radius:24px;
+    }
+
+    .bus-number {
+      font-size:1.48rem;
+    }
+
+    .bus-icon {
+      width:33px;
+      height:33px;
+      flex:0 0 33px;
+    }
+
+    .bus-card-line {
+      margin:16px 0 12px;
+    }
+
+    .bus-count {
+      font-size:.80rem;
+    }
+
+    .bus-section-title {
+      margin-top:27px;
+      margin-bottom:13px;
+    }
+  }
+
+
+  /* ===== Gestione Bus v8.00 — Home a tre categorie ===== */
+  .category-home {
+    display:grid;
+    grid-template-columns:1fr;
+    gap:18px;
+    padding-top:20px;
+  }
+
+  .category-card {
+    width:100%;
+    min-height:150px;
+    border:1px solid var(--border);
+    border-radius:28px;
+    padding:24px 22px;
+    color:var(--text);
+    text-align:left;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:18px;
+    font-family:var(--font);
+    box-shadow:0 18px 45px rgba(0,0,0,.26), inset 0 1px 0 rgba(255,255,255,.09);
+    transition:transform .16s ease, border-color .16s ease;
+  }
+
+  .category-card:active { transform:scale(.985); }
+
+  .category-card.urbani {
+    background:linear-gradient(145deg,rgba(255,255,255,.12),rgba(255,255,255,.035));
+    border-color:rgba(255,255,255,.22);
+    box-shadow:0 18px 45px rgba(0,0,0,.28), inset 5px 0 0 rgba(255,255,255,.9);
+  }
+
+  .category-card.extraurbani {
+    background:linear-gradient(145deg,rgba(37,99,235,.25),rgba(30,64,175,.08));
+    border-color:rgba(59,130,246,.42);
+    box-shadow:0 18px 45px rgba(30,64,175,.2), inset 5px 0 0 #3b82f6;
+  }
+
+  .category-card.fuori {
+    background:linear-gradient(145deg,rgba(220,38,38,.22),rgba(127,29,29,.07));
+    border-color:rgba(239,68,68,.42);
+    box-shadow:0 18px 45px rgba(127,29,29,.2), inset 5px 0 0 #ef4444;
+  }
+
+  .category-card.temi {
+    background:linear-gradient(145deg,rgba(250,204,21,.20),rgba(161,98,7,.06));
+    border-color:rgba(250,204,21,.42);
+    box-shadow:0 18px 45px rgba(161,98,7,.16), inset 5px 0 0 #facc15;
+  }
+
+  .category-card.temi .category-card-title,
+  .topics-title {
+    color:#facc15;
+  }
+
+  .topics-view { display:none; }
+  .topics-view.open { display:block; }
+
+  .topics-list {
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+
+  .topic-item {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    padding:17px 16px;
+    border:1px solid var(--border);
+    border-radius:18px;
+    background:linear-gradient(145deg,rgba(255,255,255,.08),rgba(255,255,255,.035));
+    box-shadow:0 12px 30px rgba(0,0,0,.20);
+  }
+
+  .topic-text {
+    min-width:0;
+    font-size:.96rem;
+    line-height:1.4;
+    overflow-wrap:anywhere;
+  }
+
+  .topic-delete {
+    width:38px;
+    height:38px;
+    flex:0 0 38px;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    color:#fca5a5;
+    background:rgba(239,68,68,.10);
+    border:1px solid rgba(239,68,68,.30);
+    font-size:1rem;
+  }
+
+  .topics-add-row {
+    display:flex;
+    gap:9px;
+    margin-top:20px;
+    align-items:center;
+  }
+
+  .topics-input {
+    flex:1 1 auto;
+    min-width:0;
+    height:46px;
+    border-radius:14px;
+    padding:0 14px;
+    color:var(--text);
+    font-family:var(--font-sans);
+    font-size:.92rem;
+  }
+
+  .topic-add-btn {
+    width:46px;
+    height:46px;
+    flex:0 0 46px;
+    border-radius:50%;
+    background:#facc15;
+    color:#111827;
+    font-size:1.55rem;
+    font-weight:700;
+    line-height:1;
+  }
+
+  .category-card-copy {
+    min-width:0;
+  }
+
+  .category-card-title {
+    font-size:1.55rem;
+    font-weight:700;
+    line-height:1.05;
+    letter-spacing:.1px;
+  }
+
+  .category-card-count {
+    margin-top:10px;
+    font-size:.88rem;
+    color:var(--muted);
+    font-weight:500;
+  }
+
+  .category-card-icon {
+    width:52px;
+    height:52px;
+    flex:0 0 52px;
+    opacity:.95;
+  }
+
+  .category-view {
+    display:none;
+  }
+
+  .category-view.open {
+    display:block;
+  }
+
+  .category-heading {
+    position:sticky;
+    top:0;
+    z-index:20;
+    display:grid;
+    grid-template-columns:44px 1fr 44px;
+    align-items:center;
+    min-height:68px;
+    margin-bottom:16px;
+    background:linear-gradient(to bottom,var(--bg) 72%,rgba(0,0,0,0));
+    padding:5px 0 12px;
+  }
+
+  .category-heading-title {
+    text-align:center;
+    font-size:1.28rem;
+    font-weight:700;
+  }
+
+  .category-back-btn {
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    border:1px solid var(--border);
+    background:var(--card);
+    color:var(--text);
+    display:grid;
+    place-items:center;
+    cursor:pointer;
+  }
+
+  .category-back-btn svg {
+    width:22px;
+    height:22px;
+  }
+
+  .category-bus-list {
+    display:grid;
+    grid-template-columns:1fr;
+    gap:14px;
+  }
+
+  .category-bottom-actions {
+    margin-top:24px;
+    padding-bottom:28px;
+  }
+
+  @media(max-width:480px) {
+    .category-home { gap:15px; padding-top:14px; }
+    .category-card { min-height:137px; padding:21px 19px; border-radius:25px; }
+    .category-card-title { font-size:1.42rem; }
+    .category-card-icon { width:47px; height:47px; flex-basis:47px; }
+  }
+
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div id="homeView">
+    <div class="category-home" id="busGrid"><div class="loading">Caricamento...</div></div>
+  </div>
+
+  <div class="category-view" id="categoryView">
+    <div class="category-heading">
+      <button class="category-back-btn" onclick="closeCategory()" aria-label="Indietro" title="Indietro">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M15.5 5.5 9 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="category-heading-title" id="categoryTitle"></div>
+      <div aria-hidden="true"></div>
+    </div>
+
+    <div class="category-bus-list" id="categoryBusList"></div>
+
+    <div class="category-bottom-actions">
+      <button class="btn-primary" onclick="toggleAddForm()">+ Aggiungi autobus</button>
+      <div class="add-bus-form" id="addBusForm">
+        <input id="inputMatricola" class="bus-input" placeholder="Es. A4148" maxlength="20">
+        <button class="btn-primary" onclick="addBus()">Salva</button>
+        <button class="btn-ghost" onclick="toggleAddForm()">Annulla</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="topics-view" id="topicsView">
+    <div class="category-heading">
+      <button class="category-back-btn" onclick="closeTopics()" aria-label="Indietro" title="Indietro">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M15.5 5.5 9 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="category-heading-title topics-title">Spunti</div>
+      <div aria-hidden="true"></div>
+    </div>
+    <div class="topics-list" id="topicsList"></div>
+    <div class="topics-add-row">
+      <input id="topicInput" class="topics-input" placeholder="Scrivi un nuovo tema" maxlength="300">
+      <button class="topic-add-btn" onclick="addTopic()" aria-label="Aggiungi tema" title="Aggiungi tema">+</button>
+    </div>
+  </div>
+
+  <div class="bus-detail" id="detailView">
+    <div class="detail-heading">
+      <button class="detail-back-btn" onclick="closeDetail()" aria-label="Indietro" title="Indietro">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M15.5 5.5 9 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="detail-num" id="detailNum"></div>
+      <div class="detail-heading-spacer" aria-hidden="true"></div>
+    </div>
+    <div id="detailContent"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h2 id="modalTitle">NUOVA SEGNALAZIONE</h2>
+    <textarea id="formDesc" placeholder="Descrivi il problema..."></textarea>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeModal()">Annulla</button>
+      <button class="btn-primary" onclick="saveSegnalazione()">Salva</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal-overlay" id="shareModalOverlay">
+  <div class="modal">
+    <h2>CONDIVIDI ANOMALIE</h2>
+    <div class="share-actions-row">
+      <button class="btn-ghost" onclick="selezionaTutteAnomalie()">Seleziona tutte</button>
+      <button class="btn-ghost" onclick="deselezionaTutteAnomalie()">Deseleziona</button>
+    </div>
+    <div id="shareList" class="share-list"></div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeShareModal()">Annulla</button>
+      <button class="btn-primary" onclick="condividiAnomalieSelezionate()">Condividi</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+import { getFirestore, collection, doc, onSnapshot, addDoc, updateDoc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey:"AIzaSyBdwNH43PZFgSfKZOEfJtBrF-ooC4NOnGc",
+  authDomain:"gestionesegnalazioni.firebaseapp.com",
+  projectId:"gestionesegnalazioni",
+  storageBucket:"gestionesegnalazioni.firebasestorage.app",
+  messagingSenderId:"930504240088",
+  appId:"1:930504240088:web:60e43f95f82883b43b20ad",
+  measurementId:"G-59G37GQX9J"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let buses = [];
+let segnalazioni = [];
+let temi = [];
+let selectedBus = null;
+let editingSegId = null;
+let currentBusForModal = null;
+let archiveVisible = false;
+let openSegIds = new Set();
+let openNoteIds = new Set();
+let homeScrollPosition = 0;
+let categoryScrollPosition = 0;
+let currentCategory = null;
+
+
+function byMat(a, b) {
+  return String(a.matricola || '').localeCompare(String(b.matricola || ''), 'it', { numeric:true });
+}
+
+function bySeg(a, b) {
+  const ao = typeof a.order === 'number' ? a.order : 999999;
+  const bo = typeof b.order === 'number' ? b.order : 999999;
+  if (ao !== bo) return ao - bo;
+  const ad = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+  const bd = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+  return bd - ad;
+}
+
+function esc(v) {
+  return String(v ?? '').replace(/[&<>'"]/g, c => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;'
+  }[c]));
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 1600);
+}
+window.showToast = showToast;
+
+function renderAll() {
+  renderBusGrid();
+  renderTopics();
+  if (currentCategory) renderCategoryView();
+  if (selectedBus) showBusDetail(selectedBus);
+}
+window.renderAll = renderAll;
+
+function forzaScrollInAlto() {
+  try {
+    window.scrollTo({ top:0, left:0, behavior:'auto' });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  } catch(e) {
+    window.scrollTo(0, 0);
+  }
+}
+
+function setHomeScrollLocked(locked) {
+  document.documentElement.classList.toggle('home-scroll-locked', locked);
+  document.body.classList.toggle('home-scroll-locked', locked);
+}
+
+setHomeScrollLocked(true);
+
+onSnapshot(collection(db, 'buses'), snap => {
+  buses = snap.docs.map(d => ({ id:d.id, ...d.data() })).sort(byMat);
+  localStorage.setItem('cache_buses', JSON.stringify(buses));
+  renderAll();
+}, err => {
+  console.error(err);
+  document.getElementById('busGrid').innerHTML = '<div class="empty">Errore caricamento autobus.</div>';
+});
+
+onSnapshot(collection(db, 'segnalazioni'), snap => {
+  segnalazioni = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+  localStorage.setItem('cache_seg', JSON.stringify(segnalazioni));
+
+  const activeEl = document.activeElement;
+  const isWritingNote = activeEl && activeEl.classList && activeEl.classList.contains('notes-textarea');
+
+  if (isWritingNote && selectedBus) {
+    // Durante la scrittura delle note non ridisegno il dettaglio:
+    // altrimenti la textarea viene ricreata e la scheda sembra chiudersi.
+    renderBusGrid();
+  } else {
+    renderAll();
+  }
+}, err => {
+  console.error(err);
+  document.getElementById('busGrid').innerHTML = '<div class="empty">Errore caricamento segnalazioni.</div>';
+});
+
+onSnapshot(collection(db, 'temi'), snap => {
+  temi = snap.docs.map(d => ({ id:d.id, ...d.data() }))
+    .sort((a, b) => (a.createdAt || '').localeCompare(b.createdAt || ''));
+  localStorage.setItem('cache_temi', JSON.stringify(temi));
+  renderBusGrid();
+  renderTopics();
+}, err => {
+  console.error(err);
+  const list = document.getElementById('topicsList');
+  if (list) list.innerHTML = '<div class="empty">Errore caricamento temi.</div>';
+});
+
+try {
+  const cb = localStorage.getItem('cache_buses');
+  const cs = localStorage.getItem('cache_seg');
+  const ct = localStorage.getItem('cache_temi');
+  if (cb) buses = JSON.parse(cb);
+  if (cs) segnalazioni = JSON.parse(cs);
+  if (ct) temi = JSON.parse(ct);
+  renderAll();
+} catch(e) {}
+
+window.toggleAddForm = function() {
+  const f = document.getElementById('addBusForm');
+  f.classList.toggle('open');
+  if (f.classList.contains('open')) document.getElementById('inputMatricola').focus();
+};
+
+window.addBus = async function() {
+  const inp = document.getElementById('inputMatricola');
+  const mat = inp.value.trim().toUpperCase();
+  if (!mat) return;
+
+  if (buses.some(b => String(b.matricola).toLowerCase() === mat.toLowerCase())) {
+    showToast('Matricola già presente');
+    return;
+  }
+
+  await addDoc(collection(db, 'buses'), { matricola:mat, fuoriServizio:false });
+  inp.value = '';
+  document.getElementById('addBusForm').classList.remove('open');
+  showToast('Autobus aggiunto');
+};
+
+document.getElementById('inputMatricola').addEventListener('keydown', e => {
+  if (e.key === 'Enter') addBus();
+});
+
+function getBusGroups() {
+  const inServizio = buses.filter(b => !b.fuoriServizio);
+
+  const urbani = inServizio.filter(b => {
+    const iniziale = String(b.matricola || '').trim().charAt(0).toUpperCase();
+    return iniziale === 'A' || iniziale === 'F';
+  });
+
+  const extraurbani = inServizio.filter(b => {
+    const iniziale = String(b.matricola || '').trim().charAt(0).toUpperCase();
+    return iniziale === 'K' || iniziale === 'L';
+  });
+
+  const altri = inServizio.filter(b => {
+    const iniziale = String(b.matricola || '').trim().charAt(0).toUpperCase();
+    return !['A', 'F', 'K', 'L'].includes(iniziale);
+  });
+
+  const fuori = buses.filter(b => !!b.fuoriServizio);
+  return { urbani, extraurbani, altri, fuori };
+}
+
+function busTile(bus, tipo) {
+  const active = segnalazioni.filter(s => s.bus === bus.matricola && !s.pregressa);
+
+  const countHtml = active.length
+    ? `<div class="bus-count active">${active.length} ${active.length === 1 ? 'segnalazione' : 'segnalazioni'}</div>`
+    : `<div class="bus-count zero">0 segnalazioni</div>`;
+
+  const typeClass =
+    tipo === 'urbani' ? 'urbano' :
+    tipo === 'extraurbani' ? 'extraurbano' :
+    tipo === 'fuori' ? 'fuori-servizio' : '';
+
+  return `
+    <button class="bus-tile ${typeClass}" onclick="selectBus('${esc(bus.matricola)}')">
+      <div class="bus-card-top">
+        <div class="bus-number">${esc(bus.matricola)}</div>
+        <svg class="bus-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="currentColor" d="M7 2h10a4 4 0 0 1 4 4v9a3 3 0 0 1-2 2.83V20a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-2H8v2a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-2.17A3 3 0 0 1 3 15V6a4 4 0 0 1 4-4Zm0 2a2 2 0 0 0-2 2v5h14V6a2 2 0 0 0-2-2H7Zm-1 9a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Zm12 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3ZM8 6h8v3H8V6Z"/>
+        </svg>
+      </div>
+      <div class="bus-card-line"></div>
+      ${countHtml}
+    </button>`;
+}
+
+function categoryCard(key, title, count, cssClass) {
+  const label = count === 1 ? '1 autobus' : `${count} autobus`;
+  return `
+    <button class="category-card ${cssClass}" onclick="openCategory('${key}')">
+      <div class="category-card-copy">
+        <div class="category-card-title">${title}</div>
+        <div class="category-card-count">${label}</div>
+      </div>
+      <svg class="category-card-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor" d="M7 2h10a4 4 0 0 1 4 4v9a3 3 0 0 1-2 2.83V20a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-2H8v2a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-2.17A3 3 0 0 1 3 15V6a4 4 0 0 1 4-4Zm0 2a2 2 0 0 0-2 2v5h14V6a2 2 0 0 0-2-2H7Zm-1 9a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Zm12 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3ZM8 6h8v3H8V6Z"/>
+      </svg>
+    </button>`;
+}
+
+function renderBusGrid() {
+  const grid = document.getElementById('busGrid');
+  if (!grid) return;
+
+  const { urbani, extraurbani, altri, fuori } = getBusGroups();
+  const numeroUrbani = urbani.length + altri.length;
+
+  grid.innerHTML =
+    categoryCard('urbani', 'Urbani', numeroUrbani, 'urbani') +
+    categoryCard('extraurbani', 'Extraurbani', extraurbani.length, 'extraurbani') +
+    categoryCard('fuori', 'Fuori servizio', fuori.length, 'fuori') +
+    topicCategoryCard();
+}
+
+function topicCategoryCard() {
+  const label = temi.length === 1 ? '1 tema' : `${temi.length} temi`;
+  return `
+    <button class="category-card temi" onclick="openTopics()">
+      <div class="category-card-copy">
+        <div class="category-card-title">Spunti</div>
+        <div class="category-card-count">${label}</div>
+      </div>
+      <svg class="category-card-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor" d="M5 3h11l3 3v15H5V3Zm2 2v14h10V7h-3V5H7Zm2 5h6v2H9v-2Zm0 4h6v2H9v-2Z"/>
+      </svg>
+    </button>`;
+}
+
+function renderTopics() {
+  const list = document.getElementById('topicsList');
+  if (!list) return;
+  list.innerHTML = temi.length
+    ? temi.map(t => `
+        <div class="topic-item">
+          <div class="topic-text">${esc(t.testo)}</div>
+          <button class="topic-delete" onclick="deleteTopic('${t.id}')" aria-label="Elimina tema" title="Elimina tema">✕</button>
+        </div>`).join('')
+    : '<div class="empty">Nessun tema da sviluppare.</div>';
+}
+
+window.openTopics = function() {
+  setHomeScrollLocked(false);
+  document.getElementById('homeView').style.display = 'none';
+  document.getElementById('topicsView').classList.add('open');
+  renderTopics();
+  forzaScrollInAlto();
+};
+
+window.closeTopics = function() {
+  document.getElementById('topicsView').classList.remove('open');
+  document.getElementById('homeView').style.display = 'block';
+  setHomeScrollLocked(true);
+  document.getElementById('topicInput').value = '';
+  renderBusGrid();
+  forzaScrollInAlto();
+};
+
+window.addTopic = async function() {
+  const input = document.getElementById('topicInput');
+  const testo = input.value.trim();
+  if (!testo) return;
+  await addDoc(collection(db, 'temi'), { testo, createdAt:new Date().toISOString() });
+  input.value = '';
+  input.focus();
+  showToast('Tema aggiunto');
+};
+
+window.deleteTopic = async function(id) {
+  if (!confirm('Eliminare questo tema?')) return;
+  await deleteDoc(doc(db, 'temi', id));
+  showToast('Tema eliminato');
+};
+
+document.getElementById('topicInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') addTopic();
+});
+
+window.openCategory = function(category) {
+  setHomeScrollLocked(false);
+  currentCategory = category;
+  categoryScrollPosition = 0;
+  document.getElementById('homeView').style.display = 'none';
+  document.getElementById('categoryView').classList.add('open');
+  renderCategoryView();
+  forzaScrollInAlto();
+};
+
+window.closeCategory = function() {
+  currentCategory = null;
+  document.getElementById('categoryView').classList.remove('open');
+  document.getElementById('homeView').style.display = 'block';
+  setHomeScrollLocked(true);
+  document.getElementById('addBusForm').classList.remove('open');
+  renderBusGrid();
+  forzaScrollInAlto();
+};
+
+function renderCategoryView() {
+  if (!currentCategory) return;
+
+  const { urbani, extraurbani, altri, fuori } = getBusGroups();
+  let title = '';
+  let items = [];
+  let tipo = currentCategory;
+
+  if (currentCategory === 'urbani') {
+    title = 'Urbani';
+    items = [...urbani, ...altri].sort(byMat);
+  } else if (currentCategory === 'extraurbani') {
+    title = 'Extraurbani';
+    items = extraurbani;
+  } else {
+    title = 'Fuori servizio';
+    items = fuori;
+  }
+
+  document.getElementById('categoryTitle').textContent = title;
+  const list = document.getElementById('categoryBusList');
+  list.innerHTML = items.length
+    ? items.map(b => busTile(b, tipo)).join('')
+    : `<div class="empty">Nessun autobus in questa categoria.</div>`;
+}
+
+
+window.selectBus = function(mat) {
+  categoryScrollPosition = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
+  hardResetSwipeVisual();
+  openSegIds.clear();
+  openNoteIds.clear();
+  selectedBus = mat;
+  archiveVisible = false;
+  document.getElementById('homeView').style.display = 'none';
+  document.getElementById('categoryView').classList.remove('open');
+  document.getElementById('detailView').classList.add('open');
+  showBusDetail(mat);
+  hardResetSwipeVisual();
+  forzaScrollInAlto();
+
+  requestAnimationFrame(() => {
+    hardResetSwipeVisual();
+    forzaScrollInAlto();
+  });
+
+  setTimeout(() => {
+    hardResetSwipeVisual();
+    forzaScrollInAlto();
+  }, 80);
+};
+
+window.closeDetail = function() {
+  const posizioneDaRipristinare = categoryScrollPosition;
+
+  hardResetSwipeVisual();
+  openSegIds.clear();
+  openNoteIds.clear();
+  selectedBus = null;
+  document.getElementById('detailView').classList.remove('open');
+  document.getElementById('homeView').style.display = 'none';
+  document.getElementById('categoryView').classList.add('open');
+  renderCategoryView();
+  hardResetSwipeVisual();
+
+  const ripristinaCategoria = () => {
+    window.scrollTo({ top:posizioneDaRipristinare, left:0, behavior:'auto' });
+    document.documentElement.scrollTop = posizioneDaRipristinare;
+    document.body.scrollTop = posizioneDaRipristinare;
+  };
+
+  requestAnimationFrame(() => {
+    ripristinaCategoria();
+    requestAnimationFrame(ripristinaCategoria);
+  });
+
+  setTimeout(ripristinaCategoria, 80);
+};
+
+function fmtDate(d) {
+  if (!d) return '';
+  const p = String(d).split('-');
+  return p.length === 3 ? `${p[2]}/${p[1]}/${p[0].slice(-2)}` : esc(d);
+}
+
+function normalizeDate(raw) {
+  raw = String(raw || '').replace(/\D/g, '').slice(0, 6);
+  if (raw.length !== 6) return null;
+
+  const day = raw.slice(0, 2);
+  const month = raw.slice(2, 4);
+  const year = '20' + raw.slice(4, 6);
+  const dt = new Date(+year, +month - 1, +day);
+
+  if (dt.getFullYear() !== +year || dt.getMonth() !== +month - 1 || dt.getDate() !== +day) {
+    return null;
+  }
+
+  return `${year}-${month}-${day}`;
+}
+
+function renderDateColumns(dates, segId) {
+  const sorted = [...dates].sort();
+  const total = sorted.length;
+  const usedIndexes = new Set();
+
+  function originalIndexFor(dateValue) {
+    let idx = dates.findIndex((v, i) => v === dateValue && !usedIndexes.has(i));
+    if (idx < 0) idx = dates.indexOf(dateValue);
+    usedIndexes.add(idx);
+    return idx;
+  }
+
+  function renderItem(item) {
+    return `
+      <span class="date-tag">
+        <span class="date-main">
+          <span class="date-num">${item.num}.</span>
+          <span class="date-value">${fmtDate(item.date)}</span>
+        </span>
+        <span class="date-x" onclick="rimuoviData('${segId}',${item.originalIndex})">✕</span>
+      </span>`;
+  }
+
+  if (total <= 4) {
+    const items = sorted.map((d, i) => ({
+      date: d,
+      num: i + 1,
+      originalIndex: originalIndexFor(d)
+    }));
+
+    return `
+      <div class="date-columns date-columns-single">
+        <div class="date-column">
+          ${items.map(renderItem).join('')}
+        </div>
+      </div>`;
+  }
+
+  const leftCount = total <= 8 ? 4 : Math.ceil(total / 2);
   const left = [];
   const right = [];
 
@@ -1081,7 +2132,7 @@ function renderSeg(s, pregressa = false) {
             <span class="seg-count-preview">Segnalato <strong>${dates.length}</strong> ${dates.length === 1 ? 'volta' : 'volte'}</span>
           </span>
         </span>
-        <span class="chev"><span class="closed">â–¾</span><span class="open">â–´</span></span>
+        <span class="chev"><span class="closed">▾</span><span class="open">▴</span></span>
       </summary>
 
       <div class="seg-body">
@@ -1100,15 +2151,15 @@ function renderSeg(s, pregressa = false) {
 
         <div class="seg-actions">
           ${!pregressa ? `
-            <button class="small-action" onclick="moveSeg('${s.id}',-1)">â†‘</button>
-            <button class="small-action" onclick="moveSeg('${s.id}',1)">â†“</button>
+            <button class="small-action" onclick="moveSeg('${s.id}',-1)">↑</button>
+            <button class="small-action" onclick="moveSeg('${s.id}',1)">↓</button>
             <button class="small-action archive" onclick="archiviaSeg('${s.id}')">Archivio</button>
           ` : `
             <button class="small-action restore" onclick="ripristinaSeg('${s.id}')">Ripristina</button>
           `}
-          <button class="small-action notes ${String(s.note || '').trim() ? 'has-note' : ''}" onclick="toggleNote('${s.id}')">ðŸ“ Note${String(s.note || '').trim() ? ' (1)' : ''}</button>
-          <button class="small-action icon" onclick="editSeg('${s.id}')" title="Modifica">âœŽ</button>
-          <button class="small-action icon" onclick="deleteSeg('${s.id}')" title="Elimina">ðŸ—‘</button>
+          <button class="small-action notes ${String(s.note || '').trim() ? 'has-note' : ''}" onclick="toggleNote('${s.id}')">📝 Note${String(s.note || '').trim() ? ' (1)' : ''}</button>
+          <button class="small-action icon" onclick="editSeg('${s.id}')" title="Modifica">✎</button>
+          <button class="small-action icon" onclick="deleteSeg('${s.id}')" title="Elimina">🗑</button>
         </div>
 
         <div class="notes-box ${openNoteIds.has(s.id) ? 'open' : ''}" id="notes-${s.id}">
@@ -1213,7 +2264,7 @@ window.editSeg = function(id) {
 };
 
 window.deleteSeg = async function(id) {
-  const ok = confirm("Eliminare questa anomalia?\n\nL'operazione eliminerÃ  l'anomalia e tutte le date associate.");
+  const ok = confirm("Eliminare questa anomalia?\n\nL'operazione eliminerà l'anomalia e tutte le date associate.");
   if (!ok) return;
 
   await deleteDoc(doc(db, 'segnalazioni', id));
@@ -1306,9 +2357,9 @@ window.showTodayInline = function(id) {
   const aa = String(d.getFullYear()).slice(-2);
   const data = `${gg}/${mm}/${aa}`;
   el.innerHTML =
-    '<span class="today-arrow" aria-hidden="true">â†’</span>' +
-    '<span class="today-text">OGGI Ãˆ IL ' + data + '</span>' +
-    '<span class="today-arrow" aria-hidden="true">â†</span>';
+    '<span class="today-arrow" aria-hidden="true">→</span>' +
+    '<span class="today-text">OGGI È IL ' + data + '</span>' +
+    '<span class="today-arrow" aria-hidden="true">←</span>';
   el.classList.add('visible');
 };
 
@@ -1384,7 +2435,7 @@ window.deleteBus = async function() {
 
   const ok = confirm(
     "Eliminare definitivamente l'autobus " + selectedBus + "?\n\n" +
-    "Questa operazione eliminerÃ  anche tutte le anomalie, le note e lo storico associati al mezzo."
+    "Questa operazione eliminerà anche tutte le anomalie, le note e lo storico associati al mezzo."
   );
 
   if (!ok) return;
@@ -1422,7 +2473,7 @@ function testoCondivisioneAnomalie(bus, anomalie) {
     if (!desc) return '';
     const count = Array.isArray(a.date) ? a.date.length : 0;
     const label = count === 1 ? 'segnalato 1 volta' : `segnalato ${count} volte`;
-    return `â€¢ *${desc}*\n_(${label})_`;
+    return `• *${desc}*\n_(${label})_`;
   }).filter(Boolean);
 
   return `${bus}
@@ -1715,4 +2766,3 @@ document.addEventListener('touchcancel', () => {
 </script>
 </body>
 </html>
-
