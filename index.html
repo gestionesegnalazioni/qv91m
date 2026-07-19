@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="app-version" content="8.01">
-<title>Gestione Bus v8.01</title>
+<meta name="app-version" content="8.02">
+<title>Gestione Bus v8.02</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1359,6 +1359,88 @@
     box-shadow:0 18px 45px rgba(127,29,29,.2), inset 5px 0 0 #ef4444;
   }
 
+  .category-card.temi {
+    background:linear-gradient(145deg,rgba(250,204,21,.20),rgba(161,98,7,.06));
+    border-color:rgba(250,204,21,.42);
+    box-shadow:0 18px 45px rgba(161,98,7,.16), inset 5px 0 0 #facc15;
+  }
+
+  .category-card.temi .category-card-title,
+  .topics-title {
+    color:#facc15;
+  }
+
+  .topics-view { display:none; }
+  .topics-view.open { display:block; }
+
+  .topics-list {
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+
+  .topic-item {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    padding:17px 16px;
+    border:1px solid var(--border);
+    border-radius:18px;
+    background:linear-gradient(145deg,rgba(255,255,255,.08),rgba(255,255,255,.035));
+    box-shadow:0 12px 30px rgba(0,0,0,.20);
+  }
+
+  .topic-text {
+    min-width:0;
+    font-size:.96rem;
+    line-height:1.4;
+    overflow-wrap:anywhere;
+  }
+
+  .topic-delete {
+    width:38px;
+    height:38px;
+    flex:0 0 38px;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    color:#fca5a5;
+    background:rgba(239,68,68,.10);
+    border:1px solid rgba(239,68,68,.30);
+    font-size:1rem;
+  }
+
+  .topics-add-row {
+    display:flex;
+    gap:9px;
+    margin-top:20px;
+    align-items:center;
+  }
+
+  .topics-input {
+    flex:1 1 auto;
+    min-width:0;
+    height:46px;
+    border-radius:14px;
+    padding:0 14px;
+    color:var(--text);
+    font-family:var(--font-sans);
+    font-size:.92rem;
+  }
+
+  .topic-add-btn {
+    width:46px;
+    height:46px;
+    flex:0 0 46px;
+    border-radius:50%;
+    background:#facc15;
+    color:#111827;
+    font-size:1.55rem;
+    font-weight:700;
+    line-height:1;
+  }
+
   .category-card-copy {
     min-width:0;
   }
@@ -1477,6 +1559,23 @@
     </div>
   </div>
 
+  <div class="topics-view" id="topicsView">
+    <div class="category-heading">
+      <button class="category-back-btn" onclick="closeTopics()" aria-label="Indietro" title="Indietro">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M15.5 5.5 9 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="category-heading-title topics-title">Temi da sviluppare</div>
+      <div aria-hidden="true"></div>
+    </div>
+    <div class="topics-list" id="topicsList"></div>
+    <div class="topics-add-row">
+      <input id="topicInput" class="topics-input" placeholder="Scrivi un nuovo tema" maxlength="300">
+      <button class="topic-add-btn" onclick="addTopic()" aria-label="Aggiungi tema" title="Aggiungi tema">+</button>
+    </div>
+  </div>
+
   <div class="bus-detail" id="detailView">
     <div class="detail-heading">
       <button class="detail-back-btn" onclick="closeDetail()" aria-label="Indietro" title="Indietro">
@@ -1539,6 +1638,7 @@ const db = getFirestore(app);
 
 let buses = [];
 let segnalazioni = [];
+let temi = [];
 let selectedBus = null;
 let editingSegId = null;
 let currentBusForModal = null;
@@ -1579,6 +1679,7 @@ window.showToast = showToast;
 
 function renderAll() {
   renderBusGrid();
+  renderTopics();
   if (currentCategory) renderCategoryView();
   if (selectedBus) showBusDetail(selectedBus);
 }
@@ -1622,11 +1723,25 @@ onSnapshot(collection(db, 'segnalazioni'), snap => {
   document.getElementById('busGrid').innerHTML = '<div class="empty">Errore caricamento segnalazioni.</div>';
 });
 
+onSnapshot(collection(db, 'temi'), snap => {
+  temi = snap.docs.map(d => ({ id:d.id, ...d.data() }))
+    .sort((a, b) => (a.createdAt || '').localeCompare(b.createdAt || ''));
+  localStorage.setItem('cache_temi', JSON.stringify(temi));
+  renderBusGrid();
+  renderTopics();
+}, err => {
+  console.error(err);
+  const list = document.getElementById('topicsList');
+  if (list) list.innerHTML = '<div class="empty">Errore caricamento temi.</div>';
+});
+
 try {
   const cb = localStorage.getItem('cache_buses');
   const cs = localStorage.getItem('cache_seg');
+  const ct = localStorage.getItem('cache_temi');
   if (cb) buses = JSON.parse(cb);
   if (cs) segnalazioni = JSON.parse(cs);
+  if (ct) temi = JSON.parse(ct);
   renderAll();
 } catch(e) {}
 
@@ -1727,8 +1842,70 @@ function renderBusGrid() {
   grid.innerHTML =
     categoryCard('urbani', 'Urbani', numeroUrbani, 'urbani') +
     categoryCard('extraurbani', 'Extraurbani', extraurbani.length, 'extraurbani') +
-    categoryCard('fuori', 'Fuori servizio', fuori.length, 'fuori');
+    categoryCard('fuori', 'Fuori servizio', fuori.length, 'fuori') +
+    topicCategoryCard();
 }
+
+function topicCategoryCard() {
+  const label = temi.length === 1 ? '1 tema' : `${temi.length} temi`;
+  return `
+    <button class="category-card temi" onclick="openTopics()">
+      <div class="category-card-copy">
+        <div class="category-card-title">📝 Temi da sviluppare</div>
+        <div class="category-card-count">${label}</div>
+      </div>
+      <svg class="category-card-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor" d="M5 3h11l3 3v15H5V3Zm2 2v14h10V7h-3V5H7Zm2 5h6v2H9v-2Zm0 4h6v2H9v-2Z"/>
+      </svg>
+    </button>`;
+}
+
+function renderTopics() {
+  const list = document.getElementById('topicsList');
+  if (!list) return;
+  list.innerHTML = temi.length
+    ? temi.map(t => `
+        <div class="topic-item">
+          <div class="topic-text">${esc(t.testo)}</div>
+          <button class="topic-delete" onclick="deleteTopic('${t.id}')" aria-label="Elimina tema" title="Elimina tema">✕</button>
+        </div>`).join('')
+    : '<div class="empty">Nessun tema da sviluppare.</div>';
+}
+
+window.openTopics = function() {
+  document.getElementById('homeView').style.display = 'none';
+  document.getElementById('topicsView').classList.add('open');
+  renderTopics();
+  forzaScrollInAlto();
+};
+
+window.closeTopics = function() {
+  document.getElementById('topicsView').classList.remove('open');
+  document.getElementById('homeView').style.display = 'block';
+  document.getElementById('topicInput').value = '';
+  renderBusGrid();
+  forzaScrollInAlto();
+};
+
+window.addTopic = async function() {
+  const input = document.getElementById('topicInput');
+  const testo = input.value.trim();
+  if (!testo) return;
+  await addDoc(collection(db, 'temi'), { testo, createdAt:new Date().toISOString() });
+  input.value = '';
+  input.focus();
+  showToast('Tema aggiunto');
+};
+
+window.deleteTopic = async function(id) {
+  if (!confirm('Eliminare questo tema?')) return;
+  await deleteDoc(doc(db, 'temi', id));
+  showToast('Tema eliminato');
+};
+
+document.getElementById('topicInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') addTopic();
+});
 
 window.openCategory = function(category) {
   currentCategory = category;
