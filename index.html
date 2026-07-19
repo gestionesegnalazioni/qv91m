@@ -2092,7 +2092,7 @@ function renderDateColumns(dates, segId) {
       </div>`;
   }
 
-  const leftCount = Math.ceil(total / 2);
+  const leftCount = total <= 8 ? 4 : Math.ceil(total / 2);
   const left = [];
   const right = [];
 
