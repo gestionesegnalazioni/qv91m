@@ -2719,50 +2719,118 @@ window.importaDati = async function(event) {
   reader.readAsText(file);
 };
 
-let categorySwipeStartX = 0;
-let categorySwipeStartY = 0;
-let categorySwipeCurrentX = 0;
-let categorySwipeTracking = false;
+let navigationSwipe = null;
+let suppressNavigationClick = false;
 
-document.addEventListener('touchstart', e => {
+function getOpenNavigationView() {
   const categoryView = document.getElementById('categoryView');
-  if (!categoryView?.classList.contains('open') || e.touches.length !== 1) return;
+  if (categoryView?.classList.contains('open')) {
+    return { view:categoryView, close:closeCategory };
+  }
 
-  const touch = e.touches[0];
+  const topicsView = document.getElementById('topicsView');
+  if (topicsView?.classList.contains('open')) {
+    return { view:topicsView, close:closeTopics };
+  }
 
-  categorySwipeStartX = touch.clientX;
-  categorySwipeStartY = touch.clientY;
-  categorySwipeCurrentX = touch.clientX;
-  categorySwipeTracking = true;
-}, { passive:true });
+  return null;
+}
 
-document.addEventListener('touchmove', e => {
-  if (!categorySwipeTracking || e.touches.length !== 1) return;
-
-  const touch = e.touches[0];
-  const deltaX = touch.clientX - categorySwipeStartX;
-  const deltaY = touch.clientY - categorySwipeStartY;
-
-  if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 18) {
-    categorySwipeTracking = false;
+function resetNavigationSwipe() {
+  if (!navigationSwipe?.view) {
+    navigationSwipe = null;
     return;
   }
 
-  if (deltaX > 0) categorySwipeCurrentX = touch.clientX;
+  const view = navigationSwipe.view;
+  view.style.transition = 'transform .18s ease, opacity .18s ease';
+  view.style.transform = 'translateX(0)';
+  view.style.opacity = '1';
+
+  setTimeout(() => {
+    view.style.transition = '';
+    view.style.transform = '';
+    view.style.opacity = '';
+  }, 190);
+
+  navigationSwipe = null;
+}
+
+document.addEventListener('touchstart', e => {
+  if (e.touches.length !== 1) return;
+
+  const openView = getOpenNavigationView();
+  if (!openView) return;
+
+  const touch = e.touches[0];
+  navigationSwipe = {
+    ...openView,
+    startX:touch.clientX,
+    startY:touch.clientY,
+    currentX:touch.clientX,
+    horizontal:false
+  };
+
+  openView.view.style.transition = 'none';
 }, { passive:true });
+
+document.addEventListener('touchmove', e => {
+  if (!navigationSwipe || e.touches.length !== 1) return;
+
+  const touch = e.touches[0];
+  const deltaX = touch.clientX - navigationSwipe.startX;
+  const deltaY = touch.clientY - navigationSwipe.startY;
+
+  if (!navigationSwipe.horizontal) {
+    if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 12) {
+      resetNavigationSwipe();
+      return;
+    }
+
+    if (deltaX > 12 && Math.abs(deltaX) > Math.abs(deltaY)) {
+      navigationSwipe.horizontal = true;
+    }
+  }
+
+  if (!navigationSwipe.horizontal || deltaX <= 0) return;
+
+  e.preventDefault();
+  navigationSwipe.currentX = touch.clientX;
+
+  const visualX = Math.min(deltaX, 180);
+  navigationSwipe.view.style.transform = `translateX(${visualX * 0.42}px)`;
+  navigationSwipe.view.style.opacity = String(Math.max(.76, 1 - deltaX / 500));
+}, { passive:false });
 
 document.addEventListener('touchend', () => {
-  if (!categorySwipeTracking) return;
+  if (!navigationSwipe) return;
 
-  const distance = categorySwipeCurrentX - categorySwipeStartX;
-  categorySwipeTracking = false;
+  const distance = navigationSwipe.currentX - navigationSwipe.startX;
+  const shouldClose = navigationSwipe.horizontal && distance >= 70;
+  const closeView = navigationSwipe.close;
+  const view = navigationSwipe.view;
 
-  if (distance >= 90) closeCategory();
+  if (shouldClose) {
+    suppressNavigationClick = true;
+    navigationSwipe = null;
+    view.style.transition = '';
+    view.style.transform = '';
+    view.style.opacity = '';
+    closeView();
+    setTimeout(() => { suppressNavigationClick = false; }, 350);
+    return;
+  }
+
+  resetNavigationSwipe();
 }, { passive:true });
 
-document.addEventListener('touchcancel', () => {
-  categorySwipeTracking = false;
-}, { passive:true });
+document.addEventListener('touchcancel', resetNavigationSwipe, { passive:true });
+
+document.addEventListener('click', e => {
+  if (!suppressNavigationClick) return;
+  e.preventDefault();
+  e.stopPropagation();
+}, true);
 </script>
 </body>
 </html>
