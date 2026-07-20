@@ -2725,12 +2725,12 @@ let suppressNavigationClick = false;
 function getOpenNavigationView() {
   const categoryView = document.getElementById('categoryView');
   if (categoryView?.classList.contains('open')) {
-    return { view:categoryView, close:closeCategory };
+    return { view:categoryView, close:window.closeCategory };
   }
 
   const topicsView = document.getElementById('topicsView');
   if (topicsView?.classList.contains('open')) {
-    return { view:topicsView, close:closeTopics };
+    return { view:topicsView, close:window.closeTopics };
   }
 
   return null;
