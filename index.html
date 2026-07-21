@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="app-version" content="8.03">
-<title>Gestione Bus v8.03</title>
+<meta name="app-version" content="8.04">
+<title>Gestione Bus v8.04</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1912,8 +1912,11 @@ window.openTopics = function() {
 
 window.closeTopics = function(fromHistory = false) {
   if (!fromHistory && window.location.hash === '#spunti') {
-    window.history.back();
-    return;
+    window.history.replaceState(
+      { gestioneBusView:'home' },
+      '',
+      window.location.pathname + window.location.search
+    );
   }
 
   document.getElementById('topicsView').classList.remove('open');
@@ -1962,8 +1965,11 @@ window.openCategory = function(category) {
 
 window.closeCategory = function(fromHistory = false) {
   if (!fromHistory && window.location.hash.startsWith('#categoria-')) {
-    window.history.back();
-    return;
+    window.history.replaceState(
+      { gestioneBusView:'home' },
+      '',
+      window.location.pathname + window.location.search
+    );
   }
 
   currentCategory = null;
