@@ -3,8 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="app-version" content="8.18">
-<title>Gestione Bus v8.18</title>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="app-version" content="8.19">
+<title>Gestione Bus v8.19</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1807,6 +1810,32 @@ function replaceViewState(view, extra = {}) {
   );
 }
 
+let homeNavigationIntent = false;
+
+function homeIsVisible() {
+  const home = document.getElementById('homeView');
+  return !!home && home.style.display !== 'none';
+}
+
+function recordHomeNavigationIntent(event) {
+  const card = event.target?.closest?.('.category-card');
+  homeNavigationIntent = !!(card && homeIsVisible());
+}
+
+document.addEventListener('pointerdown', recordHomeNavigationIntent, true);
+document.addEventListener('touchstart', recordHomeNavigationIntent, { passive:true, capture:true });
+
+function consumeHomeNavigationIntent(fromHistory) {
+  if (fromHistory) return true;
+  const allowed = homeNavigationIntent && homeIsVisible();
+  homeNavigationIntent = false;
+  return allowed;
+}
+
+function clearHomeNavigationIntent() {
+  homeNavigationIntent = false;
+}
+
 
 function byMat(a, b) {
   return String(a.matricola || '').localeCompare(String(b.matricola || ''), 'it', { numeric:true });
@@ -1887,12 +1916,14 @@ function renderRecentChanges() {
 }
 
 window.openRecentChanges = function(fromHistory = false) {
+  if (!consumeHomeNavigationIntent(fromHistory)) return;
   renderRecentChanges();
   document.getElementById('recentChangesOverlay').classList.add('open');
   if (!fromHistory) pushViewState('recent');
 };
 
 window.closeRecentChanges = function(fromHistory = false) {
+  clearHomeNavigationIntent();
   document.getElementById('recentChangesOverlay').classList.remove('open');
   if (!fromHistory) replaceViewState('home');
 };
@@ -2132,6 +2163,7 @@ function renderTopics() {
 }
 
 window.openTopics = function(fromHistory = false) {
+  if (!consumeHomeNavigationIntent(fromHistory)) return;
   setHomeScrollLocked(false);
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('categoryView').classList.remove('open');
@@ -2142,6 +2174,7 @@ window.openTopics = function(fromHistory = false) {
 };
 
 window.closeTopics = function(fromHistory = false) {
+  clearHomeNavigationIntent();
   document.getElementById('topicsView').classList.remove('open');
   document.getElementById('homeView').style.display = 'block';
   setHomeScrollLocked(true);
@@ -2190,6 +2223,7 @@ document.getElementById('topicInput').addEventListener('keydown', e => {
 });
 
 window.openCategory = function(category, fromHistory = false) {
+  if (!consumeHomeNavigationIntent(fromHistory)) return;
   setHomeScrollLocked(false);
   currentCategory = category;
   categoryScrollPosition = 0;
@@ -2203,6 +2237,7 @@ window.openCategory = function(category, fromHistory = false) {
 };
 
 window.closeCategory = function(fromHistory = false) {
+  clearHomeNavigationIntent();
   currentCategory = null;
   document.getElementById('categoryView').classList.remove('open');
   document.getElementById('homeView').style.display = 'block';
@@ -3017,6 +3052,7 @@ window.importaDati = async function(event) {
 };
 
 window.addEventListener('popstate', event => {
+  clearHomeNavigationIntent();
   const state = event.state || { gestioneBusView:'home' };
   const view = state.gestioneBusView || 'home';
 
