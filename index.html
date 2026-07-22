@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="app-version" content="8.06">
-<title>Gestione Bus v8.06</title>
+<meta name="app-version" content="8.07">
+<title>Gestione Bus v8.07</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -163,10 +163,9 @@
   }
 
   .home-footer {
-    display:grid;
-    grid-template-columns:42px minmax(0,1fr) 42px;
+    display:flex;
     align-items:center;
-    gap:12px;
+    justify-content:center;
     margin-top:18px;
     padding:2px 2px 14px;
   }
@@ -174,27 +173,17 @@
   .home-today {
     text-align:center;
     color:var(--muted);
+    background:transparent;
+    border:none;
+    padding:8px 14px;
+    font-family:var(--font-sans);
     font-size:.78rem;
     font-weight:600;
     text-transform:capitalize;
   }
 
-  .home-history-btn {
-    width:42px;
-    height:42px;
-    border-radius:50%;
-    display:grid;
-    place-items:center;
-    color:#ffffff;
-    background:#D48AA3;
-    border:1px solid #D48AA3;
-    box-shadow:0 10px 24px rgba(212,138,163,.25);
-    padding:0;
-  }
-
-  .home-history-btn svg {
-    width:21px;
-    height:21px;
+  .home-today:active {
+    color:var(--text);
   }
 
   .recent-list {
@@ -1646,13 +1635,7 @@
   <div id="homeView">
     <div class="category-home" id="busGrid"><div class="loading">Caricamento...</div></div>
     <div class="home-footer">
-      <div aria-hidden="true"></div>
-      <div class="home-today" id="homeToday"></div>
-      <button class="home-history-btn" onclick="openRecentChanges()" aria-label="Ultime modifiche" title="Ultime modifiche">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M4 12a8 8 0 1 0 2.35-5.65L4 8.7M4 4v4.7h4.7M12 7v5l3.2 2" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
+      <button class="home-today" id="homeToday" onclick="openRecentChanges()" aria-label="Apri le ultime modifiche" title="Ultime modifiche"></button>
     </div>
   </div>
 
