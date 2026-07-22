@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.19">
-<title>Gestione Bus v8.19</title>
+<meta name="app-version" content="8.20">
+<title>Gestione Bus v8.20</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -3051,47 +3051,39 @@ window.importaDati = async function(event) {
   reader.readAsText(file);
 };
 
-window.addEventListener('popstate', event => {
+window.addEventListener('popstate', () => {
   clearHomeNavigationIntent();
-  const state = event.state || { gestioneBusView:'home' };
-  const view = state.gestioneBusView || 'home';
 
-  document.getElementById('recentChangesOverlay').classList.remove('open');
-
-  if (view === 'detail' && state.bus) {
-    currentCategory = state.category || currentCategory || 'urbani';
-    window.selectBus(state.bus, true);
-    return;
-  }
+  const categoryWasOpen = document.getElementById('categoryView')?.classList.contains('open');
+  const topicsWereOpen = document.getElementById('topicsView')?.classList.contains('open');
+  const recentWasOpen = document.getElementById('recentChangesOverlay')?.classList.contains('open');
 
   if (selectedBus) {
     window.closeDetail(true);
-  }
-
-  if (view === 'category' && state.category) {
-    window.openCategory(state.category, true);
+    replaceViewState('category', { category:currentCategory || 'urbani' });
     return;
   }
 
+  if (categoryWasOpen) {
+    window.closeCategory(true);
+  } else if (topicsWereOpen) {
+    window.closeTopics(true);
+  } else if (recentWasOpen) {
+    window.closeRecentChanges(true);
+  }
+
+  document.getElementById('recentChangesOverlay').classList.remove('open');
   document.getElementById('categoryView').classList.remove('open');
-
-  if (view === 'topics') {
-    window.openTopics(true);
-    return;
-  }
-
   document.getElementById('topicsView').classList.remove('open');
-  currentCategory = null;
-  selectedBus = null;
   document.getElementById('detailView').classList.remove('open');
   document.getElementById('homeView').style.display = 'block';
+
+  currentCategory = null;
+  selectedBus = null;
   setHomeScrollLocked(true);
   renderBusGrid();
   forzaScrollInAlto();
-
-  if (view === 'recent') {
-    window.openRecentChanges(true);
-  }
+  replaceViewState('home');
 });
 
 let navigationSwipe = null;
