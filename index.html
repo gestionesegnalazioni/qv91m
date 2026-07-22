@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="app-version" content="8.16">
-<title>Gestione Bus v8.16</title>
+<meta name="app-version" content="8.17">
+<title>Gestione Bus v8.17</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1786,14 +1786,25 @@ let openNoteIds = new Set();
 let homeScrollPosition = 0;
 let categoryScrollPosition = 0;
 let currentCategory = null;
-let navigationCooldownUntil = 0;
 
-function navigationInCooldown() {
-  return Date.now() < navigationCooldownUntil;
+function cleanHistoryUrl() {
+  return window.location.pathname + window.location.search;
 }
 
-function startNavigationCooldown() {
-  navigationCooldownUntil = Date.now() + 700;
+function pushViewState(view, extra = {}) {
+  window.history.pushState(
+    { gestioneBusView:view, ...extra },
+    '',
+    cleanHistoryUrl()
+  );
+}
+
+function replaceViewState(view, extra = {}) {
+  window.history.replaceState(
+    { gestioneBusView:view, ...extra },
+    '',
+    cleanHistoryUrl()
+  );
 }
 
 
@@ -1875,14 +1886,17 @@ function renderRecentChanges() {
     : '<div class="empty">La cronologia è vuota. Le nuove modifiche compariranno qui.</div>';
 }
 
-window.openRecentChanges = function() {
-  if (navigationInCooldown()) return;
+window.openRecentChanges = function(fromHistory = false) {
   renderRecentChanges();
   document.getElementById('recentChangesOverlay').classList.add('open');
+  if (!fromHistory) pushViewState('recent');
 };
 
 window.closeRecentChanges = function(fromHistory = false) {
-  if (!fromHistory) startNavigationCooldown();
+  if (!fromHistory && window.history.state?.gestioneBusView === 'recent') {
+    window.history.back();
+    return;
+  }
   document.getElementById('recentChangesOverlay').classList.remove('open');
 };
 
@@ -1911,13 +1925,7 @@ function setHomeScrollLocked(locked) {
 
 setHomeScrollLocked(true);
 
-function installHistoryGuard() {
-  const cleanUrl = window.location.pathname + window.location.search;
-  window.history.replaceState({ gestioneBusView:'root' }, '', cleanUrl);
-  window.history.pushState({ gestioneBusView:'guard' }, '', cleanUrl);
-}
-
-installHistoryGuard();
+replaceViewState('home');
 
 onSnapshot(collection(db, 'buses'), snap => {
   buses = snap.docs.map(d => ({ id:d.id, ...d.data() })).sort(byMat);
@@ -2126,17 +2134,21 @@ function renderTopics() {
     : '<div class="empty">Nessun tema da sviluppare.</div>';
 }
 
-window.openTopics = function() {
-  if (navigationInCooldown()) return;
+window.openTopics = function(fromHistory = false) {
   setHomeScrollLocked(false);
   document.getElementById('homeView').style.display = 'none';
+  document.getElementById('categoryView').classList.remove('open');
   document.getElementById('topicsView').classList.add('open');
   renderTopics();
   forzaScrollInAlto();
+  if (!fromHistory) pushViewState('topics');
 };
 
 window.closeTopics = function(fromHistory = false) {
-  if (!fromHistory) startNavigationCooldown();
+  if (!fromHistory && window.history.state?.gestioneBusView === 'topics') {
+    window.history.back();
+    return;
+  }
   document.getElementById('topicsView').classList.remove('open');
   document.getElementById('homeView').style.display = 'block';
   setHomeScrollLocked(true);
@@ -2183,19 +2195,24 @@ document.getElementById('topicInput').addEventListener('keydown', e => {
   if (e.key === 'Enter') addTopic();
 });
 
-window.openCategory = function(category) {
-  if (navigationInCooldown()) return;
+window.openCategory = function(category, fromHistory = false) {
   setHomeScrollLocked(false);
   currentCategory = category;
   categoryScrollPosition = 0;
   document.getElementById('homeView').style.display = 'none';
+  document.getElementById('topicsView').classList.remove('open');
+  document.getElementById('detailView').classList.remove('open');
   document.getElementById('categoryView').classList.add('open');
   renderCategoryView();
   forzaScrollInAlto();
+  if (!fromHistory) pushViewState('category', { category });
 };
 
 window.closeCategory = function(fromHistory = false) {
-  if (!fromHistory) startNavigationCooldown();
+  if (!fromHistory && window.history.state?.gestioneBusView === 'category') {
+    window.history.back();
+    return;
+  }
   currentCategory = null;
   document.getElementById('categoryView').classList.remove('open');
   document.getElementById('homeView').style.display = 'block';
@@ -2232,8 +2249,7 @@ function renderCategoryView() {
 }
 
 
-window.selectBus = function(mat) {
-  if (navigationInCooldown()) return;
+window.selectBus = function(mat, fromHistory = false) {
   categoryScrollPosition = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
   hardResetSwipeVisual();
   openSegIds.clear();
@@ -2256,10 +2272,17 @@ window.selectBus = function(mat) {
     hardResetSwipeVisual();
     forzaScrollInAlto();
   }, 80);
+
+  if (!fromHistory) {
+    pushViewState('detail', { category:currentCategory, bus:mat });
+  }
 };
 
 window.closeDetail = function(fromHistory = false) {
-  if (!fromHistory) startNavigationCooldown();
+  if (!fromHistory && window.history.state?.gestioneBusView === 'detail') {
+    window.history.back();
+    return;
+  }
   const posizioneDaRipristinare = categoryScrollPosition;
 
   hardResetSwipeVisual();
@@ -3005,24 +3028,46 @@ window.importaDati = async function(event) {
   reader.readAsText(file);
 };
 
-window.addEventListener('popstate', () => {
-  if (selectedBus) {
-    window.closeDetail(true);
-  } else {
-    const categoryView = document.getElementById('categoryView');
-    const topicsView = document.getElementById('topicsView');
-    const recentOverlay = document.getElementById('recentChangesOverlay');
+window.addEventListener('popstate', event => {
+  const state = event.state || { gestioneBusView:'home' };
+  const view = state.gestioneBusView || 'home';
 
-    if (categoryView?.classList.contains('open')) {
-      window.closeCategory(true);
-    } else if (topicsView?.classList.contains('open')) {
-      window.closeTopics(true);
-    } else if (recentOverlay?.classList.contains('open')) {
-      window.closeRecentChanges(true);
-    }
+  document.getElementById('recentChangesOverlay').classList.remove('open');
+
+  if (view === 'detail' && state.bus) {
+    currentCategory = state.category || currentCategory || 'urbani';
+    window.selectBus(state.bus, true);
+    return;
   }
 
-  setTimeout(installHistoryGuard, 0);
+  if (selectedBus) {
+    window.closeDetail(true);
+  }
+
+  if (view === 'category' && state.category) {
+    window.openCategory(state.category, true);
+    return;
+  }
+
+  document.getElementById('categoryView').classList.remove('open');
+
+  if (view === 'topics') {
+    window.openTopics(true);
+    return;
+  }
+
+  document.getElementById('topicsView').classList.remove('open');
+  currentCategory = null;
+  selectedBus = null;
+  document.getElementById('detailView').classList.remove('open');
+  document.getElementById('homeView').style.display = 'block';
+  setHomeScrollLocked(true);
+  renderBusGrid();
+  forzaScrollInAlto();
+
+  if (view === 'recent') {
+    window.openRecentChanges(true);
+  }
 });
 
 let navigationSwipe = null;
