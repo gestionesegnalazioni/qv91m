@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="app-version" content="8.04">
-<title>Gestione Bus v8.04</title>
+<meta name="app-version" content="8.05">
+<title>Gestione Bus v8.05</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -160,6 +160,69 @@
 
   .btn-delete-bus:active {
     transform:scale(.985);
+  }
+
+  .btn-history {
+    background:#D48AA3;
+    color:#ffffff;
+    border:1px solid #D48AA3;
+    border-radius:999px;
+    padding:11px 18px;
+    font-weight:700;
+    font-size:.82rem;
+    min-height:40px;
+    width:100%;
+    box-shadow:0 10px 24px rgba(212,138,163,.22);
+  }
+
+  .recent-list {
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+    margin:12px 0 4px;
+    max-height:58vh;
+    overflow:auto;
+  }
+
+  .recent-item {
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:14px;
+    background:rgba(255,255,255,.05);
+    padding:11px 12px;
+  }
+
+  .recent-item-top {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:5px;
+  }
+
+  .recent-bus {
+    color:var(--green);
+    font-weight:800;
+    font-size:.92rem;
+  }
+
+  .recent-date {
+    color:var(--muted);
+    font-size:.68rem;
+    white-space:nowrap;
+  }
+
+  .recent-action {
+    color:var(--text);
+    font-size:.84rem;
+    line-height:1.35;
+  }
+
+  .recent-detail {
+    color:var(--muted);
+    font-size:.75rem;
+    line-height:1.3;
+    margin-top:3px;
+    word-break:break-word;
   }
 
   .share-list {
@@ -1537,6 +1600,15 @@
   .category-bottom-actions {
     margin-top:24px;
     padding-bottom:28px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+  }
+
+  .category-bottom-actions > .btn-primary,
+  .category-bottom-actions > .btn-history {
+    width:100%;
   }
 
   @media(max-width:480px) {
@@ -1574,6 +1646,7 @@
         <button class="btn-primary" onclick="addBus()">Salva</button>
         <button class="btn-ghost" onclick="toggleAddForm()">Annulla</button>
       </div>
+      <button class="btn-history" onclick="openRecentChanges()">Ultime modifiche</button>
     </div>
   </div>
 
@@ -1635,6 +1708,16 @@
   </div>
 </div>
 
+<div class="modal-overlay" id="recentChangesOverlay">
+  <div class="modal">
+    <h2>ULTIME MODIFICHE</h2>
+    <div id="recentChangesList" class="recent-list"></div>
+    <div class="modal-footer">
+      <button class="btn-primary" onclick="closeRecentChanges()">Chiudi</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script type="module">
@@ -1657,6 +1740,7 @@ const db = getFirestore(app);
 let buses = [];
 let segnalazioni = [];
 let temi = [];
+let modifiche = [];
 let selectedBus = null;
 let editingSegId = null;
 let currentBusForModal = null;
@@ -1694,6 +1778,66 @@ function showToast(msg) {
   setTimeout(() => t.style.display = 'none', 1600);
 }
 window.showToast = showToast;
+
+async function registraModifica(bus, azione, dettaglio = '') {
+  if (!bus || !azione) return;
+  try {
+    await addDoc(collection(db, 'modifiche'), {
+      bus:String(bus).toUpperCase(),
+      azione,
+      dettaglio:String(dettaglio || '').trim(),
+      createdAt:new Date().toISOString()
+    });
+  } catch(e) {
+    console.error('Cronologia non registrata', e);
+  }
+}
+
+function formattaDataModifica(value) {
+  const data = new Date(value);
+  if (Number.isNaN(data.getTime())) return '';
+  return data.toLocaleString('it-IT', {
+    day:'2-digit',
+    month:'2-digit',
+    year:'2-digit',
+    hour:'2-digit',
+    minute:'2-digit'
+  });
+}
+
+function renderRecentChanges() {
+  const list = document.getElementById('recentChangesList');
+  if (!list) return;
+
+  const ultime = [...modifiche]
+    .sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')))
+    .slice(0, 10);
+
+  list.innerHTML = ultime.length
+    ? ultime.map(m => {
+        const dettaglio = m.dettaglio
+          ? '<div class="recent-detail">' + esc(m.dettaglio) + '</div>'
+          : '';
+        return '<div class="recent-item">' +
+          '<div class="recent-item-top">' +
+            '<span class="recent-bus">' + esc(m.bus || '—') + '</span>' +
+            '<span class="recent-date">' + esc(formattaDataModifica(m.createdAt)) + '</span>' +
+          '</div>' +
+          '<div class="recent-action">' + esc(m.azione || 'Modifica') + '</div>' +
+          dettaglio +
+        '</div>';
+      }).join('')
+    : '<div class="empty">La cronologia è vuota. Le nuove modifiche compariranno qui.</div>';
+}
+
+window.openRecentChanges = function() {
+  renderRecentChanges();
+  document.getElementById('recentChangesOverlay').classList.add('open');
+};
+
+window.closeRecentChanges = function() {
+  document.getElementById('recentChangesOverlay').classList.remove('open');
+};
 
 function renderAll() {
   renderBusGrid();
@@ -1748,6 +1892,15 @@ onSnapshot(collection(db, 'segnalazioni'), snap => {
   document.getElementById('busGrid').innerHTML = '<div class="empty">Errore caricamento segnalazioni.</div>';
 });
 
+onSnapshot(collection(db, 'modifiche'), snap => {
+  modifiche = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+  if (document.getElementById('recentChangesOverlay')?.classList.contains('open')) {
+    renderRecentChanges();
+  }
+}, err => {
+  console.error('Errore caricamento cronologia', err);
+});
+
 onSnapshot(collection(db, 'temi'), snap => {
   temi = snap.docs.map(d => ({ id:d.id, ...d.data() }))
     .sort((a, b) => (a.createdAt || '').localeCompare(b.createdAt || ''));
@@ -1787,6 +1940,7 @@ window.addBus = async function() {
   }
 
   await addDoc(collection(db, 'buses'), { matricola:mat, fuoriServizio:false });
+  await registraModifica(mat, 'Autobus aggiunto');
   inp.value = '';
   document.getElementById('addBusForm').classList.remove('open');
   showToast('Autobus aggiunto');
@@ -2261,7 +2415,9 @@ window.saveSegnalazione = async function() {
   }
 
   if (editingSegId) {
+    const esistente = segnalazioni.find(x => x.id === editingSegId);
     await updateDoc(doc(db, 'segnalazioni', editingSegId), { desc });
+    await registraModifica(esistente?.bus || currentBusForModal, 'Anomalia modificata', desc);
     showToast('Segnalazione aggiornata');
   } else {
     await addDoc(collection(db, 'segnalazioni'), {
@@ -2273,6 +2429,7 @@ window.saveSegnalazione = async function() {
       note:'',
       createdAt:new Date().toISOString()
     });
+    await registraModifica(currentBusForModal, 'Nuova anomalia', desc);
     showToast('Segnalazione salvata');
   }
 
@@ -2291,10 +2448,12 @@ window.editSeg = function(id) {
 };
 
 window.deleteSeg = async function(id) {
+  const s = segnalazioni.find(x => x.id === id);
   const ok = confirm("Eliminare questa anomalia?\n\nL'operazione eliminerà l'anomalia e tutte le date associate.");
   if (!ok) return;
 
   await deleteDoc(doc(db, 'segnalazioni', id));
+  await registraModifica(s?.bus || selectedBus, 'Anomalia eliminata', s?.desc || '');
   showToast('Anomalia eliminata');
 };
 
@@ -2302,13 +2461,17 @@ window.archiviaSeg = async function(id) {
   const ok = confirm("Spostare questa anomalia nelle vecchie segnalazioni?");
   if (!ok) return;
 
+  const s = segnalazioni.find(x => x.id === id);
   await updateDoc(doc(db, 'segnalazioni', id), { pregressa:true, standby:false });
+  await registraModifica(s?.bus || selectedBus, 'Anomalia archiviata', s?.desc || '');
   archiveVisible = true;
   showToast('Spostata in archivio');
 };
 
 window.ripristinaSeg = async function(id) {
+  const s = segnalazioni.find(x => x.id === id);
   await updateDoc(doc(db, 'segnalazioni', id), { pregressa:false, standby:false });
+  await registraModifica(s?.bus || selectedBus, 'Anomalia ripristinata', s?.desc || '');
   showToast('Anomalia ripristinata');
 };
 
@@ -2358,6 +2521,8 @@ window.autoSaveNote = function(id, textarea) {
   noteTimers[id] = setTimeout(async () => {
     try {
       await updateDoc(doc(db, 'segnalazioni', id), { note:textarea.value });
+      const s = segnalazioni.find(x => x.id === id);
+      await registraModifica(s?.bus || selectedBus, 'Nota aggiornata', s?.desc || '');
     } catch(e) {
       console.error(e);
       showToast('Errore salvataggio note');
@@ -2419,6 +2584,7 @@ window.autoSaveDate = async function(id, input) {
   dates.sort();
 
   await updateDoc(doc(db, 'segnalazioni', id), { date:dates });
+  await registraModifica(s.bus, 'Nuova segnalazione registrata', s.desc || '');
   showToast('Data registrata');
 
   setTimeout(() => {
@@ -2435,6 +2601,7 @@ window.rimuoviData = async function(id, idx) {
 
   const dates = s.date.filter((_, i) => i !== idx);
   await updateDoc(doc(db, 'segnalazioni', id), { date:dates });
+  await registraModifica(s.bus, 'Data eliminata', s.desc || '');
 };
 
 window.moveSeg = async function(id, dir) {
@@ -2475,6 +2642,7 @@ window.deleteBus = async function() {
     }
 
     await deleteDoc(doc(db, 'buses', bus.id));
+    await registraModifica(selectedBus, 'Autobus eliminato');
 
     showToast('Autobus eliminato');
     closeDetail();
@@ -2490,7 +2658,9 @@ window.toggleFuoriServizio = async function() {
   const bus = buses.find(b => b.matricola === selectedBus);
   if (!bus) return;
 
-  await updateDoc(doc(db, 'buses', bus.id), { fuoriServizio:!bus.fuoriServizio });
+  const nuovoStato = !bus.fuoriServizio;
+  await updateDoc(doc(db, 'buses', bus.id), { fuoriServizio:nuovoStato });
+  await registraModifica(selectedBus, nuovoStato ? 'Autobus messo fuori servizio' : 'Autobus rimesso in servizio');
 };
 
 
