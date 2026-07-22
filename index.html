@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="app-version" content="8.10">
-<title>Gestione Bus v8.10</title>
+<meta name="app-version" content="8.11">
+<title>Gestione Bus v8.11</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -2440,7 +2440,11 @@ window.saveSegnalazione = async function() {
   if (editingSegId) {
     const esistente = segnalazioni.find(x => x.id === editingSegId);
     await updateDoc(doc(db, 'segnalazioni', editingSegId), { desc });
-    await registraModifica(esistente?.bus || currentBusForModal, 'Anomalia modificata', desc);
+    const prima = String(esistente?.desc || '').trim();
+    const dettaglio = prima && prima !== desc
+      ? 'Prima: ' + prima + ' — Adesso: ' + desc
+      : 'Anomalia: ' + desc;
+    await registraModifica(esistente?.bus || currentBusForModal, 'Anomalia modificata', dettaglio);
     showToast('Segnalazione aggiornata');
   } else {
     await addDoc(collection(db, 'segnalazioni'), {
@@ -2452,7 +2456,7 @@ window.saveSegnalazione = async function() {
       note:'',
       createdAt:new Date().toISOString()
     });
-    await registraModifica(currentBusForModal, 'Nuova anomalia', desc);
+    await registraModifica(currentBusForModal, 'Nuova anomalia', 'Anomalia: ' + desc);
     showToast('Segnalazione salvata');
   }
 
@@ -2476,7 +2480,7 @@ window.deleteSeg = async function(id) {
   if (!ok) return;
 
   await deleteDoc(doc(db, 'segnalazioni', id));
-  await registraModifica(s?.bus || selectedBus, 'Anomalia eliminata', s?.desc || '');
+  await registraModifica(s?.bus || selectedBus, 'Anomalia eliminata', 'Anomalia: ' + (s?.desc || ''));
   showToast('Anomalia eliminata');
 };
 
@@ -2486,7 +2490,7 @@ window.archiviaSeg = async function(id) {
 
   const s = segnalazioni.find(x => x.id === id);
   await updateDoc(doc(db, 'segnalazioni', id), { pregressa:true, standby:false });
-  await registraModifica(s?.bus || selectedBus, 'Anomalia archiviata', s?.desc || '');
+  await registraModifica(s?.bus || selectedBus, 'Anomalia archiviata', 'Anomalia: ' + (s?.desc || ''));
   archiveVisible = true;
   showToast('Spostata in archivio');
 };
@@ -2494,7 +2498,7 @@ window.archiviaSeg = async function(id) {
 window.ripristinaSeg = async function(id) {
   const s = segnalazioni.find(x => x.id === id);
   await updateDoc(doc(db, 'segnalazioni', id), { pregressa:false, standby:false });
-  await registraModifica(s?.bus || selectedBus, 'Anomalia ripristinata', s?.desc || '');
+  await registraModifica(s?.bus || selectedBus, 'Anomalia ripristinata', 'Anomalia: ' + (s?.desc || ''));
   showToast('Anomalia ripristinata');
 };
 
@@ -2545,7 +2549,9 @@ window.autoSaveNote = function(id, textarea) {
     try {
       await updateDoc(doc(db, 'segnalazioni', id), { note:textarea.value });
       const s = segnalazioni.find(x => x.id === id);
-      await registraModifica(s?.bus || selectedBus, 'Nota aggiornata', s?.desc || '');
+      const nota = String(textarea.value || '').trim();
+      const dettaglio = 'Anomalia: ' + (s?.desc || '') + (nota ? ' — Nota: ' + nota : ' — Nota cancellata');
+      await registraModifica(s?.bus || selectedBus, 'Nota aggiornata', dettaglio);
     } catch(e) {
       console.error(e);
       showToast('Errore salvataggio note');
@@ -2607,7 +2613,11 @@ window.autoSaveDate = async function(id, input) {
   dates.sort();
 
   await updateDoc(doc(db, 'segnalazioni', id), { date:dates });
-  await registraModifica(s.bus, 'Nuova segnalazione registrata', s.desc || '');
+  await registraModifica(
+    s.bus,
+    'Aggiunta data ' + fmtDate(data),
+    'Anomalia: ' + (s.desc || '')
+  );
   showToast('Data registrata');
 
   setTimeout(() => {
@@ -2622,9 +2632,14 @@ window.rimuoviData = async function(id, idx) {
   if (!s || !Array.isArray(s.date)) return;
   if (!confirm('Eliminare questa data?')) return;
 
+  const dataEliminata = s.date[idx];
   const dates = s.date.filter((_, i) => i !== idx);
   await updateDoc(doc(db, 'segnalazioni', id), { date:dates });
-  await registraModifica(s.bus, 'Data eliminata', s.desc || '');
+  await registraModifica(
+    s.bus,
+    'Eliminata data ' + (dataEliminata ? fmtDate(dataEliminata) : ''),
+    'Anomalia: ' + (s.desc || '')
+  );
 };
 
 window.moveSeg = async function(id, dir) {
@@ -2641,7 +2656,7 @@ window.moveSeg = async function(id, dir) {
   reordered.splice(target, 0, item);
 
   await Promise.all(reordered.map((s, i) => updateDoc(doc(db, 'segnalazioni', s.id), { order:i })));
-  await registraModifica(selectedBus, 'Ordine delle anomalie modificato', item.desc || '');
+  await registraModifica(selectedBus, 'Ordine delle anomalie modificato', 'Anomalia: ' + (item.desc || ''));
 };
 
 
