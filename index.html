@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="app-version" content="8.07">
-<title>Gestione Bus v8.07</title>
+<meta name="app-version" content="8.08">
+<title>Gestione Bus v8.08</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -166,8 +166,8 @@
     display:flex;
     align-items:center;
     justify-content:center;
-    margin-top:18px;
-    padding:2px 2px 14px;
+    margin-bottom:18px;
+    padding:2px 2px 4px;
   }
 
   .home-today {
@@ -1633,10 +1633,10 @@
 <body>
 <div class="wrapper">
   <div id="homeView">
-    <div class="category-home" id="busGrid"><div class="loading">Caricamento...</div></div>
     <div class="home-footer">
       <button class="home-today" id="homeToday" onclick="openRecentChanges()" aria-label="Apri le ultime modifiche" title="Ultime modifiche"></button>
     </div>
+    <div class="category-home" id="busGrid"><div class="loading">Caricamento...</div></div>
   </div>
 
   <div class="category-view" id="categoryView">
