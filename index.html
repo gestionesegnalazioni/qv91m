@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="app-version" content="8.05">
-<title>Gestione Bus v8.05</title>
+<meta name="app-version" content="8.06">
+<title>Gestione Bus v8.06</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -162,17 +162,39 @@
     transform:scale(.985);
   }
 
-  .btn-history {
-    background:#D48AA3;
+  .home-footer {
+    display:grid;
+    grid-template-columns:42px minmax(0,1fr) 42px;
+    align-items:center;
+    gap:12px;
+    margin-top:18px;
+    padding:2px 2px 14px;
+  }
+
+  .home-today {
+    text-align:center;
+    color:var(--muted);
+    font-size:.78rem;
+    font-weight:600;
+    text-transform:capitalize;
+  }
+
+  .home-history-btn {
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
     color:#ffffff;
+    background:#D48AA3;
     border:1px solid #D48AA3;
-    border-radius:999px;
-    padding:11px 18px;
-    font-weight:700;
-    font-size:.82rem;
-    min-height:40px;
-    width:100%;
-    box-shadow:0 10px 24px rgba(212,138,163,.22);
+    box-shadow:0 10px 24px rgba(212,138,163,.25);
+    padding:0;
+  }
+
+  .home-history-btn svg {
+    width:21px;
+    height:21px;
   }
 
   .recent-list {
@@ -1606,8 +1628,7 @@
     gap:10px;
   }
 
-  .category-bottom-actions > .btn-primary,
-  .category-bottom-actions > .btn-history {
+  .category-bottom-actions > .btn-primary {
     width:100%;
   }
 
@@ -1624,6 +1645,15 @@
 <div class="wrapper">
   <div id="homeView">
     <div class="category-home" id="busGrid"><div class="loading">Caricamento...</div></div>
+    <div class="home-footer">
+      <div aria-hidden="true"></div>
+      <div class="home-today" id="homeToday"></div>
+      <button class="home-history-btn" onclick="openRecentChanges()" aria-label="Ultime modifiche" title="Ultime modifiche">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 12a8 8 0 1 0 2.35-5.65L4 8.7M4 4v4.7h4.7M12 7v5l3.2 2" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
   </div>
 
   <div class="category-view" id="categoryView">
@@ -1646,7 +1676,6 @@
         <button class="btn-primary" onclick="addBus()">Salva</button>
         <button class="btn-ghost" onclick="toggleAddForm()">Annulla</button>
       </div>
-      <button class="btn-history" onclick="openRecentChanges()">Ultime modifiche</button>
     </div>
   </div>
 
@@ -1779,6 +1808,16 @@ function showToast(msg) {
 }
 window.showToast = showToast;
 
+function aggiornaDataHome() {
+  const el = document.getElementById('homeToday');
+  if (!el) return;
+  el.textContent = new Date().toLocaleDateString('it-IT', {
+    weekday:'long',
+    day:'numeric',
+    month:'long'
+  });
+}
+
 async function registraModifica(bus, azione, dettaglio = '') {
   if (!bus || !azione) return;
   try {
@@ -1842,6 +1881,7 @@ window.closeRecentChanges = function() {
 function renderAll() {
   renderBusGrid();
   renderTopics();
+  aggiornaDataHome();
   if (currentCategory) renderCategoryView();
   if (selectedBus) showBusDetail(selectedBus);
 }
@@ -2086,14 +2126,17 @@ window.addTopic = async function() {
   const testo = input.value.trim();
   if (!testo) return;
   await addDoc(collection(db, 'temi'), { testo, createdAt:new Date().toISOString() });
+  await registraModifica('SPUNTI', 'Nuovo spunto', testo);
   input.value = '';
   input.focus();
   showToast('Tema aggiunto');
 };
 
 window.deleteTopic = async function(id) {
+  const tema = temi.find(t => t.id === id);
   if (!confirm('Eliminare questo tema?')) return;
   await deleteDoc(doc(db, 'temi', id));
+  await registraModifica('SPUNTI', 'Spunto eliminato', tema?.testo || '');
   showToast('Tema eliminato');
 };
 
@@ -2618,6 +2661,7 @@ window.moveSeg = async function(id, dir) {
   reordered.splice(target, 0, item);
 
   await Promise.all(reordered.map((s, i) => updateDoc(doc(db, 'segnalazioni', s.id), { order:i })));
+  await registraModifica(selectedBus, 'Ordine delle anomalie modificato', item.desc || '');
 };
 
 
@@ -2907,6 +2951,7 @@ window.importaDati = async function(event) {
         await addDoc(collection(db, 'segnalazioni'), rest);
       }
 
+      await registraModifica('SISTEMA', 'Dati importati');
       showToast('Dati importati');
     } catch(err) {
       alert('File non valido');
