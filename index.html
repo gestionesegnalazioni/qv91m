@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="app-version" content="8.11">
-<title>Gestione Bus v8.11</title>
+<meta name="app-version" content="8.12">
+<title>Gestione Bus v8.12</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1625,10 +1625,34 @@
   }
 
   @media(max-width:480px) {
-    .category-home { gap:15px; padding-top:14px; }
-    .category-card { min-height:137px; padding:21px 19px; border-radius:25px; }
-    .category-card-title { font-size:1.42rem; }
-    .category-card-icon { width:47px; height:47px; flex-basis:47px; }
+    body.home-scroll-locked .category-home {
+      height:calc(100dvh - 40px);
+      grid-template-rows:repeat(5,minmax(0,1fr));
+      gap:10px;
+      padding-top:0;
+    }
+
+    body.home-scroll-locked .category-card {
+      min-height:0;
+      height:100%;
+      padding:13px 17px;
+      border-radius:21px;
+    }
+
+    body.home-scroll-locked .category-card-title {
+      font-size:1.18rem;
+    }
+
+    body.home-scroll-locked .category-card-count {
+      margin-top:5px;
+      font-size:.76rem;
+    }
+
+    body.home-scroll-locked .category-card-icon {
+      width:38px;
+      height:38px;
+      flex-basis:38px;
+    }
   }
 
 </style>
