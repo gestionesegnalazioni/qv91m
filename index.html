@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="app-version" content="8.13">
-<title>Gestione Bus v8.13</title>
+<meta name="app-version" content="8.14">
+<title>Gestione Bus v8.14</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1786,6 +1786,15 @@ let openNoteIds = new Set();
 let homeScrollPosition = 0;
 let categoryScrollPosition = 0;
 let currentCategory = null;
+let navigationCooldownUntil = 0;
+
+function navigationInCooldown() {
+  return Date.now() < navigationCooldownUntil;
+}
+
+function startNavigationCooldown() {
+  navigationCooldownUntil = Date.now() + 700;
+}
 
 
 function byMat(a, b) {
@@ -1867,6 +1876,7 @@ function renderRecentChanges() {
 }
 
 window.openRecentChanges = function() {
+  if (navigationInCooldown()) return;
   renderRecentChanges();
   document.getElementById('recentChangesOverlay').classList.add('open');
 
@@ -1876,12 +1886,17 @@ window.openRecentChanges = function() {
 };
 
 window.closeRecentChanges = function(fromHistory = false) {
-  if (!fromHistory && window.history.state?.gestioneBusView === 'modifiche') {
-    window.history.back();
-    return;
-  }
+  if (!fromHistory && navigationInCooldown()) return;
 
+  const aggiornaCronologia =
+    !fromHistory && window.history.state?.gestioneBusView === 'modifiche';
+
+  if (!fromHistory) startNavigationCooldown();
   document.getElementById('recentChangesOverlay').classList.remove('open');
+
+  if (aggiornaCronologia) {
+    setTimeout(() => window.history.back(), 0);
+  }
 };
 
 function renderAll() {
@@ -2123,6 +2138,7 @@ function renderTopics() {
 }
 
 window.openTopics = function() {
+  if (navigationInCooldown()) return;
   setHomeScrollLocked(false);
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('topicsView').classList.add('open');
@@ -2136,17 +2152,22 @@ window.openTopics = function() {
 };
 
 window.closeTopics = function(fromHistory = false) {
-  if (!fromHistory && window.history.state?.gestioneBusView === 'spunti') {
-    window.history.back();
-    return;
-  }
+  if (!fromHistory && navigationInCooldown()) return;
 
+  const aggiornaCronologia =
+    !fromHistory && window.history.state?.gestioneBusView === 'spunti';
+
+  if (!fromHistory) startNavigationCooldown();
   document.getElementById('topicsView').classList.remove('open');
   document.getElementById('homeView').style.display = 'block';
   setHomeScrollLocked(true);
   document.getElementById('topicInput').value = '';
   renderBusGrid();
   forzaScrollInAlto();
+
+  if (aggiornaCronologia) {
+    setTimeout(() => window.history.back(), 0);
+  }
 };
 
 window.addTopic = async function() {
@@ -2188,6 +2209,7 @@ document.getElementById('topicInput').addEventListener('keydown', e => {
 });
 
 window.openCategory = function(category) {
+  if (navigationInCooldown()) return;
   setHomeScrollLocked(false);
   currentCategory = category;
   categoryScrollPosition = 0;
@@ -2210,11 +2232,12 @@ window.openCategory = function(category) {
 };
 
 window.closeCategory = function(fromHistory = false) {
-  if (!fromHistory && window.history.state?.gestioneBusView === 'categoria') {
-    window.history.back();
-    return;
-  }
+  if (!fromHistory && navigationInCooldown()) return;
 
+  const aggiornaCronologia =
+    !fromHistory && window.history.state?.gestioneBusView === 'categoria';
+
+  if (!fromHistory) startNavigationCooldown();
   currentCategory = null;
   document.getElementById('categoryView').classList.remove('open');
   document.getElementById('homeView').style.display = 'block';
@@ -2222,6 +2245,10 @@ window.closeCategory = function(fromHistory = false) {
   document.getElementById('addBusForm').classList.remove('open');
   renderBusGrid();
   forzaScrollInAlto();
+
+  if (aggiornaCronologia) {
+    setTimeout(() => window.history.back(), 0);
+  }
 };
 
 function renderCategoryView() {
@@ -2252,6 +2279,7 @@ function renderCategoryView() {
 
 
 window.selectBus = function(mat) {
+  if (navigationInCooldown()) return;
   categoryScrollPosition = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
   hardResetSwipeVisual();
   openSegIds.clear();
@@ -2289,11 +2317,12 @@ window.selectBus = function(mat) {
 };
 
 window.closeDetail = function(fromHistory = false) {
-  if (!fromHistory && window.history.state?.gestioneBusView === 'dettaglio') {
-    window.history.back();
-    return;
-  }
+  if (!fromHistory && navigationInCooldown()) return;
 
+  const aggiornaCronologia =
+    !fromHistory && window.history.state?.gestioneBusView === 'dettaglio';
+
+  if (!fromHistory) startNavigationCooldown();
   const posizioneDaRipristinare = categoryScrollPosition;
 
   hardResetSwipeVisual();
@@ -2318,6 +2347,10 @@ window.closeDetail = function(fromHistory = false) {
   });
 
   setTimeout(ripristinaCategoria, 80);
+
+  if (aggiornaCronologia) {
+    setTimeout(() => window.history.back(), 0);
+  }
 };
 
 function fmtDate(d) {
