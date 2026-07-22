@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="app-version" content="8.09">
-<title>Gestione Bus v8.09</title>
+<meta name="app-version" content="8.10">
+<title>Gestione Bus v8.10</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -160,30 +160,6 @@
 
   .btn-delete-bus:active {
     transform:scale(.985);
-  }
-
-  .home-footer {
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    margin-bottom:6px;
-    padding:0 2px;
-  }
-
-  .home-today {
-    text-align:center;
-    color:var(--muted);
-    background:transparent;
-    border:none;
-    padding:8px 14px;
-    font-family:var(--font-sans);
-    font-size:.78rem;
-    font-weight:600;
-    text-transform:capitalize;
-  }
-
-  .home-today:active {
-    color:var(--text);
   }
 
   .recent-list {
@@ -1462,6 +1438,16 @@
     color:#facc15;
   }
 
+  .category-card.modifiche {
+    background:linear-gradient(145deg,rgba(212,138,163,.22),rgba(112,49,72,.07));
+    border-color:rgba(212,138,163,.48);
+    box-shadow:0 18px 45px rgba(112,49,72,.18), inset 5px 0 0 #D48AA3;
+  }
+
+  .category-card.modifiche .category-card-title {
+    color:#f4b7cb;
+  }
+
   .topics-view { display:none; }
   .topics-view.open { display:block; }
 
@@ -1490,6 +1476,14 @@
     overflow-wrap:anywhere;
   }
 
+  .topic-actions {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex:0 0 auto;
+  }
+
+  .topic-edit,
   .topic-delete {
     width:38px;
     height:38px;
@@ -1497,10 +1491,19 @@
     border-radius:50%;
     display:grid;
     place-items:center;
+    font-size:1rem;
+  }
+
+  .topic-edit {
+    color:#93c5fd;
+    background:rgba(59,130,246,.10);
+    border:1px solid rgba(59,130,246,.30);
+  }
+
+  .topic-delete {
     color:#fca5a5;
     background:rgba(239,68,68,.10);
     border:1px solid rgba(239,68,68,.30);
-    font-size:1rem;
   }
 
   .topics-add-row {
@@ -1633,9 +1636,6 @@
 <body>
 <div class="wrapper">
   <div id="homeView">
-    <div class="home-footer">
-      <button class="home-today" id="homeToday" onclick="openRecentChanges()" aria-label="Apri le ultime modifiche" title="Ultime modifiche"></button>
-    </div>
     <div class="category-home" id="busGrid"><div class="loading">Caricamento...</div></div>
   </div>
 
@@ -1791,16 +1791,6 @@ function showToast(msg) {
 }
 window.showToast = showToast;
 
-function aggiornaDataHome() {
-  const el = document.getElementById('homeToday');
-  if (!el) return;
-  el.textContent = new Date().toLocaleDateString('it-IT', {
-    weekday:'long',
-    day:'numeric',
-    month:'long'
-  });
-}
-
 async function registraModifica(bus, azione, dettaglio = '') {
   if (!bus || !azione) return;
   try {
@@ -1864,7 +1854,6 @@ window.closeRecentChanges = function() {
 function renderAll() {
   renderBusGrid();
   renderTopics();
-  aggiornaDataHome();
   if (currentCategory) renderCategoryView();
   if (selectedBus) showBusDetail(selectedBus);
 }
@@ -1917,6 +1906,7 @@ onSnapshot(collection(db, 'segnalazioni'), snap => {
 
 onSnapshot(collection(db, 'modifiche'), snap => {
   modifiche = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+  renderBusGrid();
   if (document.getElementById('recentChangesOverlay')?.classList.contains('open')) {
     renderRecentChanges();
   }
@@ -2045,7 +2035,8 @@ function renderBusGrid() {
     categoryCard('urbani', 'Urbani', numeroUrbani, 'urbani') +
     categoryCard('extraurbani', 'Extraurbani', extraurbani.length, 'extraurbani') +
     categoryCard('fuori', 'Fuori servizio', fuori.length, 'fuori') +
-    topicCategoryCard();
+    topicCategoryCard() +
+    recentChangesCategoryCard();
 }
 
 function topicCategoryCard() {
@@ -2062,6 +2053,21 @@ function topicCategoryCard() {
     </button>`;
 }
 
+function recentChangesCategoryCard() {
+  const count = Math.min(modifiche.length, 10);
+  const label = count === 1 ? '1 attività recente' : `${count} attività recenti`;
+  return `
+    <button class="category-card modifiche" onclick="openRecentChanges()">
+      <div class="category-card-copy">
+        <div class="category-card-title">Ultime modifiche</div>
+        <div class="category-card-count">${label}</div>
+      </div>
+      <svg class="category-card-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 12a8 8 0 1 0 2.35-5.65L4 8.7M4 4v4.7h4.7M12 7v5l3.2 2" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>`;
+}
+
 function renderTopics() {
   const list = document.getElementById('topicsList');
   if (!list) return;
@@ -2069,7 +2075,10 @@ function renderTopics() {
     ? temi.map(t => `
         <div class="topic-item">
           <div class="topic-text">${esc(t.testo)}</div>
-          <button class="topic-delete" onclick="deleteTopic('${t.id}')" aria-label="Elimina tema" title="Elimina tema">✕</button>
+          <div class="topic-actions">
+            <button class="topic-edit" onclick="editTopic('${t.id}')" aria-label="Modifica spunto" title="Modifica spunto">✎</button>
+            <button class="topic-delete" onclick="deleteTopic('${t.id}')" aria-label="Elimina tema" title="Elimina tema">✕</button>
+          </div>
         </div>`).join('')
     : '<div class="empty">Nessun tema da sviluppare.</div>';
 }
@@ -2079,23 +2088,10 @@ window.openTopics = function() {
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('topicsView').classList.add('open');
   renderTopics();
-
-  if (window.location.hash !== '#spunti') {
-    window.history.pushState({ gestioneBusView:'spunti' }, '', '#spunti');
-  }
-
   forzaScrollInAlto();
 };
 
-window.closeTopics = function(fromHistory = false) {
-  if (!fromHistory && window.location.hash === '#spunti') {
-    window.history.replaceState(
-      { gestioneBusView:'home' },
-      '',
-      window.location.pathname + window.location.search
-    );
-  }
-
+window.closeTopics = function() {
   document.getElementById('topicsView').classList.remove('open');
   document.getElementById('homeView').style.display = 'block';
   setHomeScrollLocked(true);
@@ -2113,6 +2109,21 @@ window.addTopic = async function() {
   input.value = '';
   input.focus();
   showToast('Tema aggiunto');
+};
+
+window.editTopic = async function(id) {
+  const tema = temi.find(t => t.id === id);
+  if (!tema) return;
+
+  const nuovoTesto = prompt('Modifica lo spunto:', tema.testo || '');
+  if (nuovoTesto === null) return;
+
+  const testo = nuovoTesto.trim();
+  if (!testo || testo === tema.testo) return;
+
+  await updateDoc(doc(db, 'temi', id), { testo });
+  await registraModifica('SPUNTI', 'Spunto modificato', testo);
+  showToast('Spunto aggiornato');
 };
 
 window.deleteTopic = async function(id) {
@@ -2134,24 +2145,10 @@ window.openCategory = function(category) {
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('categoryView').classList.add('open');
   renderCategoryView();
-
-  const categoryHash = '#categoria-' + category;
-  if (window.location.hash !== categoryHash) {
-    window.history.pushState({ gestioneBusView:'categoria', category }, '', categoryHash);
-  }
-
   forzaScrollInAlto();
 };
 
-window.closeCategory = function(fromHistory = false) {
-  if (!fromHistory && window.location.hash.startsWith('#categoria-')) {
-    window.history.replaceState(
-      { gestioneBusView:'home' },
-      '',
-      window.location.pathname + window.location.search
-    );
-  }
-
+window.closeCategory = function() {
   currentCategory = null;
   document.getElementById('categoryView').classList.remove('open');
   document.getElementById('homeView').style.display = 'block';
@@ -2943,19 +2940,6 @@ window.importaDati = async function(event) {
 
   reader.readAsText(file);
 };
-
-window.addEventListener('popstate', () => {
-  const categoryView = document.getElementById('categoryView');
-  if (categoryView?.classList.contains('open') && !window.location.hash.startsWith('#categoria-')) {
-    window.closeCategory(true);
-    return;
-  }
-
-  const topicsView = document.getElementById('topicsView');
-  if (topicsView?.classList.contains('open') && window.location.hash !== '#spunti') {
-    window.closeTopics(true);
-  }
-});
 
 let navigationSwipe = null;
 let suppressNavigationClick = false;
