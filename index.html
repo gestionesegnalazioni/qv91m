@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="app-version" content="8.17">
-<title>Gestione Bus v8.17</title>
+<meta name="app-version" content="8.18">
+<title>Gestione Bus v8.18</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1893,11 +1893,8 @@ window.openRecentChanges = function(fromHistory = false) {
 };
 
 window.closeRecentChanges = function(fromHistory = false) {
-  if (!fromHistory && window.history.state?.gestioneBusView === 'recent') {
-    window.history.back();
-    return;
-  }
   document.getElementById('recentChangesOverlay').classList.remove('open');
+  if (!fromHistory) replaceViewState('home');
 };
 
 function renderAll() {
@@ -2145,16 +2142,13 @@ window.openTopics = function(fromHistory = false) {
 };
 
 window.closeTopics = function(fromHistory = false) {
-  if (!fromHistory && window.history.state?.gestioneBusView === 'topics') {
-    window.history.back();
-    return;
-  }
   document.getElementById('topicsView').classList.remove('open');
   document.getElementById('homeView').style.display = 'block';
   setHomeScrollLocked(true);
   document.getElementById('topicInput').value = '';
   renderBusGrid();
   forzaScrollInAlto();
+  if (!fromHistory) replaceViewState('home');
 };
 
 window.addTopic = async function() {
@@ -2209,10 +2203,6 @@ window.openCategory = function(category, fromHistory = false) {
 };
 
 window.closeCategory = function(fromHistory = false) {
-  if (!fromHistory && window.history.state?.gestioneBusView === 'category') {
-    window.history.back();
-    return;
-  }
   currentCategory = null;
   document.getElementById('categoryView').classList.remove('open');
   document.getElementById('homeView').style.display = 'block';
@@ -2220,6 +2210,7 @@ window.closeCategory = function(fromHistory = false) {
   document.getElementById('addBusForm').classList.remove('open');
   renderBusGrid();
   forzaScrollInAlto();
+  if (!fromHistory) replaceViewState('home');
 };
 
 function renderCategoryView() {
@@ -2279,10 +2270,6 @@ window.selectBus = function(mat, fromHistory = false) {
 };
 
 window.closeDetail = function(fromHistory = false) {
-  if (!fromHistory && window.history.state?.gestioneBusView === 'detail') {
-    window.history.back();
-    return;
-  }
   const posizioneDaRipristinare = categoryScrollPosition;
 
   hardResetSwipeVisual();
@@ -2307,6 +2294,7 @@ window.closeDetail = function(fromHistory = false) {
   });
 
   setTimeout(ripristinaCategoria, 80);
+  if (!fromHistory) replaceViewState('category', { category:currentCategory });
 };
 
 function fmtDate(d) {
