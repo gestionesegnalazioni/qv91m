@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="app-version" content="8.12">
-<title>Gestione Bus v8.12</title>
+<meta name="app-version" content="8.13">
+<title>Gestione Bus v8.13</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1869,9 +1869,18 @@ function renderRecentChanges() {
 window.openRecentChanges = function() {
   renderRecentChanges();
   document.getElementById('recentChangesOverlay').classList.add('open');
+
+  if (window.history.state?.gestioneBusView !== 'modifiche') {
+    window.history.pushState({ gestioneBusView:'modifiche' }, '', '#ultime-modifiche');
+  }
 };
 
-window.closeRecentChanges = function() {
+window.closeRecentChanges = function(fromHistory = false) {
+  if (!fromHistory && window.history.state?.gestioneBusView === 'modifiche') {
+    window.history.back();
+    return;
+  }
+
   document.getElementById('recentChangesOverlay').classList.remove('open');
 };
 
@@ -1899,6 +1908,12 @@ function setHomeScrollLocked(locked) {
 }
 
 setHomeScrollLocked(true);
+
+window.history.replaceState(
+  { gestioneBusView:'home' },
+  '',
+  window.location.pathname + window.location.search
+);
 
 onSnapshot(collection(db, 'buses'), snap => {
   buses = snap.docs.map(d => ({ id:d.id, ...d.data() })).sort(byMat);
@@ -2112,10 +2127,20 @@ window.openTopics = function() {
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('topicsView').classList.add('open');
   renderTopics();
+
+  if (window.history.state?.gestioneBusView !== 'spunti') {
+    window.history.pushState({ gestioneBusView:'spunti' }, '', '#spunti');
+  }
+
   forzaScrollInAlto();
 };
 
-window.closeTopics = function() {
+window.closeTopics = function(fromHistory = false) {
+  if (!fromHistory && window.history.state?.gestioneBusView === 'spunti') {
+    window.history.back();
+    return;
+  }
+
   document.getElementById('topicsView').classList.remove('open');
   document.getElementById('homeView').style.display = 'block';
   setHomeScrollLocked(true);
@@ -2169,10 +2194,27 @@ window.openCategory = function(category) {
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('categoryView').classList.add('open');
   renderCategoryView();
+
+  if (
+    window.history.state?.gestioneBusView !== 'categoria' ||
+    window.history.state?.category !== category
+  ) {
+    window.history.pushState(
+      { gestioneBusView:'categoria', category },
+      '',
+      '#categoria-' + category
+    );
+  }
+
   forzaScrollInAlto();
 };
 
-window.closeCategory = function() {
+window.closeCategory = function(fromHistory = false) {
+  if (!fromHistory && window.history.state?.gestioneBusView === 'categoria') {
+    window.history.back();
+    return;
+  }
+
   currentCategory = null;
   document.getElementById('categoryView').classList.remove('open');
   document.getElementById('homeView').style.display = 'block';
@@ -2220,6 +2262,18 @@ window.selectBus = function(mat) {
   document.getElementById('categoryView').classList.remove('open');
   document.getElementById('detailView').classList.add('open');
   showBusDetail(mat);
+
+  if (
+    window.history.state?.gestioneBusView !== 'dettaglio' ||
+    window.history.state?.bus !== mat
+  ) {
+    window.history.pushState(
+      { gestioneBusView:'dettaglio', bus:mat, category:currentCategory },
+      '',
+      '#autobus-' + encodeURIComponent(mat)
+    );
+  }
+
   hardResetSwipeVisual();
   forzaScrollInAlto();
 
@@ -2234,7 +2288,12 @@ window.selectBus = function(mat) {
   }, 80);
 };
 
-window.closeDetail = function() {
+window.closeDetail = function(fromHistory = false) {
+  if (!fromHistory && window.history.state?.gestioneBusView === 'dettaglio') {
+    window.history.back();
+    return;
+  }
+
   const posizioneDaRipristinare = categoryScrollPosition;
 
   hardResetSwipeVisual();
@@ -2980,6 +3039,32 @@ window.importaDati = async function(event) {
   reader.readAsText(file);
 };
 
+window.addEventListener('popstate', event => {
+  const destinazione = event.state?.gestioneBusView || 'home';
+
+  if (selectedBus && destinazione !== 'dettaglio') {
+    window.closeDetail(true);
+    return;
+  }
+
+  const categoryView = document.getElementById('categoryView');
+  if (categoryView?.classList.contains('open') && destinazione !== 'categoria') {
+    window.closeCategory(true);
+    return;
+  }
+
+  const topicsView = document.getElementById('topicsView');
+  if (topicsView?.classList.contains('open') && destinazione !== 'spunti') {
+    window.closeTopics(true);
+    return;
+  }
+
+  const recentOverlay = document.getElementById('recentChangesOverlay');
+  if (recentOverlay?.classList.contains('open') && destinazione !== 'modifiche') {
+    window.closeRecentChanges(true);
+  }
+});
+
 let navigationSwipe = null;
 let suppressNavigationClick = false;
 
@@ -2992,6 +3077,11 @@ function getOpenNavigationView() {
   const topicsView = document.getElementById('topicsView');
   if (topicsView?.classList.contains('open')) {
     return { view:topicsView, close:window.closeTopics };
+  }
+
+  const recentOverlay = document.getElementById('recentChangesOverlay');
+  if (recentOverlay?.classList.contains('open')) {
+    return { view:recentOverlay, close:window.closeRecentChanges };
   }
 
   return null;
