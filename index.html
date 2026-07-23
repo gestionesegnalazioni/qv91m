@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.21">
-<title>Gestione Bus v8.21</title>
+<meta name="app-version" content="8.22">
+<title>Gestione Bus v8.22</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1811,6 +1811,19 @@ function replaceViewState(view, extra = {}) {
 }
 
 let homeNavigationIntent = false;
+let homeNavigationBlockedUntil = 0;
+
+function blockHomeNavigation(duration = 3000) {
+  homeNavigationIntent = false;
+  homeNavigationBlockedUntil = Math.max(
+    homeNavigationBlockedUntil,
+    Date.now() + duration
+  );
+}
+
+function homeNavigationIsBlocked() {
+  return Date.now() < homeNavigationBlockedUntil;
+}
 
 function homeIsVisible() {
   const home = document.getElementById('homeView');
@@ -1827,6 +1840,10 @@ document.addEventListener('touchstart', recordHomeNavigationIntent, { passive:tr
 
 function consumeHomeNavigationIntent(fromHistory) {
   if (fromHistory) return true;
+  if (homeNavigationIsBlocked()) {
+    homeNavigationIntent = false;
+    return false;
+  }
   const allowed = homeNavigationIntent && homeIsVisible();
   homeNavigationIntent = false;
   return allowed;
@@ -1835,6 +1852,18 @@ function consumeHomeNavigationIntent(fromHistory) {
 function clearHomeNavigationIntent() {
   homeNavigationIntent = false;
 }
+
+function stopBlockedHomeEvent(event) {
+  if (!homeNavigationIsBlocked() || !homeIsVisible()) return;
+  const card = event.target?.closest?.('.category-card');
+  if (!card) return;
+  if (event.cancelable) event.preventDefault();
+  event.stopImmediatePropagation();
+}
+
+document.addEventListener('pointerdown', stopBlockedHomeEvent, true);
+document.addEventListener('touchstart', stopBlockedHomeEvent, { capture:true, passive:false });
+document.addEventListener('click', stopBlockedHomeEvent, true);
 
 
 function byMat(a, b) {
@@ -1923,7 +1952,7 @@ window.openRecentChanges = function(fromHistory = false) {
 };
 
 window.closeRecentChanges = function(fromHistory = false) {
-  clearHomeNavigationIntent();
+  blockHomeNavigation();
   document.getElementById('recentChangesOverlay').classList.remove('open');
   if (!fromHistory) replaceViewState('home');
 };
@@ -2174,7 +2203,7 @@ window.openTopics = function(fromHistory = false) {
 };
 
 window.closeTopics = function(fromHistory = false) {
-  clearHomeNavigationIntent();
+  blockHomeNavigation();
   document.getElementById('topicsView').classList.remove('open');
   document.getElementById('homeView').style.display = 'block';
   setHomeScrollLocked(true);
@@ -2237,7 +2266,7 @@ window.openCategory = function(category, fromHistory = false) {
 };
 
 window.closeCategory = function(fromHistory = false) {
-  clearHomeNavigationIntent();
+  blockHomeNavigation();
   currentCategory = null;
   document.getElementById('categoryView').classList.remove('open');
   document.getElementById('homeView').style.display = 'block';
@@ -3043,7 +3072,7 @@ window.importaDati = async function(event) {
 };
 
 window.addEventListener('popstate', () => {
-  clearHomeNavigationIntent();
+  blockHomeNavigation();
 
   const categoryWasOpen = document.getElementById('categoryView')?.classList.contains('open');
   const topicsWereOpen = document.getElementById('topicsView')?.classList.contains('open');
