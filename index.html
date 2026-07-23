@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.26">
-<title>Gestione Bus v8.26</title>
+<meta name="app-version" content="8.27">
+<title>Gestione Bus v8.27</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -39,6 +39,13 @@
     font-family:var(--font-sans);
     min-height:100vh;
     overflow-x:hidden;
+  }
+
+  .category-view.open,
+  .topics-view.open,
+  .bus-detail.open,
+  #recentChangesOverlay.open {
+    touch-action:pan-y;
   }
 
   html.home-scroll-locked,
@@ -2945,8 +2952,20 @@ function resetSwipeVisual() {
 document.addEventListener('touchstart', e => {
   if (!selectedBus || e.touches.length !== 1) return;
 
-  // Il bordo estremo sinistro è riservato alla cronologia nativa di Safari.
-  swipeTracking = false;
+  const touch = e.touches[0];
+  // Swipe interno: parte poco dentro lo schermo, non dal bordo di Safari.
+  if (touch.clientX <= 48 || touch.clientX > 150) return;
+
+  swipeStartX = touch.clientX;
+  swipeStartY = touch.clientY;
+  swipeCurrentX = touch.clientX;
+  swipeTracking = true;
+
+  const detail = document.getElementById('detailView');
+  if (detail) {
+    detail.classList.add('swiping');
+    detail.classList.remove('swipe-back');
+  }
 }, { passive:true });
 
 document.addEventListener('touchmove', e => {
@@ -2983,7 +3002,7 @@ document.addEventListener('touchend', () => {
   const distance = swipeCurrentX - swipeStartX;
   swipeTracking = false;
 
-  if (distance >= 90) {
+  if (distance >= 55) {
     hardResetSwipeVisual();
     closeDetail();
   } else {
@@ -3144,7 +3163,7 @@ document.addEventListener('touchstart', e => {
 
   // Lo swipe che nasce dal bordo è il vero gesto Indietro di iPhone.
   // Non deve essere eseguito contemporaneamente dal sito.
-  if (touch.clientX <= 48) {
+  if (touch.clientX <= 48 || touch.clientX > 150) {
     navigationSwipe = null;
     return;
   }
@@ -3192,7 +3211,7 @@ document.addEventListener('touchend', () => {
   if (!navigationSwipe) return;
 
   const distance = navigationSwipe.currentX - navigationSwipe.startX;
-  const shouldClose = navigationSwipe.horizontal && distance >= 70;
+  const shouldClose = navigationSwipe.horizontal && distance >= 55;
   const closeView = navigationSwipe.close;
   const view = navigationSwipe.view;
 
@@ -3203,7 +3222,7 @@ document.addEventListener('touchend', () => {
     view.style.transform = '';
     view.style.opacity = '';
     closeView();
-    setTimeout(() => { suppressNavigationClick = false; }, 350);
+    setTimeout(() => { suppressNavigationClick = false; }, 900);
     return;
   }
 
