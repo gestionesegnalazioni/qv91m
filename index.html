@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.25">
-<title>Gestione Bus v8.25</title>
+<meta name="app-version" content="8.26">
+<title>Gestione Bus v8.26</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -39,15 +39,6 @@
     font-family:var(--font-sans);
     min-height:100vh;
     overflow-x:hidden;
-    overscroll-behavior-x:none;
-  }
-
-  .category-view.open,
-  .topics-view.open,
-  .bus-detail.open,
-  #recentChangesOverlay.open {
-    touch-action:pan-y;
-    overscroll-behavior-x:none;
   }
 
   html.home-scroll-locked,
@@ -1803,11 +1794,21 @@ function cleanHistoryUrl() {
   return window.location.pathname + window.location.search;
 }
 
+function viewHistoryUrl(view, extra = {}) {
+  if (view === 'category' && extra.category) {
+    return cleanHistoryUrl() + '#' + encodeURIComponent(extra.category);
+  }
+  if (view === 'detail' && extra.bus) {
+    return cleanHistoryUrl() + '#bus-' + encodeURIComponent(extra.bus);
+  }
+  return cleanHistoryUrl() + '#' + view;
+}
+
 function pushViewState(view, extra = {}) {
   window.history.pushState(
     { gestioneBusView:view, ...extra },
     '',
-    cleanHistoryUrl()
+    viewHistoryUrl(view, extra)
   );
 }
 
@@ -1815,7 +1816,7 @@ function replaceViewState(view, extra = {}) {
   window.history.replaceState(
     { gestioneBusView:view, ...extra },
     '',
-    cleanHistoryUrl()
+    viewHistoryUrl(view, extra)
   );
 }
 
@@ -2944,19 +2945,8 @@ function resetSwipeVisual() {
 document.addEventListener('touchstart', e => {
   if (!selectedBus || e.touches.length !== 1) return;
 
-  const touch = e.touches[0];
-  if (touch.clientX > 48) return;
-
-  swipeStartX = touch.clientX;
-  swipeStartY = touch.clientY;
-  swipeCurrentX = touch.clientX;
-  swipeTracking = true;
-
-  const detail = document.getElementById('detailView');
-  if (detail) {
-    detail.classList.add('swiping');
-    detail.classList.remove('swipe-back');
-  }
+  // Il bordo estremo sinistro è riservato alla cronologia nativa di Safari.
+  swipeTracking = false;
 }, { passive:true });
 
 document.addEventListener('touchmove', e => {
@@ -3078,7 +3068,6 @@ window.addEventListener('popstate', () => {
 
   if (selectedBus) {
     window.closeDetail(true);
-    replaceViewState('category', { category:currentCategory || 'urbani' });
     return;
   }
 
@@ -3101,7 +3090,6 @@ window.addEventListener('popstate', () => {
   setHomeScrollLocked(true);
   renderBusGrid();
   forzaScrollInAlto();
-  replaceViewState('home');
 });
 
 let navigationSwipe = null;
@@ -3153,6 +3141,13 @@ document.addEventListener('touchstart', e => {
   if (!openView) return;
 
   const touch = e.touches[0];
+
+  // Lo swipe che nasce dal bordo è il vero gesto Indietro di iPhone.
+  // Non deve essere eseguito contemporaneamente dal sito.
+  if (touch.clientX <= 48) {
+    navigationSwipe = null;
+    return;
+  }
 
   navigationSwipe = {
     ...openView,
