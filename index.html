@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.23">
-<title>Gestione Bus v8.23</title>
+<meta name="app-version" content="8.24">
+<title>Gestione Bus v8.24</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -39,6 +39,15 @@
     font-family:var(--font-sans);
     min-height:100vh;
     overflow-x:hidden;
+    overscroll-behavior-x:none;
+  }
+
+  .category-view.open,
+  .topics-view.open,
+  .bus-detail.open,
+  #recentChangesOverlay.open {
+    touch-action:pan-y;
+    overscroll-behavior-x:none;
   }
 
   html.home-scroll-locked,
@@ -3019,10 +3028,19 @@ function resetSwipeVisual() {
 document.addEventListener('touchstart', e => {
   if (!selectedBus || e.touches.length !== 1) return;
 
-  // Il gesto dal bordo sinistro appartiene a Safari.
-  // Non lo eseguiamo anche noi, altrimenti iOS completa due ritorni
-  // e può ripristinare la schermata appena chiusa.
-  swipeTracking = false;
+  const touch = e.touches[0];
+  if (touch.clientX > 48) return;
+
+  swipeStartX = touch.clientX;
+  swipeStartY = touch.clientY;
+  swipeCurrentX = touch.clientX;
+  swipeTracking = true;
+
+  const detail = document.getElementById('detailView');
+  if (detail) {
+    detail.classList.add('swiping');
+    detail.classList.remove('swipe-back');
+  }
 }, { passive:true });
 
 document.addEventListener('touchmove', e => {
@@ -3219,13 +3237,6 @@ document.addEventListener('touchstart', e => {
   if (!openView) return;
 
   const touch = e.touches[0];
-
-  // Dal bordo sinistro lasciamo lavorare esclusivamente il gesto nativo
-  // di Safari; il popstate porterà alla schermata precedente.
-  if (touch.clientX <= 42) {
-    navigationSwipe = null;
-    return;
-  }
 
   navigationSwipe = {
     ...openView,
