@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.37">
-<title>Gestione Bus v8.37</title>
+<meta name="app-version" content="8.38">
+<title>Gestione Bus v8.38</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1632,6 +1632,33 @@
     gap:14px;
   }
 
+  .urban-directory-head {
+    position:sticky;
+    top:68px;
+    z-index:35;
+    grid-column:1/-1;
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:7px;
+    width:100%;
+    padding:9px 8px;
+    margin-bottom:-14px;
+    background:#080b12;
+    box-shadow:0 12px 18px #080b12;
+  }
+
+  .urban-directory-head-item {
+    color:#93c5fd;
+    font-family:var(--font-mono);
+    font-size:.82rem;
+    font-weight:800;
+    text-align:center;
+    padding:7px 0;
+    border:1px solid rgba(96,165,250,.32);
+    border-radius:10px;
+    background:#101b32;
+  }
+
   .urban-directory {
     grid-column:1/-1;
     display:grid;
@@ -1654,28 +1681,18 @@
     align-items:stretch;
   }
 
-  .urban-directory-title {
-    color:#93c5fd;
-    font-family:var(--font-mono);
-    font-size:.74rem;
-    font-weight:800;
-    text-align:center;
-    padding:2px 0 5px;
-    border-bottom:1px solid rgba(147,197,253,.28);
-  }
-
   .urban-directory-bus {
     position:relative;
     width:100%;
     min-width:0;
-    height:52px;
+    height:56px;
     padding:0 4px;
-    border-radius:13px;
+    border-radius:14px;
     border:1px solid rgba(96,165,250,.38);
     background:linear-gradient(145deg,rgba(59,130,246,.18),rgba(255,255,255,.055));
     color:#f4f7fb;
     font-family:var(--font-mono);
-    font-size:.86rem;
+    font-size:.92rem;
     font-weight:800;
     white-space:nowrap;
   }
@@ -2407,16 +2424,19 @@ function renderUrbanDirectory(items, tipo) {
       : '<div class="urban-directory-empty">—</div>';
 
     return '<div class="urban-directory-column">' +
-      '<div class="urban-directory-title">' + group + '</div>' +
       buttons +
       '</div>';
   }).join('');
+
+  const stickyHead = '<div class="urban-directory-head" aria-label="Gruppi delle matricole">' +
+    groups.map(group => '<div class="urban-directory-head-item">' + group + '</div>').join('') +
+    '</div>';
 
   const directory = '<div class="urban-directory" aria-label="Matricole urbane divise per gruppo">' +
     columns +
     '</div>';
 
-  return directory + items.map(bus => busTile(bus, tipo)).join('');
+  return stickyHead + directory + items.map(bus => busTile(bus, tipo)).join('');
 }
 
 function renderCategoryView() {
