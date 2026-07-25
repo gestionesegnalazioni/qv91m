@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.39">
-<title>Gestione Bus v8.39</title>
+<meta name="app-version" content="8.40">
+<title>Gestione Bus v8.40</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1726,6 +1726,41 @@
     padding-top:7px;
   }
 
+  .urban-secondary-directory {
+    grid-column:1/-1;
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
+    width:100%;
+    padding:10px;
+    margin-top:4px;
+    border:1px solid rgba(255,255,255,.11);
+    border-radius:18px;
+    background:linear-gradient(145deg,rgba(255,255,255,.07),rgba(255,255,255,.025));
+    box-shadow:0 12px 30px rgba(0,0,0,.22);
+  }
+
+  .urban-secondary-column {
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+  }
+
+  .urban-secondary-title {
+    min-height:38px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:12px;
+    background:linear-gradient(145deg,#2563eb,#1d4ed8);
+    border:1px solid rgba(96,165,250,.55);
+    color:#fff;
+    font-family:var(--font-mono);
+    font-size:.9rem;
+    font-weight:800;
+  }
+
   .urban-group-anchor {
     scroll-margin-top:78px;
   }
@@ -1746,7 +1781,7 @@
   @media(max-width:480px) {
     body.home-scroll-locked .category-home {
       height:calc(100dvh - 90px);
-      grid-template-rows:repeat(5,minmax(0,1fr));
+      grid-template-rows:repeat(4,minmax(0,1fr));
       gap:10px;
       padding-top:0;
       padding-bottom:0;
@@ -2179,25 +2214,24 @@ document.getElementById('inputMatricola').addEventListener('keydown', e => {
 });
 
 function getBusGroups() {
-  const inServizio = buses.filter(b => !b.fuoriServizio);
+  const tutti = buses;
 
-  const urbani = inServizio.filter(b => {
+  const urbani = tutti.filter(b => {
     const iniziale = String(b.matricola || '').trim().charAt(0).toUpperCase();
-    return iniziale === 'A' || iniziale === 'F';
+    return ['A', 'B', 'F'].includes(iniziale);
   });
 
-  const extraurbani = inServizio.filter(b => {
+  const extraurbani = tutti.filter(b => {
     const iniziale = String(b.matricola || '').trim().charAt(0).toUpperCase();
     return iniziale === 'K' || iniziale === 'L';
   });
 
-  const altri = inServizio.filter(b => {
+  const altri = tutti.filter(b => {
     const iniziale = String(b.matricola || '').trim().charAt(0).toUpperCase();
-    return !['A', 'F', 'K', 'L'].includes(iniziale);
+    return !['A', 'B', 'F', 'K', 'L'].includes(iniziale);
   });
 
-  const fuori = buses.filter(b => !!b.fuoriServizio);
-  return { urbani, extraurbani, altri, fuori };
+  return { urbani, extraurbani, altri, fuori:[] };
 }
 
 function busTile(bus, tipo) {
@@ -2243,13 +2277,12 @@ function renderBusGrid() {
   const grid = document.getElementById('busGrid');
   if (!grid) return;
 
-  const { urbani, extraurbani, altri, fuori } = getBusGroups();
+  const { urbani, extraurbani, altri } = getBusGroups();
   const numeroUrbani = urbani.length + altri.length;
 
   grid.innerHTML =
     categoryCard('urbani', 'Urbani', numeroUrbani, 'urbani') +
     categoryCard('extraurbani', 'Extraurbani', extraurbani.length, 'extraurbani') +
-    categoryCard('fuori', 'Fuori servizio', fuori.length, 'fuori') +
     topicCategoryCard() +
     recentChangesCategoryCard();
 }
@@ -2403,46 +2436,70 @@ function quickGroupForCategory(matricola, category) {
   return '';
 }
 
-function renderUrbanDirectory(items, tipo) {
-  const groups = [
+function renderDirectoryButtons(groupItems) {
+  if (!groupItems.length) return '<div class="urban-directory-empty">—</div>';
+
+  return groupItems.map(bus => {
+    const count = segnalazioni.filter(s => s.bus === bus.matricola && !s.pregressa).length;
+    const badge = count
+      ? '<span class="urban-directory-badge">' + count + '</span>'
+      : '';
+
+    return '<button class="urban-directory-bus' + (count ? ' has-alerts' : '') +
+      '" onclick="selectBus(&quot;' + esc(bus.matricola) + '&quot;)" ' +
+      'aria-label="Apri autobus ' + esc(bus.matricola) + '">' +
+      esc(bus.matricola) + badge + '</button>';
+  }).join('');
+}
+
+function renderUrbanDirectory(items) {
+  const primaryGroups = [
     { label:'A2', prefix:'A2' },
     { label:'A3', prefix:'A3' },
     { label:'A4', prefix:'A4' },
-    { label:'A5-0', prefix:'A50' },
-    { label:'A5-1', prefix:'A51' }
+    { label:'A50', prefix:'A50' },
+    { label:'A51', prefix:'A51' }
   ];
-  const columns = groups.map(group => {
+
+  const primaryColumns = primaryGroups.map(group => {
     const groupItems = items
       .filter(bus => String(bus.matricola || '').trim().toUpperCase().startsWith(group.prefix))
       .sort(byMat);
 
-    const buttons = groupItems.length
-      ? groupItems.map(bus => {
-          const count = segnalazioni.filter(s => s.bus === bus.matricola && !s.pregressa).length;
-          const badge = count
-            ? '<span class="urban-directory-badge">' + count + '</span>'
-            : '';
-          return '<button class="urban-directory-bus' + (count ? ' has-alerts' : '') +
-            '" onclick="selectBus(&quot;' + esc(bus.matricola) + '&quot;)" ' +
-            'aria-label="Apri autobus ' + esc(bus.matricola) + '">' +
-            esc(bus.matricola) + badge + '</button>';
-        }).join('')
-      : '<div class="urban-directory-empty">—</div>';
-
     return '<div class="urban-directory-column">' +
-      buttons +
+      renderDirectoryButtons(groupItems) +
       '</div>';
   }).join('');
 
-  const stickyHead = '<div class="urban-directory-head" aria-label="Gruppi delle matricole">' +
-    groups.map(group => '<div class="urban-directory-head-item">' + group.label + '</div>').join('') +
+  const stickyHead = '<div class="urban-directory-head" aria-label="Gruppi delle matricole A">' +
+    primaryGroups.map(group => '<div class="urban-directory-head-item">' + group.label + '</div>').join('') +
     '</div>';
 
-  const directory = '<div class="urban-directory" aria-label="Matricole urbane divise per gruppo">' +
-    columns +
+  const primaryDirectory = '<div class="urban-directory" aria-label="Matricole urbane A divise per gruppo">' +
+    primaryColumns +
     '</div>';
 
-  return stickyHead + directory + items.map(bus => busTile(bus, tipo)).join('');
+  const secondaryGroups = [
+    { label:'B', prefix:'B' },
+    { label:'F', prefix:'F' }
+  ];
+
+  const secondaryColumns = secondaryGroups.map(group => {
+    const groupItems = items
+      .filter(bus => String(bus.matricola || '').trim().toUpperCase().startsWith(group.prefix))
+      .sort(byMat);
+
+    return '<div class="urban-secondary-column">' +
+      '<div class="urban-secondary-title">' + group.label + '</div>' +
+      '<div class="urban-directory-column">' + renderDirectoryButtons(groupItems) + '</div>' +
+      '</div>';
+  }).join('');
+
+  const secondaryDirectory = '<div class="urban-secondary-directory" aria-label="Matricole urbane B e F">' +
+    secondaryColumns +
+    '</div>';
+
+  return stickyHead + primaryDirectory + secondaryDirectory;
 }
 
 function renderCategoryView() {
@@ -2672,12 +2729,7 @@ function renderSeg(s, pregressa = false) {
 }
 
 function showBusDetail(mat) {
-  const bus = buses.find(b => b.matricola === mat);
   document.getElementById('detailNum').textContent = mat;
-
-  const isFuori = !!(bus && bus.fuoriServizio);
-  const serviceButtonText = isFuori ? 'Metti in Servizio' : 'Metti in Fuori Servizio';
-  const serviceButtonClass = isFuori ? 'btn-service-main in-service' : 'btn-service-main';
 
   const all = segnalazioni.filter(s => s.bus === mat);
   const active = all.filter(s => !s.pregressa).sort(bySeg);
@@ -2701,7 +2753,6 @@ function showBusDetail(mat) {
       <button class="btn-primary" onclick="openModal('${esc(mat)}')">+ Aggiungi segnalazione</button>
       <button class="btn-yellow-main" onclick="togglePregresse()">Vecchie segnalazioni (${arch.length})</button>
       <button class="btn-delete-bus" onclick="deleteBus()">Elimina bus</button>
-      <button class="${serviceButtonClass}" onclick="toggleFuoriServizio()">${serviceButtonText}</button>
       <button class="btn-share-main" onclick="openShareModal()">Condividi anomalie</button>
     </div>`;
 
@@ -2987,18 +3038,6 @@ window.deleteBus = async function() {
     alert("Errore durante l'eliminazione dell'autobus.");
   }
 };
-
-window.toggleFuoriServizio = async function() {
-  if (!selectedBus) return;
-
-  const bus = buses.find(b => b.matricola === selectedBus);
-  if (!bus) return;
-
-  const nuovoStato = !bus.fuoriServizio;
-  await updateDoc(doc(db, 'buses', bus.id), { fuoriServizio:nuovoStato });
-  await registraModifica(selectedBus, nuovoStato ? 'Autobus messo fuori servizio' : 'Autobus rimesso in servizio');
-};
-
 
 function testoCondivisioneAnomalie(bus, anomalie) {
   const righe = anomalie.map(a => {
