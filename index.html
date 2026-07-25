@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.30">
-<title>Gestione Bus v8.30</title>
+<meta name="app-version" content="8.31">
+<title>Gestione Bus v8.31</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -31,6 +31,11 @@
     margin:0;
     padding:0;
     max-width:100%;
+  }
+
+  html,
+  body {
+    overscroll-behavior-x:none;
   }
 
   body {
@@ -1626,11 +1631,12 @@
     top:66px;
     z-index:18;
     display:grid;
-    grid-template-columns:repeat(5,minmax(0,1fr));
+    grid-template-columns:repeat(var(--quick-groups,1),minmax(0,1fr));
     gap:6px;
-    padding:9px 2px 11px;
-    margin:-8px 0 3px;
-    background:linear-gradient(to bottom,var(--bg) 82%,rgba(8,11,18,.92));
+    padding:8px 2px 11px;
+    margin:0 0 4px;
+    background:var(--bg);
+    box-shadow:0 10px 16px var(--bg);
   }
 
   .urban-quick-btn {
@@ -1649,10 +1655,6 @@
 
   .urban-quick-btn:active {
     transform:scale(.94);
-  }
-
-  .urban-quick-btn.empty-group {
-    opacity:.38;
   }
 
   .urban-group-anchor {
@@ -1678,6 +1680,7 @@
       grid-template-rows:repeat(5,minmax(0,1fr));
       gap:10px;
       padding-top:0;
+      padding-bottom:24px;
     }
 
     body.home-scroll-locked .category-card {
@@ -1960,7 +1963,7 @@ function renderRecentChanges() {
 
   const ultime = [...modifiche]
     .sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')))
-    .slice(0, 10);
+    .slice(0, 30);
 
   list.innerHTML = ultime.length
     ? ultime.map(m => {
@@ -2197,7 +2200,7 @@ function topicCategoryCard() {
 }
 
 function recentChangesCategoryCard() {
-  const count = Math.min(modifiche.length, 10);
+  const count = Math.min(modifiche.length, 30);
   const label = count === 1 ? '1 attività recente' : `${count} attività recenti`;
   return `
     <button class="category-card modifiche" onclick="openRecentChanges()">
@@ -2312,45 +2315,61 @@ window.closeCategory = function(fromHistory = false) {
   if (!fromHistory) replaceViewState('home');
 };
 
-function urbanQuickGroup(matricola) {
+function quickGroupForCategory(matricola, category) {
   const value = String(matricola || '').trim().toUpperCase();
   if (!value) return '';
-  if (value.startsWith('F')) return 'F';
-  const first = value.charAt(0);
-  const second = value.charAt(1);
-  return /[0-9]/.test(second) ? first + second : first;
+
+  if (category === 'urbani') {
+    if (value.startsWith('F')) return 'F';
+    const match = value.match(/^A[2-5]/);
+    return match ? match[0] : '';
+  }
+
+  if (category === 'extraurbani') {
+    if (value.startsWith('L')) return 'L';
+    const match = value.match(/^K[1-4]/);
+    return match ? match[0] : '';
+  }
+
+  return '';
 }
 
-window.jumpToUrbanGroup = function(key) {
-  const target = document.getElementById('urban-group-' + key);
-  if (!target) {
-    showToast('Nessun autobus nel gruppo ' + key);
-    return;
-  }
+window.jumpToCategoryGroup = function(category, key) {
+  const target = document.getElementById('category-group-' + category + '-' + key);
+  if (!target) return;
   target.scrollIntoView({ behavior:'smooth', block:'start' });
 };
 
-function renderUrbanClassicList(items, tipo) {
-  const fixedGroups = ['A2', 'A3', 'A4', 'A5', 'F'];
-  const presentGroups = new Set(items.map(bus => urbanQuickGroup(bus.matricola)));
+function renderClassicListWithJumps(items, tipo, category) {
+  const orderedGroups = category === 'urbani'
+    ? ['A2', 'A3', 'A4', 'A5', 'F']
+    : ['K1', 'K2', 'K3', 'K4', 'L'];
+  const presentGroups = new Set(
+    items.map(bus => quickGroupForCategory(bus.matricola, category)).filter(Boolean)
+  );
+  const visibleGroups = orderedGroups.filter(key => presentGroups.has(key));
   const seenGroups = new Set();
 
-  const nav = '<nav class="urban-quick-nav" aria-label="Accesso rapido alle matricole">' +
-    fixedGroups.map(key =>
-      '<button class="urban-quick-btn' + (presentGroups.has(key) ? '' : ' empty-group') +
-        '" onclick="jumpToUrbanGroup(&quot;' + key + '&quot;)">' + key + '</button>'
-    ).join('') +
-  '</nav>';
+  const nav = visibleGroups.length
+    ? '<nav class="urban-quick-nav" style="--quick-groups:' + visibleGroups.length +
+      '" aria-label="Accesso rapido alle matricole">' +
+      visibleGroups.map(key =>
+        '<button class="urban-quick-btn" onclick="jumpToCategoryGroup(&quot;' +
+        category + '&quot;,&quot;' + key + '&quot;)">' + key + '</button>'
+      ).join('') +
+      '</nav>'
+    : '';
 
   const tiles = items.map(bus => {
-    const key = urbanQuickGroup(bus.matricola);
+    const key = quickGroupForCategory(bus.matricola, category);
     let html = busTile(bus, tipo);
 
-    if (fixedGroups.includes(key) && !seenGroups.has(key)) {
+    if (visibleGroups.includes(key) && !seenGroups.has(key)) {
       seenGroups.add(key);
       html = html.replace(
         '<button class="bus-tile ',
-        '<button id="urban-group-' + key + '" class="bus-tile urban-group-anchor '
+        '<button id="category-group-' + category + '-' + key +
+        '" class="bus-tile urban-group-anchor '
       );
     }
 
@@ -2387,8 +2406,8 @@ function renderCategoryView() {
     return;
   }
 
-  list.innerHTML = currentCategory === 'urbani'
-    ? renderUrbanClassicList(items, tipo)
+  list.innerHTML = currentCategory === 'urbani' || currentCategory === 'extraurbani'
+    ? renderClassicListWithJumps(items, tipo, currentCategory)
     : items.map(b => busTile(b, tipo)).join('');
 }
 
@@ -3009,6 +3028,8 @@ window.condividiAnomalieSelezionate = async function() {
 
 
 
+const SWIPE_NAVIGATION_ENABLED = false;
+
 let swipeStartX = 0;
 let swipeStartY = 0;
 let swipeCurrentX = 0;
@@ -3041,6 +3062,7 @@ function resetSwipeVisual() {
 }
 
 document.addEventListener('touchstart', e => {
+  if (!SWIPE_NAVIGATION_ENABLED) return;
   if (!selectedBus || e.touches.length !== 1) return;
 
   const touch = e.touches[0];
@@ -3245,6 +3267,7 @@ function resetNavigationSwipe() {
 }
 
 document.addEventListener('touchstart', e => {
+  if (!SWIPE_NAVIGATION_ENABLED) return;
   if (e.touches.length !== 1) return;
 
   const openView = getOpenNavigationView();
