@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.34">
-<title>Gestione Bus v8.34</title>
+<meta name="app-version" content="8.35">
+<title>Gestione Bus v8.35</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1632,56 +1632,81 @@
     gap:14px;
   }
 
-  .category-bus-list.with-index-rail {
-    padding-left:34px;
+  .urban-directory {
+    grid-column:1/-1;
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:7px;
+    width:100%;
+    padding:10px 8px 12px;
+    margin-bottom:4px;
+    border:1px solid rgba(255,255,255,.11);
+    border-radius:18px;
+    background:linear-gradient(145deg,rgba(255,255,255,.07),rgba(255,255,255,.025));
+    box-shadow:0 12px 30px rgba(0,0,0,.22);
   }
 
-  .category-index-rail {
-    position:fixed;
-    left:max(2px,env(safe-area-inset-left));
-    top:calc(var(--visual-viewport-top) + 104px);
-    bottom:24px;
-    width:38px;
-    z-index:32;
+  .urban-directory-column {
+    min-width:0;
     display:flex;
     flex-direction:column;
-    align-items:center;
-    justify-content:space-around;
-    padding:5px 0;
-    touch-action:pan-y;
+    gap:6px;
+    align-items:stretch;
   }
 
-  .category-index-rail::before {
-    content:'';
-    position:absolute;
-    top:0;
-    bottom:0;
-    left:50%;
-    width:3px;
-    border-radius:999px;
-    background:linear-gradient(to bottom,rgba(59,130,246,.25),#2563eb,rgba(59,130,246,.25));
-    transform:translateX(-50%);
-    box-shadow:0 0 12px rgba(37,99,235,.35);
-  }
-
-  .category-index-btn {
-    position:relative;
-    z-index:1;
-    width:34px;
-    height:34px;
-    border-radius:50%;
-    border:1px solid rgba(96,165,250,.88);
-    background:#132b61;
-    color:#fff;
+  .urban-directory-title {
+    color:#93c5fd;
     font-family:var(--font-mono);
-    font-size:.67rem;
+    font-size:.74rem;
     font-weight:800;
-    box-shadow:0 5px 14px rgba(0,0,0,.34);
+    text-align:center;
+    padding:2px 0 5px;
+    border-bottom:1px solid rgba(147,197,253,.28);
   }
 
-  .category-index-btn:active {
-    transform:scale(.92);
-    background:#2563eb;
+  .urban-directory-bus {
+    position:relative;
+    width:100%;
+    min-width:0;
+    height:34px;
+    padding:0 3px;
+    border-radius:9px;
+    border:1px solid rgba(255,255,255,.14);
+    background:rgba(255,255,255,.055);
+    color:#f4f7fb;
+    font-family:var(--font-mono);
+    font-size:.65rem;
+    font-weight:700;
+    white-space:nowrap;
+  }
+
+  .urban-directory-bus.has-alerts {
+    border-color:rgba(239,68,68,.55);
+  }
+
+  .urban-directory-badge {
+    position:absolute;
+    top:-5px;
+    right:-4px;
+    min-width:16px;
+    height:16px;
+    padding:0 4px;
+    border-radius:999px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:var(--red);
+    color:#fff;
+    font-size:.55rem;
+    line-height:1;
+    box-shadow:0 3px 8px rgba(0,0,0,.35);
+  }
+
+  .urban-directory-empty {
+    color:rgba(154,164,178,.55);
+    text-align:center;
+    font-size:.65rem;
+    padding-top:7px;
   }
 
   .urban-group-anchor {
@@ -2361,88 +2386,37 @@ function quickGroupForCategory(matricola, category) {
   return '';
 }
 
-let lastRailGroup = '';
+function renderUrbanDirectory(items, tipo) {
+  const groups = ['A2', 'A3', 'A4', 'A5'];
+  const columns = groups.map(group => {
+    const groupItems = items
+      .filter(bus => quickGroupForCategory(bus.matricola, 'urbani') === group)
+      .sort(byMat);
 
-window.jumpToCategoryGroup = function(category, key, smooth = true) {
-  const target = document.getElementById('category-group-' + category + '-' + key);
-  if (!target) return;
-  target.scrollIntoView({ behavior:smooth ? 'smooth' : 'auto', block:'start' });
-};
+    const buttons = groupItems.length
+      ? groupItems.map(bus => {
+          const count = segnalazioni.filter(s => s.bus === bus.matricola && !s.pregressa).length;
+          const badge = count
+            ? '<span class="urban-directory-badge">' + count + '</span>'
+            : '';
+          return '<button class="urban-directory-bus' + (count ? ' has-alerts' : '') +
+            '" onclick="selectBus(&quot;' + esc(bus.matricola) + '&quot;)" ' +
+            'aria-label="Apri autobus ' + esc(bus.matricola) + '">' +
+            esc(bus.matricola) + badge + '</button>';
+        }).join('')
+      : '<div class="urban-directory-empty">—</div>';
 
-window.handleCategoryRailTouch = function(event) {
-  if (!event.touches || event.touches.length !== 1) return;
-  event.preventDefault();
-
-  const rail = event.currentTarget;
-  const buttons = Array.from(rail.querySelectorAll('.category-index-btn'));
-  if (!buttons.length) return;
-
-  const y = event.touches[0].clientY;
-  let nearest = buttons[0];
-  let distance = Infinity;
-
-  buttons.forEach(button => {
-    const rect = button.getBoundingClientRect();
-    const currentDistance = Math.abs(y - (rect.top + rect.height / 2));
-    if (currentDistance < distance) {
-      distance = currentDistance;
-      nearest = button;
-    }
-  });
-
-  const key = nearest.dataset.group || '';
-  const category = rail.dataset.category || '';
-  if (!key || !category || key === lastRailGroup) return;
-
-  lastRailGroup = key;
-  window.jumpToCategoryGroup(category, key, false);
-};
-
-window.endCategoryRailTouch = function() {
-  lastRailGroup = '';
-};
-
-function renderClassicListWithJumps(items, tipo, category) {
-  const orderedGroups = category === 'urbani'
-    ? ['A2', 'A3', 'A4', 'A5', 'F']
-    : ['K1', 'K2', 'K3', 'K4', 'L'];
-  const presentGroups = new Set(
-    items.map(bus => quickGroupForCategory(bus.matricola, category)).filter(Boolean)
-  );
-  const visibleGroups = orderedGroups.filter(key => presentGroups.has(key));
-  const seenGroups = new Set();
-
-  const nav = visibleGroups.length
-    ? '<nav class="category-index-rail" data-category="' + category +
-      '" aria-label="Indice rapido delle matricole" ' +
-      'ontouchstart="handleCategoryRailTouch(event)" ' +
-      'ontouchmove="handleCategoryRailTouch(event)" ' +
-      'ontouchend="endCategoryRailTouch()" ontouchcancel="endCategoryRailTouch()">' +
-      visibleGroups.map(key =>
-        '<button class="category-index-btn" data-group="' + key +
-        '" onclick="jumpToCategoryGroup(&quot;' + category + '&quot;,&quot;' +
-        key + '&quot;,true)">' + key + '</button>'
-      ).join('') +
-      '</nav>'
-    : '';
-
-  const tiles = items.map(bus => {
-    const key = quickGroupForCategory(bus.matricola, category);
-    let html = busTile(bus, tipo);
-
-    if (visibleGroups.includes(key) && !seenGroups.has(key)) {
-      seenGroups.add(key);
-      html = html.replace(
-        '<button class="bus-tile ',
-        '<button id="category-group-' + category + '-' + key +
-        '" class="bus-tile urban-group-anchor '
-      );
-    }
-
-    return html;
+    return '<div class="urban-directory-column">' +
+      '<div class="urban-directory-title">' + group + '</div>' +
+      buttons +
+      '</div>';
   }).join('');
 
-  return nav + tiles;
+  const directory = '<div class="urban-directory" aria-label="Matricole urbane divise per gruppo">' +
+    columns +
+    '</div>';
+
+  return directory + items.map(bus => busTile(bus, tipo)).join('');
 }
 
 function renderCategoryView() {
@@ -2472,10 +2446,8 @@ function renderCategoryView() {
     return;
   }
 
-  const hasIndexRail = currentCategory === 'urbani' || currentCategory === 'extraurbani';
-  list.classList.toggle('with-index-rail', hasIndexRail);
-  list.innerHTML = hasIndexRail
-    ? renderClassicListWithJumps(items, tipo, currentCategory)
+  list.innerHTML = currentCategory === 'urbani'
+    ? renderUrbanDirectory(items, tipo)
     : items.map(b => busTile(b, tipo)).join('');
 }
 
