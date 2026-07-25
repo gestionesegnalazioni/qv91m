@@ -1621,68 +1621,92 @@
     gap:14px;
   }
 
-  .urban-quick-nav {
+  .urban-matrix {
+    display:grid;
+    grid-template-columns:repeat(var(--urban-groups),minmax(58px,1fr));
+    gap:7px;
+    align-items:start;
+    width:100%;
+  }
+
+  .urban-matrix-column {
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+    min-width:0;
+  }
+
+  .urban-matrix-heading {
     position:sticky;
-    top:66px;
+    top:68px;
     z-index:18;
+    height:38px;
     display:flex;
     align-items:center;
-    gap:8px;
-    overflow-x:auto;
-    padding:9px 6px 11px;
-    margin:-8px -2px 2px;
-    background:linear-gradient(to bottom,var(--bg) 78%,rgba(8,11,18,.90));
-    scrollbar-width:none;
-    -webkit-overflow-scrolling:touch;
-  }
-
-  .urban-quick-nav::-webkit-scrollbar {
-    display:none;
-  }
-
-  .urban-quick-btn {
-    flex:0 0 auto;
-    min-width:42px;
-    height:38px;
-    padding:0 13px;
-    border-radius:999px;
-    border:1px solid rgba(255,255,255,.22);
-    background:rgba(255,255,255,.09);
+    justify-content:center;
+    border-radius:12px;
+    background:rgba(255,255,255,.10);
+    border:1px solid rgba(255,255,255,.20);
     color:var(--text);
     font-family:var(--font-mono);
-    font-size:.78rem;
+    font-size:.76rem;
     font-weight:800;
+    box-shadow:0 8px 18px rgba(0,0,0,.18);
   }
 
-  .urban-quick-btn:active {
+  .urban-matrix-bus {
+    position:relative;
+    width:100%;
+    min-width:0;
+    min-height:43px;
+    padding:7px 3px;
+    border-radius:12px;
+    background:linear-gradient(145deg,rgba(255,255,255,.10),rgba(255,255,255,.035));
+    border:1px solid rgba(255,255,255,.15);
+    color:var(--text);
+    font-family:var(--font-mono);
+    font-size:.69rem;
+    font-weight:750;
+    text-align:center;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+
+  .urban-matrix-bus:active {
     transform:scale(.94);
-    background:rgba(255,255,255,.17);
+    background:rgba(255,255,255,.16);
   }
 
-  .urban-group-section {
-    display:grid;
-    grid-template-columns:1fr;
-    gap:14px;
-    scroll-margin-top:124px;
-  }
-
-  .urban-group-title {
+  .urban-matrix-count {
+    position:absolute;
+    top:2px;
+    right:3px;
+    min-width:14px;
+    height:14px;
+    padding:0 3px;
+    border-radius:999px;
     display:flex;
     align-items:center;
-    gap:10px;
-    margin:5px 2px -2px;
-    color:var(--muted);
+    justify-content:center;
+    background:var(--red);
+    color:#fff;
     font-family:var(--font-mono);
-    font-size:.72rem;
+    font-size:.52rem;
     font-weight:800;
-    letter-spacing:1.2px;
+    line-height:1;
   }
 
-  .urban-group-title::after {
-    content:'';
-    height:1px;
-    flex:1;
-    background:rgba(255,255,255,.12);
+  @media(max-width:380px) {
+    .urban-matrix {
+      gap:5px;
+    }
+
+    .urban-matrix-bus {
+      font-size:.63rem;
+      padding-left:2px;
+      padding-right:2px;
+    }
   }
 
   .category-bottom-actions {
@@ -2342,47 +2366,35 @@ function urbanQuickGroup(matricola) {
   const value = String(matricola || '').trim().toUpperCase();
   if (!value) return 'ALTRO';
   if (value.startsWith('F')) return 'F';
-
-  const match = value.match(/^([A-Z])(\d)/);
-  if (match) return match[1] + match[2];
-
-  return value.charAt(0);
+  const first = value.charAt(0);
+  const second = value.charAt(1);
+  if (/[0-9]/.test(second)) return first + second;
+  return first;
 }
 
-function renderUrbanQuickList(items, tipo) {
+function renderUrbanMatrix(items) {
   const groups = new Map();
-
   items.forEach(bus => {
     const key = urbanQuickGroup(bus.matricola);
     if (!groups.has(key)) groups.set(key, []);
     groups.get(key).push(bus);
   });
-
   const keys = Array.from(groups.keys());
-  const quickNav =
-    '<nav class="urban-quick-nav" aria-label="Accesso rapido alle matricole">' +
-      keys.map(key =>
-        '<button class="urban-quick-btn" onclick="jumpToUrbanGroup(\'' + esc(key) + '\')">' +
-          esc(key) +
-        '</button>'
-      ).join('') +
-    '</nav>';
-
-  const sections = keys.map((key, index) =>
-    '<section class="urban-group-section" id="urban-group-' + esc(key) + '">' +
-      '<div class="urban-group-title">' + esc(key) + '</div>' +
-      groups.get(key).map(bus => busTile(bus, tipo)).join('') +
-    '</section>'
-  ).join('');
-
-  return quickNav + sections;
+  return '<div class="urban-matrix" style="--urban-groups:' + keys.length + '">' +
+    keys.map(key =>
+      '<section class="urban-matrix-column">' +
+        '<div class="urban-matrix-heading">' + esc(key) + '</div>' +
+        groups.get(key).map(bus => {
+          const count = segnalazioni.filter(s => s.bus === bus.matricola && !s.pregressa).length;
+          const badge = count ? '<span class="urban-matrix-count">' + count + '</span>' : '';
+          return '<button class="urban-matrix-bus" onclick="selectBus(&quot;' +
+            esc(bus.matricola) + '&quot;)" aria-label="Apri autobus ' + esc(bus.matricola) + '">' +
+            esc(bus.matricola) + badge + '</button>';
+        }).join('') +
+      '</section>'
+    ).join('') +
+  '</div>';
 }
-
-window.jumpToUrbanGroup = function(key) {
-  const target = document.getElementById('urban-group-' + key);
-  if (!target) return;
-  target.scrollIntoView({ behavior:'smooth', block:'start' });
-};
 
 function renderCategoryView() {
   if (!currentCategory) return;
@@ -2412,7 +2424,7 @@ function renderCategoryView() {
   }
 
   list.innerHTML = currentCategory === 'urbani'
-    ? renderUrbanQuickList(items, tipo)
+    ? renderUrbanMatrix(items)
     : items.map(b => busTile(b, tipo)).join('');
 }
 
