@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.27">
-<title>Gestione Bus v8.27</title>
+<meta name="app-version" content="8.28">
+<title>Gestione Bus v8.28</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1621,6 +1621,70 @@
     gap:14px;
   }
 
+  .urban-quick-nav {
+    position:sticky;
+    top:66px;
+    z-index:18;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    overflow-x:auto;
+    padding:9px 6px 11px;
+    margin:-8px -2px 2px;
+    background:linear-gradient(to bottom,var(--bg) 78%,rgba(8,11,18,.90));
+    scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  .urban-quick-nav::-webkit-scrollbar {
+    display:none;
+  }
+
+  .urban-quick-btn {
+    flex:0 0 auto;
+    min-width:42px;
+    height:38px;
+    padding:0 13px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.22);
+    background:rgba(255,255,255,.09);
+    color:var(--text);
+    font-family:var(--font-mono);
+    font-size:.78rem;
+    font-weight:800;
+  }
+
+  .urban-quick-btn:active {
+    transform:scale(.94);
+    background:rgba(255,255,255,.17);
+  }
+
+  .urban-group-section {
+    display:grid;
+    grid-template-columns:1fr;
+    gap:14px;
+    scroll-margin-top:124px;
+  }
+
+  .urban-group-title {
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin:5px 2px -2px;
+    color:var(--muted);
+    font-family:var(--font-mono);
+    font-size:.72rem;
+    font-weight:800;
+    letter-spacing:1.2px;
+  }
+
+  .urban-group-title::after {
+    content:'';
+    height:1px;
+    flex:1;
+    background:rgba(255,255,255,.12);
+  }
+
   .category-bottom-actions {
     margin-top:24px;
     padding-bottom:28px;
@@ -2274,6 +2338,52 @@ window.closeCategory = function(fromHistory = false) {
   if (!fromHistory) replaceViewState('home');
 };
 
+function urbanQuickGroup(matricola) {
+  const value = String(matricola || '').trim().toUpperCase();
+  if (!value) return 'ALTRO';
+  if (value.startsWith('F')) return 'F';
+
+  const match = value.match(/^([A-Z])(\d)/);
+  if (match) return match[1] + match[2];
+
+  return value.charAt(0);
+}
+
+function renderUrbanQuickList(items, tipo) {
+  const groups = new Map();
+
+  items.forEach(bus => {
+    const key = urbanQuickGroup(bus.matricola);
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(bus);
+  });
+
+  const keys = Array.from(groups.keys());
+  const quickNav =
+    '<nav class="urban-quick-nav" aria-label="Accesso rapido alle matricole">' +
+      keys.map(key =>
+        '<button class="urban-quick-btn" onclick="jumpToUrbanGroup(\'' + esc(key) + '\')">' +
+          esc(key) +
+        '</button>'
+      ).join('') +
+    '</nav>';
+
+  const sections = keys.map((key, index) =>
+    '<section class="urban-group-section" id="urban-group-' + esc(key) + '">' +
+      '<div class="urban-group-title">' + esc(key) + '</div>' +
+      groups.get(key).map(bus => busTile(bus, tipo)).join('') +
+    '</section>'
+  ).join('');
+
+  return quickNav + sections;
+}
+
+window.jumpToUrbanGroup = function(key) {
+  const target = document.getElementById('urban-group-' + key);
+  if (!target) return;
+  target.scrollIntoView({ behavior:'smooth', block:'start' });
+};
+
 function renderCategoryView() {
   if (!currentCategory) return;
 
@@ -2295,9 +2405,15 @@ function renderCategoryView() {
 
   document.getElementById('categoryTitle').textContent = title;
   const list = document.getElementById('categoryBusList');
-  list.innerHTML = items.length
-    ? items.map(b => busTile(b, tipo)).join('')
-    : `<div class="empty">Nessun autobus in questa categoria.</div>`;
+
+  if (!items.length) {
+    list.innerHTML = '<div class="empty">Nessun autobus in questa categoria.</div>';
+    return;
+  }
+
+  list.innerHTML = currentCategory === 'urbani'
+    ? renderUrbanQuickList(items, tipo)
+    : items.map(b => busTile(b, tipo)).join('');
 }
 
 
