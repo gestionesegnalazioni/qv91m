@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.31">
-<title>Gestione Bus v8.31</title>
+<meta name="app-version" content="8.32">
+<title>Gestione Bus v8.32</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1592,8 +1592,8 @@
     grid-template-columns:44px 1fr 44px;
     align-items:center;
     min-height:68px;
-    margin-bottom:16px;
-    background:linear-gradient(to bottom,var(--bg) 72%,rgba(0,0,0,0));
+    margin-bottom:0;
+    background:var(--bg);
     padding:5px 0 12px;
   }
 
@@ -1628,15 +1628,15 @@
 
   .urban-quick-nav {
     position:sticky;
-    top:66px;
-    z-index:18;
+    top:68px;
+    z-index:21;
     display:grid;
     grid-template-columns:repeat(var(--quick-groups,1),minmax(0,1fr));
     gap:6px;
-    padding:8px 2px 11px;
+    padding:10px 2px 12px;
     margin:0 0 4px;
-    background:var(--bg);
-    box-shadow:0 10px 16px var(--bg);
+    background:#080b12;
+    box-shadow:0 12px 18px #080b12;
   }
 
   .urban-quick-btn {
@@ -1680,7 +1680,7 @@
       grid-template-rows:repeat(5,minmax(0,1fr));
       gap:10px;
       padding-top:0;
-      padding-bottom:24px;
+      padding-bottom:44px;
     }
 
     body.home-scroll-locked .category-card {
