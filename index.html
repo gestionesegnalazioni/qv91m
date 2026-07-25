@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.38">
-<title>Gestione Bus v8.38</title>
+<meta name="app-version" content="8.39">
+<title>Gestione Bus v8.39</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1638,10 +1638,10 @@
     z-index:35;
     grid-column:1/-1;
     display:grid;
-    grid-template-columns:repeat(4,minmax(0,1fr));
-    gap:7px;
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    gap:5px;
     width:100%;
-    padding:9px 8px;
+    padding:9px 6px;
     margin-bottom:-14px;
     background:#080b12;
     box-shadow:0 12px 18px #080b12;
@@ -1662,10 +1662,10 @@
   .urban-directory {
     grid-column:1/-1;
     display:grid;
-    grid-template-columns:repeat(4,minmax(0,1fr));
-    gap:7px;
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    gap:5px;
     width:100%;
-    padding:10px 8px 12px;
+    padding:10px 6px 12px;
     margin-bottom:4px;
     border:1px solid rgba(255,255,255,.11);
     border-radius:18px;
@@ -2404,10 +2404,16 @@ function quickGroupForCategory(matricola, category) {
 }
 
 function renderUrbanDirectory(items, tipo) {
-  const groups = ['A2', 'A3', 'A4', 'A5'];
+  const groups = [
+    { label:'A2', prefix:'A2' },
+    { label:'A3', prefix:'A3' },
+    { label:'A4', prefix:'A4' },
+    { label:'A5-0', prefix:'A50' },
+    { label:'A5-1', prefix:'A51' }
+  ];
   const columns = groups.map(group => {
     const groupItems = items
-      .filter(bus => quickGroupForCategory(bus.matricola, 'urbani') === group)
+      .filter(bus => String(bus.matricola || '').trim().toUpperCase().startsWith(group.prefix))
       .sort(byMat);
 
     const buttons = groupItems.length
@@ -2429,7 +2435,7 @@ function renderUrbanDirectory(items, tipo) {
   }).join('');
 
   const stickyHead = '<div class="urban-directory-head" aria-label="Gruppi delle matricole">' +
-    groups.map(group => '<div class="urban-directory-head-item">' + group + '</div>').join('') +
+    groups.map(group => '<div class="urban-directory-head-item">' + group.label + '</div>').join('') +
     '</div>';
 
   const directory = '<div class="urban-directory" aria-label="Matricole urbane divise per gruppo">' +
