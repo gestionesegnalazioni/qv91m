@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.33">
-<title>Gestione Bus v8.33</title>
+<meta name="app-version" content="8.34">
+<title>Gestione Bus v8.34</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1204,6 +1204,8 @@
 
 
   .detail-heading {
+    position:relative;
+    z-index:40;
     display:grid;
     grid-template-columns:42px minmax(0,1fr) 42px;
     align-items:center;
@@ -1212,6 +1214,8 @@
   }
 
   .detail-back-btn {
+    position:relative;
+    z-index:45;
     width:42px;
     height:42px;
     min-width:42px;
@@ -1454,13 +1458,13 @@
   }
 
   .category-card.modifiche {
-    background:linear-gradient(145deg,rgba(212,138,163,.22),rgba(112,49,72,.07));
-    border-color:rgba(212,138,163,.48);
-    box-shadow:0 18px 45px rgba(112,49,72,.18), inset 5px 0 0 #D48AA3;
+    background:linear-gradient(145deg,rgba(52,211,153,.22),rgba(6,78,59,.08));
+    border-color:rgba(52,211,153,.50);
+    box-shadow:0 18px 45px rgba(6,78,59,.20), inset 5px 0 0 var(--green);
   }
 
   .category-card.modifiche .category-card-title {
-    color:#f4b7cb;
+    color:#6ee7b7;
   }
 
   .topics-view { display:none; }
@@ -1587,7 +1591,7 @@
   .category-heading {
     position:sticky;
     top:0;
-    z-index:20;
+    z-index:40;
     display:grid;
     grid-template-columns:44px 1fr 44px;
     align-items:center;
@@ -1604,6 +1608,8 @@
   }
 
   .category-back-btn {
+    position:relative;
+    z-index:45;
     width:42px;
     height:42px;
     border-radius:50%;
@@ -1626,50 +1632,60 @@
     gap:14px;
   }
 
-  .urban-quick-nav {
-    position:sticky;
-    top:68px;
-    z-index:21;
-    display:grid;
-    grid-template-columns:repeat(var(--quick-groups,1),minmax(0,1fr));
-    gap:6px;
-    padding:10px 2px 12px;
-    margin:0 0 4px;
-    background:#080b12;
-    box-shadow:0 12px 18px #080b12;
+  .category-bus-list.with-index-rail {
+    padding-left:34px;
   }
 
-  .urban-quick-nav::before {
+  .category-index-rail {
+    position:fixed;
+    left:max(2px,env(safe-area-inset-left));
+    top:calc(var(--visual-viewport-top) + 104px);
+    bottom:24px;
+    width:38px;
+    z-index:32;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:space-around;
+    padding:5px 0;
+    touch-action:pan-y;
+  }
+
+  .category-index-rail::before {
     content:'';
     position:absolute;
-    left:-2px;
-    right:-2px;
-    bottom:100%;
-    height:76px;
-    background:#080b12;
-    pointer-events:none;
+    top:0;
+    bottom:0;
+    left:50%;
+    width:3px;
+    border-radius:999px;
+    background:linear-gradient(to bottom,rgba(59,130,246,.25),#2563eb,rgba(59,130,246,.25));
+    transform:translateX(-50%);
+    box-shadow:0 0 12px rgba(37,99,235,.35);
   }
 
-  .urban-quick-btn {
-    width:100%;
-    min-width:0;
-    height:38px;
-    border-radius:12px;
-    border:1px solid rgba(59,130,246,.75);
-    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+  .category-index-btn {
+    position:relative;
+    z-index:1;
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    border:1px solid rgba(96,165,250,.88);
+    background:#132b61;
     color:#fff;
     font-family:var(--font-mono);
-    font-size:.72rem;
+    font-size:.67rem;
     font-weight:800;
-    box-shadow:0 8px 18px rgba(30,64,175,.22);
+    box-shadow:0 5px 14px rgba(0,0,0,.34);
   }
 
-  .urban-quick-btn:active {
-    transform:scale(.94);
+  .category-index-btn:active {
+    transform:scale(.92);
+    background:#2563eb;
   }
 
   .urban-group-anchor {
-    scroll-margin-top:124px;
+    scroll-margin-top:78px;
   }
 
   .category-bottom-actions {
@@ -1864,7 +1880,7 @@ function viewHistoryUrl(view, extra = {}) {
 }
 
 function pushViewState(view, extra = {}) {
-  window.history.pushState(
+  window.history.replaceState(
     { gestioneBusView:view, ...extra },
     '',
     viewHistoryUrl(view, extra)
@@ -2345,10 +2361,45 @@ function quickGroupForCategory(matricola, category) {
   return '';
 }
 
-window.jumpToCategoryGroup = function(category, key) {
+let lastRailGroup = '';
+
+window.jumpToCategoryGroup = function(category, key, smooth = true) {
   const target = document.getElementById('category-group-' + category + '-' + key);
   if (!target) return;
-  target.scrollIntoView({ behavior:'smooth', block:'start' });
+  target.scrollIntoView({ behavior:smooth ? 'smooth' : 'auto', block:'start' });
+};
+
+window.handleCategoryRailTouch = function(event) {
+  if (!event.touches || event.touches.length !== 1) return;
+  event.preventDefault();
+
+  const rail = event.currentTarget;
+  const buttons = Array.from(rail.querySelectorAll('.category-index-btn'));
+  if (!buttons.length) return;
+
+  const y = event.touches[0].clientY;
+  let nearest = buttons[0];
+  let distance = Infinity;
+
+  buttons.forEach(button => {
+    const rect = button.getBoundingClientRect();
+    const currentDistance = Math.abs(y - (rect.top + rect.height / 2));
+    if (currentDistance < distance) {
+      distance = currentDistance;
+      nearest = button;
+    }
+  });
+
+  const key = nearest.dataset.group || '';
+  const category = rail.dataset.category || '';
+  if (!key || !category || key === lastRailGroup) return;
+
+  lastRailGroup = key;
+  window.jumpToCategoryGroup(category, key, false);
+};
+
+window.endCategoryRailTouch = function() {
+  lastRailGroup = '';
 };
 
 function renderClassicListWithJumps(items, tipo, category) {
@@ -2362,11 +2413,15 @@ function renderClassicListWithJumps(items, tipo, category) {
   const seenGroups = new Set();
 
   const nav = visibleGroups.length
-    ? '<nav class="urban-quick-nav" style="--quick-groups:' + visibleGroups.length +
-      '" aria-label="Accesso rapido alle matricole">' +
+    ? '<nav class="category-index-rail" data-category="' + category +
+      '" aria-label="Indice rapido delle matricole" ' +
+      'ontouchstart="handleCategoryRailTouch(event)" ' +
+      'ontouchmove="handleCategoryRailTouch(event)" ' +
+      'ontouchend="endCategoryRailTouch()" ontouchcancel="endCategoryRailTouch()">' +
       visibleGroups.map(key =>
-        '<button class="urban-quick-btn" onclick="jumpToCategoryGroup(&quot;' +
-        category + '&quot;,&quot;' + key + '&quot;)">' + key + '</button>'
+        '<button class="category-index-btn" data-group="' + key +
+        '" onclick="jumpToCategoryGroup(&quot;' + category + '&quot;,&quot;' +
+        key + '&quot;,true)">' + key + '</button>'
       ).join('') +
       '</nav>'
     : '';
@@ -2417,7 +2472,9 @@ function renderCategoryView() {
     return;
   }
 
-  list.innerHTML = currentCategory === 'urbani' || currentCategory === 'extraurbani'
+  const hasIndexRail = currentCategory === 'urbani' || currentCategory === 'extraurbani';
+  list.classList.toggle('with-index-rail', hasIndexRail);
+  list.innerHTML = hasIndexRail
     ? renderClassicListWithJumps(items, tipo, currentCategory)
     : items.map(b => busTile(b, tipo)).join('');
 }
