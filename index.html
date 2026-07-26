@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.49">
-<title>Gestione Bus v8.49</title>
+<meta name="app-version" content="8.50">
+<title>Gestione Bus v8.50</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1457,6 +1457,17 @@
     color:#facc15;
   }
 
+  .category-card.fermate {
+    background:linear-gradient(145deg,rgba(139,92,246,.25),rgba(76,29,149,.09));
+    border-color:rgba(167,139,250,.52);
+    box-shadow:0 18px 45px rgba(76,29,149,.22), inset 5px 0 0 #8b5cf6;
+  }
+
+  .category-card.fermate .category-card-title,
+  .stops-title {
+    color:#c4b5fd;
+  }
+
   .category-card.modifiche {
     background:linear-gradient(145deg,rgba(52,211,153,.22),rgba(6,78,59,.08));
     border-color:rgba(52,211,153,.50);
@@ -1792,10 +1803,10 @@
   @media(max-width:480px) {
     body.home-scroll-locked .category-home {
       height:calc(100dvh - 90px);
-      grid-template-rows:repeat(4,minmax(0,1fr));
-      gap:10px;
+      grid-template-rows:repeat(5,minmax(0,1fr));
+      gap:9px;
       padding-top:0;
-      padding-bottom:0;
+      padding-bottom:57px;
     }
 
     body.home-scroll-locked .category-card {
@@ -1866,6 +1877,23 @@
     <div class="topics-add-row">
       <input id="topicInput" class="topics-input" placeholder="Scrivi un nuovo tema" maxlength="300">
       <button class="topic-add-btn" onclick="addTopic()" aria-label="Aggiungi tema" title="Aggiungi tema">+</button>
+    </div>
+  </div>
+
+  <div class="topics-view stops-view" id="stopsView">
+    <div class="category-heading">
+      <button class="category-back-btn" onclick="closeStops()" aria-label="Indietro" title="Indietro">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M15.5 5.5 9 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="category-heading-title stops-title">Fermate soppresse</div>
+      <div aria-hidden="true"></div>
+    </div>
+    <div class="topics-list" id="stopsList"></div>
+    <div class="topics-add-row">
+      <input id="stopInput" class="topics-input" placeholder="Scrivi una fermata soppressa" maxlength="300">
+      <button class="topic-add-btn" onclick="addStop()" aria-label="Aggiungi fermata soppressa" title="Aggiungi fermata soppressa">+</button>
     </div>
   </div>
 
@@ -1942,6 +1970,7 @@ const db = getFirestore(app);
 let buses = [];
 let segnalazioni = [];
 let temi = [];
+let fermateSoppresse = [];
 let modifiche = [];
 let selectedBus = null;
 let editingSegId = null;
@@ -2113,6 +2142,7 @@ window.closeRecentChanges = function(fromHistory = false) {
 function renderAll() {
   renderBusGrid();
   renderTopics();
+  renderStops();
   if (currentCategory) renderCategoryView();
   if (selectedBus) showBusDetail(selectedBus);
 }
@@ -2216,6 +2246,17 @@ onSnapshot(collection(db, 'segnalazioni'), snap => {
 }, err => {
   console.error(err);
   document.getElementById('busGrid').innerHTML = '<div class="empty">Errore caricamento segnalazioni.</div>';
+});
+
+onSnapshot(collection(db, 'fermateSoppresse'), snap => {
+  fermateSoppresse = snap.docs.map(d => ({ id:d.id, ...d.data() }))
+    .sort((a, b) => (a.createdAt || '').localeCompare(b.createdAt || ''));
+  renderBusGrid();
+  renderStops();
+}, err => {
+  console.error(err);
+  const list = document.getElementById('stopsList');
+  if (list) list.innerHTML = '<div class="empty">Errore caricamento fermate soppresse.</div>';
 });
 
 onSnapshot(collection(db, 'modifiche'), snap => {
@@ -2348,6 +2389,7 @@ function renderBusGrid() {
     categoryCard('urbani', 'Urbani', numeroUrbani, 'urbani') +
     categoryCard('extraurbani', 'Extraurbani', extraurbani.length, 'extraurbani') +
     topicCategoryCard() +
+    suppressedStopsCategoryCard() +
     recentChangesCategoryCard();
 }
 
@@ -2361,6 +2403,21 @@ function topicCategoryCard() {
       </div>
       <svg class="category-card-icon" viewBox="0 0 24 24" aria-hidden="true">
         <path fill="currentColor" d="M5 3h11l3 3v15H5V3Zm2 2v14h10V7h-3V5H7Zm2 5h6v2H9v-2Zm0 4h6v2H9v-2Z"/>
+      </svg>
+    </button>`;
+}
+
+function suppressedStopsCategoryCard() {
+  const count = fermateSoppresse.length;
+  const label = count === 1 ? '1 fermata' : `${count} fermate`;
+  return `
+    <button class="category-card fermate" onclick="openStops()">
+      <div class="category-card-copy">
+        <div class="category-card-title">Fermate soppresse</div>
+        <div class="category-card-count">${label}</div>
+      </div>
+      <svg class="category-card-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M6 3h12v14H6V3Zm2 2v6h8V5H8Zm-2 12h12M8 21v-4m8 4v-4M4 8h2m12 0h2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </button>`;
 }
@@ -2400,6 +2457,7 @@ window.openTopics = function(fromHistory = false) {
   setHomeScrollLocked(false);
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('categoryView').classList.remove('open');
+  document.getElementById('stopsView').classList.remove('open');
   document.getElementById('topicsView').classList.add('open');
   renderTopics();
   forzaScrollInAlto();
@@ -2455,6 +2513,79 @@ document.getElementById('topicInput').addEventListener('keydown', e => {
   if (e.key === 'Enter') addTopic();
 });
 
+function renderStops() {
+  const list = document.getElementById('stopsList');
+  if (!list) return;
+  list.innerHTML = fermateSoppresse.length
+    ? fermateSoppresse.map(f => `
+        <div class="topic-item">
+          <div class="topic-text">${esc(f.testo)}</div>
+          <div class="topic-actions">
+            <button class="topic-edit" onclick="editStop('${f.id}')" aria-label="Modifica fermata soppressa" title="Modifica fermata soppressa">✎</button>
+            <button class="topic-delete" onclick="deleteStop('${f.id}')" aria-label="Elimina fermata soppressa" title="Elimina fermata soppressa">✕</button>
+          </div>
+        </div>`).join('')
+    : '<div class="empty">Nessuna fermata soppressa.</div>';
+}
+
+window.openStops = function(fromHistory = false) {
+  if (!consumeHomeNavigationIntent(fromHistory)) return;
+  setHomeScrollLocked(false);
+  document.getElementById('homeView').style.display = 'none';
+  document.getElementById('categoryView').classList.remove('open');
+  document.getElementById('topicsView').classList.remove('open');
+  document.getElementById('stopsView').classList.add('open');
+  renderStops();
+  forzaScrollInAlto();
+  if (!fromHistory) pushViewState('stops');
+};
+
+window.closeStops = function(fromHistory = false) {
+  blockHomeNavigation();
+  document.getElementById('stopsView').classList.remove('open');
+  document.getElementById('homeView').style.display = 'block';
+  setHomeScrollLocked(true);
+  document.getElementById('stopInput').value = '';
+  renderBusGrid();
+  forzaScrollInAlto();
+  if (!fromHistory) replaceViewState('home');
+};
+
+window.addStop = async function() {
+  const input = document.getElementById('stopInput');
+  const testo = input.value.trim();
+  if (!testo) return;
+  await addDoc(collection(db, 'fermateSoppresse'), { testo, createdAt:new Date().toISOString() });
+  await registraModifica('FERMATE', 'Fermata soppressa aggiunta', testo);
+  input.value = '';
+  input.focus();
+  showToast('Fermata aggiunta');
+};
+
+window.editStop = async function(id) {
+  const fermata = fermateSoppresse.find(f => f.id === id);
+  if (!fermata) return;
+  const nuovoTesto = prompt('Modifica la fermata soppressa:', fermata.testo || '');
+  if (nuovoTesto === null) return;
+  const testo = nuovoTesto.trim();
+  if (!testo || testo === fermata.testo) return;
+  await updateDoc(doc(db, 'fermateSoppresse', id), { testo });
+  await registraModifica('FERMATE', 'Fermata soppressa modificata', testo);
+  showToast('Fermata aggiornata');
+};
+
+window.deleteStop = async function(id) {
+  const fermata = fermateSoppresse.find(f => f.id === id);
+  if (!confirm('Eliminare questa fermata soppressa?')) return;
+  await deleteDoc(doc(db, 'fermateSoppresse', id));
+  await registraModifica('FERMATE', 'Fermata soppressa eliminata', fermata?.testo || '');
+  showToast('Fermata eliminata');
+};
+
+document.getElementById('stopInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') addStop();
+});
+
 window.openCategory = function(category, fromHistory = false) {
   if (!consumeHomeNavigationIntent(fromHistory)) return;
   setHomeScrollLocked(false);
@@ -2462,6 +2593,7 @@ window.openCategory = function(category, fromHistory = false) {
   categoryScrollPosition = 0;
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('topicsView').classList.remove('open');
+  document.getElementById('stopsView').classList.remove('open');
   document.getElementById('detailView').classList.remove('open');
   document.getElementById('categoryView').classList.add('open');
   renderCategoryView();
@@ -3419,6 +3551,7 @@ window.addEventListener('popstate', () => {
 
   const categoryWasOpen = document.getElementById('categoryView')?.classList.contains('open');
   const topicsWereOpen = document.getElementById('topicsView')?.classList.contains('open');
+  const stopsWereOpen = document.getElementById('stopsView')?.classList.contains('open');
   const recentWasOpen = document.getElementById('recentChangesOverlay')?.classList.contains('open');
 
   if (selectedBus) {
@@ -3430,6 +3563,8 @@ window.addEventListener('popstate', () => {
     window.closeCategory(true);
   } else if (topicsWereOpen) {
     window.closeTopics(true);
+  } else if (stopsWereOpen) {
+    window.closeStops(true);
   } else if (recentWasOpen) {
     window.closeRecentChanges(true);
   }
@@ -3437,6 +3572,7 @@ window.addEventListener('popstate', () => {
   document.getElementById('recentChangesOverlay').classList.remove('open');
   document.getElementById('categoryView').classList.remove('open');
   document.getElementById('topicsView').classList.remove('open');
+  document.getElementById('stopsView').classList.remove('open');
   document.getElementById('detailView').classList.remove('open');
   document.getElementById('homeView').style.display = 'block';
 
@@ -3459,6 +3595,11 @@ function getOpenNavigationView() {
   const topicsView = document.getElementById('topicsView');
   if (topicsView?.classList.contains('open')) {
     return { view:topicsView, close:window.closeTopics };
+  }
+
+  const stopsView = document.getElementById('stopsView');
+  if (stopsView?.classList.contains('open')) {
+    return { view:stopsView, close:window.closeStops };
   }
 
   const recentOverlay = document.getElementById('recentChangesOverlay');
