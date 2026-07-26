@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.43">
-<title>Gestione Bus v8.43</title>
+<meta name="app-version" content="8.44">
+<title>Gestione Bus v8.44</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -2527,11 +2527,15 @@ function renderUrbanDirectory(items) {
 }
 
 function renderExtraurbanDirectory(items) {
+  const hasK4 = items.some(bus =>
+    String(bus.matricola || '').trim().toUpperCase().startsWith('K4')
+  );
+
   const groups = [
     { label:'K1', prefix:'K1' },
     { label:'K2', prefix:'K2' },
     { label:'K3', prefix:'K3' },
-    { label:'K4', prefix:'K4' },
+    ...(hasK4 ? [{ label:'K4', prefix:'K4' }] : []),
     { label:'L', prefix:'L' }
   ];
 
@@ -2545,15 +2549,19 @@ function renderExtraurbanDirectory(items) {
       '</div>';
   }).join('');
 
-  const stickyHead = '<div class="urban-directory-head" aria-label="Gruppi delle matricole extraurbane">' +
+  const gridStyle = 'style="grid-template-columns:repeat(' + groups.length + ',minmax(0,1fr))"';
+
+  const head = '<div class="urban-directory-head" ' + gridStyle +
+    ' aria-label="Gruppi delle matricole extraurbane">' +
     groups.map(group => '<div class="urban-directory-head-item">' + group.label + '</div>').join('') +
     '</div>';
 
-  const directory = '<div class="urban-directory" aria-label="Matricole extraurbane divise per gruppo">' +
+  const directory = '<div class="urban-directory" ' + gridStyle +
+    ' aria-label="Matricole extraurbane divise per gruppo">' +
     columns +
     '</div>';
 
-  return stickyHead + directory;
+  return head + directory;
 }
 
 function renderCategoryView() {
