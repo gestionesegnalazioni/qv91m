@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.40">
-<title>Gestione Bus v8.40</title>
+<meta name="app-version" content="8.41">
+<title>Gestione Bus v8.41</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -2067,7 +2067,7 @@ function renderRecentChanges() {
 
   const ultime = [...modifiche]
     .sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')))
-    .slice(0, 30);
+    .slice(0, 50);
 
   list.innerHTML = ultime.length
     ? ultime.map(m => {
@@ -2302,7 +2302,7 @@ function topicCategoryCard() {
 }
 
 function recentChangesCategoryCard() {
-  const count = Math.min(modifiche.length, 30);
+  const count = Math.min(modifiche.length, 50);
   const label = count === 1 ? '1 attività recente' : `${count} attività recenti`;
   return `
     <button class="category-card modifiche" onclick="openRecentChanges()">
@@ -2502,6 +2502,36 @@ function renderUrbanDirectory(items) {
   return stickyHead + primaryDirectory + secondaryDirectory;
 }
 
+function renderExtraurbanDirectory(items) {
+  const groups = [
+    { label:'K1', prefix:'K1' },
+    { label:'K2', prefix:'K2' },
+    { label:'K3', prefix:'K3' },
+    { label:'K4', prefix:'K4' },
+    { label:'L', prefix:'L' }
+  ];
+
+  const columns = groups.map(group => {
+    const groupItems = items
+      .filter(bus => String(bus.matricola || '').trim().toUpperCase().startsWith(group.prefix))
+      .sort(byMat);
+
+    return '<div class="urban-directory-column">' +
+      renderDirectoryButtons(groupItems) +
+      '</div>';
+  }).join('');
+
+  const stickyHead = '<div class="urban-directory-head" aria-label="Gruppi delle matricole extraurbane">' +
+    groups.map(group => '<div class="urban-directory-head-item">' + group.label + '</div>').join('') +
+    '</div>';
+
+  const directory = '<div class="urban-directory" aria-label="Matricole extraurbane divise per gruppo">' +
+    columns +
+    '</div>';
+
+  return stickyHead + directory;
+}
+
 function renderCategoryView() {
   if (!currentCategory) return;
 
@@ -2530,8 +2560,10 @@ function renderCategoryView() {
   }
 
   list.innerHTML = currentCategory === 'urbani'
-    ? renderUrbanDirectory(items, tipo)
-    : items.map(b => busTile(b, tipo)).join('');
+    ? renderUrbanDirectory(items)
+    : currentCategory === 'extraurbani'
+      ? renderExtraurbanDirectory(items)
+      : items.map(b => busTile(b, tipo)).join('');
 }
 
 window.selectBus = function(mat, fromHistory = false) {
