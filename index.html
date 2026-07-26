@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.42">
-<title>Gestione Bus v8.42</title>
+<meta name="app-version" content="8.43">
+<title>Gestione Bus v8.43</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1633,9 +1633,9 @@
   }
 
   .urban-directory-head {
-    position:sticky;
-    top:68px;
-    z-index:35;
+    position:static;
+    top:auto;
+    z-index:auto;
     grid-column:1/-1;
     display:grid;
     grid-template-columns:repeat(5,minmax(0,1fr));
@@ -2502,20 +2502,25 @@ function renderUrbanDirectory(items) {
     return '<div class="urban-directory-column">' +
       renderDirectoryButtons(groupItems) +
       '</div>';
-  }).join('');
+  });
+
+  const emptyHead = '<div class="urban-directory-head-item is-empty" aria-hidden="true"></div>';
+  const emptyColumn = '<div class="urban-directory-column" aria-hidden="true"></div>';
 
   const secondaryHead = '<div class="urban-directory-head urban-directory-head-secondary" aria-label="Gruppi delle matricole B e F">' +
-    secondaryGroups.map(group => '<div class="urban-directory-head-item">' + group.label + '</div>').join('') +
-    '<div class="urban-directory-head-item is-empty" aria-hidden="true"></div>' +
-    '<div class="urban-directory-head-item is-empty" aria-hidden="true"></div>' +
-    '<div class="urban-directory-head-item is-empty" aria-hidden="true"></div>' +
+    emptyHead +
+    '<div class="urban-directory-head-item">B</div>' +
+    emptyHead +
+    '<div class="urban-directory-head-item">F</div>' +
+    emptyHead +
     '</div>';
 
   const secondaryDirectory = '<div class="urban-directory" aria-label="Matricole urbane B e F">' +
-    secondaryColumns +
-    '<div class="urban-directory-column" aria-hidden="true"></div>' +
-    '<div class="urban-directory-column" aria-hidden="true"></div>' +
-    '<div class="urban-directory-column" aria-hidden="true"></div>' +
+    emptyColumn +
+    secondaryColumns[0] +
+    emptyColumn +
+    secondaryColumns[1] +
+    emptyColumn +
     '</div>';
 
   return stickyHead + primaryDirectory + secondaryHead + secondaryDirectory;
