@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.48">
-<title>Gestione Bus v8.48</title>
+<meta name="app-version" content="8.49">
+<title>Gestione Bus v8.49</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -2133,9 +2133,62 @@ function setHomeScrollLocked(locked) {
   document.body.classList.toggle('home-scroll-locked', locked);
 }
 
+async function correggiMatricolaF4007() {
+  const vecchiaMatricola = 'F4007';
+  const nuovaMatricola = 'F4006';
+
+  try {
+    const busSnapshot = await getDocs(collection(db, 'buses'));
+    const vecchioBus = busSnapshot.docs.find(d =>
+      String(d.data().matricola || '').trim().toUpperCase() === vecchiaMatricola
+    );
+    const nuovoBusEsistente = busSnapshot.docs.find(d =>
+      String(d.data().matricola || '').trim().toUpperCase() === nuovaMatricola
+    );
+
+    if (!vecchioBus) return;
+
+    if (nuovoBusEsistente) {
+      console.warn('Correzione F4007 non eseguita: F4006 esiste già.');
+      return;
+    }
+
+    const [segnalazioniSnapshot, modificheSnapshot] = await Promise.all([
+      getDocs(collection(db, 'segnalazioni')),
+      getDocs(collection(db, 'modifiche'))
+    ]);
+
+    const aggiornamenti = [
+      updateDoc(doc(db, 'buses', vecchioBus.id), { matricola:nuovaMatricola })
+    ];
+
+    segnalazioniSnapshot.docs.forEach(d => {
+      if (String(d.data().bus || '').trim().toUpperCase() === vecchiaMatricola) {
+        aggiornamenti.push(updateDoc(doc(db, 'segnalazioni', d.id), { bus:nuovaMatricola }));
+      }
+    });
+
+    modificheSnapshot.docs.forEach(d => {
+      if (String(d.data().bus || '').trim().toUpperCase() === vecchiaMatricola) {
+        aggiornamenti.push(updateDoc(doc(db, 'modifiche', d.id), { bus:nuovaMatricola }));
+      }
+    });
+
+    await Promise.all(aggiornamenti);
+    await registraModifica(
+      nuovaMatricola,
+      'Matricola autobus corretta',
+      'Da F4007 a F4006'
+    );
+  } catch(e) {
+    console.error('Errore durante la correzione F4007 → F4006', e);
+  }
+}
+
 setHomeScrollLocked(true);
 
 replaceViewState('home');
+correggiMatricolaF4007();
 
 onSnapshot(collection(db, 'buses'), snap => {
   buses = snap.docs.map(d => ({ id:d.id, ...d.data() })).sort(byMat);
