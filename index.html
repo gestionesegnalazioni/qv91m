@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.54">
-<title>Gestione Bus v8.54</title>
+<meta name="app-version" content="8.55">
+<title>Gestione Bus v8.55</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1699,6 +1699,38 @@
   .combined-fleet-group .urban-directory {
     background:linear-gradient(145deg,rgba(8,11,18,.94),rgba(16,22,35,.92));
     border-color:rgba(255,255,255,.16);
+  }
+
+  .combined-fleet-group.urban .urban-directory {
+    background:#ffffff;
+    border-color:rgba(15,23,42,.14);
+    box-shadow:0 10px 24px rgba(15,23,42,.10);
+  }
+
+  .combined-fleet-group.urban .urban-directory-bus {
+    color:#111827;
+    background:linear-gradient(145deg,#ffffff,#edf2f7);
+    border-color:rgba(15,23,42,.20);
+    box-shadow:0 5px 12px rgba(15,23,42,.10);
+  }
+
+  .combined-fleet-group.urban .urban-directory-bus.has-alerts {
+    border-color:rgba(239,68,68,.72);
+  }
+
+  .combined-fleet-group.urban .urban-directory-empty {
+    color:rgba(15,23,42,.46);
+  }
+
+  .combined-fleet-group.urban .urban-more {
+    background:#ffffff;
+    border-color:rgba(15,23,42,.16);
+  }
+
+  .combined-fleet-group.urban .urban-more-column {
+    background:#ffffff;
+    border:1px solid rgba(15,23,42,.12);
+    box-shadow:0 7px 16px rgba(15,23,42,.08);
   }
 
   .combined-fleet-group .urban-directory-head {
