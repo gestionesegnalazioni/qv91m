@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.52">
-<title>Gestione Bus v8.52</title>
+<meta name="app-version" content="8.53">
+<title>Gestione Bus v8.53</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1440,6 +1440,15 @@
     box-shadow:0 18px 45px rgba(30,64,175,.2), inset 5px 0 0 #3b82f6;
   }
 
+  .category-card.autobus {
+    background:linear-gradient(145deg,rgba(255,255,255,.14),rgba(37,99,235,.22));
+    border-color:rgba(147,197,253,.44);
+    box-shadow:
+      0 18px 45px rgba(0,0,0,.28),
+      inset 5px 0 0 rgba(255,255,255,.94),
+      inset -5px 0 0 #3b82f6;
+  }
+
   .category-card.fuori {
     background:linear-gradient(145deg,rgba(220,38,38,.22),rgba(127,29,29,.07));
     border-color:rgba(239,68,68,.42);
@@ -1641,6 +1650,60 @@
     display:grid;
     grid-template-columns:1fr;
     gap:14px;
+  }
+
+  .combined-fleet-group {
+    width:100%;
+    border-radius:24px;
+    padding:14px 10px 16px;
+    overflow:hidden;
+    box-shadow:0 18px 42px rgba(0,0,0,.28);
+  }
+
+  .combined-fleet-group.urban {
+    color:#071018;
+    background:linear-gradient(145deg,#ffffff,#dfe7f0);
+    border:1px solid rgba(255,255,255,.96);
+  }
+
+  .combined-fleet-group.extraurban {
+    color:#ffffff;
+    background:linear-gradient(145deg,#2563eb,#123777);
+    border:1px solid rgba(96,165,250,.82);
+  }
+
+  .combined-fleet-title {
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:12px;
+    padding:2px 6px 13px;
+    font-family:var(--font-mono);
+    font-size:1.12rem;
+    font-weight:800;
+  }
+
+  .combined-fleet-count {
+    font-size:.72rem;
+    font-weight:700;
+    opacity:.72;
+    white-space:nowrap;
+  }
+
+  .combined-fleet-body {
+    display:grid;
+    grid-template-columns:1fr;
+    gap:14px;
+  }
+
+  .combined-fleet-group .urban-directory {
+    background:linear-gradient(145deg,rgba(8,11,18,.94),rgba(16,22,35,.92));
+    border-color:rgba(255,255,255,.16);
+  }
+
+  .combined-fleet-group .urban-directory-head {
+    background:transparent;
+    box-shadow:none;
   }
 
   .urban-directory-head {
@@ -2383,11 +2446,10 @@ function renderBusGrid() {
   if (!grid) return;
 
   const { urbani, extraurbani, altri } = getBusGroups();
-  const numeroUrbani = urbani.length + altri.length;
+  const numeroAutobus = urbani.length + altri.length + extraurbani.length;
 
   grid.innerHTML =
-    categoryCard('urbani', 'Urbani', numeroUrbani, 'urbani') +
-    categoryCard('extraurbani', 'Extraurbani', extraurbani.length, 'extraurbani') +
+    categoryCard('autobus', 'Autobus', numeroAutobus, 'autobus') +
     topicCategoryCard() +
     suppressedStopsCategoryCard() +
     recentChangesCategoryCard();
@@ -2754,16 +2816,45 @@ function renderCategoryView() {
   if (!currentCategory) return;
 
   const { urbani, extraurbani, altri, fuori } = getBusGroups();
+  const urbanItems = [...urbani, ...altri].sort(byMat);
+  const extraurbanItems = [...extraurbani].sort(byMat);
   let title = '';
   let items = [];
   let tipo = currentCategory;
 
+  if (currentCategory === 'autobus') {
+    document.getElementById('categoryTitle').textContent = 'Autobus';
+    const list = document.getElementById('categoryBusList');
+
+    const urbanLabel = urbanItems.length === 1 ? '1 autobus' : urbanItems.length + ' autobus';
+    const extraurbanLabel = extraurbanItems.length === 1 ? '1 autobus' : extraurbanItems.length + ' autobus';
+
+    const urbanContent = urbanItems.length
+      ? renderUrbanDirectory(urbanItems)
+      : '<div class="empty">Nessun autobus urbano.</div>';
+
+    const extraurbanContent = extraurbanItems.length
+      ? renderExtraurbanDirectory(extraurbanItems)
+      : '<div class="empty">Nessun autobus extraurbano.</div>';
+
+    list.innerHTML =
+      '<section class="combined-fleet-group urban">' +
+        '<div class="combined-fleet-title"><span>Urbani</span><span class="combined-fleet-count">' + urbanLabel + '</span></div>' +
+        '<div class="combined-fleet-body">' + urbanContent + '</div>' +
+      '</section>' +
+      '<section class="combined-fleet-group extraurban">' +
+        '<div class="combined-fleet-title"><span>Extraurbani</span><span class="combined-fleet-count">' + extraurbanLabel + '</span></div>' +
+        '<div class="combined-fleet-body">' + extraurbanContent + '</div>' +
+      '</section>';
+    return;
+  }
+
   if (currentCategory === 'urbani') {
     title = 'Urbani';
-    items = [...urbani, ...altri].sort(byMat);
+    items = urbanItems;
   } else if (currentCategory === 'extraurbani') {
     title = 'Extraurbani';
-    items = extraurbani;
+    items = extraurbanItems;
   } else {
     title = 'Fuori servizio';
     items = fuori;
