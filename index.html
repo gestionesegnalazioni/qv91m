@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.53">
-<title>Gestione Bus v8.53</title>
+<meta name="app-version" content="8.54">
+<title>Gestione Bus v8.54</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1846,6 +1846,104 @@
     visibility:hidden;
   }
 
+  .urban-more {
+    grid-column:1/-1;
+    width:100%;
+    margin-top:2px;
+    border:1px solid rgba(8,11,18,.18);
+    border-radius:16px;
+    background:rgba(8,11,18,.08);
+    overflow:hidden;
+  }
+
+  .urban-more-summary {
+    min-height:52px;
+    padding:10px 13px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    cursor:pointer;
+    color:#071018;
+    font-family:var(--font-mono);
+  }
+
+  .urban-more-summary > span:first-child {
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+  }
+
+  .urban-more-summary strong {
+    font-size:.86rem;
+    font-weight:800;
+  }
+
+  .urban-more-summary small {
+    font-size:.66rem;
+    font-weight:700;
+    opacity:.62;
+  }
+
+  .urban-more-chevron {
+    width:30px;
+    height:30px;
+    flex:0 0 30px;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    background:rgba(8,11,18,.10);
+    font-size:1.1rem;
+    font-weight:800;
+    transition:transform .18s ease;
+  }
+
+  .urban-more[open] .urban-more-chevron {
+    transform:rotate(180deg);
+  }
+
+  .urban-more-content {
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
+    padding:0 10px 12px;
+  }
+
+  .urban-more-column {
+    min-width:0;
+    padding:9px;
+    border-radius:14px;
+    background:linear-gradient(145deg,rgba(8,11,18,.94),rgba(16,22,35,.92));
+  }
+
+  .urban-more-column-title {
+    margin-bottom:8px;
+    min-height:32px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:10px;
+    color:#06150d;
+    background:linear-gradient(145deg,#55e1aa,#34d399);
+    border:1px solid rgba(52,211,153,.88);
+    font-family:var(--font-mono);
+    font-size:.82rem;
+    font-weight:800;
+  }
+
+  .combined-fleet-group.extraurban .urban-more-summary {
+    color:#ffffff;
+  }
+
+  .combined-fleet-group.extraurban .urban-more {
+    border-color:rgba(255,255,255,.18);
+    background:rgba(8,11,18,.16);
+  }
+
+  .combined-fleet-group.extraurban .urban-more-chevron {
+    background:rgba(255,255,255,.12);
+  }
+
   .urban-group-anchor {
     scroll-margin-top:78px;
   }
@@ -2742,36 +2840,33 @@ function renderUrbanDirectory(items) {
     { label:'F', prefix:'F' }
   ];
 
-  const secondaryColumns = secondaryGroups.map(group => {
-    const groupItems = items
+  const secondaryData = secondaryGroups.map(group => ({
+    ...group,
+    items:items
       .filter(bus => String(bus.matricola || '').trim().toUpperCase().startsWith(group.prefix))
-      .sort(byMat);
+      .sort(byMat)
+  }));
 
-    return '<div class="urban-directory-column">' +
-      renderDirectoryButtons(groupItems) +
-      '</div>';
-  });
+  const secondaryCount = secondaryData.reduce((total, group) => total + group.items.length, 0);
+  const secondaryLabel = secondaryCount === 1 ? '1 autobus' : secondaryCount + ' autobus';
 
-  const emptyHead = '<div class="urban-directory-head-item is-empty" aria-hidden="true"></div>';
-  const emptyColumn = '<div class="urban-directory-column" aria-hidden="true"></div>';
+  const secondaryColumns = secondaryData.map(group =>
+    '<div class="urban-more-column">' +
+      '<div class="urban-more-column-title">' + group.label + '</div>' +
+      '<div class="urban-directory-column">' + renderDirectoryButtons(group.items) + '</div>' +
+    '</div>'
+  ).join('');
 
-  const secondaryHead = '<div class="urban-directory-head urban-directory-head-secondary" aria-label="Gruppi delle matricole B e F">' +
-    emptyHead +
-    '<div class="urban-directory-head-item">B</div>' +
-    emptyHead +
-    '<div class="urban-directory-head-item">F</div>' +
-    emptyHead +
-    '</div>';
+  const secondaryAccordion =
+    '<details class="urban-more">' +
+      '<summary class="urban-more-summary">' +
+        '<span><strong>Altri autobus</strong><small>B e F · ' + secondaryLabel + '</small></span>' +
+        '<span class="urban-more-chevron" aria-hidden="true">⌄</span>' +
+      '</summary>' +
+      '<div class="urban-more-content">' + secondaryColumns + '</div>' +
+    '</details>';
 
-  const secondaryDirectory = '<div class="urban-directory" aria-label="Matricole urbane B e F">' +
-    emptyColumn +
-    secondaryColumns[0] +
-    emptyColumn +
-    secondaryColumns[1] +
-    emptyColumn +
-    '</div>';
-
-  return stickyHead + primaryDirectory + secondaryHead + secondaryDirectory;
+  return stickyHead + primaryDirectory + secondaryAccordion;
 }
 
 function renderExtraurbanDirectory(items) {
