@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.55">
-<title>Gestione Bus v8.55</title>
+<meta name="app-version" content="8.56">
+<title>Gestione Bus v8.56</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1976,6 +1976,81 @@
     background:rgba(255,255,255,.12);
   }
 
+  /* Un solo riquadro continuo per ciascun gruppo */
+  .combined-fleet-group.urban .urban-directory,
+  .combined-fleet-group.extraurban .urban-directory {
+    border:none;
+    box-shadow:none;
+    padding:10px 0 4px;
+  }
+
+  .combined-fleet-group.urban .urban-directory {
+    background:transparent;
+  }
+
+  .combined-fleet-group.urban .urban-more {
+    margin-top:5px;
+    border:none;
+    border-top:1px solid rgba(15,23,42,.14);
+    border-radius:0;
+    background:transparent;
+  }
+
+  .combined-fleet-group.urban .urban-more-summary {
+    padding:10px 6px 8px;
+  }
+
+  .combined-fleet-group.urban .urban-more-summary strong {
+    font-size:.82rem;
+  }
+
+  .combined-fleet-group.urban .urban-more-content {
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    gap:5px;
+    padding:8px 0 4px;
+  }
+
+  .combined-fleet-group.urban .urban-more-column {
+    padding:0;
+    border:none;
+    border-radius:0;
+    background:transparent;
+    box-shadow:none;
+  }
+
+  .combined-fleet-group.urban .urban-more-column-b {
+    grid-column:2;
+  }
+
+  .combined-fleet-group.urban .urban-more-column-f {
+    grid-column:4;
+  }
+
+  .combined-fleet-group.urban .urban-more-column-title {
+    min-height:32px;
+    margin-bottom:8px;
+  }
+
+  .combined-fleet-group.extraurban .urban-directory {
+    background:transparent;
+    border-color:transparent;
+  }
+
+  .combined-fleet-group.extraurban .urban-directory-bus {
+    color:#ffffff;
+    background:rgba(255,255,255,.10);
+    border-color:rgba(255,255,255,.55);
+    box-shadow:0 5px 12px rgba(3,14,41,.18);
+  }
+
+  .combined-fleet-group.extraurban .urban-directory-bus.has-alerts {
+    border-color:#fca5a5;
+  }
+
+  .combined-fleet-group.extraurban .urban-directory-empty {
+    color:rgba(255,255,255,.58);
+  }
+
   .urban-group-anchor {
     scroll-margin-top:78px;
   }
@@ -2868,31 +2943,25 @@ function renderUrbanDirectory(items) {
     '</div>';
 
   const secondaryGroups = [
-    { label:'B', prefix:'B' },
-    { label:'F', prefix:'F' }
+    { label:'B', prefix:'B', cssClass:'urban-more-column-b' },
+    { label:'F', prefix:'F', cssClass:'urban-more-column-f' }
   ];
 
-  const secondaryData = secondaryGroups.map(group => ({
-    ...group,
-    items:items
+  const secondaryColumns = secondaryGroups.map(group => {
+    const groupItems = items
       .filter(bus => String(bus.matricola || '').trim().toUpperCase().startsWith(group.prefix))
-      .sort(byMat)
-  }));
+      .sort(byMat);
 
-  const secondaryCount = secondaryData.reduce((total, group) => total + group.items.length, 0);
-  const secondaryLabel = secondaryCount === 1 ? '1 autobus' : secondaryCount + ' autobus';
-
-  const secondaryColumns = secondaryData.map(group =>
-    '<div class="urban-more-column">' +
+    return '<div class="urban-more-column ' + group.cssClass + '">' +
       '<div class="urban-more-column-title">' + group.label + '</div>' +
-      '<div class="urban-directory-column">' + renderDirectoryButtons(group.items) + '</div>' +
-    '</div>'
-  ).join('');
+      '<div class="urban-directory-column">' + renderDirectoryButtons(groupItems) + '</div>' +
+    '</div>';
+  }).join('');
 
   const secondaryAccordion =
     '<details class="urban-more">' +
       '<summary class="urban-more-summary">' +
-        '<span><strong>Altri autobus</strong><small>B e F · ' + secondaryLabel + '</small></span>' +
+        '<strong>B e F</strong>' +
         '<span class="urban-more-chevron" aria-hidden="true">⌄</span>' +
       '</summary>' +
       '<div class="urban-more-content">' + secondaryColumns + '</div>' +
