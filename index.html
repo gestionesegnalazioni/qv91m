@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.57">
-<title>Gestione Bus v8.57</title>
+<meta name="app-version" content="8.58">
+<title>Gestione Bus v8.58</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1441,17 +1441,14 @@
   }
 
   .category-card.autobus {
-    background:linear-gradient(145deg,rgba(249,115,22,.30),rgba(124,45,18,.10));
-    border-color:rgba(251,146,60,.58);
-    box-shadow:
-      0 18px 45px rgba(124,45,18,.20),
-      inset 5px 0 0 #f97316,
-      inset 0 1px 0 rgba(255,255,255,.10);
+    background:linear-gradient(145deg,rgba(52,211,153,.22),rgba(6,78,59,.08));
+    border-color:rgba(52,211,153,.50);
+    box-shadow:0 18px 45px rgba(6,78,59,.20), inset 5px 0 0 var(--green);
   }
 
   .category-card.autobus .category-card-title,
   .category-card.autobus .category-card-icon {
-    color:#fdba74;
+    color:#6ee7b7;
   }
 
   .category-card.fuori {
@@ -1483,13 +1480,17 @@
   }
 
   .category-card.modifiche {
-    background:linear-gradient(145deg,rgba(52,211,153,.22),rgba(6,78,59,.08));
-    border-color:rgba(52,211,153,.50);
-    box-shadow:0 18px 45px rgba(6,78,59,.20), inset 5px 0 0 var(--green);
+    background:linear-gradient(145deg,rgba(255,255,255,.14),rgba(37,99,235,.22));
+    border-color:rgba(147,197,253,.44);
+    box-shadow:
+      0 18px 45px rgba(0,0,0,.28),
+      inset 5px 0 0 rgba(255,255,255,.94),
+      inset -5px 0 0 #3b82f6;
   }
 
-  .category-card.modifiche .category-card-title {
-    color:#6ee7b7;
+  .category-card.modifiche .category-card-title,
+  .category-card.modifiche .category-card-icon {
+    color:var(--text);
   }
 
   .topics-view { display:none; }
