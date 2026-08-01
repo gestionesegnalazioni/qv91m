@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.62">
-<title>Gestione Bus v8.62</title>
+<meta name="app-version" content="8.63">
+<title>Gestione Bus v8.63</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -161,16 +161,33 @@
   }
 
   .btn-delete-bus {
-    background:linear-gradient(135deg,#ef4444,#b91c1c);
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
     color:#ffffff;
-    border:1px solid #dc2626;
+    border:1px solid #3b82f6;
     border-radius:999px;
     padding:11px 18px;
     font-weight:700;
     font-size:.82rem;
     min-height:40px;
     width:100%;
-    box-shadow:0 10px 24px rgba(220,38,38,.20);
+    box-shadow:0 10px 24px rgba(37,99,235,.22);
+  }
+
+  .btn-urgent-bus {
+    background:linear-gradient(135deg,#ef4444,#b91c1c);
+    color:#ffffff;
+    border:1px solid #f87171;
+    border-radius:999px;
+    padding:11px 18px;
+    font-weight:800;
+    font-size:.82rem;
+    min-height:40px;
+    width:100%;
+    box-shadow:0 10px 24px rgba(220,38,38,.22);
+  }
+
+  .btn-urgent-bus.active {
+    box-shadow:0 0 0 3px rgba(239,68,68,.18),0 10px 24px rgba(220,38,38,.28);
   }
 
   .btn-delete-bus:active {
@@ -592,6 +609,10 @@
     color:#fca5a5;
   }
 
+  .bus-tile.urgente .bus-number {
+    color:#ef4444!important;
+  }
+
   .bus-fuori-label {
     font-family:var(--font-mono);
     font-size:.68rem;
@@ -648,6 +669,10 @@
     justify-content:center;
     margin:6px 0 18px;
     text-align:center;
+  }
+
+  .detail-num.urgente {
+    color:#ef4444;
   }
 
   .seg-list {
@@ -954,31 +979,6 @@
   .small-action.restore {
     color:#86efac;
     border-color:rgba(34,197,94,.42);
-  }
-
-  .small-action.urgent {
-    width:28px;
-    min-width:28px;
-    padding:0;
-    color:#f87171;
-    border-color:rgba(239,68,68,.72);
-    font-weight:900;
-  }
-
-  .small-action.urgent.active {
-    color:#ffffff;
-    background:#dc2626;
-    border-color:#ef4444;
-    box-shadow:0 0 0 2px rgba(239,68,68,.14);
-  }
-
-  .seg-card.urgente {
-    border-color:rgba(239,68,68,.72);
-    box-shadow:0 14px 40px rgba(127,29,29,.24), inset 3px 0 0 #ef4444;
-  }
-
-  .seg-card.urgente .seg-dot {
-    background:#ef4444;
   }
 
   .small-action.icon {
@@ -2194,12 +2194,11 @@
     margin-bottom:3px;
   }
 
-  .urgent-report-desc {
-    display:block;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap;
-    font-size:.78rem;
+  .combined-fleet-group .urban-directory-bus.urgente {
+    color:#ffffff!important;
+    background:linear-gradient(145deg,#ef4444,#b91c1c)!important;
+    border-color:#f87171!important;
+    box-shadow:0 5px 14px rgba(185,28,28,.28)!important;
   }
 
   .urgent-report-resolve {
@@ -2721,7 +2720,7 @@ window.addBus = async function() {
     return;
   }
 
-  await addDoc(collection(db, 'buses'), { matricola:mat, fuoriServizio:false });
+  await addDoc(collection(db, 'buses'), { matricola:mat, fuoriServizio:false, urgente:false });
   await registraModifica(mat, 'Autobus aggiunto');
   inp.value = '';
   document.getElementById('addBusForm').classList.remove('open');
@@ -2766,7 +2765,7 @@ function busTile(bus, tipo) {
     tipo === 'fuori' ? 'fuori-servizio' : '';
 
   return `
-    <button class="bus-tile ${typeClass}" onclick="selectBus('${esc(bus.matricola)}')">
+    <button class="bus-tile ${typeClass} ${bus.urgente ? 'urgente' : ''}" onclick="selectBus('${esc(bus.matricola)}')">
       <div class="bus-card-top">
         <div class="bus-number">${esc(bus.matricola)}</div>
         <svg class="bus-icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -3054,7 +3053,7 @@ function renderDirectoryButtons(groupItems) {
       ? '<span class="urban-directory-badge">' + count + '</span>'
       : '';
 
-    return '<button class="urban-directory-bus' + (count ? ' has-alerts' : '') +
+    return '<button class="urban-directory-bus' + (count ? ' has-alerts' : '') + (bus.urgente ? ' urgente' : '') +
       '" onclick="selectBus(&quot;' + esc(bus.matricola) + '&quot;)" ' +
       'aria-label="Apri autobus ' + esc(bus.matricola) + '">' +
       esc(bus.matricola) + badge + '</button>';
@@ -3164,9 +3163,9 @@ function renderUrgentReports() {
     return;
   }
 
-  const urgenti = segnalazioni
-    .filter(s => !!s.urgente && !s.pregressa)
-    .sort((a, b) => String(a.bus || '').localeCompare(String(b.bus || ''), 'it', { numeric:true }));
+  const urgenti = buses
+    .filter(b => !!b.urgente)
+    .sort(byMat);
 
   if (!urgenti.length) {
     box.classList.remove('visible');
@@ -3176,15 +3175,14 @@ function renderUrgentReports() {
 
   box.classList.add('visible');
   box.innerHTML =
-    '<div class="urgent-reports-title">Segnalazioni urgenti</div>' +
+    '<div class="urgent-reports-title">Autobus urgenti</div>' +
     '<div class="urgent-reports-list">' +
-      urgenti.map(s =>
+      urgenti.map(bus =>
         '<div class="urgent-report">' +
-          '<button class="urgent-report-open" onclick="selectBus(&quot;' + esc(s.bus) + '&quot;)">' +
-            '<span class="urgent-report-bus">' + esc(s.bus || '—') + '</span>' +
-            '<span class="urgent-report-desc">' + esc(s.desc || 'Segnalazione urgente') + '</span>' +
+          '<button class="urgent-report-open" onclick="selectBus(&quot;' + esc(bus.matricola) + '&quot;)">' +
+            '<span class="urgent-report-bus">' + esc(bus.matricola || '—') + '</span>' +
           '</button>' +
-          '<button class="urgent-report-resolve" onclick="resolveUrgent(&quot;' + esc(s.id) + '&quot;,event)" aria-label="Segna come risolta" title="Segna come risolta">×</button>' +
+          '<button class="urgent-report-resolve" onclick="resolveBusUrgent(&quot;' + esc(bus.id) + '&quot;,event)" aria-label="Rimuovi urgenza" title="Rimuovi urgenza">×</button>' +
         '</div>'
       ).join('') +
     '</div>';
@@ -3403,7 +3401,7 @@ function renderSeg(s, pregressa = false) {
     : '<div class="date-columns"><div class="date-column"><span class="date-tag">Nessuna data registrata</span></div><div></div><div></div></div>';
 
   return `
-    <details class="seg-card ${pregressa ? 'pregressa' : ''} ${s.urgente ? 'urgente' : ''}" id="seg-${s.id}" ${openSegIds.has(s.id) ? 'open' : ''} ontoggle="trackSegOpen(\'${s.id}\', this)">
+    <details class="seg-card ${pregressa ? 'pregressa' : ''}" id="seg-${s.id}" ${openSegIds.has(s.id) ? 'open' : ''} ontoggle="trackSegOpen(\'${s.id}\', this)">
       <summary>
         <span class="seg-title-wrap">
           <span class="seg-dot"></span>
@@ -3437,7 +3435,6 @@ function renderSeg(s, pregressa = false) {
           ` : `
             <button class="small-action restore" onclick="ripristinaSeg('${s.id}')">Ripristina</button>
           `}
-          ${!pregressa ? `<button class="small-action urgent ${s.urgente ? 'active' : ''}" onclick="toggleUrgent('${s.id}')" title="${s.urgente ? 'Rimuovi urgenza' : 'Segna come urgente'}">U</button>` : ''}
           <button class="small-action notes ${String(s.note || '').trim() ? 'has-note' : ''}" onclick="toggleNote('${s.id}')">📝 Note${String(s.note || '').trim() ? ' (1)' : ''}</button>
           <button class="small-action icon" onclick="editSeg('${s.id}')" title="Modifica">✎</button>
           <button class="small-action icon" onclick="deleteSeg('${s.id}')" title="Elimina">🗑</button>
@@ -3452,7 +3449,10 @@ function renderSeg(s, pregressa = false) {
 }
 
 function showBusDetail(mat) {
-  document.getElementById('detailNum').textContent = mat;
+  const bus = buses.find(b => b.matricola === mat);
+  const detailNum = document.getElementById('detailNum');
+  detailNum.textContent = mat;
+  detailNum.classList.toggle('urgente', !!bus?.urgente);
 
   const all = segnalazioni.filter(s => s.bus === mat);
   const active = all.filter(s => !s.pregressa).sort(bySeg);
@@ -3475,6 +3475,7 @@ function showBusDetail(mat) {
     <div class="detail-main-actions">
       <button class="btn-primary" onclick="openModal('${esc(mat)}')">+ Aggiungi segnalazione</button>
       <button class="btn-yellow-main" onclick="togglePregresse()">Vecchie segnalazioni (${arch.length})</button>
+      <button class="btn-urgent-bus ${bus?.urgente ? 'active' : ''}" onclick="toggleBusUrgent()">${bus?.urgente ? 'Urgente ✓' : 'Urgente'}</button>
       <button class="btn-delete-bus" onclick="deleteBus()">Elimina bus</button>
       <button class="btn-share-main" onclick="openShareModal()">Condividi anomalie</button>
     </div>`;
@@ -3523,7 +3524,6 @@ window.saveSegnalazione = async function() {
       desc,
       stato:'aperta',
       pregressa:false,
-      urgente:false,
       standby:false,
       note:'',
       createdAt:new Date().toISOString()
@@ -3561,7 +3561,7 @@ window.archiviaSeg = async function(id) {
   if (!ok) return;
 
   const s = segnalazioni.find(x => x.id === id);
-  await updateDoc(doc(db, 'segnalazioni', id), { pregressa:true, standby:false, urgente:false });
+  await updateDoc(doc(db, 'segnalazioni', id), { pregressa:true, standby:false });
   await registraModifica(s?.bus || selectedBus, 'Anomalia archiviata', 'Anomalia: ' + (s?.desc || ''));
   archiveVisible = true;
   showToast('Spostata in archivio');
@@ -3574,36 +3574,32 @@ window.ripristinaSeg = async function(id) {
   showToast('Anomalia ripristinata');
 };
 
-window.toggleUrgent = async function(id) {
-  const s = segnalazioni.find(x => x.id === id);
-  if (!s) return;
+window.toggleBusUrgent = async function() {
+  if (!selectedBus) return;
+  const bus = buses.find(b => b.matricola === selectedBus);
+  if (!bus) return;
 
-  const urgente = !s.urgente;
-  await updateDoc(doc(db, 'segnalazioni', id), { urgente });
+  const urgente = !bus.urgente;
+  await updateDoc(doc(db, 'buses', bus.id), { urgente });
   await registraModifica(
-    s.bus || selectedBus,
-    urgente ? 'Segnalazione contrassegnata come urgente' : 'Urgenza rimossa',
-    'Anomalia: ' + (s.desc || '')
+    bus.matricola,
+    urgente ? 'Autobus contrassegnato come urgente' : 'Urgenza autobus rimossa'
   );
-  showToast(urgente ? 'Segnalazione urgente' : 'Urgenza rimossa');
+  showToast(urgente ? 'Autobus urgente' : 'Urgenza rimossa');
 };
 
-window.resolveUrgent = async function(id, event) {
+window.resolveBusUrgent = async function(id, event) {
   if (event) {
     event.preventDefault();
     event.stopPropagation();
   }
 
-  const s = segnalazioni.find(x => x.id === id);
-  if (!s) return;
+  const bus = buses.find(b => b.id === id);
+  if (!bus) return;
 
-  await updateDoc(doc(db, 'segnalazioni', id), { urgente:false });
-  await registraModifica(
-    s.bus,
-    'Segnalazione urgente risolta',
-    'Anomalia: ' + (s.desc || '')
-  );
-  showToast('Urgenza risolta');
+  await updateDoc(doc(db, 'buses', id), { urgente:false });
+  await registraModifica(bus.matricola, 'Urgenza autobus risolta');
+  showToast('Urgenza autobus risolta');
 };
 
 
@@ -4003,7 +3999,7 @@ document.addEventListener('visibilitychange', () => {
 
 window.esportaDati = function() {
   const data = {
-    buses:buses.map(b => ({ matricola:b.matricola, fuoriServizio:!!b.fuoriServizio })),
+    buses:buses.map(b => ({ matricola:b.matricola, fuoriServizio:!!b.fuoriServizio, urgente:!!b.urgente })),
     segnalazioni
   };
 
@@ -4034,7 +4030,7 @@ window.importaDati = async function(event) {
 
       for (const item of data.buses || []) {
         const mat = typeof item === 'string' ? item : item.matricola;
-        if (mat) await addDoc(collection(db, 'buses'), { matricola:mat, fuoriServizio:!!item.fuoriServizio });
+        if (mat) await addDoc(collection(db, 'buses'), { matricola:mat, fuoriServizio:!!item.fuoriServizio, urgente:!!item.urgente });
       }
 
       for (const seg of data.segnalazioni || []) {
