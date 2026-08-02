@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.74">
-<title>Gestione Bus v8.74</title>
+<meta name="app-version" content="8.75">
+<title>Gestione Bus v8.75</title>
 <link rel="icon" type="image/svg+xml" href="icon.svg?v=872">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=872">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -2490,8 +2490,7 @@
     <h2>ULTIME MODIFICHE</h2>
     <div id="recentChangesList" class="recent-list"></div>
     <div class="modal-footer">
-      <button type="button" class="btn-ghost" id="backupDownloadBtn" onpointerup="window.esportaDati(event)" onclick="return false">Scarica backup v8.74</button>
-      <a class="btn-ghost" id="backupReadyLink" hidden>Salva il file</a>
+      <a class="btn-ghost" id="backupReadyLink" href="#" aria-disabled="true" onclick="if(this.getAttribute('aria-disabled') === 'true') event.preventDefault()">Preparazione backup...</a>
       <button class="btn-primary" onclick="closeRecentChanges()">Chiudi</button>
     </div>
   </div>
@@ -2689,6 +2688,7 @@ window.openRecentChanges = function(fromHistory = false) {
   if (!consumeHomeNavigationIntent(fromHistory)) return;
   renderRecentChanges();
   document.getElementById('recentChangesOverlay').classList.add('open');
+  requestAnimationFrame(() => window.esportaDati());
   if (!fromHistory) pushViewState('recent');
 };
 
@@ -4121,27 +4121,22 @@ document.addEventListener('visibilitychange', () => {
   if (!document.hidden) hardResetSwipeVisual();
 });
 
-window.esportaDati = async function(event) {
-  event?.preventDefault();
-  event?.stopPropagation();
+let backupObjectUrl = null;
 
-  const button = document.getElementById('backupDownloadBtn');
+window.esportaDati = function() {
   const readyLink = document.getElementById('backupReadyLink');
-  if (button) {
-    button.disabled = true;
-    button.textContent = 'Preparazione...';
-  }
+  if (!readyLink) return;
+
+  readyLink.textContent = 'Preparazione backup...';
+  readyLink.setAttribute('aria-disabled', 'true');
+  readyLink.removeAttribute('download');
+  readyLink.href = '#';
 
   if (!auth.currentUser) {
+    readyLink.textContent = 'Accesso richiesto';
     showToast('Accesso richiesto');
-    if (button) {
-      button.disabled = false;
-      button.textContent = 'Scarica backup';
-    }
     return;
   }
-
-  showToast('Preparazione backup...');
 
   try {
     const data = {
@@ -4156,60 +4151,20 @@ window.esportaDati = async function(event) {
 
     const json = JSON.stringify(data, null, 2);
     const nomeFile = 'gestione-bus-backup-' + new Date().toISOString().slice(0, 10) + '.json';
-    const isAppleMobile = /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
-      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-
-    if (isAppleMobile && typeof navigator.share === 'function') {
-      const file = new File([json], nomeFile, { type:'application/json' });
-      try {
-        await navigator.share({ files:[file], title:'Backup Gestione Bus' });
-        showToast('Backup pronto');
-        if (button) {
-          button.disabled = false;
-          button.textContent = 'Scarica backup';
-        }
-        return;
-      } catch(error) {
-        if (error?.name === 'AbortError') {
-          if (button) {
-            button.disabled = false;
-            button.textContent = 'Scarica backup';
-          }
-          return;
-        }
-        console.error('Condivisione backup non riuscita', error);
-      }
-    }
-
     const blob = new Blob([json], { type:'application/json;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    readyLink.href = url;
+
+    if (backupObjectUrl) URL.revokeObjectURL(backupObjectUrl);
+    backupObjectUrl = URL.createObjectURL(blob);
+
+    readyLink.href = backupObjectUrl;
     readyLink.download = nomeFile;
-    readyLink.hidden = false;
-    readyLink.textContent = 'Salva il file';
-    readyLink.onclick = () => {
-      setTimeout(() => {
-        URL.revokeObjectURL(url);
-        readyLink.hidden = true;
-        readyLink.removeAttribute('href');
-      }, 1500);
-    };
-
-    readyLink.click();
-
-    if (button) {
-      button.disabled = false;
-      button.textContent = 'Ricrea backup';
-    }
-
-    showToast('Backup pronto: se non parte, premi “Salva il file”');
+    readyLink.textContent = 'Salva backup sul dispositivo';
+    readyLink.setAttribute('aria-disabled', 'false');
+    showToast('Backup pronto');
   } catch(error) {
-    console.error('Backup non riuscito', error);
-    if (button) {
-      button.disabled = false;
-      button.textContent = 'Riprova backup';
-    }
-    alert('Impossibile scaricare il backup: ' + (error?.message || 'errore sconosciuto'));
+    console.error('Preparazione backup non riuscita', error);
+    readyLink.textContent = 'Errore nella preparazione';
+    alert('Impossibile preparare il backup: ' + (error?.message || 'errore sconosciuto'));
   }
 };
 
@@ -4413,7 +4368,7 @@ document.addEventListener('touchend', () => {
 document.addEventListener('touchcancel', resetNavigationSwipe, { passive:true });
 
 document.addEventListener('click', e => {
-  if (e.target.closest('#backupDownloadBtn, #backupReadyLink')) return;
+  if (e.target.closest('#backupReadyLink')) return;
   if (!suppressNavigationClick) return;
   e.preventDefault();
   e.stopPropagation();
