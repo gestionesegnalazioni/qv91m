@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#070b13">
+<title>Backup area riservata</title>
+<style>
+:root{color-scheme:dark;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+*{box-sizing:border-box}body{margin:0;background:#070b13;color:#f7f8fb;min-height:100vh;display:grid;place-items:center;padding:24px}
+main{width:min(620px,100%);background:#111827;border:1px solid #334155;border-radius:24px;padding:28px;box-shadow:0 20px 60px #0008}
+h1{margin:0 0 12px;font-size:1.8rem}p{color:#cbd5e1;line-height:1.5}.status{margin:22px 0;padding:16px;border-radius:14px;background:#0b1220;border:1px solid #263449}
+.actions{display:grid;gap:12px}.button{display:block;width:100%;border:0;border-radius:999px;padding:15px 18px;text-align:center;text-decoration:none;font:700 1rem inherit;cursor:pointer}
+.primary{background:#35d39a;color:#04120d}.secondary{background:#334155;color:#fff}.muted{background:#1f2937;color:#e5e7eb}
+[hidden]{display:none!important}.note{font-size:.9rem;color:#94a3b8;margin-top:18px}.error{color:#fca5a5}
+</style>
+</head>
+<body>
+<main>
+  <h1>Backup Gestione Bus</h1>
+  <p>Questa pagina legge i dati soltanto dopo aver verificato il tuo account autorizzato.</p>
+  <div class="status" id="status">Verifica dell’accesso in corso…</div>
+  <div class="actions">
+    <button class="button primary" id="loginBtn" hidden>Accedi con Google</button>
+    <a class="button primary" id="downloadLink" hidden>Scarica il file di backup</a>
+    <a class="button secondary" id="openLink" target="_blank" rel="noopener" hidden>Apri il backup</a>
+    <a class="button muted" href="./">Torna a Gestione Bus</a>
+  </div>
+  <p class="note">Il backup non contiene l’identità di chi ha effettuato le modifiche.</p>
+</main>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+
+const firebaseConfig={
+  apiKey:"AIzaSyBdwNH43PZFgSfKZOEfJtBrF-ooC4NOnGc",
+  authDomain:"gestionesegnalazioni.firebaseapp.com",
+  projectId:"gestionesegnalazioni",
+  storageBucket:"gestionesegnalazioni.firebasestorage.app",
+  messagingSenderId:"930504240088",
+  appId:"1:930504240088:web:60e43f95f82883b43b20ad",
+  measurementId:"G-59G37GQX9J"
+};
+const app=initializeApp(firebaseConfig);
+const db=getFirestore(app);
+const auth=getAuth(app);
+const provider=new GoogleAuthProvider();
+provider.setCustomParameters({prompt:"select_account"});
+await setPersistence(auth,browserLocalPersistence);
+
+const status=document.getElementById("status");
+const loginBtn=document.getElementById("loginBtn");
+const downloadLink=document.getElementById("downloadLink");
+const openLink=document.getElementById("openLink");
+let objectUrl=null;
+
+loginBtn.addEventListener("click",async()=>{
+  try{await signInWithPopup(auth,provider)}
+  catch(error){status.innerHTML='<span class="error">Accesso non riuscito: '+escapeHtml(error.message)+'</span>'}
+});
+
+function escapeHtml(value){
+  return String(value).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[ch]));
+}
+function serializza(docSnap){return {documentId:docSnap.id,...docSnap.data()}}
+async function preparaBackup(){
+  status.textContent="Lettura dei dati protetti…";
+  downloadLink.hidden=true;
+  openLink.hidden=true;
+  const names=["buses","segnalazioni","temi","fermateSoppresse","modifiche"];
+  const results=await Promise.all(names.map(name=>getDocs(collection(db,name))));
+  const data={formatVersion:1,exportedAt:new Date().toISOString()};
+  names.forEach((name,index)=>{data[name]=results[index].docs.map(serializza)});
+  const json=JSON.stringify(data,null,2);
+  const blob=new Blob([json],{type:"application/json;charset=utf-8"});
+  if(objectUrl)URL.revokeObjectURL(objectUrl);
+  objectUrl=URL.createObjectURL(blob);
+  const fileName="gestione-bus-backup-"+new Date().toISOString().slice(0,10)+".json";
+  downloadLink.href=objectUrl;
+  downloadLink.download=fileName;
+  openLink.href=objectUrl;
+  downloadLink.hidden=false;
+  openLink.hidden=false;
+  status.textContent="Backup pronto: "+data.buses.length+" autobus, "+data.segnalazioni.length+" segnalazioni e "+data.modifiche.length+" modifiche.";
+}
+onAuthStateChanged(auth,user=>{
+  if(!user){
+    status.textContent="Accedi con uno degli account autorizzati.";
+    loginBtn.hidden=false;
+    return;
+  }
+  loginBtn.hidden=true;
+  preparaBackup().catch(error=>{
+    console.error(error);
+    status.innerHTML='<span class="error">Impossibile leggere i dati: '+escapeHtml(error.message)+'</span>';
+  });
+});
+</script>
+</body>
+</html>
