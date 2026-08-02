@@ -6,10 +6,10 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.68">
-<title>Gestione Bus v8.68</title>
-<link rel="icon" type="image/svg+xml" href="icon.svg?v=868">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=868">
+<meta name="app-version" content="8.69">
+<title>Gestione Bus v8.69</title>
+<link rel="icon" type="image/svg+xml" href="icon.svg?v=869">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=869">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -2253,10 +2253,136 @@
     }
   }
 
+  .auth-gate {
+    position:fixed;
+    inset:0;
+    z-index:10000;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    background:
+      radial-gradient(circle at 50% 16%,rgba(52,211,153,.12),transparent 34%),
+      var(--bg);
+  }
+
+  .auth-gate.hidden {
+    display:none;
+  }
+
+  .auth-card {
+    width:min(100%,390px);
+    padding:30px 24px;
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:28px;
+    text-align:center;
+    background:linear-gradient(145deg,#151b28,#0e131d);
+    box-shadow:0 24px 70px rgba(0,0,0,.42);
+  }
+
+  .auth-shield {
+    width:64px;
+    height:64px;
+    display:grid;
+    place-items:center;
+    margin:0 auto 18px;
+    border-radius:20px;
+    background:rgba(52,211,153,.13);
+    color:var(--green);
+    font-size:1.9rem;
+  }
+
+  .auth-card h1 {
+    font-size:1.55rem;
+    line-height:1.2;
+    margin-bottom:9px;
+  }
+
+  .auth-card p {
+    color:var(--muted);
+    font-size:.94rem;
+    line-height:1.45;
+  }
+
+  .auth-google-btn {
+    width:100%;
+    min-height:50px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:11px;
+    margin-top:22px;
+    border-radius:999px;
+    background:#ffffff;
+    color:#111827;
+    font-size:.94rem;
+    font-weight:800;
+  }
+
+  .auth-google-btn:disabled {
+    opacity:.55;
+    cursor:wait;
+  }
+
+  .auth-google-mark {
+    width:22px;
+    height:22px;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    color:#ffffff;
+    background:conic-gradient(from -45deg,#4285f4 0 25%,#34a853 0 50%,#fbbc05 0 75%,#ea4335 0);
+    font-family:Arial,sans-serif;
+    font-size:.86rem;
+    font-weight:900;
+  }
+
+  .auth-error {
+    min-height:20px;
+    margin-top:13px;
+    color:#fca5a5!important;
+    font-size:.82rem!important;
+  }
+
+  .auth-logout {
+    position:fixed;
+    top:max(12px,env(safe-area-inset-top));
+    right:12px;
+    z-index:90;
+    min-height:38px;
+    padding:8px 13px;
+    border:1px solid rgba(255,255,255,.16);
+    border-radius:999px;
+    background:rgba(16,22,35,.88);
+    color:var(--muted);
+    font-size:.74rem;
+    font-weight:700;
+    backdrop-filter:blur(12px);
+  }
+
+  .auth-logout[hidden] {
+    display:none;
+  }
+
 </style>
 </head>
 <body>
-<div class="wrapper">
+<div class="auth-gate" id="authGate" aria-live="polite">
+  <div class="auth-card">
+    <div class="auth-shield" aria-hidden="true">&#128274;</div>
+    <h1>Area riservata</h1>
+    <p>Accedi con uno degli account autorizzati per visualizzare i dati.</p>
+    <button class="auth-google-btn" id="authGoogleBtn" onclick="accediConGoogle()">
+      <span class="auth-google-mark" aria-hidden="true">G</span>
+      Accedi con Google
+    </button>
+    <p class="auth-error" id="authError"></p>
+  </div>
+</div>
+
+<button class="auth-logout" id="authLogoutBtn" onclick="esciAreaRiservata()" hidden>Esci</button>
+
+<div class="wrapper" id="appShell" aria-hidden="true">
   <div id="homeView">
     <div class="category-home" id="busGrid"><div class="loading">Caricamento...</div></div>
   </div>
@@ -2374,6 +2500,7 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 import { getFirestore, collection, doc, onSnapshot, addDoc, updateDoc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey:"AIzaSyBdwNH43PZFgSfKZOEfJtBrF-ooC4NOnGc",
@@ -2387,6 +2514,15 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({ prompt:'select_account' });
+
+setPersistence(auth, browserLocalPersistence).catch(error => {
+  console.error('Persistenza accesso non disponibile', error);
+});
+
+['cache_buses','cache_seg','cache_temi'].forEach(key => localStorage.removeItem(key));
 
 let buses = [];
 let segnalazioni = [];
@@ -2584,133 +2720,149 @@ function setHomeScrollLocked(locked) {
   document.body.classList.toggle('home-scroll-locked', locked);
 }
 
-async function correggiMatricolaF4007() {
-  const vecchiaMatricola = 'F4007';
-  const nuovaMatricola = 'F4006';
+let dataUnsubscribers = [];
 
-  try {
-    const busSnapshot = await getDocs(collection(db, 'buses'));
-    const vecchioBus = busSnapshot.docs.find(d =>
-      String(d.data().matricola || '').trim().toUpperCase() === vecchiaMatricola
-    );
-    const nuovoBusEsistente = busSnapshot.docs.find(d =>
-      String(d.data().matricola || '').trim().toUpperCase() === nuovaMatricola
-    );
-
-    if (!vecchioBus) return;
-
-    if (nuovoBusEsistente) {
-      console.warn('Correzione F4007 non eseguita: F4006 esiste già.');
-      return;
-    }
-
-    const [segnalazioniSnapshot, modificheSnapshot] = await Promise.all([
-      getDocs(collection(db, 'segnalazioni')),
-      getDocs(collection(db, 'modifiche'))
-    ]);
-
-    const aggiornamenti = [
-      updateDoc(doc(db, 'buses', vecchioBus.id), { matricola:nuovaMatricola })
-    ];
-
-    segnalazioniSnapshot.docs.forEach(d => {
-      if (String(d.data().bus || '').trim().toUpperCase() === vecchiaMatricola) {
-        aggiornamenti.push(updateDoc(doc(db, 'segnalazioni', d.id), { bus:nuovaMatricola }));
-      }
-    });
-
-    modificheSnapshot.docs.forEach(d => {
-      if (String(d.data().bus || '').trim().toUpperCase() === vecchiaMatricola) {
-        aggiornamenti.push(updateDoc(doc(db, 'modifiche', d.id), { bus:nuovaMatricola }));
-      }
-    });
-
-    await Promise.all(aggiornamenti);
-    await registraModifica(
-      nuovaMatricola,
-      'Matricola autobus corretta',
-      'Da F4007 a F4006'
-    );
-  } catch(e) {
-    console.error('Errore durante la correzione F4007 → F4006', e);
-  }
+function stopDataSubscriptions() {
+  dataUnsubscribers.forEach(unsubscribe => {
+    try { unsubscribe(); } catch(e) {}
+  });
+  dataUnsubscribers = [];
 }
 
-setHomeScrollLocked(true);
+function clearProtectedData() {
+  buses = [];
+  segnalazioni = [];
+  temi = [];
+  fermateSoppresse = [];
+  modifiche = [];
+  selectedBus = null;
+  editingSegId = null;
+  currentBusForModal = null;
+  currentCategory = null;
+  openSegIds.clear();
+  openNoteIds.clear();
+  ['cache_buses','cache_seg','cache_temi'].forEach(key => localStorage.removeItem(key));
+}
 
-replaceViewState('home');
-correggiMatricolaF4007();
+function resetProtectedViews() {
+  document.getElementById('categoryView')?.classList.remove('open');
+  document.getElementById('topicsView')?.classList.remove('open');
+  document.getElementById('stopsView')?.classList.remove('open');
+  document.getElementById('detailView')?.classList.remove('open');
+  document.getElementById('recentChangesOverlay')?.classList.remove('open');
+  document.getElementById('homeView').style.display = 'block';
+  replaceViewState('home');
+}
 
-onSnapshot(collection(db, 'buses'), snap => {
-  buses = snap.docs.map(d => ({ id:d.id, ...d.data() })).sort(byMat);
-  localStorage.setItem('cache_buses', JSON.stringify(buses));
-  renderAll();
-}, err => {
-  console.error(err);
-  document.getElementById('busGrid').innerHTML = '<div class="empty">Errore caricamento autobus.</div>';
-});
+function startDataSubscriptions() {
+  if (dataUnsubscribers.length) return;
 
-onSnapshot(collection(db, 'segnalazioni'), snap => {
-  segnalazioni = snap.docs.map(d => ({ id:d.id, ...d.data() }));
-  localStorage.setItem('cache_seg', JSON.stringify(segnalazioni));
-
-  const activeEl = document.activeElement;
-  const isWritingNote = activeEl && activeEl.classList && activeEl.classList.contains('notes-textarea');
-
-  if (isWritingNote && selectedBus) {
-    // Durante la scrittura delle note non ridisegno il dettaglio:
-    // altrimenti la textarea viene ricreata e la scheda sembra chiudersi.
-    renderBusGrid();
-  } else {
+  dataUnsubscribers.push(onSnapshot(collection(db, 'buses'), snap => {
+    buses = snap.docs.map(d => ({ id:d.id, ...d.data() })).sort(byMat);
     renderAll();
+  }, err => {
+    console.error(err);
+    document.getElementById('busGrid').innerHTML = '<div class="empty">Accesso ai dati non disponibile.</div>';
+  }));
+
+  dataUnsubscribers.push(onSnapshot(collection(db, 'segnalazioni'), snap => {
+    segnalazioni = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+
+    const activeEl = document.activeElement;
+    const isWritingNote = activeEl && activeEl.classList && activeEl.classList.contains('notes-textarea');
+
+    if (isWritingNote && selectedBus) {
+      renderBusGrid();
+    } else {
+      renderAll();
+    }
+  }, err => {
+    console.error(err);
+    document.getElementById('busGrid').innerHTML = '<div class="empty">Accesso alle segnalazioni non disponibile.</div>';
+  }));
+
+  dataUnsubscribers.push(onSnapshot(collection(db, 'fermateSoppresse'), snap => {
+    fermateSoppresse = snap.docs.map(d => ({ id:d.id, ...d.data() }))
+      .sort((a, b) => (a.createdAt || '').localeCompare(b.createdAt || ''));
+    renderBusGrid();
+    renderStops();
+  }, err => {
+    console.error(err);
+    const list = document.getElementById('stopsList');
+    if (list) list.innerHTML = '<div class="empty">Accesso ai dati non disponibile.</div>';
+  }));
+
+  dataUnsubscribers.push(onSnapshot(collection(db, 'modifiche'), snap => {
+    modifiche = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+    renderBusGrid();
+    if (document.getElementById('recentChangesOverlay')?.classList.contains('open')) {
+      renderRecentChanges();
+    }
+  }, err => {
+    console.error('Accesso alla cronologia non disponibile', err);
+  }));
+
+  dataUnsubscribers.push(onSnapshot(collection(db, 'temi'), snap => {
+    temi = snap.docs.map(d => ({ id:d.id, ...d.data() }))
+      .sort((a, b) => (a.createdAt || '').localeCompare(b.createdAt || ''));
+    renderBusGrid();
+    renderTopics();
+  }, err => {
+    console.error(err);
+    const list = document.getElementById('topicsList');
+    if (list) list.innerHTML = '<div class="empty">Accesso ai dati non disponibile.</div>';
+  }));
+}
+
+window.accediConGoogle = async function() {
+  const button = document.getElementById('authGoogleBtn');
+  const errorBox = document.getElementById('authError');
+  button.disabled = true;
+  errorBox.textContent = '';
+
+  try {
+    await signInWithPopup(auth, googleProvider);
+  } catch(error) {
+    console.error('Accesso non riuscito', error);
+    if (error?.code !== 'auth/popup-closed-by-user') {
+      errorBox.textContent = 'Accesso non riuscito. Riprova oppure apri il sito direttamente in Safari.';
+    }
+  } finally {
+    button.disabled = false;
   }
-}, err => {
-  console.error(err);
-  document.getElementById('busGrid').innerHTML = '<div class="empty">Errore caricamento segnalazioni.</div>';
-});
+};
 
-onSnapshot(collection(db, 'fermateSoppresse'), snap => {
-  fermateSoppresse = snap.docs.map(d => ({ id:d.id, ...d.data() }))
-    .sort((a, b) => (a.createdAt || '').localeCompare(b.createdAt || ''));
-  renderBusGrid();
-  renderStops();
-}, err => {
-  console.error(err);
-  const list = document.getElementById('stopsList');
-  if (list) list.innerHTML = '<div class="empty">Errore caricamento fermate soppresse.</div>';
-});
-
-onSnapshot(collection(db, 'modifiche'), snap => {
-  modifiche = snap.docs.map(d => ({ id:d.id, ...d.data() }));
-  renderBusGrid();
-  if (document.getElementById('recentChangesOverlay')?.classList.contains('open')) {
-    renderRecentChanges();
+window.esciAreaRiservata = async function() {
+  try {
+    await signOut(auth);
+  } catch(error) {
+    console.error('Disconnessione non riuscita', error);
   }
-}, err => {
-  console.error('Errore caricamento cronologia', err);
-});
+};
 
-onSnapshot(collection(db, 'temi'), snap => {
-  temi = snap.docs.map(d => ({ id:d.id, ...d.data() }))
-    .sort((a, b) => (a.createdAt || '').localeCompare(b.createdAt || ''));
-  localStorage.setItem('cache_temi', JSON.stringify(temi));
-  renderBusGrid();
-  renderTopics();
-}, err => {
-  console.error(err);
-  const list = document.getElementById('topicsList');
-  if (list) list.innerHTML = '<div class="empty">Errore caricamento temi.</div>';
-});
+onAuthStateChanged(auth, user => {
+  const gate = document.getElementById('authGate');
+  const shell = document.getElementById('appShell');
+  const logoutButton = document.getElementById('authLogoutBtn');
 
-try {
-  const cb = localStorage.getItem('cache_buses');
-  const cs = localStorage.getItem('cache_seg');
-  const ct = localStorage.getItem('cache_temi');
-  if (cb) buses = JSON.parse(cb);
-  if (cs) segnalazioni = JSON.parse(cs);
-  if (ct) temi = JSON.parse(ct);
-  renderAll();
-} catch(e) {}
+  if (user) {
+    gate.classList.add('hidden');
+    shell.setAttribute('aria-hidden', 'false');
+    logoutButton.hidden = false;
+    setHomeScrollLocked(true);
+    resetProtectedViews();
+    startDataSubscriptions();
+    return;
+  }
+
+  stopDataSubscriptions();
+  clearProtectedData();
+  resetProtectedViews();
+  setHomeScrollLocked(false);
+  shell.setAttribute('aria-hidden', 'true');
+  logoutButton.hidden = true;
+  gate.classList.remove('hidden');
+});
 
 window.toggleAddForm = function() {
   const f = document.getElementById('addBusForm');
@@ -3969,8 +4121,12 @@ document.addEventListener('visibilitychange', () => {
 
 window.esportaDati = function() {
   const data = {
+    exportedAt:new Date().toISOString(),
     buses:buses.map(b => ({ matricola:b.matricola, fuoriServizio:!!b.fuoriServizio, urgente:!!b.urgente })),
-    segnalazioni
+    segnalazioni:segnalazioni.map(({ id, ...item }) => item),
+    temi:temi.map(({ id, ...item }) => item),
+    fermateSoppresse:fermateSoppresse.map(({ id, ...item }) => item),
+    modifiche:modifiche.map(({ id, ...item }) => item)
   };
 
   const blob = new Blob([JSON.stringify(data, null, 2)], { type:'application/json' });
