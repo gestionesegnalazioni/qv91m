@@ -6,10 +6,10 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.71">
-<title>Gestione Bus v8.71</title>
-<link rel="icon" type="image/svg+xml" href="icon.svg?v=871">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=871">
+<meta name="app-version" content="8.72">
+<title>Gestione Bus v8.72</title>
+<link rel="icon" type="image/svg+xml" href="icon.svg?v=872">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=872">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -4126,46 +4126,61 @@ window.esportaDati = async function() {
     return;
   }
 
-  const data = {
-    formatVersion:1,
-    exportedAt:new Date().toISOString(),
-    buses:buses.map(({ id, ...item }) => ({ documentId:id, ...item })),
-    segnalazioni:segnalazioni.map(({ id, ...item }) => ({ documentId:id, ...item })),
-    temi:temi.map(({ id, ...item }) => ({ documentId:id, ...item })),
-    fermateSoppresse:fermateSoppresse.map(({ id, ...item }) => ({ documentId:id, ...item })),
-    modifiche:modifiche.map(({ id, ...item }) => ({ documentId:id, ...item }))
-  };
+  showToast('Preparazione backup...');
 
-  const json = JSON.stringify(data, null, 2);
-  const nomeFile = 'gestione-bus-backup-' + new Date().toISOString().slice(0, 10) + '.json';
-  const file = new File([json], nomeFile, { type:'application/json' });
+  try {
+    const data = {
+      formatVersion:1,
+      exportedAt:new Date().toISOString(),
+      buses:buses.map(({ id, ...item }) => ({ documentId:id, ...item })),
+      segnalazioni:segnalazioni.map(({ id, ...item }) => ({ documentId:id, ...item })),
+      temi:temi.map(({ id, ...item }) => ({ documentId:id, ...item })),
+      fermateSoppresse:fermateSoppresse.map(({ id, ...item }) => ({ documentId:id, ...item })),
+      modifiche:modifiche.map(({ id, ...item }) => ({ documentId:id, ...item }))
+    };
 
-  if (navigator.share && navigator.canShare && navigator.canShare({ files:[file] })) {
-    try {
-      await navigator.share({
-        files:[file],
-        title:'Backup Gestione Bus'
-      });
-      showToast('Backup pronto');
-      return;
-    } catch(error) {
-      if (error?.name === 'AbortError') return;
-      console.error('Condivisione backup non riuscita', error);
+    const json = JSON.stringify(data, null, 2);
+    const nomeFile = 'gestione-bus-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+    const isAppleMobile = /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+    if (isAppleMobile && typeof navigator.share === 'function') {
+      const file = new File([json], nomeFile, { type:'application/json' });
+      try {
+        await navigator.share({ files:[file], title:'Backup Gestione Bus' });
+        showToast('Backup pronto');
+        return;
+      } catch(error) {
+        if (error?.name === 'AbortError') return;
+        console.error('Condivisione backup non riuscita', error);
+      }
     }
-  }
 
-  const url = URL.createObjectURL(file);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = nomeFile;
-  a.style.display = 'none';
-  document.body.appendChild(a);
-  a.click();
-  setTimeout(() => {
-    URL.revokeObjectURL(url);
-    a.remove();
-  }, 2500);
-  showToast('Backup scaricato');
+    const blob = new Blob([json], { type:'application/json;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = nomeFile;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.dispatchEvent(new MouseEvent('click', {
+      bubbles:true,
+      cancelable:true,
+      view:window
+    }));
+
+    setTimeout(() => {
+      URL.revokeObjectURL(url);
+      a.remove();
+    }, 10000);
+
+    showToast('Backup scaricato');
+  } catch(error) {
+    console.error('Backup non riuscito', error);
+    alert('Impossibile scaricare il backup: ' + (error?.message || 'errore sconosciuto'));
+  }
 };
 
 window.importaDati = async function(event) {
