@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.76">
-<title>Gestione Bus v8.76</title>
+<meta name="app-version" content="8.77">
+<title>Gestione Bus v8.77</title>
 <link rel="icon" type="image/svg+xml" href="icon.svg?v=872">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=872">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -2344,10 +2344,16 @@
     font-size:.82rem!important;
   }
 
+  .auth-toolbar {
+    min-height:52px;
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    padding:0 0 8px;
+  }
+
   .auth-logout {
-    position:fixed;
-    top:max(12px,env(safe-area-inset-top));
-    right:12px;
+    position:static;
     z-index:90;
     min-height:38px;
     padding:8px 13px;
@@ -2380,9 +2386,10 @@
   </div>
 </div>
 
-<button class="auth-logout" id="authLogoutBtn" onclick="esciAreaRiservata()" hidden>Esci</button>
-
 <div class="wrapper" id="appShell" aria-hidden="true">
+  <div class="auth-toolbar">
+    <button class="auth-logout" id="authLogoutBtn" onclick="esciAreaRiservata()" hidden>Esci</button>
+  </div>
   <div id="homeView">
     <div class="category-home" id="busGrid"><div class="loading">Caricamento...</div></div>
   </div>
@@ -2490,7 +2497,6 @@
     <h2>ULTIME MODIFICHE</h2>
     <div id="recentChangesList" class="recent-list"></div>
     <div class="modal-footer">
-      <a class="btn-ghost" id="backupReadyLink" href="./backup.html" target="_blank" rel="noopener">Apri pagina backup</a>
       <button class="btn-primary" onclick="closeRecentChanges()">Chiudi</button>
     </div>
   </div>
@@ -4367,7 +4373,6 @@ document.addEventListener('touchend', () => {
 document.addEventListener('touchcancel', resetNavigationSwipe, { passive:true });
 
 document.addEventListener('click', e => {
-  if (e.target.closest('#backupReadyLink')) return;
   if (!suppressNavigationClick) return;
   e.preventDefault();
   e.stopPropagation();
