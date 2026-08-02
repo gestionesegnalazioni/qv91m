@@ -6,10 +6,10 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.70">
-<title>Gestione Bus v8.70</title>
-<link rel="icon" type="image/svg+xml" href="icon.svg?v=870">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=870">
+<meta name="app-version" content="8.71">
+<title>Gestione Bus v8.71</title>
+<link rel="icon" type="image/svg+xml" href="icon.svg?v=871">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=871">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -4120,7 +4120,7 @@ document.addEventListener('visibilitychange', () => {
   if (!document.hidden) hardResetSwipeVisual();
 });
 
-window.esportaDati = function() {
+window.esportaDati = async function() {
   if (!auth.currentUser) {
     showToast('Accesso richiesto');
     return;
@@ -4136,13 +4136,35 @@ window.esportaDati = function() {
     modifiche:modifiche.map(({ id, ...item }) => ({ documentId:id, ...item }))
   };
 
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type:'application/json' });
-  const url = URL.createObjectURL(blob);
+  const json = JSON.stringify(data, null, 2);
+  const nomeFile = 'gestione-bus-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+  const file = new File([json], nomeFile, { type:'application/json' });
+
+  if (navigator.share && navigator.canShare && navigator.canShare({ files:[file] })) {
+    try {
+      await navigator.share({
+        files:[file],
+        title:'Backup Gestione Bus'
+      });
+      showToast('Backup pronto');
+      return;
+    } catch(error) {
+      if (error?.name === 'AbortError') return;
+      console.error('Condivisione backup non riuscita', error);
+    }
+  }
+
+  const url = URL.createObjectURL(file);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'gestione-bus-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+  a.download = nomeFile;
+  a.style.display = 'none';
+  document.body.appendChild(a);
   a.click();
-  URL.revokeObjectURL(url);
+  setTimeout(() => {
+    URL.revokeObjectURL(url);
+    a.remove();
+  }, 2500);
   showToast('Backup scaricato');
 };
 
