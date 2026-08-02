@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.72">
-<title>Gestione Bus v8.72</title>
+<meta name="app-version" content="8.73">
+<title>Gestione Bus v8.73</title>
 <link rel="icon" type="image/svg+xml" href="icon.svg?v=872">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=872">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -2490,7 +2490,8 @@
     <h2>ULTIME MODIFICHE</h2>
     <div id="recentChangesList" class="recent-list"></div>
     <div class="modal-footer">
-      <button class="btn-ghost" onclick="esportaDati()">Scarica backup</button>
+      <button type="button" class="btn-ghost" id="backupDownloadBtn" onclick="window.esportaDati(event)">Scarica backup</button>
+      <a class="btn-ghost" id="backupReadyLink" hidden>Salva il file</a>
       <button class="btn-primary" onclick="closeRecentChanges()">Chiudi</button>
     </div>
   </div>
@@ -4120,9 +4121,23 @@ document.addEventListener('visibilitychange', () => {
   if (!document.hidden) hardResetSwipeVisual();
 });
 
-window.esportaDati = async function() {
+window.esportaDati = async function(event) {
+  event?.preventDefault();
+  event?.stopPropagation();
+
+  const button = document.getElementById('backupDownloadBtn');
+  const readyLink = document.getElementById('backupReadyLink');
+  if (button) {
+    button.disabled = true;
+    button.textContent = 'Preparazione...';
+  }
+
   if (!auth.currentUser) {
     showToast('Accesso richiesto');
+    if (button) {
+      button.disabled = false;
+      button.textContent = 'Scarica backup';
+    }
     return;
   }
 
@@ -4149,36 +4164,51 @@ window.esportaDati = async function() {
       try {
         await navigator.share({ files:[file], title:'Backup Gestione Bus' });
         showToast('Backup pronto');
+        if (button) {
+          button.disabled = false;
+          button.textContent = 'Scarica backup';
+        }
         return;
       } catch(error) {
-        if (error?.name === 'AbortError') return;
+        if (error?.name === 'AbortError') {
+          if (button) {
+            button.disabled = false;
+            button.textContent = 'Scarica backup';
+          }
+          return;
+        }
         console.error('Condivisione backup non riuscita', error);
       }
     }
 
     const blob = new Blob([json], { type:'application/json;charset=utf-8' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = nomeFile;
-    a.target = '_blank';
-    a.rel = 'noopener';
-    a.style.display = 'none';
-    document.body.appendChild(a);
-    a.dispatchEvent(new MouseEvent('click', {
-      bubbles:true,
-      cancelable:true,
-      view:window
-    }));
+    readyLink.href = url;
+    readyLink.download = nomeFile;
+    readyLink.hidden = false;
+    readyLink.textContent = 'Salva il file';
+    readyLink.onclick = () => {
+      setTimeout(() => {
+        URL.revokeObjectURL(url);
+        readyLink.hidden = true;
+        readyLink.removeAttribute('href');
+      }, 1500);
+    };
 
-    setTimeout(() => {
-      URL.revokeObjectURL(url);
-      a.remove();
-    }, 10000);
+    readyLink.click();
 
-    showToast('Backup scaricato');
+    if (button) {
+      button.disabled = false;
+      button.textContent = 'Ricrea backup';
+    }
+
+    showToast('Backup pronto: se non parte, premi “Salva il file”');
   } catch(error) {
     console.error('Backup non riuscito', error);
+    if (button) {
+      button.disabled = false;
+      button.textContent = 'Riprova backup';
+    }
     alert('Impossibile scaricare il backup: ' + (error?.message || 'errore sconosciuto'));
   }
 };
