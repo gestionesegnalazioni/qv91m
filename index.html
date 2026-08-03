@@ -2,14 +2,12 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="robots" content="noindex, nofollow, noarchive">
-<meta name="referrer" content="no-referrer">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.79">
-<title>Gestione Bus v8.79</title>
+<meta name="app-version" content="8.78">
+<title>Gestione Bus v8.78</title>
 <link rel="icon" type="image/svg+xml" href="icon.svg?v=872">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=872">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -851,9 +849,6 @@
     flex:0 0 22px;
     font-size:.72rem;
     line-height:1;
-    border:0;
-    background:transparent;
-    color:var(--muted);
   }
 
   .date-x:hover {
@@ -1144,24 +1139,6 @@
     display:none;
     z-index:300;
     font-size:.82rem;
-  }
-
-  .connection-banner {
-    display:none;
-    margin:0 0 12px;
-    padding:10px 12px;
-    border:1px solid rgba(248,113,113,.55);
-    border-radius:14px;
-    background:rgba(127,29,29,.26);
-    color:#fecaca;
-    font-size:.78rem;
-    font-weight:700;
-    line-height:1.35;
-    text-align:center;
-  }
-
-  .connection-banner.visible {
-    display:block;
   }
 
   @media(max-width:480px) {
@@ -2438,9 +2415,6 @@
 </div>
 
 <div class="wrapper" id="appShell" aria-hidden="true">
-  <div class="connection-banner" id="connectionBanner" role="status" aria-live="polite">
-    Connessione assente. Controlla la rete prima di apportare modifiche.
-  </div>
   <div class="auth-toolbar">
     <button class="auth-logout" id="authLogoutBtn" onclick="esciAreaRiservata()" hidden>Esci</button>
   </div>
@@ -2519,7 +2493,7 @@
   </div>
 </div>
 
-<div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+<div class="modal-overlay" id="modalOverlay">
   <div class="modal">
     <h2 id="modalTitle">NUOVA SEGNALAZIONE</h2>
     <textarea id="formDesc" placeholder="Descrivi il problema..."></textarea>
@@ -2531,9 +2505,9 @@
 </div>
 
 
-<div class="modal-overlay" id="shareModalOverlay" role="dialog" aria-modal="true" aria-labelledby="shareModalTitle">
+<div class="modal-overlay" id="shareModalOverlay">
   <div class="modal">
-    <h2 id="shareModalTitle">CONDIVIDI ANOMALIE</h2>
+    <h2>CONDIVIDI ANOMALIE</h2>
     <div class="share-actions-row">
       <button class="btn-ghost" onclick="selezionaTutteAnomalie()">Seleziona tutte</button>
       <button class="btn-ghost" onclick="deselezionaTutteAnomalie()">Deseleziona</button>
@@ -2546,9 +2520,9 @@
   </div>
 </div>
 
-<div class="modal-overlay" id="recentChangesOverlay" role="dialog" aria-modal="true" aria-labelledby="recentChangesTitle">
+<div class="modal-overlay" id="recentChangesOverlay">
   <div class="modal">
-    <h2 id="recentChangesTitle">ULTIME MODIFICHE</h2>
+    <h2>ULTIME MODIFICHE</h2>
     <div id="recentChangesList" class="recent-list"></div>
     <div class="modal-footer">
       <button class="btn-primary" onclick="closeRecentChanges()">Chiudi</button>
@@ -2556,11 +2530,11 @@
   </div>
 </div>
 
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="toast" id="toast"></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-import { getFirestore, collection, doc, onSnapshot, addDoc, updateDoc, deleteDoc, runTransaction, writeBatch } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+import { getFirestore, collection, doc, onSnapshot, addDoc, updateDoc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
 
 const firebaseConfig = {
@@ -2692,21 +2666,6 @@ function showToast(msg) {
   setTimeout(() => t.style.display = 'none', 1600);
 }
 window.showToast = showToast;
-
-function updateConnectionBanner() {
-  const banner = document.getElementById('connectionBanner');
-  if (!banner) return;
-  const offline = navigator.onLine === false;
-  banner.classList.toggle('visible', offline);
-  banner.setAttribute('aria-hidden', String(!offline));
-}
-
-window.addEventListener('online', () => {
-  updateConnectionBanner();
-  showToast('Connessione ripristinata');
-});
-window.addEventListener('offline', updateConnectionBanner);
-updateConnectionBanner();
 
 async function registraModifica(bus, azione, dettaglio = '') {
   if (!bus || !azione) return;
@@ -3550,7 +3509,7 @@ function renderDateColumns(dates, segId) {
           <span class="date-num">${item.num}.</span>
           <span class="date-value">${fmtDate(item.date)}</span>
         </span>
-        <button class="date-x" type="button" onclick="rimuoviData('${segId}',${item.originalIndex},'${esc(item.date)}')" aria-label="Elimina la data ${fmtDate(item.date)}">✕</button>
+        <span class="date-x" onclick="rimuoviData('${segId}',${item.originalIndex})">✕</span>
       </span>`;
   }
 
@@ -3906,33 +3865,17 @@ window.autoSaveDate = async function(id, input) {
   const s = segnalazioni.find(x => x.id === id);
   if (!s) return;
 
-  input.disabled = true;
+  const dates = Array.isArray(s.date) ? [...s.date] : [];
+  dates.push(data);
+  dates.sort();
 
-  try {
-    const segRef = doc(db, 'segnalazioni', id);
-    await runTransaction(db, async transaction => {
-      const snapshot = await transaction.get(segRef);
-      if (!snapshot.exists()) throw new Error('Segnalazione non trovata');
-      const currentDates = Array.isArray(snapshot.data().date) ? [...snapshot.data().date] : [];
-      currentDates.push(data);
-      currentDates.sort();
-      transaction.update(segRef, { date:currentDates });
-    });
-
-    await registraModifica(
-      s.bus,
-      'Aggiunta data ' + fmtDate(data),
-      'Anomalia: ' + (s.desc || '')
-    );
-    input.value = '';
-    showToast('Data registrata');
-  } catch(error) {
-    console.error('Registrazione data non riuscita', error);
-    showToast('Data non salvata: controlla la connessione');
-    return;
-  } finally {
-    input.disabled = false;
-  }
+  await updateDoc(doc(db, 'segnalazioni', id), { date:dates });
+  await registraModifica(
+    s.bus,
+    'Aggiunta data ' + fmtDate(data),
+    'Anomalia: ' + (s.desc || '')
+  );
+  showToast('Data registrata');
 
   setTimeout(() => {
     openSegIds.add(id);
@@ -3941,44 +3884,19 @@ window.autoSaveDate = async function(id, input) {
   }, 80);
 };
 
-window.rimuoviData = async function(id, idx, expectedDate) {
+window.rimuoviData = async function(id, idx) {
   const s = segnalazioni.find(x => x.id === id);
   if (!s || !Array.isArray(s.date)) return;
   if (!confirm('Eliminare questa data?')) return;
 
-  try {
-    const segRef = doc(db, 'segnalazioni', id);
-    let dataEliminata = expectedDate || s.date[idx] || '';
-
-    await runTransaction(db, async transaction => {
-      const snapshot = await transaction.get(segRef);
-      if (!snapshot.exists()) throw new Error('Segnalazione non trovata');
-
-      const currentDates = Array.isArray(snapshot.data().date) ? [...snapshot.data().date] : [];
-      let indexToRemove = Number(idx);
-
-      if (currentDates[indexToRemove] !== expectedDate) {
-        indexToRemove = currentDates.indexOf(expectedDate);
-      }
-      if (indexToRemove < 0 || indexToRemove >= currentDates.length) {
-        throw new Error('Data già rimossa o non più disponibile');
-      }
-
-      dataEliminata = currentDates[indexToRemove];
-      currentDates.splice(indexToRemove, 1);
-      transaction.update(segRef, { date:currentDates });
-    });
-
-    await registraModifica(
-      s.bus,
-      'Eliminata data ' + (dataEliminata ? fmtDate(dataEliminata) : ''),
-      'Anomalia: ' + (s.desc || '')
-    );
-    showToast('Data eliminata');
-  } catch(error) {
-    console.error('Eliminazione data non riuscita', error);
-    showToast('Data non eliminata: aggiorna e riprova');
-  }
+  const dataEliminata = s.date[idx];
+  const dates = s.date.filter((_, i) => i !== idx);
+  await updateDoc(doc(db, 'segnalazioni', id), { date:dates });
+  await registraModifica(
+    s.bus,
+    'Eliminata data ' + (dataEliminata ? fmtDate(dataEliminata) : ''),
+    'Anomalia: ' + (s.desc || '')
+  );
 };
 
 window.moveSeg = async function(id, dir) {
@@ -4015,10 +3933,11 @@ window.deleteBus = async function() {
   try {
     const associate = segnalazioni.filter(s => s.bus === selectedBus);
 
-    const batch = writeBatch(db);
-    associate.forEach(s => batch.delete(doc(db, 'segnalazioni', s.id)));
-    batch.delete(doc(db, 'buses', bus.id));
-    await batch.commit();
+    for (const s of associate) {
+      await deleteDoc(doc(db, 'segnalazioni', s.id));
+    }
+
+    await deleteDoc(doc(db, 'buses', bus.id));
     await registraModifica(selectedBus, 'Autobus eliminato');
 
     showToast('Autobus eliminato');
@@ -4234,6 +4153,89 @@ window.addEventListener('orientationchange', hardResetSwipeVisual);
 document.addEventListener('visibilitychange', () => {
   if (!document.hidden) hardResetSwipeVisual();
 });
+
+let backupObjectUrl = null;
+
+window.esportaDati = function() {
+  const readyLink = document.getElementById('backupReadyLink');
+  if (!readyLink) return;
+
+  readyLink.textContent = 'Preparazione backup...';
+  readyLink.setAttribute('aria-disabled', 'true');
+  readyLink.removeAttribute('download');
+  readyLink.href = '#';
+
+  if (!auth.currentUser) {
+    readyLink.textContent = 'Accesso richiesto';
+    showToast('Accesso richiesto');
+    return;
+  }
+
+  try {
+    const data = {
+      formatVersion:1,
+      exportedAt:new Date().toISOString(),
+      buses:buses.map(({ id, ...item }) => ({ documentId:id, ...item })),
+      segnalazioni:segnalazioni.map(({ id, ...item }) => ({ documentId:id, ...item })),
+      temi:temi.map(({ id, ...item }) => ({ documentId:id, ...item })),
+      fermateSoppresse:fermateSoppresse.map(({ id, ...item }) => ({ documentId:id, ...item })),
+      modifiche:modifiche.map(({ id, ...item }) => ({ documentId:id, ...item }))
+    };
+
+    const json = JSON.stringify(data, null, 2);
+    const nomeFile = 'gestione-bus-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+    const blob = new Blob([json], { type:'application/json;charset=utf-8' });
+
+    if (backupObjectUrl) URL.revokeObjectURL(backupObjectUrl);
+    backupObjectUrl = URL.createObjectURL(blob);
+
+    readyLink.href = backupObjectUrl;
+    readyLink.download = nomeFile;
+    readyLink.textContent = 'Salva backup sul dispositivo';
+    readyLink.setAttribute('aria-disabled', 'false');
+    showToast('Backup pronto');
+  } catch(error) {
+    console.error('Preparazione backup non riuscita', error);
+    readyLink.textContent = 'Errore nella preparazione';
+    alert('Impossibile preparare il backup: ' + (error?.message || 'errore sconosciuto'));
+  }
+};
+
+window.importaDati = async function(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = async e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!confirm('Importare i dati? I dati attuali verranno sostituiti.')) return;
+
+      const oldB = await getDocs(collection(db, 'buses'));
+      for (const d of oldB.docs) await deleteDoc(doc(db, 'buses', d.id));
+
+      const oldS = await getDocs(collection(db, 'segnalazioni'));
+      for (const d of oldS.docs) await deleteDoc(doc(db, 'segnalazioni', d.id));
+
+      for (const item of data.buses || []) {
+        const mat = typeof item === 'string' ? item : item.matricola;
+        if (mat) await addDoc(collection(db, 'buses'), { matricola:mat, fuoriServizio:!!item.fuoriServizio, urgente:!!item.urgente });
+      }
+
+      for (const seg of data.segnalazioni || []) {
+        const { id, ...rest } = seg;
+        await addDoc(collection(db, 'segnalazioni'), rest);
+      }
+
+      await registraModifica('SISTEMA', 'Dati importati');
+      showToast('Dati importati');
+    } catch(err) {
+      alert('File non valido');
+    }
+  };
+
+  reader.readAsText(file);
+};
 
 window.addEventListener('popstate', () => {
   blockHomeNavigation();
