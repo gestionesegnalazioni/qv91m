@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.80">
-<title>Gestione Bus v8.80</title>
+<meta name="app-version" content="8.81">
+<title>Gestione Bus v8.81</title>
 <link rel="icon" type="image/svg+xml" href="icon.svg?v=872">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=872">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -2405,8 +2405,8 @@
   <div class="auth-card">
     <div class="auth-shield" aria-hidden="true">&#128274;</div>
     <h1>Area riservata</h1>
-    <p>Accedi con uno degli account autorizzati per visualizzare i dati.</p>
-    <button class="auth-google-btn" id="authGoogleBtn" onclick="accediConGoogle()">
+    <p id="authMessage">Verifica dell’accesso salvato in corso…</p>
+    <button class="auth-google-btn" id="authGoogleBtn" onclick="accediConGoogle()" hidden>
       <span class="auth-google-mark" aria-hidden="true">G</span>
       Accedi con Google
     </button>
@@ -2535,7 +2535,7 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 import { getFirestore, collection, doc, onSnapshot, addDoc, updateDoc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
-import { initializeAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, indexedDBLocalPersistence, browserLocalPersistence, browserPopupRedirectResolver } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+import { initializeAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, browserCookiePersistence, indexedDBLocalPersistence, browserLocalPersistence, browserPopupRedirectResolver } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey:"AIzaSyBdwNH43PZFgSfKZOEfJtBrF-ooC4NOnGc",
@@ -2550,7 +2550,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = initializeAuth(app, {
-  persistence: [indexedDBLocalPersistence, browserLocalPersistence],
+  persistence: [browserCookiePersistence, browserLocalPersistence, indexedDBLocalPersistence],
   popupRedirectResolver: browserPopupRedirectResolver
 });
 const googleProvider = new GoogleAuthProvider();
@@ -2878,8 +2878,11 @@ onAuthStateChanged(auth, user => {
   const gate = document.getElementById('authGate');
   const shell = document.getElementById('appShell');
   const logoutButton = document.getElementById('authLogoutBtn');
+  const loginButton = document.getElementById('authGoogleBtn');
+  const authMessage = document.getElementById('authMessage');
 
   if (user) {
+    loginButton.hidden = true;
     gate.classList.add('hidden');
     shell.setAttribute('aria-hidden', 'false');
     logoutButton.hidden = false;
@@ -2889,6 +2892,8 @@ onAuthStateChanged(auth, user => {
     return;
   }
 
+  loginButton.hidden = false;
+  authMessage.textContent = 'Accedi con uno degli account autorizzati per visualizzare i dati.';
   stopDataSubscriptions();
   clearProtectedData();
   resetProtectedViews();
