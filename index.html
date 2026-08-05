@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.81">
-<title>Gestione Bus v8.81</title>
+<meta name="app-version" content="8.82">
+<title>Gestione Bus v8.82</title>
 <link rel="icon" type="image/svg+xml" href="icon.svg?v=872">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=872">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -3596,7 +3596,7 @@ function renderSeg(s, pregressa = false) {
           ` : `
             <button class="small-action restore" onclick="ripristinaSeg('${s.id}')">Ripristina</button>
           `}
-          <button class="small-action notes ${String(s.note || '').trim() ? 'has-note' : ''}" onclick="toggleNote('${s.id}')">📝 Note${String(s.note || '').trim() ? ' (1)' : ''}</button>
+          <button class="small-action notes ${String(s.note || '').trim() ? 'has-note' : ''}" onclick="toggleNote('${s.id}')">Note${String(s.note || '').trim() ? ' 1' : ''}</button>
           <button class="small-action icon" onclick="editSeg('${s.id}')" title="Modifica">✎</button>
           <button class="small-action icon" onclick="deleteSeg('${s.id}')" title="Elimina">🗑</button>
         </div>
