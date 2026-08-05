@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.82">
-<title>Gestione Bus v8.82</title>
+<meta name="app-version" content="8.83">
+<title>Gestione Bus v8.83</title>
 <link rel="icon" type="image/svg+xml" href="icon.svg?v=872">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=872">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -2535,7 +2535,7 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 import { getFirestore, collection, doc, onSnapshot, addDoc, updateDoc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
-import { initializeAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, browserCookiePersistence, indexedDBLocalPersistence, browserLocalPersistence, browserPopupRedirectResolver } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+import { initializeAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, browserPopupRedirectResolver } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey:"AIzaSyBdwNH43PZFgSfKZOEfJtBrF-ooC4NOnGc",
@@ -2550,11 +2550,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = initializeAuth(app, {
-  persistence: [browserCookiePersistence, browserLocalPersistence, indexedDBLocalPersistence],
+  persistence: [indexedDBLocalPersistence, browserLocalPersistence],
   popupRedirectResolver: browserPopupRedirectResolver
 });
 const googleProvider = new GoogleAuthProvider();
-googleProvider.setCustomParameters({ prompt:'select_account' });
 
 ['cache_buses','cache_seg','cache_temi'].forEach(key => localStorage.removeItem(key));
 
@@ -2855,6 +2854,12 @@ window.accediConGoogle = async function() {
   errorBox.textContent = '';
 
   try {
+    try {
+      await setPersistence(auth, indexedDBLocalPersistence);
+    } catch(persistenceError) {
+      console.warn('IndexedDB non disponibile, uso localStorage', persistenceError);
+      await setPersistence(auth, browserLocalPersistence);
+    }
     await signInWithPopup(auth, googleProvider);
   } catch(error) {
     console.error('Accesso non riuscito', error);
