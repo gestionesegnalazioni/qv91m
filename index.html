@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.83">
-<title>Gestione Bus v8.83</title>
+<meta name="app-version" content="8.84">
+<title>Gestione Bus v8.84</title>
 <link rel="icon" type="image/svg+xml" href="icon.svg?v=872">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=872">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -1546,6 +1546,33 @@
     color:#fca5a5;
   }
 
+  .category-card.plurimus {
+    background:linear-gradient(145deg,rgba(14,165,233,.30),rgba(8,47,73,.12));
+    border-color:rgba(56,189,248,.64);
+    box-shadow:
+      0 18px 45px rgba(3,105,161,.22),
+      inset 5px 0 0 #38bdf8,
+      inset 0 1px 0 rgba(255,255,255,.13);
+  }
+
+  .category-card.plurimus .category-card-title,
+  .category-card.plurimus .category-card-icon,
+  .plurimus-title {
+    color:#7dd3fc;
+  }
+
+  .plurimus-placeholder {
+    min-height:calc(100dvh - 190px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    color:#bae6fd;
+    font-size:1.25rem;
+    font-weight:700;
+    letter-spacing:.2px;
+  }
+
   .category-card.modifiche {
     background:linear-gradient(145deg,rgba(196,181,253,.30),rgba(109,40,217,.10));
     border-color:rgba(221,214,254,.66);
@@ -1558,6 +1585,24 @@
   .category-card.modifiche .category-card-title,
   .category-card.modifiche .category-card-icon {
     color:#ddd6fe;
+  }
+
+  @media(max-width:480px) {
+    .category-home {
+      gap:12px;
+      padding-top:12px;
+    }
+    .category-card {
+      min-height:clamp(108px,15.5dvh,132px);
+      padding:18px 19px;
+    }
+    .category-card-title { font-size:1.34rem; }
+    .category-card-count { margin-top:7px; }
+    .category-card-icon {
+      width:46px;
+      height:46px;
+      flex-basis:46px;
+    }
   }
 
   .topics-view { display:none; }
@@ -2479,6 +2524,19 @@
     </div>
   </div>
 
+  <div class="topics-view plurimus-view" id="plurimusView">
+    <div class="category-heading">
+      <button class="category-back-btn" onclick="closePlurimus()" aria-label="Indietro" title="Indietro">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M15.5 5.5 9 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="category-heading-title plurimus-title">Codici Plurimus</div>
+      <button class="section-logout-btn" onclick="esciAreaRiservata()">Esci</button>
+    </div>
+    <div class="plurimus-placeholder">Pagina in costruzione</div>
+  </div>
+
   <div class="bus-detail" id="detailView">
     <div class="detail-heading">
       <button class="detail-back-btn" onclick="closeDetail()" aria-label="Indietro" title="Indietro">
@@ -2781,6 +2839,7 @@ function resetProtectedViews() {
   document.getElementById('categoryView')?.classList.remove('open');
   document.getElementById('topicsView')?.classList.remove('open');
   document.getElementById('stopsView')?.classList.remove('open');
+  document.getElementById('plurimusView')?.classList.remove('open');
   document.getElementById('detailView')?.classList.remove('open');
   document.getElementById('recentChangesOverlay')?.classList.remove('open');
   document.getElementById('homeView').style.display = 'block';
@@ -3006,6 +3065,7 @@ function renderBusGrid() {
     categoryCard('autobus', 'Autobus', numeroAutobus, 'autobus') +
     topicCategoryCard() +
     suppressedStopsCategoryCard() +
+    plurimusCategoryCard() +
     recentChangesCategoryCard();
 }
 
@@ -3034,6 +3094,19 @@ function suppressedStopsCategoryCard() {
       </div>
       <svg class="category-card-icon" viewBox="0 0 24 24" aria-hidden="true">
         <path d="M6 3h12v14H6V3Zm2 2v6h8V5H8Zm-2 12h12M8 21v-4m8 4v-4M4 8h2m12 0h2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>`;
+}
+
+function plurimusCategoryCard() {
+  return `
+    <button class="category-card plurimus" onclick="openPlurimus()">
+      <div class="category-card-copy">
+        <div class="category-card-title">Codici Plurimus</div>
+        <div class="category-card-count">Pagina in costruzione</div>
+      </div>
+      <svg class="category-card-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M5 3h14v18H5V3Zm3 4h2m4 0h2M8 11h2m4 0h2M8 15h2m4 0h2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </button>`;
 }
@@ -3067,6 +3140,28 @@ function renderTopics() {
         </div>`).join('')
     : '<div class="empty">Nessun tema da sviluppare.</div>';
 }
+
+window.openPlurimus = function(fromHistory = false) {
+  if (!consumeHomeNavigationIntent(fromHistory)) return;
+  setHomeScrollLocked(false);
+  document.getElementById('homeView').style.display = 'none';
+  document.getElementById('categoryView').classList.remove('open');
+  document.getElementById('topicsView').classList.remove('open');
+  document.getElementById('stopsView').classList.remove('open');
+  document.getElementById('plurimusView').classList.add('open');
+  forzaScrollInAlto();
+  if (!fromHistory) pushViewState('plurimus');
+};
+
+window.closePlurimus = function(fromHistory = false) {
+  blockHomeNavigation();
+  document.getElementById('plurimusView').classList.remove('open');
+  document.getElementById('homeView').style.display = 'block';
+  setHomeScrollLocked(true);
+  renderBusGrid();
+  forzaScrollInAlto();
+  if (!fromHistory) replaceViewState('home');
+};
 
 window.openTopics = function(fromHistory = false) {
   if (!consumeHomeNavigationIntent(fromHistory)) return;
@@ -3210,6 +3305,7 @@ window.openCategory = function(category, fromHistory = false) {
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('topicsView').classList.remove('open');
   document.getElementById('stopsView').classList.remove('open');
+  document.getElementById('plurimusView').classList.remove('open');
   document.getElementById('detailView').classList.remove('open');
   document.getElementById('categoryView').classList.add('open');
   renderCategoryView();
@@ -4252,6 +4348,7 @@ window.addEventListener('popstate', () => {
   const categoryWasOpen = document.getElementById('categoryView')?.classList.contains('open');
   const topicsWereOpen = document.getElementById('topicsView')?.classList.contains('open');
   const stopsWereOpen = document.getElementById('stopsView')?.classList.contains('open');
+  const plurimusWasOpen = document.getElementById('plurimusView')?.classList.contains('open');
   const recentWasOpen = document.getElementById('recentChangesOverlay')?.classList.contains('open');
 
   if (selectedBus) {
@@ -4265,6 +4362,8 @@ window.addEventListener('popstate', () => {
     window.closeTopics(true);
   } else if (stopsWereOpen) {
     window.closeStops(true);
+  } else if (plurimusWasOpen) {
+    window.closePlurimus(true);
   } else if (recentWasOpen) {
     window.closeRecentChanges(true);
   }
@@ -4273,6 +4372,7 @@ window.addEventListener('popstate', () => {
   document.getElementById('categoryView').classList.remove('open');
   document.getElementById('topicsView').classList.remove('open');
   document.getElementById('stopsView').classList.remove('open');
+  document.getElementById('plurimusView').classList.remove('open');
   document.getElementById('detailView').classList.remove('open');
   document.getElementById('homeView').style.display = 'block';
 
@@ -4300,6 +4400,11 @@ function getOpenNavigationView() {
   const stopsView = document.getElementById('stopsView');
   if (stopsView?.classList.contains('open')) {
     return { view:stopsView, close:window.closeStops };
+  }
+
+  const plurimusView = document.getElementById('plurimusView');
+  if (plurimusView?.classList.contains('open')) {
+    return { view:plurimusView, close:window.closePlurimus };
   }
 
   const recentOverlay = document.getElementById('recentChangesOverlay');
