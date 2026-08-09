@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.84">
-<title>Gestione Bus v8.84</title>
+<meta name="app-version" content="8.85">
+<title>Gestione Bus v8.85</title>
 <link rel="icon" type="image/svg+xml" href="icon.svg?v=872">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=872">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -1561,16 +1561,55 @@
     color:#7dd3fc;
   }
 
-  .plurimus-placeholder {
-    min-height:calc(100dvh - 190px);
+  .plurimus-list {
     display:flex;
+    flex-direction:column;
+    gap:14px;
+    padding-bottom:80px;
+  }
+
+  .plurimus-line {
+    overflow:hidden;
+    border:1px solid rgba(56,189,248,.30);
+    border-radius:18px;
+    background:linear-gradient(145deg,rgba(14,165,233,.12),rgba(255,255,255,.035));
+    box-shadow:0 12px 28px rgba(0,0,0,.18);
+  }
+
+  .plurimus-line-title {
+    padding:12px 15px;
+    color:#7dd3fc;
+    background:rgba(14,165,233,.11);
+    border-bottom:1px solid rgba(56,189,248,.24);
+    font-size:1rem;
+    font-weight:800;
+  }
+
+  .plurimus-code-row {
+    display:grid;
+    grid-template-columns:72px minmax(0,1fr);
     align-items:center;
-    justify-content:center;
-    text-align:center;
-    color:#bae6fd;
-    font-size:1.25rem;
-    font-weight:700;
-    letter-spacing:.2px;
+    gap:12px;
+    min-height:45px;
+    padding:10px 15px;
+    border-bottom:1px solid rgba(255,255,255,.08);
+  }
+
+  .plurimus-code-row:last-child {
+    border-bottom:none;
+  }
+
+  .plurimus-code {
+    color:#7dd3fc;
+    font-size:.95rem;
+    font-weight:800;
+    letter-spacing:.4px;
+  }
+
+  .plurimus-destination {
+    color:var(--text);
+    font-size:.9rem;
+    line-height:1.3;
   }
 
   .category-card.modifiche {
@@ -2534,7 +2573,231 @@
       <div class="category-heading-title plurimus-title">Codici Plurimus</div>
       <button class="section-logout-btn" onclick="esciAreaRiservata()">Esci</button>
     </div>
-    <div class="plurimus-placeholder">Pagina in costruzione</div>
+    <div class="plurimus-list">
+      <section class="plurimus-line">
+        <div class="plurimus-line-title">Linea 39</div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8310</span><span class="plurimus-destination">Fosdinovo</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8311</span><span class="plurimus-destination">Castelpoggio</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8312</span><span class="plurimus-destination">Campocecina</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8313</span><span class="plurimus-destination">Soliera F.S.</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8314</span><span class="plurimus-destination">Fivizzano</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8315</span><span class="plurimus-destination">Fivizzano (Ospedale)</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8316</span><span class="plurimus-destination">Carrara</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8317</span><span class="plurimus-destination">Castelpoggio (Noceto)</span></div>
+      </section>
+      <section class="plurimus-line">
+        <div class="plurimus-line-title">Linea 47</div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8360</span><span class="plurimus-destination">Sorgnano</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8361</span><span class="plurimus-destination">Carrara</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8362</span><span class="plurimus-destination">Sorgnano (S. Martino)</span></div>
+      </section>
+      <section class="plurimus-line">
+        <div class="plurimus-line-title">Linea 48</div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8370</span><span class="plurimus-destination">Torano</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8371</span><span class="plurimus-destination">Carrara</span></div>
+      </section>
+      <section class="plurimus-line">
+        <div class="plurimus-line-title">Linea 49</div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8380</span><span class="plurimus-destination">Miseglia</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8381</span><span class="plurimus-destination">Carrara</span></div>
+      </section>
+      <section class="plurimus-line">
+        <div class="plurimus-line-title">Linea 50</div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8390</span><span class="plurimus-destination">Colonnata</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8391</span><span class="plurimus-destination">Bedizzano</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8392</span><span class="plurimus-destination">Bergiola</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8393</span><span class="plurimus-destination">Carrara</span></div>
+      </section>
+      <section class="plurimus-line">
+        <div class="plurimus-line-title">Linea 51</div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8400</span><span class="plurimus-destination">N.O.A. (M. di Carrara)</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8401</span><span class="plurimus-destination">Carrara (M. di Carrara)</span></div>
+      </section>
+      <section class="plurimus-line">
+        <div class="plurimus-line-title">Linea 52</div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8410</span><span class="plurimus-destination">Marinella (Avenza F.S.)</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8411</span><span class="plurimus-destination">Marinella</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8412</span><span class="plurimus-destination">Paradiso (Avenza F.S.)</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8413</span><span class="plurimus-destination">F. Maestra (Avenza F.S.)</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8414</span><span class="plurimus-destination">F. Maestra</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8415</span><span class="plurimus-destination">Carrara (Avenza F.S.)</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8416</span><span class="plurimus-destination">Carrara</span></div>
+      </section>
+      <section class="plurimus-line">
+        <div class="plurimus-line-title">Linea 53</div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8420</span><span class="plurimus-destination">Carrara (Avenza F.S.)</span></div>
+      </section>
+      <section class="plurimus-line">
+        <div class="plurimus-line-title">Linea 54</div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8430</span><span class="plurimus-destination">Lunimare (M. di Carrara)</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8431</span><span class="plurimus-destination">Carrara</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8432</span><span class="plurimus-destination">Paradiso</span></div>
+      </section>
+      <section class="plurimus-line">
+        <div class="plurimus-line-title">Linea 56</div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8440</span><span class="plurimus-destination">Massa F.S.</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8441</span><span class="plurimus-destination">Avenza F.S.</span></div>
+      </section>
+      <section class="plurimus-line">
+        <div class="plurimus-line-title">Linea 60</div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8450</span><span class="plurimus-destination">P.za Betti (Massa)</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8451</span><span class="plurimus-destination">Massa F.S.</span></div>
+      </section>
+      <section class="plurimus-line">
+        <div class="plurimus-line-title">Linea 61</div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8460</span><span class="plurimus-destination">P.za Betti (Massa-N.O.A.)</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8461</span><span class="plurimus-destination">Massa F.S. (N.O.A.)</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8462</span><span class="plurimus-destination">Massa F.S.</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8463</span><span class="plurimus-destination">P.za Betti (Massa)</span></div>
+      </section>
+      <section class="plurimus-line">
+        <div class="plurimus-line-title">Linea 62</div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8470</span><span class="plurimus-destination">P.za Betti (Ronchi)</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8471</span><span class="plurimus-destination">Massa F.S.</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8472</span><span class="plurimus-destination">Cinquale</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8473</span><span class="plurimus-destination">Don Milani</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8474</span><span class="plurimus-destination">Ronchi</span></div>
+      </section>
+      <section class="plurimus-line">
+        <div class="plurimus-line-title">Linea 63</div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8480</span><span class="plurimus-destination">P.za Menconi (M. Carrara)</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8481</span><span class="plurimus-destination">P.za Betti</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8482</span><span class="plurimus-destination">Cinquale</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8483</span><span class="plurimus-destination">Paradiso</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8488</span><span class="plurimus-destination">Fossa Maestra</span></div>
+      </section>
+      <section class="plurimus-line">
+        <div class="plurimus-line-title">Linea 64</div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8490</span><span class="plurimus-destination">Massa</span></div>
+      </section>
+      <section class="plurimus-line">
+        <div class="plurimus-line-title">Linea 65</div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8500</span><span class="plurimus-destination">Forno</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8501</span><span class="plurimus-destination">Massa F.S.</span></div>
+      </section>
+      <section class="plurimus-line">
+        <div class="plurimus-line-title">Linea 66</div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8510</span><span class="plurimus-destination">Antona</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8511</span><span class="plurimus-destination">Massa F.S.</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8512</span><span class="plurimus-destination">P. della Fioba</span></div>
+      </section>
+      <section class="plurimus-line">
+        <div class="plurimus-line-title">Linea 67</div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8520</span><span class="plurimus-destination">Ricortola</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8521</span><span class="plurimus-destination">Bergiola</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8522</span><span class="plurimus-destination">Castagnara</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8523</span><span class="plurimus-destination">Massa F.S.</span></div>
+      </section>
+      <section class="plurimus-line">
+        <div class="plurimus-line-title">Linea 68</div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8530</span><span class="plurimus-destination">Crocello</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8531</span><span class="plurimus-destination">Montignoso</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8532</span><span class="plurimus-destination">Massa</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8533</span><span class="plurimus-destination">Cinquale</span></div>
+      </section>
+      <section class="plurimus-line">
+        <div class="plurimus-line-title">Linea 70</div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8540</span><span class="plurimus-destination">Circ. SX (F.S.-M. di Carrara)</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8541</span><span class="plurimus-destination">Circ. DX (F.S.-M. di Carrara)</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8544</span><span class="plurimus-destination">Carrara</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8545</span><span class="plurimus-destination">Circ. DX Avenza</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8546</span><span class="plurimus-destination">Circ. SX (Avenza F.S.)</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8547</span><span class="plurimus-destination">Circ. DX (Avenza F.S.)</span></div>
+      </section>
+      <section class="plurimus-line">
+        <div class="plurimus-line-title">Linea 71</div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8550</span><span class="plurimus-destination">P.za Menconi</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8551</span><span class="plurimus-destination">Paradiso</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8552</span><span class="plurimus-destination">V. Garibaldi</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8553</span><span class="plurimus-destination">Romagnano Massa</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8554</span><span class="plurimus-destination">Avenza</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8555</span><span class="plurimus-destination">Carrara</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8556</span><span class="plurimus-destination">N.O.A. (Alberghiero)</span></div>
+      </section>
+      <section class="plurimus-line">
+        <div class="plurimus-line-title">Linea 72</div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8560</span><span class="plurimus-destination">F. Maestra (Fossone)</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8561</span><span class="plurimus-destination">Avenza F.S. (Fossone)</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8562</span><span class="plurimus-destination">Carrara (Fossone)</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8563</span><span class="plurimus-destination">Avenza (Fossone)</span></div>
+      </section>
+      <section class="plurimus-line">
+        <div class="plurimus-line-title">Linea 73</div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8570</span><span class="plurimus-destination">Paradiso (ITIS Galilei)</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8571</span><span class="plurimus-destination">F. Maestra</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8572</span><span class="plurimus-destination">Bonascola</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8573</span><span class="plurimus-destination">Carrara</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8574</span><span class="plurimus-destination">Avenza</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8575</span><span class="plurimus-destination">Navetta Bonascola</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8576</span><span class="plurimus-destination">P.za Menconi</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8577</span><span class="plurimus-destination">Paradiso</span></div>
+      </section>
+      <section class="plurimus-line">
+        <div class="plurimus-line-title">Linea 74</div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8580</span><span class="plurimus-destination">Massa (Foce)</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8581</span><span class="plurimus-destination">Carrara (Foce)</span></div>
+      </section>
+      <section class="plurimus-line">
+        <div class="plurimus-line-title">Linea 75</div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8590</span><span class="plurimus-destination">Massa (Nazzano)</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8591</span><span class="plurimus-destination">Carrara (Nazzano)</span></div>
+      </section>
+      <section class="plurimus-line">
+        <div class="plurimus-line-title">Linea 76</div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8600</span><span class="plurimus-destination">Massa F.S.</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8601</span><span class="plurimus-destination">Massa</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8602</span><span class="plurimus-destination">P.za Menconi (M. Carrara)</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8603</span><span class="plurimus-destination">Paradiso</span></div>
+      </section>
+      <section class="plurimus-line">
+        <div class="plurimus-line-title">Linea 77</div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8610</span><span class="plurimus-destination">Massa (Stazione)</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8611</span><span class="plurimus-destination">Massa F.S.</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8612</span><span class="plurimus-destination">Alberghiero</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8613</span><span class="plurimus-destination">Romagnano Massa (ITI)</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8614</span><span class="plurimus-destination">Avenza F.S. (P.za Menconi)</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8615</span><span class="plurimus-destination">P.za Betti (Ricortola)</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8616</span><span class="plurimus-destination">Ronchi (Don Milani)</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8617</span><span class="plurimus-destination">Bivio Due Madonne</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8618</span><span class="plurimus-destination">Massa (Alberghiero)</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8619</span><span class="plurimus-destination">Massa (V. Roma-Stazione)</span></div>
+      </section>
+      <section class="plurimus-line">
+        <div class="plurimus-line-title">Linea 78</div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8620</span><span class="plurimus-destination">Resceto</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8621</span><span class="plurimus-destination">Massa F.S.</span></div>
+      </section>
+      <section class="plurimus-line">
+        <div class="plurimus-line-title">Linea 79</div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8630</span><span class="plurimus-destination">Casette</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8631</span><span class="plurimus-destination">Massa F.S.</span></div>
+      </section>
+      <section class="plurimus-line">
+        <div class="plurimus-line-title">Linea 82</div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8640</span><span class="plurimus-destination">Casano</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8641</span><span class="plurimus-destination">Carrara</span></div>
+      </section>
+      <section class="plurimus-line">
+        <div class="plurimus-line-title">Linea 83</div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8650</span><span class="plurimus-destination">Ortonovo (Fontia)</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8651</span><span class="plurimus-destination">Fontia</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8652</span><span class="plurimus-destination">Carrara</span></div>
+      </section>
+      <section class="plurimus-line">
+        <div class="plurimus-line-title">Linea 107</div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8720</span><span class="plurimus-destination">Comune</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8721</span><span class="plurimus-destination">S. Martino Tribunale</span></div>
+      </section>
+      <section class="plurimus-line">
+        <div class="plurimus-line-title">Linea 601</div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8750</span><span class="plurimus-destination">Sarzana</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8751</span><span class="plurimus-destination">M. Carrara</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8752</span><span class="plurimus-destination">Sarzana (Magis-V. Galilei)</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8753</span><span class="plurimus-destination">Sarzana (ITIS Galilei)</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8754</span><span class="plurimus-destination">M. Carrara (Magistrali)</span></div>
+        <div class="plurimus-code-row"><span class="plurimus-code">8755</span><span class="plurimus-destination">M. Carrara (ITIS Galilei)</span></div>
+      </section>
+    </div>
   </div>
 
   <div class="bus-detail" id="detailView">
@@ -3103,7 +3366,7 @@ function plurimusCategoryCard() {
     <button class="category-card plurimus" onclick="openPlurimus()">
       <div class="category-card-copy">
         <div class="category-card-title">Codici Plurimus</div>
-        <div class="category-card-count">Pagina in costruzione</div>
+        <div class="category-card-count">33 linee · 124 codici</div>
       </div>
       <svg class="category-card-icon" viewBox="0 0 24 24" aria-hidden="true">
         <path d="M5 3h14v18H5V3Zm3 4h2m4 0h2M8 11h2m4 0h2M8 15h2m4 0h2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
