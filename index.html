@@ -6,9 +6,9 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.90">
-<title>Gestione Bus v8.90</title>
-<link rel="icon" type="image/svg+xml" href="icon.svg?v=890">
+<meta name="app-version" content="8.91">
+<title>Gestione Bus v8.91</title>
+<link rel="icon" type="image/svg+xml" href="icon.svg?v=891">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -2403,6 +2403,10 @@
     font-weight:800;
   }
 
+  .auth-google-btn[hidden] {
+    display:none;
+  }
+
   .auth-google-btn:disabled {
     opacity:.55;
     cursor:wait;
@@ -2489,7 +2493,7 @@
   <div class="auth-card">
     <div class="auth-shield" aria-hidden="true">&#128274;</div>
     <h1>Area riservata</h1>
-    <p id="authMessage">Verifica dell’accesso salvato in corso…</p>
+    <p id="authMessage">Caricamento…</p>
     <button class="auth-google-btn" id="authGoogleBtn" onclick="accediConGoogle()" hidden>
       <span class="auth-google-mark" aria-hidden="true">G</span>
       Accedi con Google
