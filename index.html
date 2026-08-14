@@ -6,9 +6,9 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.94">
-<title>Gestione Bus v8.94</title>
-<link rel="icon" type="image/svg+xml" href="icon.svg?v=894">
+<meta name="app-version" content="8.95">
+<title>Gestione Bus v8.95</title>
+<link rel="icon" type="image/svg+xml" href="icon.svg?v=895">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -3157,9 +3157,9 @@ function startDataSubscriptions() {
   if (dataUnsubscribers.length) return;
   initialDataReady = { buses:false, segnalazioni:false };
 
-  dataUnsubscribers.push(onSnapshot(collection(db, 'buses'), snap => {
+  dataUnsubscribers.push(onSnapshot(collection(db, 'buses'), { includeMetadataChanges:true }, snap => {
     buses = snap.docs.map(d => ({ id:d.id, ...d.data() })).sort(byMat);
-    initialDataReady.buses = true;
+    initialDataReady.buses = !snap.metadata.fromCache;
     renderAll();
     revealProtectedAppWhenReady();
   }, err => {
@@ -3167,9 +3167,9 @@ function startDataSubscriptions() {
     showInitialDataError();
   }));
 
-  dataUnsubscribers.push(onSnapshot(collection(db, 'segnalazioni'), snap => {
+  dataUnsubscribers.push(onSnapshot(collection(db, 'segnalazioni'), { includeMetadataChanges:true }, snap => {
     segnalazioni = snap.docs.map(d => ({ id:d.id, ...d.data() }));
-    initialDataReady.segnalazioni = true;
+    initialDataReady.segnalazioni = !snap.metadata.fromCache;
 
     const activeEl = document.activeElement;
     const isWritingNote = activeEl && activeEl.classList && activeEl.classList.contains('notes-textarea');
