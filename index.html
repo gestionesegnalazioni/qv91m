@@ -6,13 +6,13 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.99">
-<title>Gestione Bus v8.99</title>
-<link rel="icon" type="image/svg+xml" href="icon.svg?v=899">
+<meta name="app-version" content="9.00">
+<title>Gestione Bus v9.00</title>
+<link rel="icon" type="image/svg+xml" href="icon.svg?v=900">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
-<link rel="apple-touch-startup-image" href="launch-1206x2622.png?v=899">
+<link rel="apple-touch-startup-image" href="launch-1206x2622.png?v=900">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -2520,9 +2520,6 @@
 </div>
 
 <div class="wrapper" id="appShell" aria-hidden="true">
-  <div class="auth-toolbar">
-    <button class="auth-logout" id="authLogoutBtn" onclick="esciAreaRiservata()" hidden>Esci</button>
-  </div>
   <div id="homeView">
     <div class="category-home" id="busGrid"><div class="loading">Caricamento...</div></div>
   </div>
@@ -3113,10 +3110,8 @@ function revealProtectedAppWhenReady() {
   if (!initialDataReady.buses || !initialDataReady.segnalazioni) return;
   const gate = document.getElementById('authGate');
   const shell = document.getElementById('appShell');
-  const logoutButton = document.getElementById('authLogoutBtn');
   gate.classList.add('hidden');
   shell.setAttribute('aria-hidden', 'false');
-  logoutButton.hidden = false;
 }
 
 function showInitialDataError() {
@@ -3256,7 +3251,6 @@ window.esciAreaRiservata = async function() {
 onAuthStateChanged(auth, user => {
   const gate = document.getElementById('authGate');
   const shell = document.getElementById('appShell');
-  const logoutButton = document.getElementById('authLogoutBtn');
   const loginButton = document.getElementById('authGoogleBtn');
   const authMessage = document.getElementById('authMessage');
 
@@ -3265,7 +3259,6 @@ onAuthStateChanged(auth, user => {
     authMessage.textContent = 'Caricamento…';
     gate.classList.remove('hidden');
     shell.setAttribute('aria-hidden', 'true');
-    logoutButton.hidden = true;
     resetProtectedViews();
     startDataSubscriptions();
     return;
@@ -3278,7 +3271,6 @@ onAuthStateChanged(auth, user => {
   resetProtectedViews();
   setHomeScrollLocked(false);
   shell.setAttribute('aria-hidden', 'true');
-  logoutButton.hidden = true;
   gate.classList.remove('hidden');
 });
 
