@@ -6,9 +6,9 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.91">
-<title>Gestione Bus v8.91</title>
-<link rel="icon" type="image/svg+xml" href="icon.svg?v=891">
+<meta name="app-version" content="8.92">
+<title>Gestione Bus v8.92</title>
+<link rel="icon" type="image/svg+xml" href="icon.svg?v=892">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -2512,7 +2512,7 @@
 
   <div class="category-view" id="categoryView">
     <div class="category-heading">
-      <button class="category-back-btn" onclick="closeCategory()" aria-label="Indietro" title="Indietro">
+      <button class="category-back-btn" id="fleetRootBackButton" onclick="closeCategory()" aria-label="Indietro" title="Indietro" hidden>
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M15.5 5.5 9 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
@@ -3114,14 +3114,18 @@ function clearProtectedData() {
 }
 
 function resetProtectedViews() {
-  document.getElementById('categoryView')?.classList.remove('open');
   document.getElementById('topicsView')?.classList.remove('open');
   document.getElementById('stopsView')?.classList.remove('open');
   document.getElementById('plurimusView')?.classList.remove('open');
   document.getElementById('detailView')?.classList.remove('open');
   document.getElementById('recentChangesOverlay')?.classList.remove('open');
-  document.getElementById('homeView').style.display = 'block';
-  replaceViewState('home');
+  document.getElementById('homeView').style.display = 'none';
+  currentCategory = 'autobus';
+  document.getElementById('categoryView')?.classList.add('open');
+  document.getElementById('fleetRootBackButton')?.setAttribute('hidden', '');
+  setHomeScrollLocked(false);
+  renderCategoryView();
+  replaceViewState('category', { category:'autobus' });
 }
 
 function startDataSubscriptions() {
@@ -4629,6 +4633,13 @@ window.addEventListener('popstate', () => {
     return;
   }
 
+  if (categoryWasOpen && currentCategory === 'autobus') {
+    replaceViewState('category', { category:'autobus' });
+    renderCategoryView();
+    forzaScrollInAlto();
+    return;
+  }
+
   if (categoryWasOpen) {
     window.closeCategory(true);
   } else if (topicsWereOpen) {
@@ -4662,6 +4673,7 @@ let suppressNavigationClick = false;
 function getOpenNavigationView() {
   const categoryView = document.getElementById('categoryView');
   if (categoryView?.classList.contains('open')) {
+    if (currentCategory === 'autobus') return null;
     return { view:categoryView, close:window.closeCategory };
   }
 
