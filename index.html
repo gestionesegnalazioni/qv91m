@@ -6,9 +6,9 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="8.92">
-<title>Gestione Bus v8.92</title>
-<link rel="icon" type="image/svg+xml" href="icon.svg?v=892">
+<meta name="app-version" content="8.93">
+<title>Gestione Bus v8.93</title>
+<link rel="icon" type="image/svg+xml" href="icon.svg?v=893">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -3095,6 +3095,22 @@ function setHomeScrollLocked(locked) {
 }
 
 let dataUnsubscribers = [];
+let initialDataReady = { buses:false, segnalazioni:false };
+
+function revealProtectedAppWhenReady() {
+  if (!initialDataReady.buses || !initialDataReady.segnalazioni) return;
+  const gate = document.getElementById('authGate');
+  const shell = document.getElementById('appShell');
+  const logoutButton = document.getElementById('authLogoutBtn');
+  gate.classList.add('hidden');
+  shell.setAttribute('aria-hidden', 'false');
+  logoutButton.hidden = false;
+}
+
+function showInitialDataError() {
+  const authMessage = document.getElementById('authMessage');
+  if (authMessage) authMessage.textContent = 'Dati momentaneamente non disponibili. Controlla la connessione e riprova.';
+}
 
 function stopDataSubscriptions() {
   dataUnsubscribers.forEach(unsubscribe => {
@@ -3135,17 +3151,21 @@ function resetProtectedViews() {
 
 function startDataSubscriptions() {
   if (dataUnsubscribers.length) return;
+  initialDataReady = { buses:false, segnalazioni:false };
 
   dataUnsubscribers.push(onSnapshot(collection(db, 'buses'), snap => {
     buses = snap.docs.map(d => ({ id:d.id, ...d.data() })).sort(byMat);
+    initialDataReady.buses = true;
     renderAll();
+    revealProtectedAppWhenReady();
   }, err => {
     console.error(err);
-    document.getElementById('busGrid').innerHTML = '<div class="empty">Accesso ai dati non disponibile.</div>';
+    showInitialDataError();
   }));
 
   dataUnsubscribers.push(onSnapshot(collection(db, 'segnalazioni'), snap => {
     segnalazioni = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+    initialDataReady.segnalazioni = true;
 
     const activeEl = document.activeElement;
     const isWritingNote = activeEl && activeEl.classList && activeEl.classList.contains('notes-textarea');
@@ -3155,9 +3175,10 @@ function startDataSubscriptions() {
     } else {
       renderAll();
     }
+    revealProtectedAppWhenReady();
   }, err => {
     console.error(err);
-    document.getElementById('busGrid').innerHTML = '<div class="empty">Accesso alle segnalazioni non disponibile.</div>';
+    showInitialDataError();
   }));
 
   dataUnsubscribers.push(onSnapshot(collection(db, 'fermateSoppresse'), snap => {
@@ -3229,10 +3250,10 @@ onAuthStateChanged(auth, user => {
 
   if (user) {
     loginButton.hidden = true;
-    gate.classList.add('hidden');
-    shell.setAttribute('aria-hidden', 'false');
-    logoutButton.hidden = false;
-    setHomeScrollLocked(true);
+    authMessage.textContent = 'Caricamento…';
+    gate.classList.remove('hidden');
+    shell.setAttribute('aria-hidden', 'true');
+    logoutButton.hidden = true;
     resetProtectedViews();
     startDataSubscriptions();
     return;
