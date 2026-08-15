@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Gestione Bus</title>
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<style>html,body{margin:0;background:#080b12;color:#9aa4b2;font-family:Arial,sans-serif;height:100%}body{display:grid;place-items:center}.loading{text-align:center;font-weight:700;letter-spacing:.4px}</style>
+</head>
+<body>
+<div class="loading">Caricamento…</div>
+<script>
+  const target = new URL('./', window.location.href);
+  target.searchParams.set('aggiornamento', Date.now().toString());
+  window.location.replace(target.href);
+</script>
+</body>
+</html>
