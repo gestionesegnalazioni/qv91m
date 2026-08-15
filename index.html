@@ -6,13 +6,13 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="9.15">
-<title>Gestione Bus v9.15</title>
-<link rel="icon" type="image/svg+xml" href="icon.svg?v=915">
+<meta name="app-version" content="9.16">
+<title>Gestione Bus v9.16</title>
+<link rel="icon" type="image/svg+xml" href="icon.svg?v=916">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
-<link rel="apple-touch-startup-image" href="launch-1206x2622.png?v=915">
+<link rel="apple-touch-startup-image" href="launch-1206x2622.png?v=916">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1065,14 +1065,12 @@
 
   .modal-footer.mileage-footer {
     display:grid;
-    grid-template-columns:repeat(2,minmax(0,180px));
+    grid-template-columns:minmax(0,180px);
     justify-content:center;
     align-items:center;
-    gap:12px;
     width:100%;
   }
 
-  .mileage-edit-btn,
   .mileage-close-btn {
     width:100%;
     min-width:0;
@@ -3035,8 +3033,7 @@
     <h2>Km</h2>
     <input class="mileage-input" id="mileageInput" type="text" inputmode="numeric" autocomplete="off" placeholder="0" oninput="formatMileageInput(this)">
     <div class="modal-footer mileage-footer">
-      <button class="btn-primary mileage-edit-btn" onclick="saveMileage()">Modifica</button>
-      <button class="btn-primary mileage-close-btn" onclick="closeMileageModal()">Chiudi</button>
+      <button class="btn-primary mileage-close-btn" onclick="saveMileage()">Chiudi</button>
     </div>
   </div>
 </div>
@@ -4323,10 +4320,15 @@ window.saveMileage = async function() {
     return;
   }
   const km = Math.round(valore);
-  await updateDoc(doc(db, 'buses', bus.id), { chilometri:km });
-  await registraModifica(selectedBus, 'Chilometraggio aggiornato', km.toLocaleString('it-IT') + ' km');
+  const kmAttuali = Number.isFinite(Number(bus.chilometri)) ? Math.max(0, Math.round(Number(bus.chilometri))) : null;
+
+  if (kmAttuali !== km) {
+    await updateDoc(doc(db, 'buses', bus.id), { chilometri:km });
+    await registraModifica(selectedBus, 'Chilometraggio aggiornato', km.toLocaleString('it-IT') + ' km');
+    showToast('Chilometri salvati');
+  }
+
   closeMileageModal();
-  showToast('Chilometri salvati');
 };
 
 window.toggleReturn = function(id) {
