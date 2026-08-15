@@ -6,13 +6,13 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="9.08">
-<title>Gestione Bus v9.08</title>
-<link rel="icon" type="image/svg+xml" href="icon.svg?v=908">
+<meta name="app-version" content="9.09">
+<title>Gestione Bus v9.09</title>
+<link rel="icon" type="image/svg+xml" href="icon.svg?v=909">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
-<link rel="apple-touch-startup-image" href="launch-1206x2622.png?v=908">
+<link rel="apple-touch-startup-image" href="launch-1206x2622.png?v=909">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1902,6 +1902,15 @@
 
   .category-view.open {
     display:block;
+  }
+
+  /* Autobus è la schermata principale: niente barra nera fissa con il titolo. */
+  .category-view.fleet-root > .category-heading {
+    display:none;
+  }
+
+  .category-view.fleet-root > .category-bus-list {
+    padding-top:0;
   }
 
   .category-heading {
@@ -3908,6 +3917,8 @@ function renderExtraurbanDirectory(items) {
 
 function renderCategoryView() {
   if (!currentCategory) return;
+
+  document.getElementById('categoryView')?.classList.toggle('fleet-root', currentCategory === 'autobus');
 
   const { urbani, extraurbani, altri, fuori } = getBusGroups();
   const urbanItems = [...urbani, ...altri].sort(byMat);
