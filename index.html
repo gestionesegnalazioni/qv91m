@@ -6,13 +6,13 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="9.06">
-<title>Gestione Bus v9.06</title>
-<link rel="icon" type="image/svg+xml" href="icon.svg?v=906">
+<meta name="app-version" content="9.07">
+<title>Gestione Bus v9.07</title>
+<link rel="icon" type="image/svg+xml" href="icon.svg?v=907">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
-<link rel="apple-touch-startup-image" href="launch-1206x2622.png?v=906">
+<link rel="apple-touch-startup-image" href="launch-1206x2622.png?v=907">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1043,6 +1043,15 @@
     text-align:center;
     font-size:1.08rem;
     font-weight:800;
+  }
+
+  .mileage-footer {
+    justify-content:center;
+  }
+
+  .mileage-edit-btn {
+    width:min(230px,100%);
+    flex:none;
   }
 
   .return-box {
@@ -2982,9 +2991,8 @@
   <div class="modal mileage-modal">
     <h2>Km</h2>
     <input class="mileage-input" id="mileageInput" type="number" min="0" step="1" inputmode="numeric" placeholder="0">
-    <div class="modal-footer">
-      <button class="btn-ghost" onclick="closeMileageModal()">Annulla</button>
-      <button class="btn-primary" onclick="saveMileage()">Salva</button>
+    <div class="modal-footer mileage-footer">
+      <button class="btn-primary mileage-edit-btn" onclick="saveMileage()">Modifica</button>
     </div>
   </div>
 </div>
