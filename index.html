@@ -6,13 +6,13 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="9.05">
-<title>Gestione Bus v9.05</title>
-<link rel="icon" type="image/svg+xml" href="icon.svg?v=905">
+<meta name="app-version" content="9.06">
+<title>Gestione Bus v9.06</title>
+<link rel="icon" type="image/svg+xml" href="icon.svg?v=906">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
-<link rel="apple-touch-startup-image" href="launch-1206x2622.png?v=905">
+<link rel="apple-touch-startup-image" href="launch-1206x2622.png?v=906">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1020,11 +1020,21 @@
     font-size:.74rem;
   }
 
-  .mileage-current {
-    color:var(--muted);
+  #mileageModalOverlay {
+    background:rgba(0,0,0,.92);
+  }
+
+  #mileageModalOverlay .mileage-modal {
+    background:#10141c;
+    border:1px solid rgba(255,255,255,.18);
+    box-shadow:0 22px 70px rgba(0,0,0,.72);
+  }
+
+  #mileageModalOverlay .mileage-modal h2 {
     text-align:center;
-    margin:-4px 0 14px;
-    font-size:.88rem;
+    color:#f4f7fb;
+    margin-bottom:16px;
+    text-transform:none;
   }
 
   .mileage-input {
@@ -2969,10 +2979,9 @@
 </div>
 
 <div class="modal-overlay" id="mileageModalOverlay">
-  <div class="modal">
-    <h2>CHILOMETRI DEL MEZZO</h2>
-    <div class="mileage-current" id="mileageCurrent"></div>
-    <input class="mileage-input" id="mileageInput" type="number" min="0" step="1" inputmode="numeric" placeholder="Inserisci i chilometri">
+  <div class="modal mileage-modal">
+    <h2>Km</h2>
+    <input class="mileage-input" id="mileageInput" type="number" min="0" step="1" inputmode="numeric" placeholder="0">
     <div class="modal-footer">
       <button class="btn-ghost" onclick="closeMileageModal()">Annulla</button>
       <button class="btn-primary" onclick="saveMileage()">Salva</button>
@@ -4202,7 +4211,6 @@ window.openMileageModal = function() {
   if (!selectedBus) return;
   const bus = buses.find(b => b.matricola === selectedBus);
   const valore = Number.isFinite(Number(bus?.chilometri)) ? Math.max(0, Math.round(Number(bus.chilometri))) : '';
-  document.getElementById('mileageCurrent').textContent = valore === '' ? 'Nessun chilometraggio registrato' : 'Attualmente: ' + valore.toLocaleString('it-IT') + ' km';
   document.getElementById('mileageInput').value = valore;
   document.getElementById('mileageModalOverlay').classList.add('open');
   setTimeout(() => document.getElementById('mileageInput').focus(), 80);
