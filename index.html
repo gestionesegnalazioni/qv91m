@@ -6,13 +6,13 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="9.14">
-<title>Gestione Bus v9.14</title>
-<link rel="icon" type="image/svg+xml" href="icon.svg?v=914">
+<meta name="app-version" content="9.15">
+<title>Gestione Bus v9.15</title>
+<link rel="icon" type="image/svg+xml" href="icon.svg?v=915">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
-<link rel="apple-touch-startup-image" href="launch-1206x2622.png?v=914">
+<link rel="apple-touch-startup-image" href="launch-1206x2622.png?v=915">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -4090,6 +4090,31 @@ function normalizeDate(raw) {
   return `${year}-${month}-${day}`;
 }
 
+window.formatReturnDateInput = function(input) {
+  const raw = String(input.value || '').replace(/\D/g, '').slice(0, 6);
+  input.value = raw.length <= 2
+    ? raw
+    : (raw.length <= 4
+      ? raw.slice(0,2) + '/' + raw.slice(2)
+      : raw.slice(0,2) + '/' + raw.slice(2,4) + '/' + raw.slice(4));
+};
+
+window.formatReturnTimeInput = function(input) {
+  const raw = String(input.value || '').replace(/\D/g, '').slice(0, 4);
+  input.value = raw.length <= 2 ? raw : raw.slice(0,2) + '.' + raw.slice(2);
+};
+
+function normalizeTime(raw) {
+  raw = String(raw || '').replace(/\D/g, '').slice(0, 4);
+  if (raw.length !== 4) return null;
+
+  const hours = Number(raw.slice(0, 2));
+  const minutes = Number(raw.slice(2, 4));
+  if (hours > 23 || minutes > 59) return null;
+
+  return String(hours).padStart(2,'0') + ':' + String(minutes).padStart(2,'0');
+}
+
 function renderDateColumns(dates, segId) {
   const sorted = [...dates].sort();
   const total = sorted.length;
@@ -4188,7 +4213,7 @@ function renderSeg(s, pregressa = false) {
           ${!pregressa ? `
             <button class="small-action up-action" onclick="moveSeg('${s.id}',-1)">Su</button>
             <button class="small-action down-action" onclick="moveSeg('${s.id}',1)">Giù</button>
-            <button class="small-action archive" onclick="archiviaSeg('${s.id}')">Archivio</button>
+            <button class="small-action archive" onclick="archiviaSeg('${s.id}')">Archivia</button>
           ` : `
             <button class="small-action restore" onclick="ripristinaSeg('${s.id}')">Ripristina</button>
           `}
@@ -4206,8 +4231,10 @@ function renderSeg(s, pregressa = false) {
         <div class="return-box" id="return-${s.id}">
           <div class="return-title">Rientri in deposito</div>
           <div class="return-form">
-            <input id="return-date-${s.id}" type="date" aria-label="Data del rientro">
-            <input id="return-time-${s.id}" type="time" aria-label="Ora del rientro">
+            <input id="return-date-${s.id}" type="text" inputmode="numeric" maxlength="8" autocomplete="off"
+              placeholder="GG/MM/AA" aria-label="Data del rientro" oninput="formatReturnDateInput(this)">
+            <input id="return-time-${s.id}" type="text" inputmode="numeric" maxlength="5" autocomplete="off"
+              placeholder="HH.MM" aria-label="Ora del rientro" oninput="formatReturnTimeInput(this)">
             <input class="return-colleague" id="return-name-${s.id}" type="text" placeholder="Nome del collega">
             <button class="return-save" onclick="saveReturn('${s.id}')">Aggiungi rientro</button>
           </div>
@@ -4215,7 +4242,7 @@ function renderSeg(s, pregressa = false) {
             ${(Array.isArray(s.rientri) ? s.rientri : []).length
               ? s.rientri.map((r, idx) => `
                 <div class="return-entry">
-                  <div class="return-entry-main">${esc(fmtDate(r.data))}${r.ora ? ' · ' + esc(r.ora) : ''}</div>
+                  <div class="return-entry-main">${esc(fmtDate(r.data))}${r.ora ? ' · ' + esc(String(r.ora).replace(':','.')) : ''}</div>
                   <div class="return-entry-name">${esc(r.collega || 'Collega non indicato')}</div>
                   <button class="return-delete" onclick="deleteReturn('${s.id}',${idx})">Elimina</button>
                 </div>`).join('')
@@ -4314,11 +4341,18 @@ window.toggleReturn = function(id) {
 window.saveReturn = async function(id) {
   const s = segnalazioni.find(x => x.id === id);
   if (!s) return;
-  const data = document.getElementById('return-date-' + id)?.value || '';
-  const ora = document.getElementById('return-time-' + id)?.value || '';
+  const dataInput = document.getElementById('return-date-' + id)?.value || '';
+  const oraInput = document.getElementById('return-time-' + id)?.value || '';
   const collega = document.getElementById('return-name-' + id)?.value.trim() || '';
+  const data = normalizeDate(dataInput);
+  const ora = oraInput ? normalizeTime(oraInput) : '';
+
   if (!data) {
-    showToast('Inserisci la data del rientro');
+    showToast(dataInput ? 'Data del rientro non valida' : 'Inserisci la data del rientro');
+    return;
+  }
+  if (oraInput && !ora) {
+    showToast('Orario del rientro non valido');
     return;
   }
   if (!collega) {
@@ -4330,7 +4364,7 @@ window.saveReturn = async function(id) {
   await updateDoc(doc(db, 'segnalazioni', id), { rientri });
   s.rientri = rientri;
   document.querySelector('#seg-' + CSS.escape(id) + ' .return-action')?.classList.add('has-return');
-  await registraModifica(s.bus, 'Rientro in deposito', 'Anomalia: ' + (s.desc || '') + ' — ' + fmtDate(data) + (ora ? ' alle ' + ora : '') + ' — Collega: ' + collega);
+  await registraModifica(s.bus, 'Rientro in deposito', 'Anomalia: ' + (s.desc || '') + ' — ' + fmtDate(data) + (ora ? ' alle ' + ora.replace(':','.') : '') + ' — Collega: ' + collega);
   openSegIds.add(id);
   showToast('Rientro registrato');
 };
