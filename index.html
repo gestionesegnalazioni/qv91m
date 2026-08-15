@@ -6,13 +6,13 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="9.13">
-<title>Gestione Bus v9.13</title>
-<link rel="icon" type="image/svg+xml" href="icon.svg?v=913">
+<meta name="app-version" content="9.14">
+<title>Gestione Bus v9.14</title>
+<link rel="icon" type="image/svg+xml" href="icon.svg?v=914">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
-<link rel="apple-touch-startup-image" href="launch-1206x2622.png?v=913">
+<link rel="apple-touch-startup-image" href="launch-1206x2622.png?v=914">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -975,9 +975,14 @@
     white-space:nowrap;
   }
 
-  .seg-card:not(.pregressa) .seg-actions .return-action {
-    grid-column:span 2;
-  }
+  .seg-actions .up-action { grid-column:1; grid-row:1; }
+  .seg-actions .down-action { grid-column:2; grid-row:1; }
+  .seg-actions .archive { grid-column:3; grid-row:1; }
+  .seg-actions .restore { grid-column:1 / span 3; grid-row:1; }
+  .seg-actions .notes { grid-column:4; grid-row:1; }
+  .seg-actions .edit-action { grid-column:1; grid-row:2; }
+  .seg-actions .return-action { grid-column:2 / span 2; grid-row:2; }
+  .seg-actions .delete-action { grid-column:4; grid-row:2; }
 
   .small-action.archive {
     color:var(--accent);
@@ -1003,8 +1008,11 @@
   }
 
   .small-action.notes.has-note {
-    color:var(--blue);
-    border-color:rgba(59,130,246,.45);
+    color:#ffffff;
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+    border-color:#60a5fa;
+    box-shadow:0 0 0 2px rgba(59,130,246,.14);
+    font-weight:800;
   }
 
   .detail-km-btn {
@@ -1151,8 +1159,16 @@
   }
 
   .small-action.return-action {
-    color:#93c5fd;
-    border-color:rgba(96,165,250,.45);
+    color:var(--muted);
+    border-color:rgba(255,255,255,.14);
+  }
+
+  .small-action.return-action.has-return {
+    color:#052e24;
+    background:var(--green);
+    border-color:var(--green);
+    box-shadow:0 0 0 2px rgba(52,211,153,.14);
+    font-weight:800;
   }
 
   .notes-box {
@@ -4170,16 +4186,16 @@ function renderSeg(s, pregressa = false) {
 
         <div class="seg-actions">
           ${!pregressa ? `
-            <button class="small-action" onclick="moveSeg('${s.id}',-1)">Su</button>
-            <button class="small-action" onclick="moveSeg('${s.id}',1)">Giù</button>
+            <button class="small-action up-action" onclick="moveSeg('${s.id}',-1)">Su</button>
+            <button class="small-action down-action" onclick="moveSeg('${s.id}',1)">Giù</button>
             <button class="small-action archive" onclick="archiviaSeg('${s.id}')">Archivio</button>
           ` : `
             <button class="small-action restore" onclick="ripristinaSeg('${s.id}')">Ripristina</button>
           `}
-          <button class="small-action notes ${String(s.note || '').trim() ? 'has-note' : ''}" onclick="toggleNote('${s.id}')">Note${String(s.note || '').trim() ? ' 1' : ''}</button>
-          <button class="small-action" onclick="editSeg('${s.id}')">Modifica</button>
-          <button class="small-action" onclick="deleteSeg('${s.id}')">Cestino</button>
-          <button class="small-action return-action" onclick="toggleReturn('${s.id}')">Rientro in deposito</button>
+          <button class="small-action notes ${String(s.note || '').trim() ? 'has-note' : ''}" onclick="toggleNote('${s.id}')">Note</button>
+          <button class="small-action edit-action" onclick="editSeg('${s.id}')">Modifica</button>
+          <button class="small-action return-action ${Array.isArray(s.rientri) && s.rientri.length ? 'has-return' : ''}" onclick="toggleReturn('${s.id}')">Rientro in deposito</button>
+          <button class="small-action delete-action" onclick="deleteSeg('${s.id}')">Cestino</button>
         </div>
 
         <div class="notes-box ${openNoteIds.has(s.id) ? 'open' : ''}" id="notes-${s.id}">
@@ -4312,6 +4328,8 @@ window.saveReturn = async function(id) {
   const rientri = Array.isArray(s.rientri) ? [...s.rientri] : [];
   rientri.push({ data, ora, collega, createdAt:new Date().toISOString() });
   await updateDoc(doc(db, 'segnalazioni', id), { rientri });
+  s.rientri = rientri;
+  document.querySelector('#seg-' + CSS.escape(id) + ' .return-action')?.classList.add('has-return');
   await registraModifica(s.bus, 'Rientro in deposito', 'Anomalia: ' + (s.desc || '') + ' — ' + fmtDate(data) + (ora ? ' alle ' + ora : '') + ' — Collega: ' + collega);
   openSegIds.add(id);
   showToast('Rientro registrato');
@@ -4324,6 +4342,8 @@ window.deleteReturn = async function(id, idx) {
   const rimosso = s.rientri[idx];
   const rientri = s.rientri.filter((_, i) => i !== idx);
   await updateDoc(doc(db, 'segnalazioni', id), { rientri });
+  s.rientri = rientri;
+  document.querySelector('#seg-' + CSS.escape(id) + ' .return-action')?.classList.toggle('has-return', rientri.length > 0);
   await registraModifica(s.bus, 'Rientro eliminato', 'Anomalia: ' + (s.desc || '') + ' — ' + fmtDate(rimosso.data));
   openSegIds.add(id);
   showToast('Rientro eliminato');
@@ -4489,6 +4509,9 @@ window.autoSaveNote = function(id, textarea) {
 
   const local = segnalazioni.find(x => x.id === id);
   if (local) local.note = textarea.value;
+
+  const noteButton = textarea.closest('.seg-card')?.querySelector('.small-action.notes');
+  if (noteButton) noteButton.classList.toggle('has-note', !!String(textarea.value || '').trim());
 
   clearTimeout(noteTimers[id]);
   noteTimers[id] = setTimeout(async () => {
