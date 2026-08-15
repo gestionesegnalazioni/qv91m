@@ -6,13 +6,13 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="9.02">
-<title>Gestione Bus v9.02</title>
-<link rel="icon" type="image/svg+xml" href="icon.svg?v=902">
+<meta name="app-version" content="9.03">
+<title>Gestione Bus v9.03</title>
+<link rel="icon" type="image/svg+xml" href="icon.svg?v=903">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
-<link rel="apple-touch-startup-image" href="launch-1206x2622.png?v=902">
+<link rel="apple-touch-startup-image" href="launch-1206x2622.png?v=903">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -949,15 +949,14 @@
   }
 
   .seg-actions {
-    display:flex;
-    gap:6px;
-    flex-wrap:nowrap;
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:8px;
     margin-top:10px;
-    padding-top:9px;
+    padding-top:10px;
     border-top:1px solid rgba(255,255,255,.08);
-    justify-content:center;
-    align-items:center;
-    overflow:hidden;
+    align-items:stretch;
+    overflow:visible;
   }
 
   .small-action {
@@ -965,15 +964,19 @@
     color:var(--muted);
     border:1px solid rgba(255,255,255,.14);
     border-radius:999px;
-    min-width:28px;
-    height:26px;
-    padding:0 8px;
-    font-size:.66rem;
+    width:100%;
+    min-width:0;
+    height:34px;
+    padding:0 5px;
+    font-size:.64rem;
     display:inline-flex;
     align-items:center;
     justify-content:center;
     white-space:nowrap;
-    flex:0 0 auto;
+  }
+
+  .seg-card:not(.pregressa) .seg-actions .return-action {
+    grid-column:span 2;
   }
 
   .small-action.archive {
