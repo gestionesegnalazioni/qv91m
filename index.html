@@ -6,13 +6,13 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="9.10">
-<title>Gestione Bus v9.10</title>
-<link rel="icon" type="image/svg+xml" href="icon.svg?v=910">
+<meta name="app-version" content="9.11">
+<title>Gestione Bus v9.11</title>
+<link rel="icon" type="image/svg+xml" href="icon.svg?v=911">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
-<link rel="apple-touch-startup-image" href="launch-1206x2622.png?v=910">
+<link rel="apple-touch-startup-image" href="launch-1206x2622.png?v=911">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1043,6 +1043,16 @@
     text-align:center;
     font-size:1.08rem;
     font-weight:800;
+    appearance:textfield;
+    -moz-appearance:textfield;
+  }
+
+  /* Nessun comando automatico su/giù: i chilometri si scrivono manualmente. */
+  .mileage-input::-webkit-inner-spin-button,
+  .mileage-input::-webkit-outer-spin-button {
+    appearance:none;
+    -webkit-appearance:none;
+    margin:0;
   }
 
   .modal-footer.mileage-footer {
