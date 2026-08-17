@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="9.18">
+<meta name="app-version" content="9.19">
 <title>Gestione Bus v9.18</title>
 <link rel="icon" type="image/svg+xml" href="icon.svg?v=918">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
@@ -1160,6 +1160,58 @@
   .btn-return-main {width:100%;min-height:40px;padding:11px 18px;border-radius:999px;color:#24123f;background:linear-gradient(135deg,#ddd6fe,#a78bfa);border:1px solid #c4b5fd;box-shadow:0 10px 24px rgba(139,92,246,.24);font-size:.82rem;font-weight:800}
   .bus-return-box {margin-top:0;border-color:rgba(196,181,253,.38);background:rgba(139,92,246,.10)}
   .bus-return-box .return-title {color:#ddd6fe}
+
+  /* Pannello rientri: interfaccia lineare e coordinata al pulsante lilla */
+  .bus-return-box {
+    margin-top:0;
+    padding:16px;
+    border:1px solid #c4b5fd;
+    border-radius:18px;
+    background:linear-gradient(145deg,#ddd6fe 0%,#b9a7fb 100%);
+    color:#24123f;
+    box-shadow:0 12px 30px rgba(139,92,246,.20);
+  }
+  .bus-return-box .return-title {
+    color:#24123f;
+    margin-bottom:12px;
+    font-size:.84rem;
+    text-align:center;
+  }
+  .bus-return-box .return-form {gap:10px}
+  .bus-return-box .return-form input {
+    min-height:44px;
+    border:1px solid rgba(76,29,149,.24);
+    border-radius:13px;
+    background:rgba(255,255,255,.48);
+    color:#24123f;
+    box-shadow:none;
+  }
+  .bus-return-box .return-form input::placeholder {color:rgba(36,18,63,.62)}
+  .bus-return-box .return-save {
+    min-height:44px;
+    border:0;
+    border-radius:13px;
+    background:#6d4bd1;
+    color:#fff;
+    box-shadow:none;
+  }
+  .bus-return-box .return-list {margin-top:12px}
+  .bus-return-box .return-entry {
+    padding:11px 12px;
+    border:1px solid rgba(76,29,149,.18);
+    background:rgba(255,255,255,.42);
+    color:#24123f;
+  }
+  .bus-return-box .return-entry-main,
+  .bus-return-box .return-entry-name {color:#24123f}
+  .bus-return-box .return-entry-name {opacity:.72}
+  .bus-return-box .return-delete {
+    border:1px solid rgba(76,29,149,.25);
+    background:rgba(76,29,149,.12);
+    color:#4c1d95;
+  }
+  .bus-return-box .empty {color:rgba(36,18,63,.68)}
+
 
   .notes-box {
     display:none;
