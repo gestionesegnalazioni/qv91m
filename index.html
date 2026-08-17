@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="9.22">
-<title>Gestione Bus v9.22</title>
+<meta name="app-version" content="9.23">
+<title>Gestione Bus v9.23</title>
 <link rel="icon" type="image/svg+xml" href="icon.svg?v=920">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1233,12 +1233,57 @@
     grid-column:auto;
     align-self:center;
   }
-  .bus-return-box .return-delete {
-    border:1px solid rgba(76,29,149,.25);
-    background:rgba(76,29,149,.12);
+  .bus-return-box .return-entry-actions {
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    gap:7px;
+    align-self:stretch;
+  }
+  .bus-return-box .return-icon-btn {
+    width:36px;
+    min-height:34px;
+    border-radius:10px;
+    font-size:1rem;
+    font-weight:800;
+  }
+  .bus-return-box .return-edit {
+    border:1px solid rgba(76,29,149,.28);
+    background:rgba(109,75,209,.16);
     color:#4c1d95;
   }
+  .bus-return-box .return-delete {
+    grid-row:auto;
+    grid-column:auto;
+    border:1px solid rgba(190,24,93,.26);
+    background:rgba(244,114,182,.18);
+    color:#9d174d;
+    padding:0;
+  }
   .bus-return-box .empty {color:rgba(36,18,63,.68)}
+
+  /* Sfumature coordinate per i pulsanti principali */
+  .detail-main-actions .btn-primary {
+    background:linear-gradient(135deg,#6ee7b7 0%,#34d399 52%,#10b981 100%);
+    border:1px solid #6ee7b7;
+    box-shadow:0 10px 24px rgba(16,185,129,.22);
+  }
+  .detail-main-actions .btn-yellow-main {
+    background:linear-gradient(135deg,#fde68a 0%,#facc15 52%,#eab308 100%);
+  }
+  .detail-main-actions .btn-urgent-bus {
+    background:linear-gradient(135deg,#f87171 0%,#ef4444 52%,#b91c1c 100%);
+  }
+  .detail-main-actions .btn-delete-bus {
+    background:linear-gradient(135deg,#60a5fa 0%,#2563eb 52%,#1d4ed8 100%);
+  }
+  .detail-main-actions .btn-share-main {
+    background:linear-gradient(135deg,#f0b6ca 0%,#d48aa3 52%,#b96082 100%);
+    border-color:#edaec4;
+  }
+  .bus-return-box .return-save {
+    background:linear-gradient(135deg,#8b5cf6 0%,#6d4bd1 58%,#5b21b6 100%);
+  }
 
 
   .notes-box {
@@ -4337,7 +4382,7 @@ function showBusDetail(mat) {
       <button class="btn-return-main" onclick="toggleBusReturn()">Mezzo fermato · ${allReturns.length ? 'Sì' : 'No'}</button>
       <div class="return-box bus-return-box" id="busReturnBox">
         <div class="return-title">Rientri in deposito</div>
-        <div class="return-list">${allReturns.length ? allReturns.map(r => `<div class="return-entry"><div class="return-entry-details"><div class="return-field"><span class="return-label">Causa:</span><span>${esc(r.motivo || 'Non indicata')}</span></div><div class="return-field"><span class="return-label">Data:</span><span>${r.data ? esc(fmtDate(r.data)) : 'Non indicata'}</span></div><div class="return-field"><span class="return-label">Ora:</span><span>${r.ora ? esc(String(r.ora).replace(':','.')) : 'Non indicata'}</span></div><div class="return-field"><span class="return-label">Autista:</span><span>${esc(r.autista || r.collega || 'Non indicato')}</span></div></div><button class="return-delete" onclick="${r.legacySegId ? `deleteLegacyReturn('${r.legacySegId}',${r.legacyIndex})` : `deleteBusReturn(${r.busIndex})`}">Elimina</button></div>`).join('') : '<div class="empty">Nessun rientro registrato.</div>'}</div>
+        <div class="return-list">${allReturns.length ? allReturns.map(r => `<div class="return-entry"><div class="return-entry-details"><div class="return-field"><span class="return-label">Causa:</span><span>${esc(r.motivo || 'Non indicata')}</span></div><div class="return-field"><span class="return-label">Data:</span><span>${r.data ? esc(fmtDate(r.data)) : 'Non indicata'}</span></div><div class="return-field"><span class="return-label">Ora:</span><span>${r.ora ? esc(String(r.ora).replace(':','.')) : 'Non indicata'}</span></div><div class="return-field"><span class="return-label">Autista:</span><span>${esc(r.autista || r.collega || 'Non indicato')}</span></div></div><div class="return-entry-actions"><button class="return-icon-btn return-edit" aria-label="Modifica" title="Modifica" onclick="${r.legacySegId ? `editBusReturn('legacy','${r.legacySegId}',${r.legacyIndex})` : `editBusReturn('bus','',${r.busIndex})`}">✎</button><button class="return-icon-btn return-delete" aria-label="Elimina" title="Elimina" onclick="${r.legacySegId ? `deleteLegacyReturn('${r.legacySegId}',${r.legacyIndex})` : `deleteBusReturn(${r.busIndex})`}">✕</button></div></div>`).join('') : '<div class="empty">Nessun rientro registrato.</div>'}</div>
         <div class="return-form">
           <input class="return-reason" id="bus-return-reason" type="text" placeholder="Motivo del rientro">
           <input class="return-colleague" id="bus-return-name" type="text" placeholder="Nome dell’autista">
@@ -4401,8 +4446,71 @@ window.saveMileage = async function() {
   closeMileageModal();
 };
 
+let editingBusReturn = null;
+
 window.toggleBusReturn=function(){document.getElementById('busReturnBox')?.classList.toggle('open')};
-window.saveBusReturn=async function(){if(!selectedBus)return;const bus=buses.find(b=>b.matricola===selectedBus);if(!bus)return;const motivo=document.getElementById('bus-return-reason')?.value.trim()||'',autista=document.getElementById('bus-return-name')?.value.trim()||'',dataInput=document.getElementById('bus-return-date')?.value||'',oraInput=document.getElementById('bus-return-time')?.value||'',data=dataInput?normalizeDate(dataInput):'',ora=oraInput?normalizeTime(oraInput):'';if(dataInput&&!data){showToast('Data del rientro non valida');return}if(oraInput&&!ora){showToast('Orario del rientro non valido');return}const rientri=Array.isArray(bus.rientri)?[...bus.rientri]:[];rientri.push({motivo,autista,data,ora,createdAt:new Date().toISOString()});await updateDoc(doc(db,'buses',bus.id),{rientri});bus.rientri=rientri;const dettagli=[motivo?'Motivo: '+motivo:'',autista?'Autista: '+autista:'',data?'Data: '+fmtDate(data):'',ora?'Ora: '+ora.replace(':','.'):''].filter(Boolean).join(' — ')||'Dettagli non indicati';await registraModifica(selectedBus,'Rientro in deposito',dettagli);showToast('Rientro registrato');showBusDetail(selectedBus);setTimeout(()=>document.getElementById('busReturnBox')?.classList.add('open'),0)};
+
+window.editBusReturn=function(type, segId, index) {
+  const bus = buses.find(b => b.matricola === selectedBus);
+  const seg = type === 'legacy' ? segnalazioni.find(s => s.id === segId) : null;
+  const source = type === 'legacy' ? seg?.rientri : bus?.rientri;
+  const rientro = Array.isArray(source) ? source[index] : null;
+  if (!rientro) return;
+
+  editingBusReturn = { type, segId, index };
+  document.getElementById('bus-return-reason').value = rientro.motivo || '';
+  document.getElementById('bus-return-name').value = rientro.autista || rientro.collega || '';
+  document.getElementById('bus-return-date').value = rientro.data ? fmtDate(rientro.data) : '';
+  document.getElementById('bus-return-time').value = rientro.ora ? String(rientro.ora).replace(':','.') : '';
+  const saveButton = document.querySelector('#busReturnBox .return-save');
+  if (saveButton) saveButton.textContent = 'Salva modifica';
+  document.getElementById('bus-return-reason')?.focus();
+};
+
+window.saveBusReturn=async function(){
+  if(!selectedBus)return;
+  const bus=buses.find(b=>b.matricola===selectedBus);
+  if(!bus)return;
+  const motivo=document.getElementById('bus-return-reason')?.value.trim()||'';
+  const autista=document.getElementById('bus-return-name')?.value.trim()||'';
+  const dataInput=document.getElementById('bus-return-date')?.value||'';
+  const oraInput=document.getElementById('bus-return-time')?.value||'';
+  const data=dataInput?normalizeDate(dataInput):'';
+  const ora=oraInput?normalizeTime(oraInput):'';
+  if(dataInput&&!data){showToast('Data del rientro non valida');return}
+  if(oraInput&&!ora){showToast('Orario del rientro non valido');return}
+
+  const updated={motivo,autista,data,ora,updatedAt:new Date().toISOString()};
+  let action='Rientro in deposito';
+  if(editingBusReturn?.type==='legacy'){
+    const seg=segnalazioni.find(s=>s.id===editingBusReturn.segId);
+    if(!seg||!Array.isArray(seg.rientri)||!seg.rientri[editingBusReturn.index])return;
+    const rientri=[...seg.rientri];
+    updated.createdAt=rientri[editingBusReturn.index].createdAt||updated.updatedAt;
+    rientri[editingBusReturn.index]=updated;
+    await updateDoc(doc(db,'segnalazioni',seg.id),{rientri});
+    seg.rientri=rientri;
+    action='Rientro modificato';
+  }else{
+    const rientri=Array.isArray(bus.rientri)?[...bus.rientri]:[];
+    if(editingBusReturn?.type==='bus'&&rientri[editingBusReturn.index]){
+      updated.createdAt=rientri[editingBusReturn.index].createdAt||updated.updatedAt;
+      rientri[editingBusReturn.index]=updated;
+      action='Rientro modificato';
+    }else{
+      updated.createdAt=updated.updatedAt;
+      rientri.push(updated);
+    }
+    await updateDoc(doc(db,'buses',bus.id),{rientri});
+    bus.rientri=rientri;
+  }
+  const dettagli=[motivo?'Motivo: '+motivo:'',autista?'Autista: '+autista:'',data?'Data: '+fmtDate(data):'',ora?'Ora: '+ora.replace(':','.'):''].filter(Boolean).join(' — ')||'Dettagli non indicati';
+  await registraModifica(selectedBus,action,dettagli);
+  showToast(action==='Rientro modificato'?'Rientro modificato':'Rientro registrato');
+  editingBusReturn=null;
+  showBusDetail(selectedBus);
+  setTimeout(()=>document.getElementById('busReturnBox')?.classList.add('open'),0)
+};
 window.deleteBusReturn=async function(idx){const bus=buses.find(b=>b.matricola===selectedBus);if(!bus||!Array.isArray(bus.rientri)||!bus.rientri[idx])return;if(!confirm('Eliminare questa registrazione di rientro?'))return;const rientri=bus.rientri.filter((_,i)=>i!==idx);await updateDoc(doc(db,'buses',bus.id),{rientri});bus.rientri=rientri;await registraModifica(selectedBus,'Rientro eliminato');showToast('Rientro eliminato');showBusDetail(selectedBus);setTimeout(()=>document.getElementById('busReturnBox')?.classList.add('open'),0)};
 window.deleteLegacyReturn=async function(segId,idx){const s=segnalazioni.find(x=>x.id===segId);if(!s||!Array.isArray(s.rientri)||!s.rientri[idx])return;if(!confirm('Eliminare questa registrazione di rientro?'))return;const rientri=s.rientri.filter((_,i)=>i!==idx);await updateDoc(doc(db,'segnalazioni',segId),{rientri});s.rientri=rientri;await registraModifica(s.bus||selectedBus,'Rientro eliminato');showToast('Rientro eliminato');showBusDetail(selectedBus);setTimeout(()=>document.getElementById('busReturnBox')?.classList.add('open'),0)};
 
