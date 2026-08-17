@@ -6,13 +6,13 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="9.16">
-<title>Gestione Bus v9.16</title>
-<link rel="icon" type="image/svg+xml" href="icon.svg?v=916">
+<meta name="app-version" content="9.17">
+<title>Gestione Bus v9.17</title>
+<link rel="icon" type="image/svg+xml" href="icon.svg?v=917">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
-<link rel="apple-touch-startup-image" href="launch-1206x2622.png?v=916">
+<link rel="apple-touch-startup-image" href="launch-1206x2622.png?v=917">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1104,7 +1104,8 @@
     gap:8px;
   }
 
-  .return-form .return-colleague { grid-column:1 / -1; }
+  .return-form .return-colleague,
+  .return-form .return-reason { grid-column:1 / -1; }
 
   .return-form input {
     width:100%;
@@ -1156,18 +1157,9 @@
     font-weight:800;
   }
 
-  .small-action.return-action {
-    color:var(--muted);
-    border-color:rgba(255,255,255,.14);
-  }
-
-  .small-action.return-action.has-return {
-    color:#052e24;
-    background:var(--green);
-    border-color:var(--green);
-    box-shadow:0 0 0 2px rgba(52,211,153,.14);
-    font-weight:800;
-  }
+  .btn-return-main {width:100%;min-height:40px;padding:11px 18px;border-radius:999px;color:#24123f;background:linear-gradient(135deg,#ddd6fe,#a78bfa);border:1px solid #c4b5fd;box-shadow:0 10px 24px rgba(139,92,246,.24);font-size:.82rem;font-weight:800}
+  .bus-return-box {margin-top:0;border-color:rgba(196,181,253,.38);background:rgba(139,92,246,.10)}
+  .bus-return-box .return-title {color:#ddd6fe}
 
   .notes-box {
     display:none;
@@ -4216,35 +4208,11 @@ function renderSeg(s, pregressa = false) {
           `}
           <button class="small-action notes ${String(s.note || '').trim() ? 'has-note' : ''}" onclick="toggleNote('${s.id}')">Note</button>
           <button class="small-action edit-action" onclick="editSeg('${s.id}')">Modifica</button>
-          <button class="small-action return-action ${Array.isArray(s.rientri) && s.rientri.length ? 'has-return' : ''}" onclick="toggleReturn('${s.id}')">Rientro in deposito</button>
           <button class="small-action delete-action" onclick="deleteSeg('${s.id}')">Cestino</button>
         </div>
-
         <div class="notes-box ${openNoteIds.has(s.id) ? 'open' : ''}" id="notes-${s.id}">
           <div class="notes-label">Note libere</div>
           <textarea class="notes-textarea" placeholder="Scrivi qui le tue note..." onclick="event.stopPropagation()" onmousedown="event.stopPropagation()" ontouchstart="event.stopPropagation()" oninput="autoSaveNote('${s.id}', this)">${esc(s.note || '')}</textarea>
-        </div>
-
-        <div class="return-box" id="return-${s.id}">
-          <div class="return-title">Rientri in deposito</div>
-          <div class="return-form">
-            <input id="return-date-${s.id}" type="text" inputmode="numeric" maxlength="8" autocomplete="off"
-              placeholder="GG/MM/AA" aria-label="Data del rientro" oninput="formatReturnDateInput(this)">
-            <input id="return-time-${s.id}" type="text" inputmode="numeric" maxlength="5" autocomplete="off"
-              placeholder="HH.MM" aria-label="Ora del rientro" oninput="formatReturnTimeInput(this)">
-            <input class="return-colleague" id="return-name-${s.id}" type="text" placeholder="Nome del collega">
-            <button class="return-save" onclick="saveReturn('${s.id}')">Aggiungi rientro</button>
-          </div>
-          <div class="return-list">
-            ${(Array.isArray(s.rientri) ? s.rientri : []).length
-              ? s.rientri.map((r, idx) => `
-                <div class="return-entry">
-                  <div class="return-entry-main">${esc(fmtDate(r.data))}${r.ora ? ' · ' + esc(String(r.ora).replace(':','.')) : ''}</div>
-                  <div class="return-entry-name">${esc(r.collega || 'Collega non indicato')}</div>
-                  <button class="return-delete" onclick="deleteReturn('${s.id}',${idx})">Elimina</button>
-                </div>`).join('')
-              : '<div class="empty">Nessun rientro registrato.</div>'}
-          </div>
         </div>
       </div>
     </details>`;
@@ -4273,9 +4241,24 @@ function showBusDetail(mat) {
       </div>`;
   }
 
+  const busReturns = Array.isArray(bus?.rientri) ? bus.rientri : [];
+  const legacyReturns = all.flatMap(s => (Array.isArray(s.rientri) ? s.rientri : []).map((r, idx) => ({ ...r, legacySegId:s.id, legacyIndex:idx })));
+  const allReturns = [...busReturns.map((r, idx) => ({ ...r, busIndex:idx })), ...legacyReturns];
   html += `
     <div class="detail-main-actions">
       <button class="btn-primary" onclick="openModal('${esc(mat)}')">+ Aggiungi segnalazione</button>
+      <button class="btn-return-main" onclick="toggleBusReturn()">Rientro in deposito (${allReturns.length})</button>
+      <div class="return-box bus-return-box" id="busReturnBox">
+        <div class="return-title">Rientri in deposito</div>
+        <div class="return-form">
+          <input class="return-reason" id="bus-return-reason" type="text" placeholder="Motivo del rientro (facoltativo)">
+          <input class="return-colleague" id="bus-return-name" type="text" placeholder="Nome dell’autista (facoltativo)">
+          <input id="bus-return-date" type="text" inputmode="numeric" maxlength="8" autocomplete="off" placeholder="GG/MM/AA" oninput="formatReturnDateInput(this)">
+          <input id="bus-return-time" type="text" inputmode="numeric" maxlength="5" autocomplete="off" placeholder="HH.MM" oninput="formatReturnTimeInput(this)">
+          <button class="return-save" onclick="saveBusReturn()">Aggiungi rientro</button>
+        </div>
+        <div class="return-list">${allReturns.length ? allReturns.map(r => `<div class="return-entry"><div class="return-entry-main">${r.data ? esc(fmtDate(r.data)) : 'Data non indicata'}${r.ora ? ' · ' + esc(String(r.ora).replace(':','.')) : ''}</div><div class="return-entry-name">${esc(r.motivo || 'Motivo non indicato')} · ${esc(r.autista || r.collega || 'Autista non indicato')}</div><button class="return-delete" onclick="${r.legacySegId ? `deleteLegacyReturn('${r.legacySegId}',${r.legacyIndex})` : `deleteBusReturn(${r.busIndex})`}">Elimina</button></div>`).join('') : '<div class="empty">Nessun rientro registrato.</div>'}</div>
+      </div>
       <button class="btn-yellow-main" onclick="togglePregresse()">Vecchie segnalazioni (${arch.length})</button>
       <button class="btn-urgent-bus ${bus?.urgente ? 'active' : ''}" onclick="toggleBusUrgent()">${bus?.urgente ? 'Urgente ✓' : 'Urgente'}</button>
       <button class="btn-delete-bus" onclick="deleteBus()">Elimina bus</button>
@@ -4331,59 +4314,10 @@ window.saveMileage = async function() {
   closeMileageModal();
 };
 
-window.toggleReturn = function(id) {
-  const seg = document.getElementById('seg-' + id);
-  if (seg) {
-    seg.open = true;
-    openSegIds.add(id);
-  }
-  document.getElementById('return-' + id)?.classList.toggle('open');
-};
-
-window.saveReturn = async function(id) {
-  const s = segnalazioni.find(x => x.id === id);
-  if (!s) return;
-  const dataInput = document.getElementById('return-date-' + id)?.value || '';
-  const oraInput = document.getElementById('return-time-' + id)?.value || '';
-  const collega = document.getElementById('return-name-' + id)?.value.trim() || '';
-  const data = normalizeDate(dataInput);
-  const ora = oraInput ? normalizeTime(oraInput) : '';
-
-  if (!data) {
-    showToast(dataInput ? 'Data del rientro non valida' : 'Inserisci la data del rientro');
-    return;
-  }
-  if (oraInput && !ora) {
-    showToast('Orario del rientro non valido');
-    return;
-  }
-  if (!collega) {
-    showToast('Inserisci il nome del collega');
-    return;
-  }
-  const rientri = Array.isArray(s.rientri) ? [...s.rientri] : [];
-  rientri.push({ data, ora, collega, createdAt:new Date().toISOString() });
-  await updateDoc(doc(db, 'segnalazioni', id), { rientri });
-  s.rientri = rientri;
-  document.querySelector('#seg-' + CSS.escape(id) + ' .return-action')?.classList.add('has-return');
-  await registraModifica(s.bus, 'Rientro in deposito', 'Anomalia: ' + (s.desc || '') + ' — ' + fmtDate(data) + (ora ? ' alle ' + ora.replace(':','.') : '') + ' — Collega: ' + collega);
-  openSegIds.add(id);
-  showToast('Rientro registrato');
-};
-
-window.deleteReturn = async function(id, idx) {
-  const s = segnalazioni.find(x => x.id === id);
-  if (!s || !Array.isArray(s.rientri) || !s.rientri[idx]) return;
-  if (!confirm('Eliminare questa registrazione di rientro?')) return;
-  const rimosso = s.rientri[idx];
-  const rientri = s.rientri.filter((_, i) => i !== idx);
-  await updateDoc(doc(db, 'segnalazioni', id), { rientri });
-  s.rientri = rientri;
-  document.querySelector('#seg-' + CSS.escape(id) + ' .return-action')?.classList.toggle('has-return', rientri.length > 0);
-  await registraModifica(s.bus, 'Rientro eliminato', 'Anomalia: ' + (s.desc || '') + ' — ' + fmtDate(rimosso.data));
-  openSegIds.add(id);
-  showToast('Rientro eliminato');
-};
+window.toggleBusReturn=function(){document.getElementById('busReturnBox')?.classList.toggle('open')};
+window.saveBusReturn=async function(){if(!selectedBus)return;const bus=buses.find(b=>b.matricola===selectedBus);if(!bus)return;const motivo=document.getElementById('bus-return-reason')?.value.trim()||'',autista=document.getElementById('bus-return-name')?.value.trim()||'',dataInput=document.getElementById('bus-return-date')?.value||'',oraInput=document.getElementById('bus-return-time')?.value||'',data=dataInput?normalizeDate(dataInput):'',ora=oraInput?normalizeTime(oraInput):'';if(dataInput&&!data){showToast('Data del rientro non valida');return}if(oraInput&&!ora){showToast('Orario del rientro non valido');return}const rientri=Array.isArray(bus.rientri)?[...bus.rientri]:[];rientri.push({motivo,autista,data,ora,createdAt:new Date().toISOString()});await updateDoc(doc(db,'buses',bus.id),{rientri});bus.rientri=rientri;const dettagli=[motivo?'Motivo: '+motivo:'',autista?'Autista: '+autista:'',data?'Data: '+fmtDate(data):'',ora?'Ora: '+ora.replace(':','.'):''].filter(Boolean).join(' — ')||'Dettagli non indicati';await registraModifica(selectedBus,'Rientro in deposito',dettagli);showToast('Rientro registrato');showBusDetail(selectedBus);setTimeout(()=>document.getElementById('busReturnBox')?.classList.add('open'),0)};
+window.deleteBusReturn=async function(idx){const bus=buses.find(b=>b.matricola===selectedBus);if(!bus||!Array.isArray(bus.rientri)||!bus.rientri[idx])return;if(!confirm('Eliminare questa registrazione di rientro?'))return;const rientri=bus.rientri.filter((_,i)=>i!==idx);await updateDoc(doc(db,'buses',bus.id),{rientri});bus.rientri=rientri;await registraModifica(selectedBus,'Rientro eliminato');showToast('Rientro eliminato');showBusDetail(selectedBus);setTimeout(()=>document.getElementById('busReturnBox')?.classList.add('open'),0)};
+window.deleteLegacyReturn=async function(segId,idx){const s=segnalazioni.find(x=>x.id===segId);if(!s||!Array.isArray(s.rientri)||!s.rientri[idx])return;if(!confirm('Eliminare questa registrazione di rientro?'))return;const rientri=s.rientri.filter((_,i)=>i!==idx);await updateDoc(doc(db,'segnalazioni',segId),{rientri});s.rientri=rientri;await registraModifica(s.bus||selectedBus,'Rientro eliminato');showToast('Rientro eliminato');showBusDetail(selectedBus);setTimeout(()=>document.getElementById('busReturnBox')?.classList.add('open'),0)};
 
 window.togglePregresse = function() {
   archiveVisible = !archiveVisible;
