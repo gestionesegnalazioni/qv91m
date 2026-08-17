@@ -6,13 +6,13 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="9.17">
-<title>Gestione Bus v9.17</title>
-<link rel="icon" type="image/svg+xml" href="icon.svg?v=917">
+<meta name="app-version" content="9.18">
+<title>Gestione Bus v9.18</title>
+<link rel="icon" type="image/svg+xml" href="icon.svg?v=918">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
-<link rel="apple-touch-startup-image" href="launch-1206x2622.png?v=917">
+<link rel="apple-touch-startup-image" href="launch-1206x2622.png?v=918">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -4247,7 +4247,7 @@ function showBusDetail(mat) {
   html += `
     <div class="detail-main-actions">
       <button class="btn-primary" onclick="openModal('${esc(mat)}')">+ Aggiungi segnalazione</button>
-      <button class="btn-return-main" onclick="toggleBusReturn()">Rientro in deposito (${allReturns.length})</button>
+      <button class="btn-return-main" onclick="toggleBusReturn()">Rientri in deposito · ${allReturns.length ? 'Sì' : 'No'}</button>
       <div class="return-box bus-return-box" id="busReturnBox">
         <div class="return-title">Rientri in deposito</div>
         <div class="return-form">
