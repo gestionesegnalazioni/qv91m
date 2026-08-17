@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="9.21">
-<title>Gestione Bus v9.21</title>
+<meta name="app-version" content="9.22">
+<title>Gestione Bus v9.22</title>
 <link rel="icon" type="image/svg+xml" href="icon.svg?v=920">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1177,7 +1177,7 @@
     font-size:.84rem;
     text-align:center;
   }
-  .bus-return-box .return-form {gap:10px}
+  .bus-return-box .return-form {gap:10px;margin-top:14px;padding-top:14px;border-top:1px solid rgba(76,29,149,.18)}
   .bus-return-box .return-form input {
     min-height:44px;
     border:1px solid rgba(76,29,149,.24);
@@ -4337,14 +4337,14 @@ function showBusDetail(mat) {
       <button class="btn-return-main" onclick="toggleBusReturn()">Mezzo fermato · ${allReturns.length ? 'Sì' : 'No'}</button>
       <div class="return-box bus-return-box" id="busReturnBox">
         <div class="return-title">Rientri in deposito</div>
+        <div class="return-list">${allReturns.length ? allReturns.map(r => `<div class="return-entry"><div class="return-entry-details"><div class="return-field"><span class="return-label">Causa:</span><span>${esc(r.motivo || 'Non indicata')}</span></div><div class="return-field"><span class="return-label">Data:</span><span>${r.data ? esc(fmtDate(r.data)) : 'Non indicata'}</span></div><div class="return-field"><span class="return-label">Ora:</span><span>${r.ora ? esc(String(r.ora).replace(':','.')) : 'Non indicata'}</span></div><div class="return-field"><span class="return-label">Autista:</span><span>${esc(r.autista || r.collega || 'Non indicato')}</span></div></div><button class="return-delete" onclick="${r.legacySegId ? `deleteLegacyReturn('${r.legacySegId}',${r.legacyIndex})` : `deleteBusReturn(${r.busIndex})`}">Elimina</button></div>`).join('') : '<div class="empty">Nessun rientro registrato.</div>'}</div>
         <div class="return-form">
-          <input class="return-reason" id="bus-return-reason" type="text" placeholder="Motivo del rientro (facoltativo)">
-          <input class="return-colleague" id="bus-return-name" type="text" placeholder="Nome dell’autista (facoltativo)">
+          <input class="return-reason" id="bus-return-reason" type="text" placeholder="Motivo del rientro">
+          <input class="return-colleague" id="bus-return-name" type="text" placeholder="Nome dell’autista">
           <input id="bus-return-date" type="text" inputmode="numeric" maxlength="8" autocomplete="off" placeholder="GG/MM/AA" oninput="formatReturnDateInput(this)">
           <input id="bus-return-time" type="text" inputmode="numeric" maxlength="5" autocomplete="off" placeholder="HH.MM" oninput="formatReturnTimeInput(this)">
           <button class="return-save" onclick="saveBusReturn()">Aggiungi rientro</button>
         </div>
-        <div class="return-list">${allReturns.length ? allReturns.map(r => `<div class="return-entry"><div class="return-entry-details"><div class="return-field"><span class="return-label">Data</span><span>${r.data ? esc(fmtDate(r.data)) : 'Non indicata'}</span></div><div class="return-field"><span class="return-label">Ora</span><span>${r.ora ? esc(String(r.ora).replace(':','.')) : 'Non indicata'}</span></div><div class="return-field"><span class="return-label">Causa</span><span>${esc(r.motivo || 'Non indicata')}</span></div><div class="return-field"><span class="return-label">Autista</span><span>${esc(r.autista || r.collega || 'Non indicato')}</span></div></div><button class="return-delete" onclick="${r.legacySegId ? `deleteLegacyReturn('${r.legacySegId}',${r.legacyIndex})` : `deleteBusReturn(${r.busIndex})`}">Elimina</button></div>`).join('') : '<div class="empty">Nessun rientro registrato.</div>'}</div>
       </div>
       <button class="btn-yellow-main" onclick="togglePregresse()">Vecchie segnalazioni (${arch.length})</button>
       <button class="btn-urgent-bus ${bus?.urgente ? 'active' : ''}" onclick="toggleBusUrgent()">${bus?.urgente ? 'Urgente ✓' : 'Urgente'}</button>
