@@ -6,13 +6,13 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="9.19">
-<title>Gestione Bus v9.18</title>
-<link rel="icon" type="image/svg+xml" href="icon.svg?v=918">
+<meta name="app-version" content="9.20">
+<title>Gestione Bus v9.20</title>
+<link rel="icon" type="image/svg+xml" href="icon.svg?v=920">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
-<link rel="apple-touch-startup-image" href="launch-1206x2622.png?v=918">
+<link rel="apple-touch-startup-image" href="launch-1206x2622.png?v=920">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1205,6 +1205,34 @@
   .bus-return-box .return-entry-main,
   .bus-return-box .return-entry-name {color:#24123f}
   .bus-return-box .return-entry-name {opacity:.72}
+  .bus-return-box .return-entry {
+    grid-template-columns:minmax(0,1fr) auto;
+    align-items:start;
+    gap:10px;
+  }
+  .bus-return-box .return-entry-details {
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+    min-width:0;
+  }
+  .bus-return-box .return-field {
+    display:grid;
+    grid-template-columns:64px minmax(0,1fr);
+    gap:8px;
+    font-size:.78rem;
+    line-height:1.35;
+    overflow-wrap:anywhere;
+  }
+  .bus-return-box .return-label {
+    font-weight:800;
+    color:#4c1d95;
+  }
+  .bus-return-box .return-delete {
+    grid-row:auto;
+    grid-column:auto;
+    align-self:center;
+  }
   .bus-return-box .return-delete {
     border:1px solid rgba(76,29,149,.25);
     background:rgba(76,29,149,.12);
@@ -4295,7 +4323,14 @@ function showBusDetail(mat) {
 
   const busReturns = Array.isArray(bus?.rientri) ? bus.rientri : [];
   const legacyReturns = all.flatMap(s => (Array.isArray(s.rientri) ? s.rientri : []).map((r, idx) => ({ ...r, legacySegId:s.id, legacyIndex:idx })));
-  const allReturns = [...busReturns.map((r, idx) => ({ ...r, busIndex:idx })), ...legacyReturns];
+  const allReturns = [...busReturns.map((r, idx) => ({ ...r, busIndex:idx })), ...legacyReturns]
+    .sort((a, b) => {
+      const dataA = a.data || '9999-12-31';
+      const dataB = b.data || '9999-12-31';
+      const confrontoData = dataA.localeCompare(dataB);
+      if (confrontoData) return confrontoData;
+      return String(a.ora || '99:99').localeCompare(String(b.ora || '99:99'));
+    });
   html += `
     <div class="detail-main-actions">
       <button class="btn-primary" onclick="openModal('${esc(mat)}')">+ Aggiungi segnalazione</button>
@@ -4309,7 +4344,7 @@ function showBusDetail(mat) {
           <input id="bus-return-time" type="text" inputmode="numeric" maxlength="5" autocomplete="off" placeholder="HH.MM" oninput="formatReturnTimeInput(this)">
           <button class="return-save" onclick="saveBusReturn()">Aggiungi rientro</button>
         </div>
-        <div class="return-list">${allReturns.length ? allReturns.map(r => `<div class="return-entry"><div class="return-entry-main">${r.data ? esc(fmtDate(r.data)) : 'Data non indicata'}${r.ora ? ' · ' + esc(String(r.ora).replace(':','.')) : ''}</div><div class="return-entry-name">${esc(r.motivo || 'Motivo non indicato')} · ${esc(r.autista || r.collega || 'Autista non indicato')}</div><button class="return-delete" onclick="${r.legacySegId ? `deleteLegacyReturn('${r.legacySegId}',${r.legacyIndex})` : `deleteBusReturn(${r.busIndex})`}">Elimina</button></div>`).join('') : '<div class="empty">Nessun rientro registrato.</div>'}</div>
+        <div class="return-list">${allReturns.length ? allReturns.map(r => `<div class="return-entry"><div class="return-entry-details"><div class="return-field"><span class="return-label">Data</span><span>${r.data ? esc(fmtDate(r.data)) : 'Non indicata'}</span></div><div class="return-field"><span class="return-label">Ora</span><span>${r.ora ? esc(String(r.ora).replace(':','.')) : 'Non indicata'}</span></div><div class="return-field"><span class="return-label">Causa</span><span>${esc(r.motivo || 'Non indicata')}</span></div><div class="return-field"><span class="return-label">Autista</span><span>${esc(r.autista || r.collega || 'Non indicato')}</span></div></div><button class="return-delete" onclick="${r.legacySegId ? `deleteLegacyReturn('${r.legacySegId}',${r.legacyIndex})` : `deleteBusReturn(${r.busIndex})`}">Elimina</button></div>`).join('') : '<div class="empty">Nessun rientro registrato.</div>'}</div>
       </div>
       <button class="btn-yellow-main" onclick="togglePregresse()">Vecchie segnalazioni (${arch.length})</button>
       <button class="btn-urgent-bus ${bus?.urgente ? 'active' : ''}" onclick="toggleBusUrgent()">${bus?.urgente ? 'Urgente ✓' : 'Urgente'}</button>
