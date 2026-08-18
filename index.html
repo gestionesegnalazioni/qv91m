@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="9.28">
-<title>Gestione Bus v9.28</title>
+<meta name="app-version" content="9.29">
+<title>Gestione Bus v9.29</title>
 <link rel="icon" type="image/svg+xml" href="icon.svg?v=920">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -149,16 +149,16 @@
   }
 
   .btn-share-main {
-    background:#D48AA3;
-    color:#ffffff;
-    border:1px solid #D48AA3;
+    background:linear-gradient(135deg,#dbeafe 0%,#bae6fd 48%,#7dd3fc 100%);
+    color:#082f49;
+    border:1px solid #bae6fd;
     border-radius:999px;
     padding:11px 18px;
     font-weight:700;
     font-size:.82rem;
     min-height:40px;
     width:100%;
-    box-shadow:0 10px 24px rgba(212,138,163,.22);
+    box-shadow:0 10px 24px rgba(56,189,248,.24);
   }
 
   .btn-share-main:active {
@@ -4608,8 +4608,10 @@ window.archiviaSeg = async function(id) {
   const s = segnalazioni.find(x => x.id === id);
   await updateDoc(doc(db, 'segnalazioni', id), { pregressa:true, standby:false });
   await registraModifica(s?.bus || selectedBus, 'Anomalia archiviata', 'Anomalia: ' + (s?.desc || ''));
-  archiveVisible = true;
-  showToast('Spostata in archivio');
+  archiveVisible = false;
+  openSegIds.delete(id);
+  openNoteIds.delete(id);
+  showToast('Spostata in Vecchie segnalazioni');
 };
 
 window.ripristinaSeg = async function(id) {
