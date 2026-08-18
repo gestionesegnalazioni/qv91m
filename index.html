@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="9.25">
-<title>Gestione Bus v9.25</title>
+<meta name="app-version" content="9.26">
+<title>Gestione Bus v9.26</title>
 <link rel="icon" type="image/svg+xml" href="icon.svg?v=920">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -4396,7 +4396,7 @@ function showBusDetail(mat) {
       <button class="btn-primary" onclick="openModal('${esc(mat)}')">+ Aggiungi segnalazione</button>
       <button class="btn-return-main" onclick="toggleBusReturn()">Mezzo fermato · ${allReturns.length ? 'Sì' : 'No'}</button>
       <div class="return-box bus-return-box" id="busReturnBox">
-        <div class="return-title">Mezzo fermato</div>
+        
         <div class="return-list">${allReturns.length ? allReturns.map(r => `<div class="return-entry"><div class="return-entry-details"><div class="return-field"><span class="return-label">Causa:</span><span>${esc(r.motivo || 'Non indicata')}</span></div><div class="return-field"><span class="return-label">Data:</span><span>${r.data ? esc(fmtDate(r.data)) : 'Non indicata'}</span></div><div class="return-field"><span class="return-label">Ora:</span><span>${r.ora ? esc(String(r.ora).replace(':','.')) : 'Non indicata'}</span></div><div class="return-field"><span class="return-label">Autista:</span><span>${esc(r.autista || r.collega || 'Non indicato')}</span></div></div><div class="return-entry-actions"><button class="return-icon-btn return-edit" aria-label="Modifica" title="Modifica" onclick="${r.legacySegId ? `editBusReturn('legacy','${r.legacySegId}',${r.legacyIndex})` : `editBusReturn('bus','',${r.busIndex})`}">✎</button><button class="return-icon-btn return-delete" aria-label="Elimina" title="Elimina" onclick="${r.legacySegId ? `deleteLegacyReturn('${r.legacySegId}',${r.legacyIndex})` : `deleteBusReturn(${r.busIndex})`}">✕</button></div></div>`).join('') : '<div class="empty">Nessun rientro registrato.</div>'}</div>
         <div class="return-form">
           <input class="return-reason" id="bus-return-reason" type="text" placeholder="Motivo del rientro">
