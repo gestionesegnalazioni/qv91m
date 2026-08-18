@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="9.29">
-<title>Gestione Bus v9.29</title>
+<meta name="app-version" content="9.30">
+<title>Gestione Bus v9.30</title>
 <link rel="icon" type="image/svg+xml" href="icon.svg?v=920">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -4373,14 +4373,6 @@ function showBusDetail(mat) {
     ? `<div class="seg-list">${active.map(s => renderSeg(s, false)).join('')}</div>`
     : '<div class="empty">Nessuna anomalia attiva per questo autobus.</div>';
 
-  if (archiveVisible) {
-    html += `
-      <div class="archive-box">
-        <div class="archive-title">Vecchie segnalazioni</div>
-        ${arch.length ? `<div class="seg-list">${arch.map(s => renderSeg(s, true)).join('')}</div>` : '<div class="empty">Archivio vuoto.</div>'}
-      </div>`;
-  }
-
   const busReturns = Array.isArray(bus?.rientri) ? bus.rientri : [];
   const legacyReturns = all.flatMap(s => (Array.isArray(s.rientri) ? s.rientri : []).map((r, idx) => ({ ...r, legacySegId:s.id, legacyIndex:idx })));
   const allReturns = [...busReturns.map((r, idx) => ({ ...r, busIndex:idx })), ...legacyReturns]
@@ -4407,6 +4399,10 @@ function showBusDetail(mat) {
         </div>
       </div>
       <button class="btn-yellow-main" onclick="togglePregresse()">Vecchie segnalazioni (${arch.length})</button>
+      ${archiveVisible ? `
+        <div class="archive-box">
+          ${arch.length ? `<div class="seg-list">${arch.map(s => renderSeg(s, true)).join('')}</div>` : '<div class="empty">Archivio vuoto.</div>'}
+        </div>` : ''}
       <button class="btn-urgent-bus ${bus?.urgente ? 'active' : ''}" onclick="toggleBusUrgent()">${bus?.urgente ? 'Urgente ✓' : 'Urgente'}</button>
       <button class="btn-share-main" onclick="openShareModal()">Condividi anomalie</button>
     </div>`;
@@ -4606,11 +4602,11 @@ window.archiviaSeg = async function(id) {
   if (!ok) return;
 
   const s = segnalazioni.find(x => x.id === id);
-  await updateDoc(doc(db, 'segnalazioni', id), { pregressa:true, standby:false });
-  await registraModifica(s?.bus || selectedBus, 'Anomalia archiviata', 'Anomalia: ' + (s?.desc || ''));
   archiveVisible = false;
   openSegIds.delete(id);
   openNoteIds.delete(id);
+  await updateDoc(doc(db, 'segnalazioni', id), { pregressa:true, standby:false });
+  await registraModifica(s?.bus || selectedBus, 'Anomalia archiviata', 'Anomalia: ' + (s?.desc || ''));
   showToast('Spostata in Vecchie segnalazioni');
 };
 
