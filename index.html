@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="9.46">
-<title>Gestione Bus v9.46</title>
+<meta name="app-version" content="9.47">
+<title>Gestione Bus v9.47</title>
 <link rel="icon" type="image/svg+xml" href="icon.svg?v=920">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -4224,79 +4224,49 @@ function renderCategoryView() {
 }
 
 window.selectBus = function(mat, fromHistory = false) {
-  // Evita il tocco fantasma generato da iPhone quando termina lo swipe
-  // sopra la casella dell'autobus appena chiuso.
-  if (!fromHistory && Date.now() < busSelectionLockedUntil) return;
-
-  // Solo un vero click successivo, arrivato dopo il blocco anti-ghost,
-  // può consentire di aprire nuovamente una scheda.
-  fleetHomeGuardActive = false;
-
-  // La scheda del bus non viene più registrata nella cronologia.
-  // Inseriamo prima una seconda voce identica della pagina Autobus: il gesto
-  // nativo di iPhone può così tornare indietro senza avere alcuna scheda bus
-  // da ripristinare o riaprire.
-  if (!fromHistory) {
-    pushViewState('category', { category:'autobus' });
-  }
-
-  // Ogni apertura volontaria annulla un'eventuale stabilizzazione del ritorno precedente.
-  detailNavigationGeneration += 1;
   categoryScrollPosition = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
-  hardResetSwipeVisual();
   openSegIds.clear();
   openNoteIds.clear();
-  selectedBus = mat;
-  document.getElementById('edgeBackCapture')?.classList.add('active');
   archiveVisible = false;
+  selectedBus = mat;
+
+  document.getElementById('edgeBackCapture')?.classList.remove('active');
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('categoryView').classList.remove('open');
   document.getElementById('detailView').classList.add('open');
+
   showBusDetail(mat);
   hardResetSwipeVisual();
   forzaScrollInAlto();
 
-  requestAnimationFrame(() => {
-    hardResetSwipeVisual();
-    forzaScrollInAlto();
-  });
-
-  setTimeout(() => {
-    hardResetSwipeVisual();
-    forzaScrollInAlto();
-  }, 80);
-
+  // La scheda è una vera pagina della cronologia: lo swipe nativo di iPhone
+  // torna alla schermata Autobus senza anteprime annullate o rimbalzi.
+  if (!fromHistory) pushViewState('detail', { bus:mat });
 };
 
 window.closeDetail = function(fromHistory = false) {
-  // Chiusura esclusivamente interna: nessun history.back() e nessuno stato
-  // della matricola che iOS possa ripristinare dopo il gesto.
-  const posizioneDaRipristinare = categoryScrollPosition;
+  if (!fromHistory && window.history.state?.gestioneBusView === 'detail') {
+    window.history.back();
+    return;
+  }
 
-  hardResetSwipeVisual();
+  const posizioneDaRipristinare = categoryScrollPosition;
   openSegIds.clear();
   openNoteIds.clear();
   selectedBus = null;
+  archiveVisible = false;
+
   document.getElementById('edgeBackCapture')?.classList.remove('active');
   document.getElementById('detailView').classList.remove('open');
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('categoryView').classList.add('open');
+  currentCategory = 'autobus';
   renderCategoryView();
   hardResetSwipeVisual();
 
-  const ripristinaCategoria = () => {
-    window.scrollTo({ top:posizioneDaRipristinare, left:0, behavior:'auto' });
-    document.documentElement.scrollTop = posizioneDaRipristinare;
-    document.body.scrollTop = posizioneDaRipristinare;
-  };
-
   requestAnimationFrame(() => {
-    ripristinaCategoria();
-    requestAnimationFrame(ripristinaCategoria);
+    window.scrollTo({ top:posizioneDaRipristinare, left:0, behavior:'auto' });
   });
-
-  setTimeout(ripristinaCategoria, 80);
-  replaceViewState('category', { category:'autobus' });
 };
 
 function fmtDate(d) {
@@ -5042,221 +5012,7 @@ const SWIPE_NAVIGATION_ENABLED = false;
  * non può verificarsi il precedente rimbalzo automatico nella scheda.
  */
 const EDGE_BACK_SWIPE_ENABLED = false;
-let edgeBackSwipe = null;
-
-function resetEdgeBackSwipe(animate = true) {
-  const state = edgeBackSwipe;
-  edgeBackSwipe = null;
-  if (!state?.view) return;
-
-  state.view.style.transition = animate
-    ? 'transform .18s ease, opacity .18s ease'
-    : '';
-  state.view.style.transform = 'translateX(0)';
-  state.view.style.opacity = '1';
-
-  if (animate) {
-    setTimeout(() => {
-      state.view.style.transition = '';
-      state.view.style.transform = '';
-      state.view.style.opacity = '';
-    }, 190);
-  }
-}
-
-document.addEventListener('touchstart', e => {
-  if (!EDGE_BACK_SWIPE_ENABLED || !selectedBus || e.touches.length !== 1) return;
-  if (document.querySelector('.modal-overlay.open, .modal-overlay.active, .modal-overlay.show')) return;
-
-  const touch = e.touches[0];
-  // Deve partire dal bordo estremo, come il gesto nativo di iPhone.
-  if (touch.clientX > Math.min(110, window.innerWidth * .18)) return;
-
-  const view = document.getElementById('detailView');
-  if (!view?.classList.contains('open')) return;
-
-  edgeBackSwipe = {
-    view,
-    startX:touch.clientX,
-    startY:touch.clientY,
-    currentX:touch.clientX,
-    horizontal:false
-  };
-  view.style.transition = 'none';
-}, { passive:true, capture:true });
-
-document.addEventListener('touchmove', e => {
-  if (!edgeBackSwipe || e.touches.length !== 1) return;
-
-  const touch = e.touches[0];
-  const deltaX = touch.clientX - edgeBackSwipe.startX;
-  const deltaY = touch.clientY - edgeBackSwipe.startY;
-
-  if (!edgeBackSwipe.horizontal) {
-    if (Math.abs(deltaY) > 14 && Math.abs(deltaY) > Math.abs(deltaX)) {
-      resetEdgeBackSwipe();
-      return;
-    }
-    if (deltaX < 12 || deltaX < Math.abs(deltaY) * 1.25) return;
-    edgeBackSwipe.horizontal = true;
-  }
-
-  if (deltaX <= 0) return;
-  edgeBackSwipe.currentX = touch.clientX;
-  e.preventDefault();
-
-  // Su iPhone il touchend può essere trasformato in touchcancel dal browser.
-  // Eseguiamo quindi il ritorno non appena il gesto supera la soglia.
-  if (deltaX >= 72) {
-    const view = edgeBackSwipe.view;
-    edgeBackSwipe = null;
-    view.style.transition = '';
-    view.style.transform = '';
-    view.style.opacity = '';
-    suppressNavigationClick = true;
-    hardResetSwipeVisual();
-    window.closeDetail();
-    setTimeout(() => { suppressNavigationClick = false; }, 700);
-    return;
-  }
-
-  const visualX = Math.min(deltaX, 180);
-  edgeBackSwipe.view.style.transform = `translateX(${visualX * .32}px)`;
-  edgeBackSwipe.view.style.opacity = String(Math.max(.76, 1 - deltaX / 520));
-}, { passive:false, capture:true });
-
-document.addEventListener('touchend', e => {
-  if (!edgeBackSwipe) return;
-
-  const state = edgeBackSwipe;
-  const endX = e.changedTouches?.[0]?.clientX ?? state.currentX;
-  const endY = e.changedTouches?.[0]?.clientY ?? state.startY;
-  const distance = Math.max(state.currentX, endX) - state.startX;
-  const verticalDistance = Math.abs(endY - state.startY);
-  const completed = distance >= 55 && distance > verticalDistance * 1.15;
-  resetEdgeBackSwipe(!completed);
-
-  if (!completed) return;
-
-  suppressNavigationClick = true;
-  hardResetSwipeVisual();
-  window.closeDetail();
-  setTimeout(() => { suppressNavigationClick = false; }, 700);
-}, { passive:true, capture:true });
-
-document.addEventListener('touchcancel', () => {
-  if (edgeBackSwipe) resetEdgeBackSwipe();
-}, { passive:true, capture:true });
-
-let swipeStartX = 0;
-let swipeStartY = 0;
-let swipeCurrentX = 0;
-let swipeTracking = false;
-
-function hardResetSwipeVisual() {
-  const detail = document.getElementById('detailView');
-  if (!detail) return;
-
-  detail.classList.remove('swiping', 'swipe-back');
-  detail.style.transform = 'translateX(0)';
-  detail.style.opacity = '1';
-  detail.style.width = '100%';
-  detail.style.marginLeft = 'auto';
-  detail.style.marginRight = 'auto';
-}
-
-function resetSwipeVisual() {
-  const detail = document.getElementById('detailView');
-  if (!detail) return;
-
-  detail.classList.remove('swiping');
-  detail.classList.add('swipe-back');
-  detail.style.transform = 'translateX(0)';
-  detail.style.opacity = '1';
-
-  setTimeout(() => {
-    hardResetSwipeVisual();
-  }, 200);
-}
-
-document.addEventListener('touchstart', e => {
-  if (!SWIPE_NAVIGATION_ENABLED) return;
-  if (!selectedBus || e.touches.length !== 1) return;
-
-  const touch = e.touches[0];
-  // Swipe interno: parte poco dentro lo schermo, non dal bordo di Safari.
-  if (touch.clientX <= 48 || touch.clientX > 150) return;
-
-  swipeStartX = touch.clientX;
-  swipeStartY = touch.clientY;
-  swipeCurrentX = touch.clientX;
-  swipeTracking = true;
-
-  const detail = document.getElementById('detailView');
-  if (detail) {
-    detail.classList.add('swiping');
-    detail.classList.remove('swipe-back');
-  }
-}, { passive:true });
-
-document.addEventListener('touchmove', e => {
-  if (!swipeTracking || !selectedBus || e.touches.length !== 1) return;
-
-  const touch = e.touches[0];
-  const deltaX = touch.clientX - swipeStartX;
-  const deltaY = touch.clientY - swipeStartY;
-
-  if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 18) {
-    swipeTracking = false;
-    resetSwipeVisual();
-    return;
-  }
-
-  if (deltaX <= 0) return;
-
-  swipeCurrentX = touch.clientX;
-
-  const detail = document.getElementById('detailView');
-  if (detail) {
-    const visualX = Math.min(deltaX, 150);
-    detail.style.transform = `translateX(${visualX * 0.35}px)`;
-    detail.style.opacity = String(Math.max(0.72, 1 - deltaX / 420));
-  }
-}, { passive:true });
-
-document.addEventListener('touchend', () => {
-  if (!swipeTracking || !selectedBus) {
-    swipeTracking = false;
-    return;
-  }
-
-  const distance = swipeCurrentX - swipeStartX;
-  swipeTracking = false;
-
-  if (distance >= 55) {
-    hardResetSwipeVisual();
-    closeDetail();
-  } else {
-    resetSwipeVisual();
-  }
-}, { passive:true });
-
-document.addEventListener('touchcancel', () => {
-  swipeTracking = false;
-  resetSwipeVisual();
-}, { passive:true });
-
-
-
-
-
-aggiornaPosizioneHeaderVisuale();
-
-window.addEventListener('resize', hardResetSwipeVisual);
-window.addEventListener('orientationchange', hardResetSwipeVisual);
-document.addEventListener('visibilitychange', () => {
-  if (!document.hidden) hardResetSwipeVisual();
-});
+// Il ritorno dalla scheda usa esclusivamente la cronologia nativa del browser.
 
 let backupObjectUrl = null;
 
@@ -5351,34 +5107,11 @@ window.addEventListener('popstate', () => {
   const recentWasOpen = document.getElementById('recentChangesOverlay')?.classList.contains('open');
 
   if (selectedBus) {
-    const closingGeneration = ++detailNavigationGeneration;
-    lockBusSelection(1800);
-    activateFleetHomeGuard();
     window.closeDetail(true);
-
-    // iOS può ripristinare tardivamente lo stato visivo della pagina appena chiusa.
-    // Confermiamo più volte la schermata Autobus, ma solo finché l'utente
-    // non apre volontariamente un altro mezzo.
-    const stabilizeBusHome = () => {
-      if (detailNavigationGeneration !== closingGeneration) return;
-
-      selectedBus = null;
-      currentCategory = 'autobus';
-      document.getElementById('detailView')?.classList.remove('open');
-      document.getElementById('homeView').style.display = 'none';
-      document.getElementById('categoryView')?.classList.add('open');
-      document.getElementById('fleetRootBackButton')?.setAttribute('hidden', '');
-      replaceViewState('category', { category:'autobus' });
-      renderCategoryView();
-      hardResetSwipeVisual();
-    };
-
-    [40, 180, 500, 1000].forEach(delay => setTimeout(stabilizeBusHome, delay));
     return;
   }
 
   if (categoryWasOpen && currentCategory === 'autobus') {
-    replaceViewState('category', { category:'autobus' });
     renderCategoryView();
     forzaScrollInAlto();
     return;
@@ -5549,69 +5282,6 @@ document.addEventListener('click', e => {
   e.stopPropagation();
 }, true);
 
-/*
- * Cattura dedicata del bordo sinistro.
- * Non usa lo swipe nativo di Safari e non attende touchend: appena il dito
- * supera la soglia chiude direttamente la scheda e converte lo stato corrente
- * in home Autobus, impedendo qualsiasi rimbalzo.
- */
-const edgeBackCapture = document.createElement('div');
-edgeBackCapture.id = 'edgeBackCapture';
-edgeBackCapture.setAttribute('aria-hidden', 'true');
-document.body.appendChild(edgeBackCapture);
-
-let edgeCaptureStartX = 0;
-let edgeCaptureStartY = 0;
-let edgeCaptureDone = false;
-
-edgeBackCapture.addEventListener('touchstart', e => {
-  if (!selectedBus || e.touches.length !== 1) return;
-  // È essenziale bloccare Safari già al primo contatto: se aspettiamo il
-  // touchmove, iOS avvia la propria anteprima Indietro e poi la annulla.
-  e.preventDefault();
-  e.stopPropagation();
-  const touch = e.touches[0];
-  edgeCaptureStartX = touch.clientX;
-  edgeCaptureStartY = touch.clientY;
-  edgeCaptureDone = false;
-}, { passive:false, capture:true });
-
-edgeBackCapture.addEventListener('touchmove', e => {
-  if (!selectedBus || edgeCaptureDone || e.touches.length !== 1) return;
-  const touch = e.touches[0];
-  const dx = touch.clientX - edgeCaptureStartX;
-  const dy = Math.abs(touch.clientY - edgeCaptureStartY);
-
-  if (dx <= 0 || dy > dx) return;
-  e.preventDefault();
-
-  const detail = document.getElementById('detailView');
-  if (detail) {
-    detail.style.transform = `translateX(${Math.min(dx, 120) * .28}px)`;
-    detail.style.opacity = String(Math.max(.82, 1 - dx / 600));
-  }
-
-  if (dx < 58) return;
-  edgeCaptureDone = true;
-  detailNavigationGeneration += 1;
-  lockBusSelection(5000);
-  suppressNavigationClick = true;
-  activateFleetHomeGuard();
-  hardResetSwipeVisual();
-  window.closeDetail(true);
-  replaceViewState('category', { category:'autobus' });
-  setTimeout(() => { suppressNavigationClick = false; }, 5000);
-}, { passive:false });
-
-edgeBackCapture.addEventListener('touchend', () => {
-  edgeCaptureDone = false;
-  hardResetSwipeVisual();
-}, { passive:true });
-
-edgeBackCapture.addEventListener('touchcancel', () => {
-  edgeCaptureDone = false;
-  hardResetSwipeVisual();
-}, { passive:true });
 </script>
 </body>
 </html>
