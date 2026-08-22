@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="9.40">
-<title>Gestione Bus v9.40</title>
+<meta name="app-version" content="9.41">
+<title>Gestione Bus v9.41</title>
 <link rel="icon" type="image/svg+xml" href="icon.svg?v=920">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -59,9 +59,27 @@
     touch-action:pan-y;
   }
 
-  /* La scheda autobus lascia a iOS la gestione dello swipe dal bordo. */
+  /* Lo swipe viene catturato da una zona dedicata sul bordo sinistro. */
   .bus-detail.open {
-    touch-action:auto;
+    touch-action:pan-y;
+  }
+
+  #edgeBackCapture {
+    position:fixed;
+    z-index:100000;
+    left:0;
+    top:0;
+    bottom:0;
+    width:34px;
+    display:none;
+    pointer-events:none;
+    touch-action:none;
+    background:transparent;
+  }
+
+  #edgeBackCapture.active {
+    display:block;
+    pointer-events:auto;
   }
 
   html.home-scroll-locked,
@@ -4167,6 +4185,7 @@ window.selectBus = function(mat, fromHistory = false) {
   openSegIds.clear();
   openNoteIds.clear();
   selectedBus = mat;
+  document.getElementById('edgeBackCapture')?.classList.add('active');
   archiveVisible = false;
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('categoryView').classList.remove('open');
@@ -4203,6 +4222,7 @@ window.closeDetail = function(fromHistory = false) {
   openSegIds.clear();
   openNoteIds.clear();
   selectedBus = null;
+  document.getElementById('edgeBackCapture')?.classList.remove('active');
   document.getElementById('detailView').classList.remove('open');
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('categoryView').classList.add('open');
@@ -5471,6 +5491,64 @@ document.addEventListener('click', e => {
   e.preventDefault();
   e.stopPropagation();
 }, true);
+
+/*
+ * Cattura dedicata del bordo sinistro.
+ * Non usa lo swipe nativo di Safari e non attende touchend: appena il dito
+ * supera la soglia chiude direttamente la scheda e converte lo stato corrente
+ * in home Autobus, impedendo qualsiasi rimbalzo.
+ */
+const edgeBackCapture = document.createElement('div');
+edgeBackCapture.id = 'edgeBackCapture';
+edgeBackCapture.setAttribute('aria-hidden', 'true');
+document.body.appendChild(edgeBackCapture);
+
+let edgeCaptureStartX = 0;
+let edgeCaptureStartY = 0;
+let edgeCaptureDone = false;
+
+edgeBackCapture.addEventListener('touchstart', e => {
+  if (!selectedBus || e.touches.length !== 1) return;
+  const touch = e.touches[0];
+  edgeCaptureStartX = touch.clientX;
+  edgeCaptureStartY = touch.clientY;
+  edgeCaptureDone = false;
+}, { passive:true });
+
+edgeBackCapture.addEventListener('touchmove', e => {
+  if (!selectedBus || edgeCaptureDone || e.touches.length !== 1) return;
+  const touch = e.touches[0];
+  const dx = touch.clientX - edgeCaptureStartX;
+  const dy = Math.abs(touch.clientY - edgeCaptureStartY);
+
+  if (dx <= 0 || dy > dx) return;
+  e.preventDefault();
+
+  const detail = document.getElementById('detailView');
+  if (detail) {
+    detail.style.transform = `translateX(${Math.min(dx, 120) * .28}px)`;
+    detail.style.opacity = String(Math.max(.82, 1 - dx / 600));
+  }
+
+  if (dx < 58) return;
+  edgeCaptureDone = true;
+  detailNavigationGeneration += 1;
+  suppressNavigationClick = true;
+  hardResetSwipeVisual();
+  window.closeDetail(true);
+  replaceViewState('category', { category:'autobus' });
+  setTimeout(() => { suppressNavigationClick = false; }, 500);
+}, { passive:false });
+
+edgeBackCapture.addEventListener('touchend', () => {
+  edgeCaptureDone = false;
+  hardResetSwipeVisual();
+}, { passive:true });
+
+edgeBackCapture.addEventListener('touchcancel', () => {
+  edgeCaptureDone = false;
+  hardResetSwipeVisual();
+}, { passive:true });
 </script>
 </body>
 </html>
