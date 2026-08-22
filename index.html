@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="9.42">
-<title>Gestione Bus v9.42</title>
+<meta name="app-version" content="9.43">
+<title>Gestione Bus v9.43</title>
 <link rel="icon" type="image/svg+xml" href="icon.svg?v=920">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -4187,6 +4187,14 @@ window.selectBus = function(mat, fromHistory = false) {
   // sopra la casella dell'autobus appena chiuso.
   if (!fromHistory && Date.now() < busSelectionLockedUntil) return;
 
+  // La scheda del bus non viene più registrata nella cronologia.
+  // Inseriamo prima una seconda voce identica della pagina Autobus: il gesto
+  // nativo di iPhone può così tornare indietro senza avere alcuna scheda bus
+  // da ripristinare o riaprire.
+  if (!fromHistory) {
+    pushViewState('category', { category:'autobus' });
+  }
+
   // Ogni apertura volontaria annulla un'eventuale stabilizzazione del ritorno precedente.
   detailNavigationGeneration += 1;
   categoryScrollPosition = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
@@ -4213,18 +4221,11 @@ window.selectBus = function(mat, fromHistory = false) {
     forzaScrollInAlto();
   }, 80);
 
-  if (!fromHistory) {
-    pushViewState('detail', { category:currentCategory, bus:mat });
-  }
 };
 
 window.closeDetail = function(fromHistory = false) {
-  // La freccia usa la stessa cronologia dello swipe nativo di iPhone.
-  if (!fromHistory && window.history.state?.gestioneBusView === 'detail') {
-    window.history.back();
-    return;
-  }
-
+  // Chiusura esclusivamente interna: nessun history.back() e nessuno stato
+  // della matricola che iOS possa ripristinare dopo il gesto.
   const posizioneDaRipristinare = categoryScrollPosition;
 
   hardResetSwipeVisual();
@@ -4250,7 +4251,7 @@ window.closeDetail = function(fromHistory = false) {
   });
 
   setTimeout(ripristinaCategoria, 80);
-  if (!fromHistory) replaceViewState('category', { category:currentCategory });
+  replaceViewState('category', { category:'autobus' });
 };
 
 function fmtDate(d) {
