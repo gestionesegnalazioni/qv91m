@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="9.32">
-<title>Gestione Bus v9.32</title>
+<meta name="app-version" content="9.33">
+<title>Gestione Bus v9.33</title>
 <link rel="icon" type="image/svg+xml" href="icon.svg?v=920">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -989,6 +989,14 @@
   .small-action.archive {
     color:var(--accent);
     border-color:rgba(245,200,75,.42);
+  }
+
+  .small-action.archive.has-archive {
+    color:#17110a;
+    background:linear-gradient(135deg,#fde68a 0%,#facc15 52%,#eab308 100%);
+    border-color:#fde047;
+    box-shadow:0 0 0 2px rgba(250,204,21,.13),0 8px 18px rgba(234,179,8,.18);
+    font-weight:800;
   }
 
   .small-action.restore {
@@ -4309,7 +4317,7 @@ function renderDateColumns(dates, segId) {
 }
 
 
-function renderSeg(s, pregressa = false) {
+function renderSeg(s, pregressa = false, hasArchive = false) {
   const dates = Array.isArray(s.date) ? s.date : [];
   const datesHtml = dates.length
     ? renderDateColumns(dates, s.id)
@@ -4346,7 +4354,7 @@ function renderSeg(s, pregressa = false) {
           ${!pregressa ? `
             <button class="small-action up-action" onclick="moveSeg('${s.id}',-1)">Su</button>
             <button class="small-action down-action" onclick="moveSeg('${s.id}',1)">Giù</button>
-            <button class="small-action archive" onclick="archiviaSeg('${s.id}')">Archivia</button>
+            <button class="small-action archive ${hasArchive ? 'has-archive' : ''}" onclick="archiviaSeg('${s.id}')">Archivio</button>
           ` : `
             <button class="small-action restore" onclick="ripristinaSeg('${s.id}')">Ripristina</button>
           `}
@@ -4374,7 +4382,7 @@ function showBusDetail(mat) {
 
   let html = '';
   html += active.length
-    ? `<div class="seg-list">${active.map(s => renderSeg(s, false)).join('')}</div>`
+    ? `<div class="seg-list">${active.map(s => renderSeg(s, false, arch.length > 0)).join('')}</div>`
     : '<div class="empty">Nessuna anomalia attiva per questo autobus.</div>';
 
   const busReturns = Array.isArray(bus?.rientri) ? bus.rientri : [];
