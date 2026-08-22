@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="9.44">
-<title>Gestione Bus v9.44</title>
+<meta name="app-version" content="9.45">
+<title>Gestione Bus v9.45</title>
 <link rel="icon" type="image/svg+xml" href="icon.svg?v=920">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -70,7 +70,7 @@
     left:0;
     top:0;
     bottom:0;
-    width:34px;
+    width:64px;
     display:none;
     pointer-events:none;
     touch-action:none;
@@ -5566,11 +5566,15 @@ let edgeCaptureDone = false;
 
 edgeBackCapture.addEventListener('touchstart', e => {
   if (!selectedBus || e.touches.length !== 1) return;
+  // È essenziale bloccare Safari già al primo contatto: se aspettiamo il
+  // touchmove, iOS avvia la propria anteprima Indietro e poi la annulla.
+  e.preventDefault();
+  e.stopPropagation();
   const touch = e.touches[0];
   edgeCaptureStartX = touch.clientX;
   edgeCaptureStartY = touch.clientY;
   edgeCaptureDone = false;
-}, { passive:true });
+}, { passive:false, capture:true });
 
 edgeBackCapture.addEventListener('touchmove', e => {
   if (!selectedBus || edgeCaptureDone || e.touches.length !== 1) return;
