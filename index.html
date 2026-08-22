@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="9.41">
-<title>Gestione Bus v9.41</title>
+<meta name="app-version" content="9.42">
+<title>Gestione Bus v9.42</title>
 <link rel="icon" type="image/svg+xml" href="icon.svg?v=920">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3273,6 +3273,11 @@ let homeScrollPosition = 0;
 let categoryScrollPosition = 0;
 let currentCategory = null;
 let detailNavigationGeneration = 0;
+let busSelectionLockedUntil = 0;
+
+function lockBusSelection(duration = 1600) {
+  busSelectionLockedUntil = Math.max(busSelectionLockedUntil, Date.now() + duration);
+}
 
 function cleanHistoryUrl() {
   return window.location.pathname + window.location.search;
@@ -4178,6 +4183,10 @@ function renderCategoryView() {
 }
 
 window.selectBus = function(mat, fromHistory = false) {
+  // Evita il tocco fantasma generato da iPhone quando termina lo swipe
+  // sopra la casella dell'autobus appena chiuso.
+  if (!fromHistory && Date.now() < busSelectionLockedUntil) return;
+
   // Ogni apertura volontaria annulla un'eventuale stabilizzazione del ritorno precedente.
   detailNavigationGeneration += 1;
   categoryScrollPosition = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
@@ -5297,6 +5306,7 @@ window.addEventListener('popstate', () => {
 
   if (selectedBus) {
     const closingGeneration = ++detailNavigationGeneration;
+    lockBusSelection(1800);
     window.closeDetail(true);
 
     // iOS può ripristinare tardivamente lo stato visivo della pagina appena chiusa.
@@ -5533,11 +5543,12 @@ edgeBackCapture.addEventListener('touchmove', e => {
   if (dx < 58) return;
   edgeCaptureDone = true;
   detailNavigationGeneration += 1;
+  lockBusSelection(1800);
   suppressNavigationClick = true;
   hardResetSwipeVisual();
   window.closeDetail(true);
   replaceViewState('category', { category:'autobus' });
-  setTimeout(() => { suppressNavigationClick = false; }, 500);
+  setTimeout(() => { suppressNavigationClick = false; }, 1800);
 }, { passive:false });
 
 edgeBackCapture.addEventListener('touchend', () => {
