@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="9.48">
-<title>Gestione Bus v9.48</title>
+<meta name="app-version" content="9.49">
+<title>Gestione Bus v9.49</title>
 <link rel="icon" type="image/svg+xml" href="icon.svg?v=920">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -4224,15 +4224,32 @@ function renderCategoryView() {
 }
 
 function hardResetSwipeVisual() {
-  const detail = document.getElementById('detailView');
-  if (!detail) return;
-  detail.classList.remove('swiping', 'swipe-back');
-  detail.style.transition = '';
-  detail.style.transform = '';
-  detail.style.opacity = '';
-  detail.style.width = '';
-  detail.style.marginLeft = '';
-  detail.style.marginRight = '';
+  const resetElement = element => {
+    if (!element) return;
+    element.classList.remove('swiping', 'swipe-back');
+    element.style.transition = '';
+    element.style.transform = '';
+    element.style.translate = '';
+    element.style.opacity = '';
+    element.style.width = '';
+    element.style.height = '';
+    element.style.marginLeft = '';
+    element.style.marginRight = '';
+    element.style.marginTop = '';
+    element.style.top = '';
+    element.style.left = '';
+  };
+
+  resetElement(document.getElementById('detailView'));
+  resetElement(document.getElementById('categoryView'));
+  resetElement(document.getElementById('categoryBusList'));
+  resetElement(document.getElementById('appShell'));
+
+  navigationSwipe = null;
+  document.documentElement.style.transform = '';
+  document.documentElement.style.translate = '';
+  document.body.style.transform = '';
+  document.body.style.translate = '';
 }
 
 window.selectBus = function(mat, fromHistory = false) {
@@ -4262,23 +4279,36 @@ window.closeDetail = function(fromHistory = false) {
     return;
   }
 
-  const posizioneDaRipristinare = categoryScrollPosition;
   openSegIds.clear();
   openNoteIds.clear();
   selectedBus = null;
   archiveVisible = false;
+  categoryScrollPosition = 0;
 
   document.getElementById('edgeBackCapture')?.classList.remove('active');
   document.getElementById('detailView').classList.remove('open');
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('categoryView').classList.add('open');
   currentCategory = 'autobus';
-  renderCategoryView();
+  setHomeScrollLocked(false);
   hardResetSwipeVisual();
+  renderCategoryView();
 
+  // Al termine dello swipe iOS può ripristinare per alcuni frame la vecchia
+  // posizione della scheda. Forziamo la home Autobus nella sua geometria reale.
+  forzaScrollInAlto();
   requestAnimationFrame(() => {
-    window.scrollTo({ top:posizioneDaRipristinare, left:0, behavior:'auto' });
+    hardResetSwipeVisual();
+    forzaScrollInAlto();
+    requestAnimationFrame(() => {
+      hardResetSwipeVisual();
+      forzaScrollInAlto();
+    });
   });
+  setTimeout(() => {
+    hardResetSwipeVisual();
+    forzaScrollInAlto();
+  }, 350);
 };
 
 function fmtDate(d) {
