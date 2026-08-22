@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="9.45">
-<title>Gestione Bus v9.45</title>
+<meta name="app-version" content="9.46">
+<title>Gestione Bus v9.46</title>
 <link rel="icon" type="image/svg+xml" href="icon.svg?v=920">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3308,15 +3308,11 @@ function activateFleetHomeGuard() {
   enforceFleetHomeGuard();
 }
 
-function releaseFleetHomeGuardForFreshBusPress(event) {
-  if (!fleetHomeGuardActive) return;
-  const tile = event.target?.closest?.('.bus-tile, .urban-directory-bus');
-  if (!tile) return;
-  fleetHomeGuardActive = false;
-}
-
-document.addEventListener('pointerdown', releaseFleetHomeGuardForFreshBusPress, true);
-document.addEventListener('touchstart', releaseFleetHomeGuardForFreshBusPress, { passive:true, capture:true });
+/*
+ * Non disattivare la guardia su pointerdown/touchstart: iOS può generarli
+ * nuovamente sul riquadro sottostante alla fine dello stesso swipe.
+ * La guardia viene rimossa soltanto dentro selectBus, dopo il blocco anti-ghost.
+ */
 window.addEventListener('pageshow', enforceFleetHomeGuard);
 window.addEventListener('focus', enforceFleetHomeGuard);
 document.addEventListener('visibilitychange', () => {
@@ -4231,6 +4227,10 @@ window.selectBus = function(mat, fromHistory = false) {
   // Evita il tocco fantasma generato da iPhone quando termina lo swipe
   // sopra la casella dell'autobus appena chiuso.
   if (!fromHistory && Date.now() < busSelectionLockedUntil) return;
+
+  // Solo un vero click successivo, arrivato dopo il blocco anti-ghost,
+  // può consentire di aprire nuovamente una scheda.
+  fleetHomeGuardActive = false;
 
   // La scheda del bus non viene più registrata nella cronologia.
   // Inseriamo prima una seconda voce identica della pagina Autobus: il gesto
@@ -5594,13 +5594,13 @@ edgeBackCapture.addEventListener('touchmove', e => {
   if (dx < 58) return;
   edgeCaptureDone = true;
   detailNavigationGeneration += 1;
-  lockBusSelection(1800);
+  lockBusSelection(5000);
   suppressNavigationClick = true;
   activateFleetHomeGuard();
   hardResetSwipeVisual();
   window.closeDetail(true);
   replaceViewState('category', { category:'autobus' });
-  setTimeout(() => { suppressNavigationClick = false; }, 1800);
+  setTimeout(() => { suppressNavigationClick = false; }, 5000);
 }, { passive:false });
 
 edgeBackCapture.addEventListener('touchend', () => {
