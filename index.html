@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="9.54">
-<title>Gestione Bus v9.54</title>
+<meta name="app-version" content="9.55">
+<title>Gestione Bus v9.55</title>
 <link rel="icon" type="image/svg+xml" href="icon.svg?v=920">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1139,13 +1139,23 @@
   }
 
   .return-form .return-colleague,
-  .return-form .return-reason { grid-column:1 / -1; }
+  .return-form .return-reason,
+  .return-form .return-reason-custom { grid-column:1 / -1; }
 
-  .return-form input {
+  .return-form input,
+  .return-form select {
     width:100%;
     min-height:42px;
     padding:8px 10px;
     font-size:.82rem;
+  }
+
+  .return-form select {
+    border:1px solid var(--border);
+    border-radius:10px;
+    background:var(--card);
+    color:var(--text);
+    font-family:var(--font-mono);
   }
 
   .return-save {
@@ -4755,6 +4765,11 @@ function showBusDetail(mat) {
       if (confrontoData) return confrontoData;
       return String(a.ora || '99:99').localeCompare(String(b.ora || '99:99'));
     });
+  const returnReasonOptions = active.length
+    ? '<option value="">Seleziona un\u2019anomalia</option>' +
+      active.map(s => '<option value="' + esc(s.desc || '') + '">' + esc(s.desc || 'Anomalia senza descrizione') + '</option>').join('') +
+      '<option value="__custom__">Altro motivo\u2026</option>'
+    : '<option value="">Nessuna anomalia attiva</option><option value="__custom__">Altro motivo\u2026</option>';
   html += `
     <div class="detail-main-actions">
       <button class="btn-primary" onclick="openModal('${esc(mat)}')">+ Aggiungi segnalazione</button>
@@ -4763,7 +4778,10 @@ function showBusDetail(mat) {
         
         <div class="return-list">${allReturns.length ? allReturns.map(r => `<div class="return-entry"><div class="return-entry-details"><div class="return-field"><span class="return-label">Causa:</span><span>${esc(r.motivo || 'Non indicata')}</span></div><div class="return-field"><span class="return-label">Data:</span><span>${r.data ? esc(fmtDate(r.data)) : 'Non indicata'}</span></div><div class="return-field"><span class="return-label">Ora:</span><span>${r.ora ? esc(String(r.ora).replace(':','.')) : 'Non indicata'}</span></div><div class="return-field"><span class="return-label">Autista:</span><span>${esc(r.autista || r.collega || 'Non indicato')}</span></div></div><div class="return-entry-actions"><button class="return-icon-btn return-edit" aria-label="Modifica" title="Modifica" onclick="${r.legacySegId ? `editBusReturn('legacy','${r.legacySegId}',${r.legacyIndex})` : `editBusReturn('bus','',${r.busIndex})`}">✎</button><button class="return-icon-btn return-delete" aria-label="Elimina" title="Elimina" onclick="${r.legacySegId ? `deleteLegacyReturn('${r.legacySegId}',${r.legacyIndex})` : `deleteBusReturn(${r.busIndex})`}">✕</button></div></div>`).join('') : '<div class="empty">Nessun fermo registrato.</div>'}</div>
         <div class="return-form">
-          <input class="return-reason" id="bus-return-reason" type="text" placeholder="Motivo del rientro">
+          <select class="return-reason" id="bus-return-reason" onchange="toggleBusReturnReasonCustom()" aria-label="Motivo del fermo">
+            ${returnReasonOptions}
+          </select>
+          <input class="return-reason-custom" id="bus-return-reason-custom" type="text" placeholder="Scrivi un altro motivo" hidden>
           <input class="return-colleague" id="bus-return-name" type="text" placeholder="Nome dell’autista">
           <input id="bus-return-date" type="text" inputmode="numeric" maxlength="8" autocomplete="off" placeholder="GG/MM/AA" oninput="formatReturnDateInput(this)">
           <input id="bus-return-time" type="text" inputmode="numeric" maxlength="5" autocomplete="off" placeholder="HH.MM" oninput="formatReturnTimeInput(this)">
@@ -4832,6 +4850,15 @@ let editingBusReturn = null;
 
 window.toggleBusReturn=function(){document.getElementById('busReturnBox')?.classList.toggle('open')};
 
+window.toggleBusReturnReasonCustom=function(){
+  const select=document.getElementById('bus-return-reason');
+  const custom=document.getElementById('bus-return-reason-custom');
+  if(!select||!custom)return;
+  const show=select.value==='__custom__';
+  custom.hidden=!show;
+  if(show)setTimeout(()=>custom.focus(),0);
+};
+
 window.editBusReturn=function(type, segId, index) {
   const bus = buses.find(b => b.matricola === selectedBus);
   const seg = type === 'legacy' ? segnalazioni.find(s => s.id === segId) : null;
@@ -4840,20 +4867,28 @@ window.editBusReturn=function(type, segId, index) {
   if (!rientro) return;
 
   editingBusReturn = { type, segId, index };
-  document.getElementById('bus-return-reason').value = rientro.motivo || '';
+  const reasonSelect = document.getElementById('bus-return-reason');
+  const reasonCustom = document.getElementById('bus-return-reason-custom');
+  const previousReason = rientro.motivo || '';
+  const reasonExists = Array.from(reasonSelect?.options || []).some(option => option.value === previousReason);
+  if (reasonSelect) reasonSelect.value = reasonExists ? previousReason : (previousReason ? '__custom__' : '');
+  if (reasonCustom) reasonCustom.value = reasonExists ? '' : previousReason;
+  window.toggleBusReturnReasonCustom();
   document.getElementById('bus-return-name').value = rientro.autista || rientro.collega || '';
   document.getElementById('bus-return-date').value = rientro.data ? fmtDate(rientro.data) : '';
   document.getElementById('bus-return-time').value = rientro.ora ? String(rientro.ora).replace(':','.') : '';
   const saveButton = document.querySelector('#busReturnBox .return-save');
   if (saveButton) saveButton.textContent = 'Salva modifica';
-  document.getElementById('bus-return-reason')?.focus();
+  reasonSelect?.focus();
 };
 
 window.saveBusReturn=async function(){
   if(!selectedBus)return;
   const bus=buses.find(b=>b.matricola===selectedBus);
   if(!bus)return;
-  const motivo=document.getElementById('bus-return-reason')?.value.trim()||'';
+  const reasonSelect=document.getElementById('bus-return-reason');
+  const reasonCustom=document.getElementById('bus-return-reason-custom');
+  const motivo=reasonSelect?.value==='__custom__'?(reasonCustom?.value.trim()||''):(reasonSelect?.value.trim()||'');
   const autista=document.getElementById('bus-return-name')?.value.trim()||'';
   const dataInput=document.getElementById('bus-return-date')?.value||'';
   const oraInput=document.getElementById('bus-return-time')?.value||'';
