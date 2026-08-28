@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="9.59">
-<title>Gestione Bus v9.59</title>
+<meta name="app-version" content="9.60">
+<title>Gestione Bus v9.60</title>
 <link rel="icon" type="image/svg+xml" href="icon.svg?v=920">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3002,145 +3002,6 @@
     .attention-report-panel { padding:20px; }
   }
 
-  .repaired-buses-toggle {
-    width:100%;
-    min-height:54px;
-    border:1px solid rgba(110,231,183,.68);
-    border-radius:999px;
-    background:linear-gradient(135deg,#a7f3d0,#34d399);
-    color:#063b2c;
-    font:inherit;
-    font-weight:800;
-    font-size:1rem;
-    box-shadow:0 10px 24px rgba(16,185,129,.15);
-  }
-
-  .repaired-buses-panel {
-    display:none;
-    width:100%;
-    margin-top:2px;
-    padding:16px;
-    border:1px solid rgba(110,231,183,.46);
-    border-radius:24px;
-    background:linear-gradient(155deg,rgba(6,95,70,.25),rgba(6,78,59,.62));
-  }
-
-  .repaired-buses-panel.open { display:block; }
-
-  .repaired-buses-label {
-    display:block;
-    color:#a7f3d0;
-    font-size:.76rem;
-    font-weight:800;
-    margin:12px 2px 6px;
-  }
-
-  .repaired-buses-field {
-    width:100%;
-    min-height:48px;
-    padding:10px 13px;
-    border:1px solid rgba(110,231,183,.42);
-    border-radius:14px;
-    background:#171827;
-    color:#f0fdf4;
-    font:inherit;
-    font-size:.92rem;
-    outline:none;
-    box-sizing:border-box;
-  }
-
-  .repaired-buses-field:focus {
-    border-color:#6ee7b7;
-    box-shadow:0 0 0 3px rgba(52,211,153,.14);
-  }
-
-  .repaired-buses-add,
-  .repaired-buses-cancel {
-    width:100%;
-    min-height:48px;
-    margin-top:12px;
-    border-radius:14px;
-    font:inherit;
-    font-weight:800;
-  }
-
-  .repaired-buses-add {
-    background:linear-gradient(135deg,#10b981,#047857);
-    color:#fff;
-  }
-
-  .repaired-buses-cancel {
-    display:none;
-    margin-top:8px;
-    border:1px solid rgba(167,243,208,.42);
-    background:rgba(255,255,255,.07);
-    color:#d1fae5;
-  }
-
-  .repaired-buses-cancel.visible { display:block; }
-
-  .repaired-buses-list {
-    display:flex;
-    flex-direction:column;
-    gap:9px;
-    margin-top:16px;
-  }
-
-  .repaired-buses-empty {
-    padding:15px 8px;
-    color:rgba(209,250,229,.68);
-    text-align:center;
-    font-size:.88rem;
-  }
-
-  .repaired-buses-item {
-    display:grid;
-    grid-template-columns:minmax(0,1fr) 34px 34px;
-    gap:7px;
-    align-items:center;
-    padding:11px 10px 11px 13px;
-    border:1px solid rgba(110,231,183,.28);
-    border-radius:15px;
-    background:rgba(255,255,255,.07);
-  }
-
-  .repaired-buses-bus {
-    color:#6ee7b7;
-    font-weight:900;
-    font-size:.83rem;
-    margin-bottom:3px;
-  }
-
-  .repaired-buses-repair {
-    color:#f0fdf4;
-    font-size:.9rem;
-    line-height:1.3;
-  }
-
-  .repaired-buses-edit,
-  .repaired-buses-remove {
-    width:34px;
-    height:34px;
-    border-radius:50%;
-    font-size:.95rem;
-  }
-
-  .repaired-buses-edit {
-    border:1px solid rgba(110,231,183,.54);
-    background:rgba(5,150,105,.16);
-    color:#a7f3d0;
-  }
-
-  .repaired-buses-remove {
-    border:1px solid rgba(251,113,133,.58);
-    background:rgba(190,24,93,.17);
-    color:#fda4af;
-  }
-
-  @media (min-width:700px) {
-    .repaired-buses-panel { padding:20px; }
-  }
-
 </style>
 <script>
   (async function verificaVersioneApp() {
@@ -3209,20 +3070,6 @@
         <button class="attention-report-add" onclick="addAttentionReportEntry()">+ Aggiungi al report</button>
 
         <div class="attention-report-list" id="attentionReportList"></div>
-      </section>
-
-      <button class="repaired-buses-toggle" onclick="toggleRepairedBuses()">Mezzi riparati</button>
-      <section class="repaired-buses-panel" id="repairedBusesPanel" aria-label="Elenco dei mezzi recentemente riparati">
-        <label class="repaired-buses-label" for="repairedBusSelect">Autobus</label>
-        <select class="repaired-buses-field" id="repairedBusSelect"></select>
-
-        <label class="repaired-buses-label" for="repairedBusDescription">Riparazione eseguita</label>
-        <input class="repaired-buses-field" id="repairedBusDescription" type="text" placeholder="Es. Sostituito retrovisore destro" maxlength="240">
-
-        <button class="repaired-buses-add" id="repairedBusSaveButton" onclick="saveRepairedBusEntry()">+ Aggiungi riparazione</button>
-        <button class="repaired-buses-cancel" id="repairedBusCancelButton" onclick="cancelRepairedBusEdit()">Annulla modifica</button>
-
-        <div class="repaired-buses-list" id="repairedBusesList"></div>
       </section>
     </div>
   </div>
@@ -3602,8 +3449,6 @@ let temi = [];
 let fermateSoppresse = [];
 let modifiche = [];
 let attentionReportEntries = [];
-let repairedBusEntries = [];
-let editingRepairedBusId = null;
 let selectedBus = null;
 let editingSegId = null;
 let currentBusForModal = null;
@@ -3823,7 +3668,6 @@ function renderAll() {
   renderTopics();
   renderStops();
   renderAttentionReport();
-  renderRepairedBuses();
   if (currentCategory) renderCategoryView();
   if (selectedBus) showBusDetail(selectedBus);
 }
@@ -3874,8 +3718,6 @@ function clearProtectedData() {
   fermateSoppresse = [];
   modifiche = [];
   attentionReportEntries = [];
-  repairedBusEntries = [];
-  editingRepairedBusId = null;
   selectedBus = null;
   editingSegId = null;
   currentBusForModal = null;
@@ -3968,21 +3810,6 @@ function startDataSubscriptions() {
     renderAttentionReport();
   }, err => {
     console.error('Report autobus non disponibile', err);
-  }));
-
-  dataUnsubscribers.push(onSnapshot(collection(db, 'mezziRiparati'), snap => {
-    repairedBusEntries = snap.docs.map(d => ({ id:d.id, ...d.data() }))
-      .sort((a, b) => {
-        const busOrder = String(a.bus || '').localeCompare(String(b.bus || ''), 'it', {
-          numeric:true,
-          sensitivity:'base'
-        });
-        if (busOrder !== 0) return busOrder;
-        return String(b.createdAt || '').localeCompare(String(a.createdAt || ''));
-      });
-    renderRepairedBuses();
-  }, err => {
-    console.error('Elenco mezzi riparati non disponibile', err);
   }));
 
   dataUnsubscribers.push(onSnapshot(collection(db, 'temi'), snap => {
@@ -4182,105 +4009,6 @@ window.removeAttentionReportEntry = async function(id) {
   const anomaly = segnalazioni.find(s => s.id === entry.segId);
   await registraModifica(entry.bus || anomaly?.bus || 'REPORT', 'Rimosso dal report', anomaly?.desc || '');
   showToast('Rimosso dal report');
-};
-
-window.toggleRepairedBuses = function() {
-  const panel = document.getElementById('repairedBusesPanel');
-  if (!panel) return;
-  panel.classList.toggle('open');
-  renderRepairedBuses();
-};
-
-function repairedBusOptions() {
-  return [...buses]
-    .sort(byMat)
-    .map(bus => '<option value="' + esc(bus.matricola) + '">' + esc(bus.matricola) + '</option>')
-    .join('');
-}
-
-function renderRepairedBuses() {
-  const busSelect = document.getElementById('repairedBusSelect');
-  const list = document.getElementById('repairedBusesList');
-  if (!busSelect || !list) return;
-
-  const previousBus = busSelect.value;
-  busSelect.innerHTML = repairedBusOptions() || '<option value="">Nessun autobus</option>';
-  if (previousBus && buses.some(b => b.matricola === previousBus)) busSelect.value = previousBus;
-
-  list.innerHTML = repairedBusEntries.length
-    ? repairedBusEntries.map(entry =>
-        '<div class="repaired-buses-item">' +
-          '<div>' +
-            '<div class="repaired-buses-bus">' + esc(entry.bus || '—') + '</div>' +
-            '<div class="repaired-buses-repair">' + esc(entry.repair || 'Riparazione non indicata') + '</div>' +
-          '</div>' +
-          '<button class="repaired-buses-edit" onclick="editRepairedBusEntry(&quot;' + esc(entry.id) + '&quot;)" aria-label="Modifica riparazione">✎</button>' +
-          '<button class="repaired-buses-remove" onclick="removeRepairedBusEntry(&quot;' + esc(entry.id) + '&quot;)" aria-label="Rimuovi riparazione">×</button>' +
-        '</div>'
-      ).join('')
-    : '<div class="repaired-buses-empty">Nessun mezzo riparato inserito.</div>';
-}
-
-window.saveRepairedBusEntry = async function() {
-  const bus = document.getElementById('repairedBusSelect')?.value || '';
-  const repairInput = document.getElementById('repairedBusDescription');
-  const repair = repairInput?.value.trim() || '';
-  if (!bus || !repair) {
-    showToast('Indica autobus e riparazione');
-    return;
-  }
-
-  if (editingRepairedBusId) {
-    await updateDoc(doc(db, 'mezziRiparati', editingRepairedBusId), {
-      bus,
-      repair,
-      updatedAt:new Date().toISOString()
-    });
-    await registraModifica(bus, 'Riparazione modificata', repair);
-    showToast('Riparazione aggiornata');
-  } else {
-    await addDoc(collection(db, 'mezziRiparati'), {
-      bus,
-      repair,
-      createdAt:new Date().toISOString()
-    });
-    await registraModifica(bus, 'Mezzo riparato', repair);
-    showToast('Riparazione aggiunta');
-  }
-
-  cancelRepairedBusEdit();
-};
-
-window.editRepairedBusEntry = function(id) {
-  const entry = repairedBusEntries.find(item => item.id === id);
-  if (!entry) return;
-  editingRepairedBusId = id;
-  const busSelect = document.getElementById('repairedBusSelect');
-  const repairInput = document.getElementById('repairedBusDescription');
-  if (busSelect) busSelect.value = entry.bus || '';
-  if (repairInput) {
-    repairInput.value = entry.repair || '';
-    repairInput.focus();
-  }
-  document.getElementById('repairedBusSaveButton').textContent = 'Salva modifica';
-  document.getElementById('repairedBusCancelButton').classList.add('visible');
-};
-
-window.cancelRepairedBusEdit = function() {
-  editingRepairedBusId = null;
-  const repairInput = document.getElementById('repairedBusDescription');
-  if (repairInput) repairInput.value = '';
-  document.getElementById('repairedBusSaveButton').textContent = '+ Aggiungi riparazione';
-  document.getElementById('repairedBusCancelButton').classList.remove('visible');
-};
-
-window.removeRepairedBusEntry = async function(id) {
-  const entry = repairedBusEntries.find(item => item.id === id);
-  if (!entry) return;
-  await deleteDoc(doc(db, 'mezziRiparati', id));
-  await registraModifica(entry.bus || 'RIPARAZIONE', 'Riparazione rimossa', entry.repair || '');
-  if (editingRepairedBusId === id) cancelRepairedBusEdit();
-  showToast('Riparazione rimossa');
 };
 
 function getBusGroups() {
