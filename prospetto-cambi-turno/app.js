@@ -80,6 +80,7 @@
         </header>
         <div class="week__groups">${week.groups.map(group => groupColumn(week, group)).join("")}</div>
       </article>`).join("");
+    document.querySelector("#loadingStatus")?.remove();
   }
 
   function openTurn(turn, group) {

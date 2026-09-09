@@ -30,6 +30,19 @@ button { font: inherit; cursor: pointer; }
   padding: 12px 0 28px;
 }
 
+.loading-status {
+  margin: 20px auto;
+  padding: 14px 18px;
+  border: 1px solid #bfc9d8;
+  border-radius: 10px;
+  background: white;
+  color: var(--navy);
+  text-align: center;
+  font-weight: 800;
+}
+
+.loading-status--error { color: #a1221b; }
+
 .weeks {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

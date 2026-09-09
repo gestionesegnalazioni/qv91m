@@ -6,10 +6,11 @@
   <meta name="theme-color" content="#10264b">
   <meta name="description" content="Prospetto cambi turno dal 15 settembre 2026 al 10 giugno 2027.">
   <title>Prospetto Cambi Turno</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=20260909-3">
 </head>
 <body>
   <main class="schedule-board">
+    <p id="loadingStatus" class="loading-status">Caricamento del prospetto…</p>
     <div id="weeks" class="weeks" aria-label="Prospetto cambi turno"></div>
   </main>
 
@@ -24,7 +25,8 @@
     </div>
   </dialog>
 
-  <script src="data.js"></script>
-  <script src="app.js"></script>
+  <noscript><p class="loading-status loading-status--error">Per visualizzare il prospetto è necessario attivare JavaScript.</p></noscript>
+  <script src="data.js?v=20260909-3"></script>
+  <script src="app.js?v=20260909-3"></script>
 </body>
 </html>
