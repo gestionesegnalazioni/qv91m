@@ -38,10 +38,26 @@
     return data.turnDetails[`MS${turn}`] || [];
   }
 
+  function dayLabel(days) {
+    const names = {
+      LUN: "lunedì",
+      MAR: "martedì",
+      MER: "mercoledì",
+      GIO: "giovedì",
+      VEN: "venerdì",
+      SAB: "sabato",
+      DOM: "domenica"
+    };
+    const fullDays = days.map(day => names[day] || day.toLowerCase());
+    if (fullDays.length === 1) return `Solo ${fullDays[0]}`;
+    if (fullDays.length === 2) return `Solo ${fullDays[0]} e ${fullDays[1]}`;
+    return `Solo ${fullDays.slice(0, -1).join(", ")} e ${fullDays.at(-1)}`;
+  }
+
   function personRow(week, group, turn, person, days = [], open = false) {
     const key = selectionKey(week, group, turn, person, days);
     const selected = selections.has(key);
-    const daysHtml = days.length ? `<small class="person__days">${escapeHtml(days.join(", "))}</small>` : "";
+    const daysHtml = days.length ? `<small class="person__days">${escapeHtml(dayLabel(days))}</small>` : "";
     return `
       <label class="person${selected ? " is-selected" : ""}${open ? " person--open" : ""}" data-selection="${escapeHtml(key)}">
         <input type="checkbox" ${selected ? "checked" : ""} aria-label="Segna cambio con ${escapeHtml(person)}">
