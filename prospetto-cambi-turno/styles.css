@@ -182,7 +182,7 @@ button { font: inherit; cursor: pointer; }
   line-height: 1.22;
 }
 
-.person input { width: 14px; height: 14px; margin: 0; accent-color: #168447; }
+.person input { width: 14px; height: 14px; margin: 0; accent-color: #d1aa00; }
 .person__text { min-width: 0; overflow-wrap: anywhere; }
 .person__days { display: block; margin-top: 1px; color: var(--muted); font-size: .64rem; }
 .person.is-selected { background: var(--yellow); border-color: #d1aa00; color: #352b00; }
