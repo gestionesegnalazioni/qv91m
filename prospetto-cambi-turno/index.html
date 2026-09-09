@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1830">
+  <meta name="description" content="Prospetto cambi turno dal 15 settembre 2026 al 10 giugno 2027.">
+  <title>Prospetto Cambi Turno</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar__inner">
+      <div>
+        <p class="eyebrow">Rotazione invernale 2026–2027</p>
+        <h1>Prospetto Cambi Turno</h1>
+        <p class="period">15 settembre 2026 – 10 giugno 2027</p>
+      </div>
+      <button class="help-button" id="helpButton" type="button" aria-expanded="false" aria-controls="helpPanel">Come si usa</button>
+    </div>
+    <div class="help-panel" id="helpPanel" hidden>
+      <div><strong>Spunta un collega</strong> per evidenziarlo in giallo nella settimana del cambio.</div>
+      <div><strong>Apri un turno</strong> per vedere orari, corse e attività feriali o festive.</div>
+      <div>Le spunte restano memorizzate su questo dispositivo.</div>
+    </div>
+  </header>
+
+  <main>
+    <section class="controls" aria-label="Filtri del prospetto">
+      <label class="search">
+        <span>Cerca turno o collega</span>
+        <input id="searchInput" type="search" inputmode="search" placeholder="Es. 122 oppure Valeri" autocomplete="off">
+      </label>
+      <label class="group-filter">
+        <span>Gruppo</span>
+        <select id="groupFilter">
+          <option value="all">Tutti</option>
+          <option value="ATN">ATN</option>
+          <option value="CTT">CTT</option>
+          <option value="AT">AT</option>
+        </select>
+      </label>
+      <button class="clear-button" id="clearSelections" type="button">Cancella spunte</button>
+    </section>
+
+    <div class="legend" aria-label="Legenda">
+      <span><i class="legend__swatch legend__swatch--yellow"></i> cambio selezionato</span>
+      <span><i class="legend__swatch legend__swatch--blue"></i> dettaglio turno disponibile</span>
+    </div>
+
+    <div id="weeks" class="weeks" aria-live="polite"></div>
+    <p class="empty-state" id="emptyState" hidden>Nessun turno o collega corrisponde alla ricerca.</p>
+  </main>
+
+  <footer>
+    <p>Dati delle rotazioni A1 ex ATN, A2 ex CTT e A3 AT · In vigore dal 15/09/2026</p>
+  </footer>
+
+  <dialog class="turn-dialog" id="turnDialog" aria-labelledby="dialogTitle">
+    <div class="dialog-shell">
+      <header class="dialog-header">
+        <div>
+          <p class="eyebrow" id="dialogGroup"></p>
+          <h2 id="dialogTitle">Dettaglio turno</h2>
+        </div>
+        <button class="close-button" id="closeDialog" type="button" aria-label="Chiudi dettaglio">×</button>
+      </header>
+      <div class="variant-tabs" id="variantTabs" role="tablist" aria-label="Tipo di giornata"></div>
+      <div id="dialogBody"></div>
+    </div>
+  </dialog>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
