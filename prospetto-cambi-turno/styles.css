@@ -299,8 +299,9 @@ button { font: inherit; cursor: pointer; }
   .activity-table {
     display: table;
     width: 100%;
-    min-width: 620px;
-    font-size: .8rem;
+    min-width: 0;
+    table-layout: fixed;
+    font-size: .7rem;
   }
   .activity-table thead { display: table-header-group; }
   .activity-table tbody { display: table-row-group; }
@@ -308,7 +309,21 @@ button { font: inherit; cursor: pointer; }
   .activity-table tr:not(.pause-row),
   .activity-table tr.pause-row { display: table-row; }
   .activity-table td,
-  .activity-table tr.pause-row td { display: table-cell; }
+  .activity-table tr.pause-row td {
+    display: table-cell;
+    padding: 6px 4px;
+    overflow-wrap: anywhere;
+  }
+  .activity-table th { padding: 7px 4px; }
+  .activity-table th:nth-child(1) { width: 22%; }
+  .activity-table th:nth-child(2) { width: 27%; }
+  .activity-table th:nth-child(3),
+  .activity-table th:nth-child(4) { width: 25.5%; }
+  .activity-time { font-size: .68rem; }
+  .activity-table tr.pause-row td {
+    padding: 9px 6px;
+    font-size: .75rem;
+  }
 }
 
 @media print {
