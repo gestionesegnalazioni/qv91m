@@ -185,7 +185,7 @@ button { font: inherit; cursor: pointer; }
 .person input { width: 14px; height: 14px; margin: 0; accent-color: #168447; }
 .person__text { min-width: 0; overflow-wrap: anywhere; }
 .person__days { display: block; margin-top: 1px; color: var(--muted); font-size: .64rem; }
-.person.is-selected { background: #168447; border-color: #0f6b35; color: white; }
+.person.is-selected { background: var(--yellow); border-color: #d1aa00; color: #352b00; }
 .person.is-selected .person__days { color: #e8fff1; }
 .person--open .person__text { color: var(--muted); font-style: italic; }
 
