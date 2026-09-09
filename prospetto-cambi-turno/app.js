@@ -98,9 +98,17 @@
   function vacationControl(week) {
     const key = String(week.index);
     const selected = vacationWeeks.has(key);
-    const label = selected ? "FERIE" : "+ Ferie";
     const action = selected ? "Togli ferie" : "Segna ferie";
-    return `<button class="vacation-toggle${selected ? " is-active" : ""}" type="button" data-vacation-week="${escapeHtml(key)}" aria-pressed="${selected}" aria-label="${action} per la settimana ${week.index}" title="${action} per la settimana ${week.index}">${label}</button>`;
+    return `
+      <div class="vacation-control">
+        <span class="vacation-status"${selected ? "" : " hidden"}>FERIE</span>
+        <details class="vacation-menu">
+          <summary aria-label="Opzioni settimana ${week.index}" title="Opzioni settimana ${week.index}">⋯</summary>
+          <div class="vacation-menu__panel">
+            <button class="vacation-menu__item" type="button" data-vacation-week="${escapeHtml(key)}" aria-pressed="${selected}" aria-label="${action} per la settimana ${week.index}">${action}</button>
+          </div>
+        </details>
+      </div>`;
   }
 
   function ownTurnControl(week) {
@@ -268,11 +276,13 @@
       vacationWeeks.has(key) ? vacationWeeks.delete(key) : vacationWeeks.add(key);
       const selected = vacationWeeks.has(key);
       const action = selected ? "Togli ferie" : "Segna ferie";
-      vacationButton.classList.toggle("is-active", selected);
+      const control = vacationButton.closest(".vacation-control");
+      const status = control?.querySelector(".vacation-status");
+      if (status) status.hidden = !selected;
       vacationButton.setAttribute("aria-pressed", String(selected));
       vacationButton.setAttribute("aria-label", `${action} per la settimana ${key}`);
-      vacationButton.title = `${action} per la settimana ${key}`;
-      vacationButton.textContent = selected ? "FERIE" : "+ Ferie";
+      vacationButton.textContent = action;
+      vacationButton.closest("details")?.removeAttribute("open");
       saveVacationWeeks();
       return;
     }
