@@ -75,8 +75,13 @@ button { font: inherit; cursor: pointer; }
 .week__dates { margin: 2px 0 0; color: #d9e7fb; font-size: .76rem; }
 
 .rotation-code {
+  display: grid;
+  width: 34px;
+  height: 34px;
   min-width: 34px;
-  padding: 5px 7px;
+  padding: 0;
+  place-items: center;
+  box-sizing: border-box;
   border: 1px solid rgba(255, 255, 255, .4);
   border-radius: 7px;
   text-align: center;
@@ -98,17 +103,11 @@ button { font: inherit; cursor: pointer; }
 }
 
 .rotation-code-list--multiple .rotation-code {
-  min-width: 0;
-  padding: 3px 5px;
+  width: auto;
+  min-width: 30px;
+  padding: 0 5px;
   font-size: .7rem;
   line-height: 1;
-}
-
-.own-turn-summary {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 3px;
 }
 
 .rotation-rest {
@@ -127,6 +126,14 @@ button { font: inherit; cursor: pointer; }
 .rotation-code--button:hover { background: rgba(255, 255, 255, .2); }
 
 .week__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 3px;
+}
+
+.week__action-row {
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -154,8 +161,8 @@ button { font: inherit; cursor: pointer; }
 .vacation-menu { position: relative; }
 .vacation-menu summary {
   display: grid;
-  width: 30px;
-  height: 30px;
+  width: 34px;
+  height: 34px;
   place-items: center;
   border: 1px solid rgba(255, 255, 255, .4);
   border-radius: 7px;
