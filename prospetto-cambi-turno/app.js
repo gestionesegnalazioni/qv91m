@@ -128,6 +128,14 @@
     return Number.isFinite(hours) && Number.isFinite(minutes) ? (hours * 60) + minutes : null;
   }
 
+  function pauseDuration(totalMinutes) {
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    if (!hours) return `${minutes} ${minutes === 1 ? "minuto" : "minuti"}`;
+    if (!minutes) return `${hours} ${hours === 1 ? "ora" : "ore"}`;
+    return `${hours} ${hours === 1 ? "ora" : "ore"} e ${minutes} ${minutes === 1 ? "minuto" : "minuti"}`;
+  }
+
   function timelineRows(activities) {
     const rows = [];
     activities.forEach((row, index) => {
@@ -147,9 +155,10 @@
       if (previousEnd === null || nextStart === null) return;
       if (nextStart < previousEnd) nextStart += 24 * 60;
       if (nextStart - previousEnd >= 30) {
+        const duration = nextStart - previousEnd;
         rows.push(`
           <tr class="pause-row">
-            <td colspan="4"><strong>Pausa</strong> dalle ore ${escapeHtml(row.end)} alle ore ${escapeHtml(next.start)}</td>
+            <td colspan="4"><strong>Pausa</strong> dalle ore ${escapeHtml(row.end)} alle ore ${escapeHtml(next.start)}<span class="pause-duration">Durata: ${escapeHtml(pauseDuration(duration))}</span></td>
           </tr>`);
       }
     });
