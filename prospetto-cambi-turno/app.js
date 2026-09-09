@@ -3,6 +3,7 @@
 
   const data = window.PROSPETTO_DATA;
   const STORAGE_KEY = "prospetto-cambi-turno:selected-v1";
+  const VACATION_STORAGE_KEY = "prospetto-cambi-turno:vacations-v1";
   const weeksEl = document.querySelector("#weeks");
   const dialog = document.querySelector("#turnDialog");
   const dialogBody = document.querySelector("#dialogBody");
@@ -11,6 +12,7 @@
   const EVENING_TURNS = new Set(["128", "154", "156", "158"]);
   const dateFormat = new Intl.DateTimeFormat("it-IT", { day: "numeric", month: "short", timeZone: "UTC" });
   let selections = loadSelections();
+  let vacationWeeks = loadVacationWeeks();
 
   function loadSelections() {
     try { return new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]")); }
@@ -19,6 +21,15 @@
 
   function saveSelections() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify([...selections]));
+  }
+
+  function loadVacationWeeks() {
+    try { return new Set(JSON.parse(localStorage.getItem(VACATION_STORAGE_KEY) || "[]"));
+    } catch { return new Set(); }
+  }
+
+  function saveVacationWeeks() {
+    localStorage.setItem(VACATION_STORAGE_KEY, JSON.stringify([...vacationWeeks]));
   }
 
   function escapeHtml(value) {
@@ -84,6 +95,14 @@
       </section>`;
   }
 
+  function vacationControl(week) {
+    const key = String(week.index);
+    const selected = vacationWeeks.has(key);
+    const label = selected ? "FERIE" : "+ Ferie";
+    const action = selected ? "Togli ferie" : "Segna ferie";
+    return `<button class="vacation-toggle${selected ? " is-active" : ""}" type="button" data-vacation-week="${escapeHtml(key)}" aria-pressed="${selected}" aria-label="${action} per la settimana ${week.index}" title="${action} per la settimana ${week.index}">${label}</button>`;
+  }
+
   function ownTurnControl(week) {
     if (/^\d+$/.test(week.code)) {
       const displayTurn = week.code;
@@ -101,7 +120,7 @@
             <h1>Settimana ${week.index}</h1>
             <p class="week__dates">${shortDate(week.start)} – ${shortDate(week.end)}</p>
           </div>
-          ${ownTurnControl(week)}
+          <div class="week__actions">${vacationControl(week)}${ownTurnControl(week)}</div>
         </header>
         <div class="week__groups">${week.groups.map(group => groupColumn(week, group)).join("")}</div>
       </article>`).join("");
@@ -243,6 +262,20 @@
   });
 
   weeksEl.addEventListener("click", event => {
+    const vacationButton = event.target.closest("[data-vacation-week]");
+    if (vacationButton) {
+      const key = vacationButton.dataset.vacationWeek;
+      vacationWeeks.has(key) ? vacationWeeks.delete(key) : vacationWeeks.add(key);
+      const selected = vacationWeeks.has(key);
+      const action = selected ? "Togli ferie" : "Segna ferie";
+      vacationButton.classList.toggle("is-active", selected);
+      vacationButton.setAttribute("aria-pressed", String(selected));
+      vacationButton.setAttribute("aria-label", `${action} per la settimana ${key}`);
+      vacationButton.title = `${action} per la settimana ${key}`;
+      vacationButton.textContent = selected ? "FERIE" : "+ Ferie";
+      saveVacationWeeks();
+      return;
+    }
     const button = event.target.closest("[data-open-turn]");
     if (button) openTurn(button.dataset.openTurn, button.dataset.group, button.dataset.displayTurn || `MS${button.dataset.openTurn}`);
   });
