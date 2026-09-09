@@ -291,51 +291,24 @@ button { font: inherit; cursor: pointer; }
   .shift-time { padding: 9px 10px; }
   .shift-time strong { font-size: 1.1rem; }
 
-  .activity-wrap { overflow-x: hidden; }
+  .activity-wrap {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+  }
   .activity-table {
-    display: block;
+    display: table;
     width: 100%;
-    min-width: 0;
+    min-width: 620px;
     font-size: .8rem;
   }
-  .activity-table thead { display: none; }
-  .activity-table tbody { display: block; }
-  .activity-table tr:not(.pause-row) {
-    display: grid;
-    grid-template-columns: minmax(76px, .8fr) minmax(0, 1.2fr);
-    border-top: 1px solid var(--line);
-  }
-  .activity-table tr:first-child { border-top: 0; }
-  .activity-table td {
-    min-width: 0;
-    border-top: 0;
-    overflow-wrap: anywhere;
-  }
-  .activity-table tr:not(.pause-row) td:nth-child(1),
-  .activity-table tr:not(.pause-row) td:nth-child(2) { padding: 7px 8px; }
-  .activity-table tr:not(.pause-row) td:nth-child(3),
-  .activity-table tr:not(.pause-row) td:nth-child(4) {
-    grid-column: 1 / -1;
-    padding: 3px 8px 6px;
-  }
-  .activity-table tr:not(.pause-row) td:nth-child(3)::before {
-    content: "Da: ";
-    color: var(--muted);
-    font-weight: 800;
-  }
-  .activity-table tr:not(.pause-row) td:nth-child(4)::before {
-    content: "A: ";
-    color: var(--muted);
-    font-weight: 800;
-  }
-  .activity-table tr.pause-row { display: block; }
-  .activity-table tr.pause-row td {
-    display: block;
-    width: 100%;
-    padding: 10px 8px;
-    font-size: .82rem;
-    overflow-wrap: anywhere;
-  }
+  .activity-table thead { display: table-header-group; }
+  .activity-table tbody { display: table-row-group; }
+  .activity-table tr,
+  .activity-table tr:not(.pause-row),
+  .activity-table tr.pause-row { display: table-row; }
+  .activity-table td,
+  .activity-table tr.pause-row td { display: table-cell; }
 }
 
 @media print {
