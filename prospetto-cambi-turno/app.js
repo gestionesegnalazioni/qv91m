@@ -128,29 +128,36 @@
     return Number.isFinite(hours) && Number.isFinite(minutes) ? (hours * 60) + minutes : null;
   }
 
-  function formatDuration(totalMinutes) {
-    const hours = Math.floor(totalMinutes / 60);
-    const minutes = totalMinutes % 60;
-    if (!hours) return `${minutes} min`;
-    if (!minutes) return `${hours} ${hours === 1 ? "ora" : "ore"}`;
-    return `${hours} ${hours === 1 ? "ora" : "ore"} ${minutes} min`;
-  }
+  function timelineRows(activities) {
+    const rows = [];
+    activities.forEach((row, index) => {
+      if (row.line) {
+        rows.push(`
+          <tr>
+            <td><strong>${escapeHtml(row.line)}</strong></td>
+            <td class="activity-time">${escapeHtml(row.start)}–${escapeHtml(row.end)}</td>
+            <td>${escapeHtml(row.from)}</td><td>${escapeHtml(row.to)}</td>
+          </tr>`);
+      }
 
-  function findBreaks(activities) {
-    return activities.slice(1).map((row, index) => {
-      const previous = activities[index];
-      const previousEnd = minutesFromTime(previous.end);
-      let nextStart = minutesFromTime(row.start);
-      if (previousEnd === null || nextStart === null) return null;
+      const next = activities[index + 1];
+      if (!next) return;
+      const previousEnd = minutesFromTime(row.end);
+      let nextStart = minutesFromTime(next.start);
+      if (previousEnd === null || nextStart === null) return;
       if (nextStart < previousEnd) nextStart += 24 * 60;
-      const duration = nextStart - previousEnd;
-      return duration >= 30 ? { start: previous.end, end: row.start, duration } : null;
-    }).filter(Boolean);
+      if (nextStart - previousEnd >= 30) {
+        rows.push(`
+          <tr class="pause-row">
+            <td colspan="4"><strong>Pausa</strong> dalle ore ${escapeHtml(row.end)} alle ore ${escapeHtml(next.start)}</td>
+          </tr>`);
+      }
+    });
+    return rows.join("");
   }
 
   function renderDetail(item, showVariant) {
     const lineActivities = item.activities.filter(row => row.line);
-    const breaks = findBreaks(item.activities);
     const title = showVariant && variantLabel(item.variant)
       ? `<h3 class="schedule-variant__title">${escapeHtml(variantLabel(item.variant))}</h3>`
       : "";
@@ -158,23 +165,9 @@
       <div class="activity-wrap">
         <table class="activity-table">
           <thead><tr><th>Linea</th><th>Orario</th><th>Da</th><th>A</th></tr></thead>
-          <tbody>${lineActivities.map(row => `
-            <tr>
-              <td><strong>${escapeHtml(row.line)}</strong></td>
-              <td class="activity-time">${escapeHtml(row.start)}–${escapeHtml(row.end)}</td>
-              <td>${escapeHtml(row.from)}</td><td>${escapeHtml(row.to)}</td>
-            </tr>`).join("")}</tbody>
+          <tbody>${timelineRows(item.activities)}</tbody>
         </table>
       </div>` : '<p class="no-details">Nessuna linea di servizio indicata per questo turno.</p>';
-
-    const breakDetails = breaks.length
-      ? breaks.map((pause, index) => `
-          <div class="break-entry">
-            ${breaks.length > 1 ? `<small>Stacco ${index + 1}</small>` : ""}
-            <strong>${escapeHtml(pause.start)}–${escapeHtml(pause.end)}</strong>
-            <span>${escapeHtml(formatDuration(pause.duration))}</span>
-          </div>`).join("")
-      : '<strong class="no-break">Nessuno stacco</strong>';
 
     return `
       <section class="schedule-variant">
@@ -182,7 +175,6 @@
         <div class="shift-times">
           <div class="shift-time"><span>Inizio turno</span><strong>${escapeHtml(item.start || "—")}</strong></div>
           <div class="shift-time"><span>Fine turno</span><strong>${escapeHtml(item.end || "—")}</strong></div>
-          <div class="shift-time shift-time--break"><span>Sosta / stacco</span>${breakDetails}</div>
         </div>
         <h3 class="lines-title">Linee e orari</h3>
         ${activities}
