@@ -112,12 +112,17 @@
   }
 
   function ownTurnControl(week) {
-    if (/^\d+$/.test(week.code)) {
-      const displayTurn = week.code;
-      const eveningClass = EVENING_TURNS.has(String(week.code)) ? " rotation-code--evening" : "";
-      return `<button class="rotation-code rotation-code--button${eveningClass}" type="button" data-open-turn="${week.code}" data-group="Il mio turno" data-display-turn="${displayTurn}" title="Apri il mio turno ${displayTurn}">${displayTurn}</button>`;
-    }
-    return `<span class="rotation-code">${escapeHtml(week.code)}</span>`;
+    const turnCodes = Array.isArray(week.codes) && week.codes.length ? week.codes : [week.code];
+    const multipleClass = turnCodes.length > 1 ? " rotation-code-list--multiple" : "";
+    const controls = turnCodes.map(code => {
+      const value = String(code);
+      if (/^\d+$/.test(value)) {
+        const eveningClass = EVENING_TURNS.has(value) ? " rotation-code--evening" : "";
+        return `<button class="rotation-code rotation-code--button${eveningClass}" type="button" data-open-turn="${escapeHtml(value)}" data-group="Il mio turno" data-display-turn="${escapeHtml(value)}" title="Apri il mio turno ${escapeHtml(value)}">${escapeHtml(value)}</button>`;
+      }
+      return `<span class="rotation-code">${escapeHtml(value)}</span>`;
+    }).join("");
+    return `<div class="rotation-code-list${multipleClass}" aria-label="I miei turni: ${escapeHtml(turnCodes.join(", "))}">${controls}</div>`;
   }
 
   function renderWeeks() {
