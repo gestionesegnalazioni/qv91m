@@ -187,6 +187,7 @@ button { font: inherit; cursor: pointer; }
 .activity-table th { padding: 8px; background: #e6ebf2; color: #344258; text-align: left; white-space: nowrap; }
 .activity-table td { padding: 7px 8px; border-top: 1px solid var(--line); vertical-align: top; }
 .activity-table tr:nth-child(even) td { background: #fafbfd; }
+.activity-table .edge-row td { background: #e9f2ff; color: #173e69; font-weight: 650; }
 .activity-table .pause-row td { padding: 10px 12px; background: #ffe768; color: #4b3d00; font-size: .9rem; text-align: center; }
 .pause-row strong { text-transform: uppercase; }
 .pause-duration { display: block; margin-top: 2px; font-weight: 800; }

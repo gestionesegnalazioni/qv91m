@@ -136,9 +136,37 @@
     return `${hours} ${hours === 1 ? "ora" : "ore"} e ${minutes} ${minutes === 1 ? "minuto" : "minuti"}`;
   }
 
-  function timelineRows(activities) {
+  function edgeRow(label, start, end, from, to) {
+    return `
+      <tr class="edge-row">
+        <td><strong>${escapeHtml(label)}</strong></td>
+        <td class="activity-time">${escapeHtml(start)}–${escapeHtml(end)}</td>
+        <td>${escapeHtml(from || "—")}</td>
+        <td>${escapeHtml(to || "—")}</td>
+      </tr>`;
+  }
+
+  function timelineRows(item) {
+    const activities = item.activities || [];
     const rows = [];
+    const firstLineIndex = activities.findIndex(row => row.line);
+    let lastLineIndex = -1;
+    activities.forEach((row, index) => { if (row.line) lastLineIndex = index; });
+    if (firstLineIndex < 0) return "";
+
+    const firstLine = activities[firstLineIndex];
+    if (item.start && firstLine.start && item.start !== firstLine.start) {
+      rows.push(edgeRow(
+        "Pre-ripresa",
+        item.start,
+        firstLine.start,
+        item.depot || activities[0]?.from,
+        firstLine.from
+      ));
+    }
+
     activities.forEach((row, index) => {
+      if (index < firstLineIndex || index > lastLineIndex) return;
       if (row.line) {
         rows.push(`
           <tr>
@@ -149,19 +177,30 @@
       }
 
       const next = activities[index + 1];
-      if (!next) return;
+      if (!next || index >= lastLineIndex) return;
       const previousEnd = minutesFromTime(row.end);
       let nextStart = minutesFromTime(next.start);
       if (previousEnd === null || nextStart === null) return;
       if (nextStart < previousEnd) nextStart += 24 * 60;
-      if (nextStart - previousEnd >= 15) {
-        const duration = nextStart - previousEnd;
+      const duration = nextStart - previousEnd;
+      if (duration > 0) {
         rows.push(`
           <tr class="pause-row">
             <td colspan="4"><strong>Pausa</strong> dalle ore ${escapeHtml(row.end)} alle ore ${escapeHtml(next.start)}<span class="pause-duration">Durata: ${escapeHtml(pauseDuration(duration))}</span></td>
           </tr>`);
       }
     });
+
+    const lastLine = activities[lastLineIndex];
+    if (lastLine.end && item.end && lastLine.end !== item.end) {
+      rows.push(edgeRow(
+        "Rientro in deposito / Fine turno",
+        lastLine.end,
+        item.end,
+        lastLine.to,
+        item.depot || activities[activities.length - 1]?.to
+      ));
+    }
     return rows.join("");
   }
 
@@ -174,7 +213,7 @@
       <div class="activity-wrap">
         <table class="activity-table">
           <thead><tr><th>Linea</th><th>Orario</th><th>Da</th><th>A</th></tr></thead>
-          <tbody>${timelineRows(item.activities)}</tbody>
+          <tbody>${timelineRows(item)}</tbody>
         </table>
       </div>` : '<p class="no-details">Nessuna linea di servizio indicata per questo turno.</p>';
 
