@@ -117,7 +117,6 @@
 
   function ownTurnControl(week) {
     const turnCodes = Array.isArray(week.codes) && week.codes.length ? week.codes : [week.code];
-    const restDays = Array.isArray(week.restDays) ? week.restDays : [];
     const multipleClass = turnCodes.length > 1 ? " rotation-code-list--multiple" : "";
     const controls = turnCodes.map(code => {
       const value = String(code);
@@ -127,10 +126,15 @@
       }
       return `<span class="rotation-code">${escapeHtml(value)}</span>`;
     }).join("");
+    return `<div class="rotation-code-list${multipleClass}" aria-label="I miei turni: ${escapeHtml(turnCodes.join(", "))}">${controls}</div>`;
+  }
+
+  function weekActions(week) {
+    const restDays = Array.isArray(week.restDays) ? week.restDays : [];
     const restCaption = restDays.length
       ? `<small class="rotation-rest">Riposo: ${escapeHtml(italianDayList(restDays))}</small>`
       : "";
-    return `<div class="own-turn-summary"><div class="rotation-code-list${multipleClass}" aria-label="I miei turni: ${escapeHtml(turnCodes.join(", "))}">${controls}</div>${restCaption}</div>`;
+    return `<div class="week__actions"><div class="week__action-row">${vacationControl(week)}${ownTurnControl(week)}</div>${restCaption}</div>`;
   }
 
   function renderWeeks() {
@@ -141,7 +145,7 @@
             <h1>Settimana ${week.index}</h1>
             <p class="week__dates">${shortDate(week.start)} – ${shortDate(week.end)}</p>
           </div>
-          <div class="week__actions">${vacationControl(week)}${ownTurnControl(week)}</div>
+          ${weekActions(week)}
         </header>
         <div class="week__groups">${week.groups.map(group => groupColumn(week, group)).join("")}</div>
       </article>`).join("");
