@@ -97,33 +97,65 @@ button { font: inherit; cursor: pointer; }
   gap: 6px;
 }
 
-.vacation-toggle {
-  min-height: 30px;
-  padding: 5px 8px;
-  border: 1px dashed rgba(255, 255, 255, .55);
+.vacation-control { display: flex; align-items: center; gap: 5px; }
+
+.vacation-status {
+  padding: 6px 8px;
+  border: 1px solid #d1aa00;
   border-radius: 7px;
-  background: rgba(255, 255, 255, .08);
-  color: #e8f1ff;
+  background: var(--yellow);
+  color: #352b00;
   font-size: .72rem;
   font-weight: 900;
   line-height: 1;
-  white-space: nowrap;
 }
 
-.vacation-toggle:hover { background: rgba(255, 255, 255, .18); }
-.vacation-toggle.is-active {
-  border-style: solid;
-  border-color: #d1aa00;
-  background: var(--yellow);
-  color: #352b00;
-}
-.vacation-toggle.is-active:hover { background: #f4d641; }
-.rotation-code--button.rotation-code--evening {
-  border-color: #ffb1ad;
-  background: #c62f2a;
+.vacation-menu { position: relative; }
+.vacation-menu summary {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, .4);
+  border-radius: 7px;
   color: white;
+  cursor: pointer;
+  font-size: 1.15rem;
+  font-weight: 900;
+  line-height: 1;
+  list-style: none;
 }
-.rotation-code--button.rotation-code--evening:hover { background: #a9211d; }
+.vacation-menu summary::-webkit-details-marker { display: none; }
+.vacation-menu summary:hover { background: rgba(255, 255, 255, .18); }
+.vacation-menu__panel {
+  position: absolute;
+  z-index: 5;
+  top: calc(100% + 5px);
+  right: 0;
+  min-width: 118px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 8px 20px rgba(4, 19, 41, .22);
+}
+.vacation-menu__item {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  color: var(--navy);
+  text-align: left;
+  font-size: .78rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.vacation-menu__item:hover { background: #eef4fb; }
+.rotation-code--button.rotation-code--evening {
+  border-color: transparent;
+  background: transparent;
+  color: #ff6b64;
+}
+.rotation-code--button.rotation-code--evening:hover { background: transparent; text-decoration: underline; }
 
 .week__groups { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .group { min-width: 0; border-left: 1px solid var(--line); }
@@ -158,14 +190,9 @@ button { font: inherit; cursor: pointer; }
 
 .turn__number:hover { text-decoration: underline; }
 .turn__number--evening {
-  width: auto;
-  margin: 0 0 3px;
-  padding: 3px 7px;
-  border-radius: 5px;
-  background: #c62f2a;
-  color: white;
+  color: #c62828;
 }
-.turn__number--evening:hover { background: #a9211d; text-decoration: none; }
+.turn__number--evening:hover { text-decoration: underline; }
 .names { display: grid; gap: 3px; }
 
 .person {
