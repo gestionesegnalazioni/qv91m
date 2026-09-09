@@ -183,7 +183,7 @@
       if (previousEnd === null || nextStart === null) return;
       if (nextStart < previousEnd) nextStart += 24 * 60;
       const duration = nextStart - previousEnd;
-      if (duration > 0) {
+      if (duration > 30) {
         rows.push(`
           <tr class="pause-row">
             <td colspan="4"><strong>Pausa</strong> dalle ore ${escapeHtml(row.end)} alle ore ${escapeHtml(next.start)}<span class="pause-duration">Durata: ${escapeHtml(pauseDuration(duration))}</span></td>
