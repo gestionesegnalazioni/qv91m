@@ -48,7 +48,7 @@
     return data.turnDetails[`MS${turn}`] || [];
   }
 
-  function dayLabel(days) {
+  function italianDayList(days) {
     const names = {
       LUN: "lunedì",
       MAR: "martedì",
@@ -59,9 +59,13 @@
       DOM: "domenica"
     };
     const fullDays = days.map(day => names[day] || day.toLowerCase());
-    if (fullDays.length === 1) return `Solo ${fullDays[0]}`;
-    if (fullDays.length === 2) return `Solo ${fullDays[0]} e ${fullDays[1]}`;
-    return `Solo ${fullDays.slice(0, -1).join(", ")} e ${fullDays.at(-1)}`;
+    if (fullDays.length === 1) return fullDays[0];
+    if (fullDays.length === 2) return `${fullDays[0]} e ${fullDays[1]}`;
+    return `${fullDays.slice(0, -1).join(", ")} e ${fullDays.at(-1)}`;
+  }
+
+  function dayLabel(days) {
+    return `Solo ${italianDayList(days)}`;
   }
 
   function personRow(week, group, turn, person, days = [], open = false) {
@@ -113,6 +117,7 @@
 
   function ownTurnControl(week) {
     const turnCodes = Array.isArray(week.codes) && week.codes.length ? week.codes : [week.code];
+    const restDays = Array.isArray(week.restDays) ? week.restDays : [];
     const multipleClass = turnCodes.length > 1 ? " rotation-code-list--multiple" : "";
     const controls = turnCodes.map(code => {
       const value = String(code);
@@ -122,7 +127,10 @@
       }
       return `<span class="rotation-code">${escapeHtml(value)}</span>`;
     }).join("");
-    return `<div class="rotation-code-list${multipleClass}" aria-label="I miei turni: ${escapeHtml(turnCodes.join(", "))}">${controls}</div>`;
+    const restCaption = restDays.length
+      ? `<small class="rotation-rest">Riposo: ${escapeHtml(italianDayList(restDays))}</small>`
+      : "";
+    return `<div class="own-turn-summary"><div class="rotation-code-list${multipleClass}" aria-label="I miei turni: ${escapeHtml(turnCodes.join(", "))}">${controls}</div>${restCaption}</div>`;
   }
 
   function renderWeeks() {
