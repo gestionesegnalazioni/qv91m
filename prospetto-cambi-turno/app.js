@@ -154,7 +154,7 @@
       let nextStart = minutesFromTime(next.start);
       if (previousEnd === null || nextStart === null) return;
       if (nextStart < previousEnd) nextStart += 24 * 60;
-      if (nextStart - previousEnd >= 30) {
+      if (nextStart - previousEnd >= 15) {
         const duration = nextStart - previousEnd;
         rows.push(`
           <tr class="pause-row">
