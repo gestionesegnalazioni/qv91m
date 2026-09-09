@@ -3,19 +3,15 @@
 
   const data = window.PROSPETTO_DATA;
   const STORAGE_KEY = "prospetto-cambi-turno:selected-v1";
-  const itDate = new Intl.DateTimeFormat("it-IT", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
-  const shortDate = new Intl.DateTimeFormat("it-IT", { day: "numeric", month: "long", timeZone: "UTC" });
   const weeksEl = document.querySelector("#weeks");
-  const emptyEl = document.querySelector("#emptyState");
-  const searchInput = document.querySelector("#searchInput");
-  const groupFilter = document.querySelector("#groupFilter");
   const dialog = document.querySelector("#turnDialog");
   const dialogBody = document.querySelector("#dialogBody");
   const dialogTitle = document.querySelector("#dialogTitle");
   const dialogGroup = document.querySelector("#dialogGroup");
   const variantTabs = document.querySelector("#variantTabs");
-  let selections = loadSelections();
+  const dateFormat = new Intl.DateTimeFormat("it-IT", { day: "numeric", month: "short", timeZone: "UTC" });
   let activeDetails = [];
+  let selections = loadSelections();
 
   function loadSelections() {
     try { return new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]")); }
@@ -30,94 +26,69 @@
     return String(value ?? "").replace(/[&<>'"]/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" })[char]);
   }
 
-  function dateFromIso(value) { return new Date(`${value}T12:00:00Z`); }
-
-  function weekDateLabel(week) {
-    const start = dateFromIso(week.start);
-    const end = dateFromIso(week.end);
-    return start.getUTCFullYear() === end.getUTCFullYear()
-      ? `${shortDate.format(start)} – ${itDate.format(end)}`
-      : `${itDate.format(start)} – ${itDate.format(end)}`;
-  }
-
-  function normalize(value) {
-    return String(value).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  function shortDate(value) {
+    return dateFormat.format(new Date(`${value}T12:00:00Z`)).replace(".", "");
   }
 
   function selectionKey(week, group, turn, person, days) {
     return [week.index, group, turn, person, days.join(",") || "base"].join("|");
   }
 
-  function findDetails(turn) { return data.turnDetails[`MS${turn}`] || []; }
-
-  function primaryPreview(turn) {
-    const details = findDetails(turn);
-    const primary = details.find(item => item.source === "Feriale") || details[0];
-    if (!primary) return "Dettaglio non disponibile";
-    const times = primary.start && primary.end ? `${primary.start}–${primary.end}` : "orari da consultare";
-    return `${primary.variant}: ${times}${primary.span ? ` · nastro ${primary.span}` : ""}`;
+  function detailFor(turn) {
+    return data.turnDetails[`MS${turn}`] || [];
   }
 
   function personRow(week, group, turn, person, days = [], open = false) {
     const key = selectionKey(week, group, turn, person, days);
     const selected = selections.has(key);
-    const dayLabel = days.length ? `<span class="person__days">${escapeHtml(days.join(", "))}</span>` : "";
+    const daysHtml = days.length ? `<small class="person__days">${escapeHtml(days.join(", "))}</small>` : "";
     return `
       <label class="person${selected ? " is-selected" : ""}${open ? " person--open" : ""}" data-selection="${escapeHtml(key)}">
         <input type="checkbox" ${selected ? "checked" : ""} aria-label="Segna cambio con ${escapeHtml(person)}">
-        <span class="person__text">${escapeHtml(person)} ${dayLabel}</span>
+        <span class="person__text">${escapeHtml(person)}${daysHtml}</span>
       </label>`;
   }
 
-  function turnCard(week, group, item) {
-    const details = findDetails(item.turn);
-    const rows = [personRow(week, group, item.turn, item.base, [], item.base === "SCOPERTO")]
+  function turnRow(week, group, item) {
+    const people = [personRow(week, group, item.turn, item.base, [], item.base === "SCOPERTO")]
       .concat(item.variations.map(v => personRow(week, group, item.turn, v.person, v.days)))
       .join("");
     return `
-      <article class="turn-card" data-turn="${item.turn}" data-group="${group}">
-        <div class="turn-preview" role="tooltip">${escapeHtml(primaryPreview(item.turn))}</div>
-        <div class="turn-card__top">
-          <button class="turn-open" type="button" data-open-turn="${item.turn}" data-group="${group}" ${details.length ? "" : "aria-disabled=\"true\""}>MS${item.turn}</button>
-          <span class="group-badge">${group}</span>
-        </div>
-        <div class="names">${rows}</div>
-      </article>`;
+      <div class="turn">
+        <button class="turn__number" type="button" data-open-turn="${item.turn}" data-group="${group}" title="Apri il turno MS${item.turn}">MS${item.turn}</button>
+        <div class="names">${people}</div>
+      </div>`;
   }
 
-  function render() {
-    const query = normalize(searchInput.value.trim());
-    const wantedGroup = groupFilter.value;
-    let visibleCards = 0;
-    weeksEl.innerHTML = data.weeks.map(week => {
-      const cards = week.groups.flatMap(group => group.turns.map(item => ({ group: group.name, item })))
-        .filter(({ group }) => wantedGroup === "all" || group === wantedGroup)
-        .filter(({ item }) => {
-          if (!query) return true;
-          const haystack = [item.turn, `ms${item.turn}`, item.base, ...item.variations.map(v => v.person)].join(" ");
-          return normalize(haystack).includes(query);
-        });
-      if (!cards.length) return "";
-      visibleCards += cards.length;
-      return `
-        <section class="week" id="settimana-${week.index}">
-          <header class="week__header">
-            <div><h2>Settimana ${week.index}</h2><p class="week__dates">${weekDateLabel(week)}</p></div>
-            <span class="rotation-code" title="Codice rotazione della settimana">${escapeHtml(week.code)}</span>
-          </header>
-          <div class="turn-grid">${cards.map(({ group, item }) => turnCard(week, group, item)).join("")}</div>
-        </section>`;
-    }).join("");
-    emptyEl.hidden = visibleCards > 0;
+  function groupColumn(week, group) {
+    return `
+      <section class="group">
+        <h2 class="group__title">${escapeHtml(group.name)}</h2>
+        <div class="turn-list">${group.turns.map(item => turnRow(week, group.name, item)).join("")}</div>
+      </section>`;
+  }
+
+  function renderWeeks() {
+    weeksEl.innerHTML = data.weeks.map(week => `
+      <article class="week">
+        <header class="week__header">
+          <div>
+            <h1>Settimana ${week.index}</h1>
+            <p class="week__dates">${shortDate(week.start)} – ${shortDate(week.end)}</p>
+          </div>
+          <span class="rotation-code">${escapeHtml(week.code)}</span>
+        </header>
+        <div class="week__groups">${week.groups.map(group => groupColumn(week, group)).join("")}</div>
+      </article>`).join("");
   }
 
   function openTurn(turn, group) {
-    activeDetails = findDetails(turn);
+    activeDetails = detailFor(turn);
     dialogTitle.textContent = `Turno MS${turn}`;
-    dialogGroup.textContent = `${group} · scheda operativa`;
+    dialogGroup.textContent = group;
     if (!activeDetails.length) {
       variantTabs.innerHTML = "";
-      dialogBody.innerHTML = '<p class="no-details">La scheda dettagliata di questo turno non è presente nei file caricati.</p>';
+      dialogBody.innerHTML = '<p class="no-details">Scheda dettagliata non disponibile.</p>';
     } else {
       variantTabs.innerHTML = activeDetails.map((item, index) => `
         <button class="variant-tab" type="button" role="tab" data-variant-index="${index}" aria-selected="${index === 0}">${escapeHtml(item.variant)}</button>`).join("");
@@ -144,7 +115,7 @@
               <td class="activity-time">${escapeHtml(row.start)}–${escapeHtml(row.end)}</td><td>${escapeHtml(row.to)}</td>
             </tr>`).join("")}</tbody>
         </table>
-      </div>` : '<p class="no-details">Nessuna attività elencata nella scheda.</p>';
+      </div>` : '<p class="no-details">Nessuna attività elencata.</p>';
 
     dialogBody.innerHTML = `
       <div class="detail-body">
@@ -158,7 +129,7 @@
           ${summaryItem("Valido dal", item.validFrom)}
           ${summaryItem("Restrizione", item.restriction)}
         </div>
-        <p class="detail-note"><strong>${escapeHtml(item.variant)}</strong> · dati estratti dalla scheda ${escapeHtml(item.source.toLowerCase())} 2026–2027.</p>
+        <p class="detail-note"><strong>${escapeHtml(item.variant)}</strong></p>
         ${activities}
       </div>`;
   }
@@ -185,18 +156,5 @@
 
   document.querySelector("#closeDialog").addEventListener("click", () => dialog.close());
   dialog.addEventListener("click", event => { if (event.target === dialog) dialog.close(); });
-  searchInput.addEventListener("input", render);
-  groupFilter.addEventListener("change", render);
-  document.querySelector("#clearSelections").addEventListener("click", () => {
-    if (!selections.size || confirm("Vuoi cancellare tutte le spunte salvate?")) {
-      selections.clear(); saveSelections(); render();
-    }
-  });
-  document.querySelector("#helpButton").addEventListener("click", event => {
-    const panel = document.querySelector("#helpPanel");
-    panel.hidden = !panel.hidden;
-    event.currentTarget.setAttribute("aria-expanded", String(!panel.hidden));
-  });
-
-  render();
+  renderWeeks();
 })();
