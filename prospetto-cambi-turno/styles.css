@@ -93,8 +93,8 @@ button { font: inherit; cursor: pointer; }
 }
 
 .rotation-code-list--multiple {
-  max-width: 138px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  white-space: nowrap;
 }
 
 .rotation-code-list--multiple .rotation-code {
@@ -102,6 +102,21 @@ button { font: inherit; cursor: pointer; }
   padding: 3px 5px;
   font-size: .7rem;
   line-height: 1;
+}
+
+.own-turn-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+}
+
+.rotation-rest {
+  color: #d9e7fb;
+  font-size: .62rem;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .rotation-code--button {
