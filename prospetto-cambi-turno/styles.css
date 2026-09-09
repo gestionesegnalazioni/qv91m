@@ -89,6 +89,12 @@ button { font: inherit; cursor: pointer; }
 }
 
 .rotation-code--button:hover { background: rgba(255, 255, 255, .2); }
+.rotation-code--button.rotation-code--evening {
+  border-color: #ffb1ad;
+  background: #c62f2a;
+  color: white;
+}
+.rotation-code--button.rotation-code--evening:hover { background: #a9211d; }
 
 .week__groups { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .group { min-width: 0; border-left: 1px solid var(--line); }
@@ -122,6 +128,15 @@ button { font: inherit; cursor: pointer; }
 }
 
 .turn__number:hover { text-decoration: underline; }
+.turn__number--evening {
+  width: auto;
+  margin: 0 0 3px;
+  padding: 3px 7px;
+  border-radius: 5px;
+  background: #c62f2a;
+  color: white;
+}
+.turn__number--evening:hover { background: #a9211d; text-decoration: none; }
 .names { display: grid; gap: 3px; }
 
 .person {
