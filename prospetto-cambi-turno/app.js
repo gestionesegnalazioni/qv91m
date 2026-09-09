@@ -8,9 +8,7 @@
   const dialogBody = document.querySelector("#dialogBody");
   const dialogTitle = document.querySelector("#dialogTitle");
   const dialogGroup = document.querySelector("#dialogGroup");
-  const variantTabs = document.querySelector("#variantTabs");
   const dateFormat = new Intl.DateTimeFormat("it-IT", { day: "numeric", month: "short", timeZone: "UTC" });
-  let activeDetails = [];
   let selections = loadSelections();
 
   function loadSelections() {
@@ -84,6 +82,14 @@
       </section>`;
   }
 
+  function ownTurnControl(week) {
+    if (/^\d+$/.test(week.code)) {
+      const displayTurn = `${week.code}E`;
+      return `<button class="rotation-code rotation-code--button" type="button" data-open-turn="${week.code}" data-group="Il mio turno" data-display-turn="${displayTurn}" title="Apri il mio turno ${displayTurn}">${displayTurn}</button>`;
+    }
+    return `<span class="rotation-code">${escapeHtml(week.code)}</span>`;
+  }
+
   function renderWeeks() {
     weeksEl.innerHTML = data.weeks.map(week => `
       <article class="week">
@@ -92,63 +98,59 @@
             <h1>Settimana ${week.index}</h1>
             <p class="week__dates">${shortDate(week.start)} – ${shortDate(week.end)}</p>
           </div>
-          <span class="rotation-code">${escapeHtml(week.code)}</span>
+          ${ownTurnControl(week)}
         </header>
         <div class="week__groups">${week.groups.map(group => groupColumn(week, group)).join("")}</div>
       </article>`).join("");
     document.querySelector("#loadingStatus")?.remove();
   }
 
-  function openTurn(turn, group) {
-    activeDetails = detailFor(turn);
-    dialogTitle.textContent = `Turno MS${turn}`;
+  function openTurn(turn, group, displayTurn = `MS${turn}`) {
+    const ferialDetails = detailFor(turn).filter(item => item.source === "Feriale");
+    dialogTitle.textContent = `Turno ${displayTurn}`;
     dialogGroup.textContent = group;
-    if (!activeDetails.length) {
-      variantTabs.innerHTML = "";
+    if (!ferialDetails.length) {
       dialogBody.innerHTML = '<p class="no-details">Scheda dettagliata non disponibile.</p>';
     } else {
-      variantTabs.innerHTML = activeDetails.map((item, index) => `
-        <button class="variant-tab" type="button" role="tab" data-variant-index="${index}" aria-selected="${index === 0}">${escapeHtml(item.variant)}</button>`).join("");
-      renderDetail(0);
+      dialogBody.innerHTML = `<div class="detail-body">${ferialDetails.map(item => renderDetail(item, ferialDetails.length > 1)).join("")}</div>`;
     }
     dialog.showModal();
   }
 
-  function summaryItem(label, value) {
-    return `<div class="summary-item"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value || "—")}</strong></div>`;
+  function variantLabel(variant) {
+    if (/escluso sabato/i.test(variant)) return "Da lunedì a venerdì";
+    if (/^sabato$/i.test(variant)) return "Sabato";
+    return "";
   }
 
-  function renderDetail(index) {
-    const item = activeDetails[index];
-    variantTabs.querySelectorAll(".variant-tab").forEach((tab, i) => tab.setAttribute("aria-selected", String(i === index)));
-    const activities = item.activities.length ? `
+  function renderDetail(item, showVariant) {
+    const lineActivities = item.activities.filter(row => row.line);
+    const title = showVariant && variantLabel(item.variant)
+      ? `<h3 class="schedule-variant__title">${escapeHtml(variantLabel(item.variant))}</h3>`
+      : "";
+    const activities = lineActivities.length ? `
       <div class="activity-wrap">
         <table class="activity-table">
-          <thead><tr><th>N.</th><th>TM</th><th>Linea</th><th>Attività</th><th>Da</th><th>Orario</th><th>A</th></tr></thead>
-          <tbody>${item.activities.map(row => `
+          <thead><tr><th>Linea</th><th>Orario</th><th>Da</th><th>A</th></tr></thead>
+          <tbody>${lineActivities.map(row => `
             <tr>
-              <td>${escapeHtml(row.n)}</td><td>${escapeHtml(row.tm)}</td><td>${escapeHtml(row.line || "—")}</td>
-              <td>${escapeHtml(row.activity)}</td><td>${escapeHtml(row.from)}</td>
-              <td class="activity-time">${escapeHtml(row.start)}–${escapeHtml(row.end)}</td><td>${escapeHtml(row.to)}</td>
+              <td><strong>${escapeHtml(row.line)}</strong></td>
+              <td class="activity-time">${escapeHtml(row.start)}–${escapeHtml(row.end)}</td>
+              <td>${escapeHtml(row.from)}</td><td>${escapeHtml(row.to)}</td>
             </tr>`).join("")}</tbody>
         </table>
-      </div>` : '<p class="no-details">Nessuna attività elencata.</p>';
+      </div>` : '<p class="no-details">Nessuna linea di servizio indicata per questo turno.</p>';
 
-    dialogBody.innerHTML = `
-      <div class="detail-body">
-        <div class="detail-summary">
-          ${summaryItem("Inizio – fine", item.start && item.end ? `${item.start} – ${item.end}` : "—")}
-          ${summaryItem("Nastro", item.span)}
-          ${summaryItem("Lavoro", item.work)}
-          ${summaryItem("Guida", item.drive)}
-          ${summaryItem("Deposito", item.depot)}
-          ${summaryItem("Tipologia", item.type)}
-          ${summaryItem("Valido dal", item.validFrom)}
-          ${summaryItem("Restrizione", item.restriction)}
+    return `
+      <section class="schedule-variant">
+        ${title}
+        <div class="shift-times">
+          <div class="shift-time"><span>Inizio turno</span><strong>${escapeHtml(item.start || "—")}</strong></div>
+          <div class="shift-time"><span>Fine turno</span><strong>${escapeHtml(item.end || "—")}</strong></div>
         </div>
-        <p class="detail-note"><strong>${escapeHtml(item.variant)}</strong></p>
+        <h3 class="lines-title">Linee e orari</h3>
         ${activities}
-      </div>`;
+      </section>`;
   }
 
   weeksEl.addEventListener("change", event => {
@@ -163,12 +165,7 @@
 
   weeksEl.addEventListener("click", event => {
     const button = event.target.closest("[data-open-turn]");
-    if (button) openTurn(button.dataset.openTurn, button.dataset.group);
-  });
-
-  variantTabs.addEventListener("click", event => {
-    const tab = event.target.closest("[data-variant-index]");
-    if (tab) renderDetail(Number(tab.dataset.variantIndex));
+    if (button) openTurn(button.dataset.openTurn, button.dataset.group, button.dataset.displayTurn || `MS${button.dataset.openTurn}`);
   });
 
   document.querySelector("#closeDialog").addEventListener("click", () => dialog.close());

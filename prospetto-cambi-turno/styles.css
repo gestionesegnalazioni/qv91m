@@ -83,6 +83,13 @@ button { font: inherit; cursor: pointer; }
   font-weight: 900;
 }
 
+.rotation-code--button {
+  background: rgba(255, 255, 255, .08);
+  color: white;
+}
+
+.rotation-code--button:hover { background: rgba(255, 255, 255, .2); }
+
 .week__groups { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .group { min-width: 0; border-left: 1px solid var(--line); }
 .group:first-child { border-left: 0; }
@@ -167,17 +174,16 @@ button { font: inherit; cursor: pointer; }
 .dialog-header p { margin: 0 0 2px; color: #a9ccef; font-size: .76rem; font-weight: 800; text-transform: uppercase; }
 .dialog-header h2 { margin: 0; font-size: 1.4rem; }
 .close-button { width: 40px; height: 40px; border: 1px solid rgba(255,255,255,.45); border-radius: 50%; background: transparent; color: white; font-size: 1.7rem; line-height: 1; }
-.variant-tabs { position: sticky; top: 70px; z-index: 3; display: flex; gap: 7px; overflow-x: auto; padding: 10px 15px; border-bottom: 1px solid var(--line); background: white; }
-.variant-tab { border: 1px solid #bbc6d5; border-radius: 999px; padding: 7px 11px; background: white; color: #34435b; font-weight: 800; white-space: nowrap; }
-.variant-tab[aria-selected="true"] { border-color: var(--blue); background: var(--blue); color: white; }
 .detail-body { padding: 16px 18px 22px; }
-.detail-summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-bottom: 14px; }
-.summary-item { padding: 9px 10px; border: 1px solid var(--line); border-radius: 9px; background: #f7f9fc; }
-.summary-item span { display: block; color: var(--muted); font-size: .7rem; font-weight: 800; text-transform: uppercase; }
-.summary-item strong { display: block; margin-top: 2px; font-size: .92rem; }
-.detail-note { margin: 0 0 13px; padding: 9px 11px; border-left: 4px solid var(--blue); background: var(--blue-soft); color: #284462; font-size: .84rem; }
+.schedule-variant + .schedule-variant { margin-top: 22px; padding-top: 20px; border-top: 2px solid var(--line); }
+.schedule-variant__title { margin: 0 0 10px; color: var(--navy); font-size: 1rem; }
+.shift-times { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 15px; }
+.shift-time { padding: 11px 13px; border: 1px solid #aac3df; border-radius: 10px; background: var(--blue-soft); }
+.shift-time span { display: block; color: #46617f; font-size: .72rem; font-weight: 800; text-transform: uppercase; }
+.shift-time strong { display: block; margin-top: 2px; color: var(--navy); font-size: 1.25rem; }
+.lines-title { margin: 0 0 8px; color: #33445d; font-size: .95rem; }
 .activity-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; }
-.activity-table { width: 100%; min-width: 750px; border-collapse: collapse; font-size: .8rem; }
+.activity-table { width: 100%; min-width: 620px; border-collapse: collapse; font-size: .84rem; }
 .activity-table th { padding: 8px; background: #e6ebf2; color: #344258; text-align: left; white-space: nowrap; }
 .activity-table td { padding: 7px 8px; border-top: 1px solid var(--line); vertical-align: top; }
 .activity-table tr:nth-child(even) td { background: #fafbfd; }
@@ -192,7 +198,6 @@ button { font: inherit; cursor: pointer; }
   .weeks { grid-template-columns: 1fr; gap: 8px; }
   .week__groups { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .person { font-size: .68rem; }
-  .detail-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .detail-body { padding-inline: 11px; }
 }
 
