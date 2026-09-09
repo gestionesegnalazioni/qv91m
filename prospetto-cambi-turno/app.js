@@ -167,13 +167,11 @@
     return `${hours} ${hours === 1 ? "ora" : "ore"} e ${minutes} ${minutes === 1 ? "minuto" : "minuti"}`;
   }
 
-  function edgeRow(label, start, end, from, to) {
+  function edgeRow(label, start, end) {
     return `
       <tr class="edge-row">
         <td><strong>${escapeHtml(label)}</strong></td>
         <td class="activity-time">${escapeHtml(start)}–${escapeHtml(end)}</td>
-        <td>${escapeHtml(from || "—")}</td>
-        <td>${escapeHtml(to || "—")}</td>
       </tr>`;
   }
 
@@ -203,7 +201,6 @@
           <tr>
             <td><strong>${escapeHtml(row.line)}</strong></td>
             <td class="activity-time">${escapeHtml(row.start)}–${escapeHtml(row.end)}</td>
-            <td>${escapeHtml(row.from)}</td><td>${escapeHtml(row.to)}</td>
           </tr>`);
       }
 
@@ -217,7 +214,7 @@
       if (duration > 30) {
         rows.push(`
           <tr class="pause-row">
-            <td colspan="4"><strong>Pausa</strong> dalle ore ${escapeHtml(row.end)} alle ore ${escapeHtml(next.start)}<span class="pause-duration">Durata: ${escapeHtml(pauseDuration(duration))}</span></td>
+            <td colspan="2"><strong>Pausa</strong> dalle ore ${escapeHtml(row.end)} alle ore ${escapeHtml(next.start)}<span class="pause-duration">Durata: ${escapeHtml(pauseDuration(duration))}</span></td>
           </tr>`);
       }
     });
@@ -243,7 +240,7 @@
     const activities = lineActivities.length ? `
       <div class="activity-wrap">
         <table class="activity-table">
-          <thead><tr><th>Linea</th><th>Orario</th><th>Da</th><th>A</th></tr></thead>
+          <thead><tr><th>Linea / attività</th><th>Orario</th></tr></thead>
           <tbody>${timelineRows(item)}</tbody>
         </table>
       </div>` : '<p class="no-details">Nessuna linea di servizio indicata per questo turno.</p>';
