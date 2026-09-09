@@ -113,11 +113,11 @@ button { font: inherit; cursor: pointer; }
 .vacation-toggle:hover { background: rgba(255, 255, 255, .18); }
 .vacation-toggle.is-active {
   border-style: solid;
-  border-color: #d1aa00;
-  background: var(--yellow);
-  color: #352b00;
+  border-color: #0f6b35;
+  background: #168447;
+  color: white;
 }
-.vacation-toggle.is-active:hover { background: #f4d641; }
+.vacation-toggle.is-active:hover { background: #116b39; }
 .rotation-code--button.rotation-code--evening {
   border-color: #ffb1ad;
   background: #c62f2a;
