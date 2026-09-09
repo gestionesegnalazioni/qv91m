@@ -84,7 +84,7 @@
 
   function ownTurnControl(week) {
     if (/^\d+$/.test(week.code)) {
-      const displayTurn = `${week.code}E`;
+      const displayTurn = week.code;
       return `<button class="rotation-code rotation-code--button" type="button" data-open-turn="${week.code}" data-group="Il mio turno" data-display-turn="${displayTurn}" title="Apri il mio turno ${displayTurn}">${displayTurn}</button>`;
     }
     return `<span class="rotation-code">${escapeHtml(week.code)}</span>`;
