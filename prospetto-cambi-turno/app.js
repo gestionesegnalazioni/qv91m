@@ -145,6 +145,7 @@
       dialogBody.innerHTML = `<div class="detail-body">${ferialDetails.map(item => renderDetail(item, ferialDetails.length > 1)).join("")}</div>`;
     }
     dialog.showModal();
+    dialog.querySelectorAll(".activity-wrap").forEach(wrap => { wrap.scrollLeft = 0; });
   }
 
   function variantLabel(variant) {
