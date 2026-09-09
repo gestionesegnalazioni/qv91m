@@ -279,7 +279,63 @@ button { font: inherit; cursor: pointer; }
   .weeks { grid-template-columns: 1fr; gap: 8px; }
   .week__groups { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .person { font-size: .68rem; }
-  .detail-body { padding-inline: 11px; }
+
+  .turn-dialog {
+    width: calc(100% - 16px);
+    max-height: calc(100dvh - 16px);
+  }
+  .dialog-header { padding: 12px 14px; }
+  .dialog-header h2 { font-size: 1.25rem; }
+  .detail-body { padding: 12px 10px 18px; }
+  .shift-times { gap: 7px; }
+  .shift-time { padding: 9px 10px; }
+  .shift-time strong { font-size: 1.1rem; }
+
+  .activity-wrap { overflow-x: hidden; }
+  .activity-table {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    font-size: .8rem;
+  }
+  .activity-table thead { display: none; }
+  .activity-table tbody { display: block; }
+  .activity-table tr:not(.pause-row) {
+    display: grid;
+    grid-template-columns: minmax(76px, .8fr) minmax(0, 1.2fr);
+    border-top: 1px solid var(--line);
+  }
+  .activity-table tr:first-child { border-top: 0; }
+  .activity-table td {
+    min-width: 0;
+    border-top: 0;
+    overflow-wrap: anywhere;
+  }
+  .activity-table tr:not(.pause-row) td:nth-child(1),
+  .activity-table tr:not(.pause-row) td:nth-child(2) { padding: 7px 8px; }
+  .activity-table tr:not(.pause-row) td:nth-child(3),
+  .activity-table tr:not(.pause-row) td:nth-child(4) {
+    grid-column: 1 / -1;
+    padding: 3px 8px 6px;
+  }
+  .activity-table tr:not(.pause-row) td:nth-child(3)::before {
+    content: "Da: ";
+    color: var(--muted);
+    font-weight: 800;
+  }
+  .activity-table tr:not(.pause-row) td:nth-child(4)::before {
+    content: "A: ";
+    color: var(--muted);
+    font-weight: 800;
+  }
+  .activity-table tr.pause-row { display: block; }
+  .activity-table tr.pause-row td {
+    display: block;
+    width: 100%;
+    padding: 10px 8px;
+    font-size: .82rem;
+    overflow-wrap: anywhere;
+  }
 }
 
 @media print {
