@@ -8,6 +8,7 @@
   const dialogBody = document.querySelector("#dialogBody");
   const dialogTitle = document.querySelector("#dialogTitle");
   const dialogGroup = document.querySelector("#dialogGroup");
+  const EVENING_TURNS = new Set(["128", "154", "156", "158"]);
   const dateFormat = new Intl.DateTimeFormat("it-IT", { day: "numeric", month: "short", timeZone: "UTC" });
   let selections = loadSelections();
 
@@ -67,9 +68,10 @@
     const people = [personRow(week, group, item.turn, item.base, [], item.base === "SCOPERTO")]
       .concat(item.variations.map(v => personRow(week, group, item.turn, v.person, v.days)))
       .join("");
+    const eveningClass = EVENING_TURNS.has(String(item.turn)) ? " turn__number--evening" : "";
     return `
       <div class="turn">
-        <button class="turn__number" type="button" data-open-turn="${item.turn}" data-group="${group}" title="Apri il turno MS${item.turn}">MS${item.turn}</button>
+        <button class="turn__number${eveningClass}" type="button" data-open-turn="${item.turn}" data-group="${group}" title="Apri il turno MS${item.turn}">MS${item.turn}</button>
         <div class="names">${people}</div>
       </div>`;
   }
@@ -85,7 +87,8 @@
   function ownTurnControl(week) {
     if (/^\d+$/.test(week.code)) {
       const displayTurn = week.code;
-      return `<button class="rotation-code rotation-code--button" type="button" data-open-turn="${week.code}" data-group="Il mio turno" data-display-turn="${displayTurn}" title="Apri il mio turno ${displayTurn}">${displayTurn}</button>`;
+      const eveningClass = EVENING_TURNS.has(String(week.code)) ? " rotation-code--evening" : "";
+      return `<button class="rotation-code rotation-code--button${eveningClass}" type="button" data-open-turn="${week.code}" data-group="Il mio turno" data-display-turn="${displayTurn}" title="Apri il mio turno ${displayTurn}">${displayTurn}</button>`;
     }
     return `<span class="rotation-code">${escapeHtml(week.code)}</span>`;
   }
