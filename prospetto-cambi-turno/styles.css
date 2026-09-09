@@ -60,6 +60,7 @@ button { font: inherit; cursor: pointer; }
 }
 
 .week__header {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -100,6 +101,11 @@ button { font: inherit; cursor: pointer; }
 .vacation-control { display: flex; align-items: center; gap: 5px; }
 
 .vacation-status {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  transform: translate(-50%, -50%);
   padding: 6px 8px;
   border: 1px solid #d1aa00;
   border-radius: 7px;
