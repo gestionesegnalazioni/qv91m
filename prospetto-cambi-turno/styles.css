@@ -89,6 +89,35 @@ button { font: inherit; cursor: pointer; }
 }
 
 .rotation-code--button:hover { background: rgba(255, 255, 255, .2); }
+
+.week__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.vacation-toggle {
+  min-height: 30px;
+  padding: 5px 8px;
+  border: 1px dashed rgba(255, 255, 255, .55);
+  border-radius: 7px;
+  background: rgba(255, 255, 255, .08);
+  color: #e8f1ff;
+  font-size: .72rem;
+  font-weight: 900;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.vacation-toggle:hover { background: rgba(255, 255, 255, .18); }
+.vacation-toggle.is-active {
+  border-style: solid;
+  border-color: #d1aa00;
+  background: var(--yellow);
+  color: #352b00;
+}
+.vacation-toggle.is-active:hover { background: #f4d641; }
 .rotation-code--button.rotation-code--evening {
   border-color: #ffb1ad;
   background: #c62f2a;
