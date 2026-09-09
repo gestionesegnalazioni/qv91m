@@ -84,6 +84,26 @@ button { font: inherit; cursor: pointer; }
   font-weight: 900;
 }
 
+
+.rotation-code-list {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 3px;
+}
+
+.rotation-code-list--multiple {
+  max-width: 138px;
+  flex-wrap: wrap;
+}
+
+.rotation-code-list--multiple .rotation-code {
+  min-width: 0;
+  padding: 3px 5px;
+  font-size: .7rem;
+  line-height: 1;
+}
+
 .rotation-code--button {
   background: rgba(255, 255, 255, .08);
   color: white;
