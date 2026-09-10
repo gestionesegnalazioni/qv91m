@@ -278,8 +278,10 @@ button { font: inherit; cursor: pointer; }
   border-radius: 6px;
   background: #f8fafc;
   color: #7a8494;
+  font: inherit;
   font-size: .72rem;
   text-align: left;
+  resize: vertical;
 }
 
 .agenda-day__note-space.has-note {
@@ -460,19 +462,23 @@ button { font: inherit; cursor: pointer; }
   box-shadow: inset 0 0 0 1px var(--blue);
 }
 
-.agenda-note-field {
+.agenda-change-fields {
   display: grid;
-  gap: 6px;
-  margin-top: 5px;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 8px;
+}
+
+.agenda-change-fields label {
+  display: grid;
+  gap: 5px;
   color: var(--navy);
-  font-size: .78rem;
+  font-size: .72rem;
   font-weight: 900;
   text-transform: uppercase;
 }
 
-.agenda-note-field textarea {
+.agenda-change-fields input {
   width: 100%;
-  resize: vertical;
   padding: 10px;
   border: 1px solid #b8c3d3;
   border-radius: 8px;
@@ -710,24 +716,16 @@ button { font: inherit; cursor: pointer; }
 .names { display: grid; gap: 3px; }
 
 .person {
-  display: grid;
-  grid-template-columns: 15px minmax(0, 1fr);
-  align-items: start;
-  gap: 4px;
+  display: block;
   min-width: 0;
-  padding: 3px;
-  border: 1px solid transparent;
-  border-radius: 5px;
+  padding: 3px 2px;
   font-size: .71rem;
   font-weight: 700;
   line-height: 1.22;
 }
 
-.person input { width: 14px; height: 14px; margin: 0; accent-color: #d1aa00; }
 .person__text { min-width: 0; overflow-wrap: anywhere; }
 .person__days { display: block; margin-top: 1px; color: var(--muted); font-size: .64rem; }
-.person.is-selected { background: var(--yellow); border-color: #d1aa00; color: #352b00; }
-.person.is-selected .person__days { color: #e8fff1; }
 .person--open .person__text { color: var(--muted); font-style: italic; }
 
 .turn-dialog {
@@ -805,6 +803,7 @@ button { font: inherit; cursor: pointer; }
   .agenda-day__content { padding: 8px; }
   .agenda-day__week { margin-right: 0; font-size: .58rem; }
   .agenda-status-options { grid-template-columns: 1fr; }
+  .agenda-change-fields { grid-template-columns: 1fr; }
 
   .turn-dialog {
     width: calc(100% - 16px);
