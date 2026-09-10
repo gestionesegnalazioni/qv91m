@@ -285,7 +285,7 @@ button { font: inherit; cursor: pointer; }
   background: #f8fafc;
   color: #7a8494;
   font: inherit;
-  font-size: .72rem;
+  font-size: 16px;
   text-align: left;
   overflow-x: hidden;
   overflow-y: auto;
@@ -813,6 +813,7 @@ button { font: inherit; cursor: pointer; }
   .agenda-day__week { margin-right: 0; font-size: .58rem; }
   .agenda-status-options { grid-template-columns: 1fr; }
   .agenda-change-fields { grid-template-columns: 1fr; }
+  .agenda-change-fields input { font-size: 16px; }
 
   .turn-dialog {
     width: calc(100% - 16px);
