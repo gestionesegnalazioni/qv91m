@@ -264,7 +264,7 @@ button { font: inherit; cursor: pointer; }
 
 .weeks {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   align-items: start;
   gap: 12px;
 }
@@ -535,7 +535,7 @@ button { font: inherit; cursor: pointer; }
 .no-details { padding: 32px 18px; text-align: center; color: var(--muted); }
 :focus-visible { outline: 3px solid rgba(23, 107, 192, .35); outline-offset: 2px; }
 
-@media (max-width: 1100px) { .weeks { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 1100px) { .weeks { grid-template-columns: 1fr; } }
 
 @media (max-width: 720px) {
   .top-switcher { padding: 6px; }
@@ -604,6 +604,6 @@ button { font: inherit; cursor: pointer; }
 @media print {
   body { background: white; }
   .schedule-board { width: 100%; padding: 0; }
-  .weeks { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; }
+  .weeks { grid-template-columns: 1fr; gap: 5px; }
   .week { break-inside: avoid; box-shadow: none; }
 }
