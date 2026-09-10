@@ -324,7 +324,7 @@
   }
 
   function resizeNoteField(field) {
-    field.style.height = "42px";
+    field.style.height = "36px";
   }
 
   function saveInlineNote(field) {
