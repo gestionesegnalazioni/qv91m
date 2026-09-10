@@ -274,7 +274,10 @@ button { font: inherit; cursor: pointer; }
 
 .agenda-day__note-space {
   width: 100%;
-  min-height: 34px;
+  min-width: 0;
+  height: 42px;
+  min-height: 42px;
+  max-height: 42px;
   margin-top: auto;
   padding: 6px 8px;
   border: 1px dashed #b7c1cf;
@@ -284,7 +287,10 @@ button { font: inherit; cursor: pointer; }
   font: inherit;
   font-size: .72rem;
   text-align: left;
-  resize: vertical;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overflow-wrap: anywhere;
+  resize: none;
 }
 
 .agenda-day__note-space.has-note {
