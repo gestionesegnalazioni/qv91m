@@ -6,12 +6,34 @@
   <meta name="theme-color" content="#10264b">
   <meta name="description" content="Prospetto cambi turno dal 15 settembre 2026 al 10 giugno 2027.">
   <title>Prospetto Cambi Turno</title>
-  <link rel="stylesheet" href="styles.css?v=20260909-27">
+  <link rel="stylesheet" href="styles.css?v=20260910-1">
 </head>
 <body>
+  <header class="top-switcher">
+    <nav class="view-tabs" aria-label="Sezioni del prospetto">
+      <button class="view-tab is-active" type="button" data-app-view="prospetto" aria-selected="true">Prospetto</button>
+      <button class="view-tab" type="button" data-app-view="agenda" aria-selected="false">Agenda</button>
+    </nav>
+  </header>
+
   <main class="schedule-board">
-    <p id="loadingStatus" class="loading-status">Caricamento del prospetto…</p>
-    <div id="weeks" class="weeks" aria-label="Prospetto cambi turno"></div>
+    <section id="prospettoView" aria-label="Prospetto cambi turno">
+      <p id="loadingStatus" class="loading-status">Caricamento del prospetto…</p>
+      <div id="weeks" class="weeks"></div>
+    </section>
+
+    <section id="agendaView" class="agenda-view" aria-label="Agenda personale" hidden>
+      <div class="agenda-toolbar">
+        <button id="agendaPrevious" class="agenda-month-button" type="button" aria-label="Mese precedente">‹</button>
+        <div>
+          <p class="agenda-kicker">La mia agenda</p>
+          <h1 id="agendaMonthTitle">Agenda</h1>
+        </div>
+        <button id="agendaNext" class="agenda-month-button" type="button" aria-label="Mese successivo">›</button>
+      </div>
+      <p class="agenda-legend"><span class="legend-dot legend-dot--turn"></span>Turno previsto <span class="legend-dot legend-dot--change"></span>Cambio <span class="legend-dot legend-dot--vacation"></span>Ferie <span class="legend-dot legend-dot--rest"></span>Riposo</p>
+      <div id="agendaDays" class="agenda-days" aria-live="polite"></div>
+    </section>
   </main>
 
   <dialog class="turn-dialog" id="turnDialog" aria-labelledby="dialogTitle">
@@ -25,7 +47,7 @@
   </dialog>
 
   <noscript><p class="loading-status loading-status--error">Per visualizzare il prospetto è necessario attivare JavaScript.</p></noscript>
-  <script src="data.js?v=20260909-7"></script>
-    <script src="app.js?v=20260909-20"></script>
+  <script src="data.js?v=20260910-1"></script>
+    <script src="app.js?v=20260910-1"></script>
 </body>
 </html>
