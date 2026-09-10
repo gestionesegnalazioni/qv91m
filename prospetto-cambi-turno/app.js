@@ -14,7 +14,8 @@
   const agendaNext = document.querySelector("#agendaNext");
   const agendaEditDialog = document.querySelector("#agendaEditDialog");
   const agendaEditTitle = document.querySelector("#agendaEditTitle");
-  const agendaNote = document.querySelector("#agendaNote");
+  const agendaChangeTurn = document.querySelector("#agendaChangeTurn");
+  const agendaChangeColleague = document.querySelector("#agendaChangeColleague");
   const dialog = document.querySelector("#turnDialog");
   const dialogBody = document.querySelector("#dialogBody");
   const dialogTitle = document.querySelector("#dialogTitle");
@@ -38,6 +39,7 @@
   let cloudDocument = null;
   let cloudReady = false;
   let cloudSaveTimer = null;
+  let ignoreOwnCloudUpdate = false;
   let stopCloudListener = null;
   let firebaseServices = null;
 
@@ -94,8 +96,11 @@
   async function saveToCloud() {
     if (!cloudReady || !cloudUser || !cloudDocument || !firebaseServices) return;
     try {
+      ignoreOwnCloudUpdate = true;
       await firebaseServices.setDoc(cloudDocument, cloudPayload(), { merge: true });
+      setTimeout(() => { ignoreOwnCloudUpdate = false; }, 1000);
     } catch (error) {
+      ignoreOwnCloudUpdate = false;
       console.error("Salvataggio online non riuscito", error);
     }
   }
@@ -126,7 +131,7 @@
       }
       cloudReady = true;
       stopCloudListener = firebaseServices.onSnapshot(cloudDocument, remote => {
-        if (!remote.exists() || !cloudReady) return;
+        if (!remote.exists() || !cloudReady || ignoreOwnCloudUpdate) return;
         storeCloudDataLocally(remote.data());
       }, error => {
         console.error("Aggiornamento online non disponibile", error);
@@ -209,14 +214,11 @@
   }
 
   function personRow(week, group, turn, person, days = [], open = false) {
-    const key = selectionKey(week, group, turn, person, days);
-    const selected = selections.has(key);
     const daysHtml = days.length ? `<small class="person__days">${escapeHtml(dayLabel(days))}</small>` : "";
     return `
-      <label class="person${selected ? " is-selected" : ""}${open ? " person--open" : ""}" data-selection="${escapeHtml(key)}">
-        <input type="checkbox" ${selected ? "checked" : ""} aria-label="Segna cambio con ${escapeHtml(person)}">
+      <div class="person${open ? " person--open" : ""}">
         <span class="person__text">${escapeHtml(person)}${daysHtml}</span>
-      </label>`;
+      </div>`;
   }
 
   function turnRow(week, group, item) {
@@ -321,6 +323,24 @@
     return result;
   }
 
+  function resizeNoteField(field) {
+    field.style.height = "auto";
+    field.style.height = `${Math.max(42, field.scrollHeight)}px`;
+  }
+
+  function saveInlineNote(field) {
+    const date = field.dataset.agendaNote;
+    if (!date) return;
+    const saved = { ...(agendaDayData[date] || {}) };
+    if (field.value) saved.note = field.value;
+    else delete saved.note;
+    if (Object.keys(saved).length) agendaDayData[date] = saved;
+    else delete agendaDayData[date];
+    field.classList.toggle("has-note", Boolean(field.value));
+    resizeNoteField(field);
+    saveAgendaDayData();
+  }
+
   function selectedChangesFor(entry) {
     if (entry.day === "DOM" || entry.turn === "RIP") return [];
     return [...selections].map(key => {
@@ -342,7 +362,11 @@
     const vacationStatus = saved.vacationStatus === "none"
       ? ""
       : saved.vacationStatus || (weeklyVacation ? "requested" : "");
-    const changes = selectedChangesFor(entry);
+    const legacyChanges = selectedChangesFor(entry);
+    const hasManualChange = saved.changeOverride === true || Boolean(saved.changeTurn || saved.changeColleague);
+    const changes = hasManualChange
+      ? (saved.changeTurn || saved.changeColleague ? [{ turn: saved.changeTurn || "—", person: saved.changeColleague || "—" }] : [])
+      : legacyChanges;
     const changeTurns = [...new Set(changes.map(change => String(change.turn).replace(/^MS/i, "")))].join(" · ");
     const colleagues = [...new Set(changes.map(change => change.person === "SCOPERTO" ? "turno scoperto" : change.person))].join(", ");
     const stateClasses = [
@@ -364,7 +388,7 @@
           <strong class="agenda-day__turn">${escapeHtml(agendaTurnLabel(entry.turn))}</strong>
           ${changes.length ? `<div class="agenda-day__change"><span>${escapeHtml(colleagues)}</span><strong>Turno ${escapeHtml(changeTurns)}</strong></div>` : ""}
           ${vacationBadge}
-          <button class="agenda-day__note-space${saved.note ? " has-note" : ""}" type="button" data-edit-agenda="${entry.date}">${saved.note ? escapeHtml(saved.note) : "Aggiungi una nota…"}</button>
+          <textarea class="agenda-day__note-space${saved.note ? " has-note" : ""}" rows="2" data-agenda-note="${entry.date}" aria-label="Nota del ${entry.date}" placeholder="Scrivi una nota…">${escapeHtml(saved.note || "")}</textarea>
         </div>
         <div class="agenda-day__tools">
           ${entry.week ? `<span class="agenda-day__week">Sett. ${entry.week}</span>` : ""}
@@ -384,6 +408,7 @@
     agendaPrevious.disabled = agendaMonthIndex === 0;
     agendaNext.disabled = agendaMonthIndex === agendaMonths.length - 1;
     agendaDaysEl.innerHTML = entriesForAgendaMonth(month).map(agendaDay).join("");
+    agendaDaysEl.querySelectorAll("[data-agenda-note]").forEach(resizeNoteField);
     if (scrollToToday && month === currentMonthKey) {
       requestAnimationFrame(() => {
         agendaDaysEl.querySelector(`[data-agenda-date="${todayKey}"]`)?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -414,7 +439,8 @@
       year: "numeric",
       timeZone: "UTC"
     }).format(new Date(`${date}T12:00:00Z`));
-    agendaNote.value = saved.note || "";
+    agendaChangeTurn.value = saved.changeTurn || "";
+    agendaChangeColleague.value = saved.changeColleague || "";
     setPendingAgendaStatus(status);
     agendaEditDialog.showModal();
   }
@@ -427,14 +453,20 @@
   function saveAgendaEditor() {
     if (!editingAgendaDate) return;
     const entry = agendaEntryForDate(editingAgendaDate);
-    const note = agendaNote.value.trim();
+    const existing = agendaDayData[editingAgendaDate] || {};
+    const note = existing.note || "";
+    const changeTurn = agendaChangeTurn.value.trim().replace(/^MS/i, "");
+    const changeColleague = agendaChangeColleague.value.trim();
     const needsWeeklyOverride = entry && vacationWeeks.has(String(entry.week)) && pendingAgendaStatus === "none";
-    if (!note && pendingAgendaStatus === "none" && !needsWeeklyOverride) {
+    if (!note && !changeTurn && !changeColleague && pendingAgendaStatus === "none" && !needsWeeklyOverride) {
       delete agendaDayData[editingAgendaDate];
     } else {
       agendaDayData[editingAgendaDate] = {
         vacationStatus: pendingAgendaStatus,
-        note
+        note,
+        changeTurn,
+        changeColleague,
+        changeOverride: true
       };
     }
     saveAgendaDayData();
@@ -444,7 +476,8 @@
 
   function clearAgendaEditor() {
     if (!editingAgendaDate) return;
-    delete agendaDayData[editingAgendaDate];
+    const note = agendaDayData[editingAgendaDate]?.note || "";
+    agendaDayData[editingAgendaDate] = { note, changeOverride: true };
     saveAgendaDayData();
     closeAgendaEditor();
     renderAgenda();
@@ -588,17 +621,6 @@
       </section>`;
   }
 
-  weeksEl.addEventListener("change", event => {
-    const checkbox = event.target.closest('.person input[type="checkbox"]');
-    if (!checkbox) return;
-    const label = checkbox.closest(".person");
-    const key = label.dataset.selection;
-    checkbox.checked ? selections.add(key) : selections.delete(key);
-    label.classList.toggle("is-selected", checkbox.checked);
-    saveSelections();
-    renderAgenda();
-  });
-
   weeksEl.addEventListener("click", event => {
     const vacationButton = event.target.closest("[data-vacation-week]");
     if (vacationButton) {
@@ -641,6 +663,10 @@
   agendaDaysEl.addEventListener("click", event => {
     const button = event.target.closest("[data-edit-agenda]");
     if (button) openAgendaEditor(button.dataset.editAgenda);
+  });
+  agendaDaysEl.addEventListener("input", event => {
+    const field = event.target.closest("[data-agenda-note]");
+    if (field) saveInlineNote(field);
   });
   agendaEditDialog.querySelectorAll("[data-agenda-status]").forEach(button => {
     button.addEventListener("click", () => setPendingAgendaStatus(button.dataset.agendaStatus));
