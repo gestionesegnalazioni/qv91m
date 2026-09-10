@@ -142,7 +142,10 @@ button { font: inherit; cursor: pointer; }
   border-radius: 10px;
   background: white;
   box-shadow: 0 2px 7px rgba(16, 38, 75, .06);
+  scroll-margin-top: 72px;
 }
+
+.week { scroll-margin-top: 72px; }
 
 .agenda-date {
   display: flex;
