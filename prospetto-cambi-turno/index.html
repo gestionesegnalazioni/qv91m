@@ -12,7 +12,7 @@
   <link rel="icon" href="agenda-icon-nero.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="agenda-icon-nero.svg">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="styles.css?v=20260910-7">
+  <link rel="stylesheet" href="styles.css?v=20260910-8">
 </head>
 <body>
   <header class="top-switcher">
@@ -57,16 +57,17 @@
         <button class="agenda-edit-close" id="closeAgendaEdit" type="button" aria-label="Chiudi">×</button>
       </header>
       <div class="agenda-edit-body">
+        <p class="agenda-edit-label">Cambio turno</p>
+        <div class="agenda-change-fields">
+          <label for="agendaChangeTurn"><span>Turno</span><input id="agendaChangeTurn" inputmode="numeric" placeholder="es. 126"></label>
+          <label for="agendaChangeColleague"><span>Collega</span><input id="agendaChangeColleague" placeholder="Nome e cognome"></label>
+        </div>
         <p class="agenda-edit-label">Ferie</p>
         <div class="agenda-status-options" role="group" aria-label="Stato ferie">
           <button type="button" data-agenda-status="requested">Chiedere ferie</button>
           <button type="button" data-agenda-status="approved">Ferie concesse</button>
           <button type="button" data-agenda-status="none">Nessuna ferie</button>
         </div>
-        <label class="agenda-note-field" for="agendaNote">
-          <span>Note</span>
-          <textarea id="agendaNote" rows="4" placeholder="Scrivi qui quello che desideri…"></textarea>
-        </label>
       </div>
       <footer class="agenda-edit-footer">
         <button class="agenda-clear-button" id="clearAgendaEdit" type="button">Azzera</button>
@@ -77,6 +78,6 @@
 
   <noscript><p class="loading-status loading-status--error">Per visualizzare il prospetto è necessario attivare JavaScript.</p></noscript>
   <script src="data.js?v=20260910-1"></script>
-    <script src="app.js?v=20260910-6"></script>
+    <script src="app.js?v=20260910-7"></script>
 </body>
 </html>
