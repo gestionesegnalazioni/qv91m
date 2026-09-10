@@ -79,6 +79,7 @@ button { font: inherit; cursor: pointer; }
 
 .loading-status--error { color: #a1221b; }
 
+#prospettoView,
 .agenda-view {
   width: min(760px, 100%);
   margin: 0 auto;
