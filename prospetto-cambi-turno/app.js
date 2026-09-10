@@ -4,7 +4,7 @@
   const data = window.PROSPETTO_DATA;
   const STORAGE_KEY = "prospetto-cambi-turno:selected-v1";
   const VACATION_STORAGE_KEY = "prospetto-cambi-turno:vacations-v1";
-  const VIEW_STORAGE_KEY = "prospetto-cambi-turno:view-v1";
+  const AGENDA_DAY_STORAGE_KEY = "prospetto-cambi-turno:agenda-days-v1";
   const weeksEl = document.querySelector("#weeks");
   const prospettoView = document.querySelector("#prospettoView");
   const agendaView = document.querySelector("#agendaView");
@@ -12,6 +12,9 @@
   const agendaMonthTitle = document.querySelector("#agendaMonthTitle");
   const agendaPrevious = document.querySelector("#agendaPrevious");
   const agendaNext = document.querySelector("#agendaNext");
+  const agendaEditDialog = document.querySelector("#agendaEditDialog");
+  const agendaEditTitle = document.querySelector("#agendaEditTitle");
+  const agendaNote = document.querySelector("#agendaNote");
   const dialog = document.querySelector("#turnDialog");
   const dialogBody = document.querySelector("#dialogBody");
   const dialogTitle = document.querySelector("#dialogTitle");
@@ -26,6 +29,9 @@
   let agendaMonthIndex = Math.max(0, agendaMonths.indexOf(currentMonthKey));
   let selections = loadSelections();
   let vacationWeeks = loadVacationWeeks();
+  let agendaDayData = loadAgendaDayData();
+  let editingAgendaDate = "";
+  let pendingAgendaStatus = "none";
 
   function loadSelections() {
     try { return new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]")); }
@@ -45,8 +51,13 @@
     localStorage.setItem(VACATION_STORAGE_KEY, JSON.stringify([...vacationWeeks]));
   }
 
-  function loadActiveView() {
-    return localStorage.getItem(VIEW_STORAGE_KEY) === "agenda" ? "agenda" : "prospetto";
+  function loadAgendaDayData() {
+    try { return JSON.parse(localStorage.getItem(AGENDA_DAY_STORAGE_KEY) || "{}"); }
+    catch { return {}; }
+  }
+
+  function saveAgendaDayData() {
+    localStorage.setItem(AGENDA_DAY_STORAGE_KEY, JSON.stringify(agendaDayData));
   }
 
   function escapeHtml(value) {
@@ -189,40 +200,50 @@
     const date = new Date(`${entry.date}T12:00:00Z`);
     const weekday = weekdayFormat.format(date).replace(".", "").toUpperCase();
     const dayNumber = date.getUTCDate();
-    const onVacation = vacationWeeks.has(String(entry.week)) && entry.turn !== "RIP";
-    const changes = onVacation ? [] : selectedChangesFor(entry);
-    let stateClass = "";
-    let content = `
-      <span class="agenda-day__label">Turno previsto</span>
-      <strong class="agenda-day__turn">${escapeHtml(agendaTurnLabel(entry.turn))}</strong>`;
-
-    if (entry.turn === "RIP") {
-      stateClass = " agenda-day--rest";
-      content = `
-        <span class="agenda-day__label">Giorno di riposo</span>
-        <strong class="agenda-day__turn">RIPOSO</strong>`;
-    } else if (onVacation) {
-      stateClass = " agenda-day--vacation";
-      content = `
-        <span class="agenda-day__label">Ferie richieste</span>
-        <strong class="agenda-day__turn">FERIE</strong>
-        <span class="agenda-day__base">Turno previsto: ${escapeHtml(entry.turn)}</span>`;
-    } else if (changes.length) {
-      stateClass = " agenda-day--change";
-      const changeTurns = [...new Set(changes.map(change => `MS${change.turn}`))].join(" · ");
-      const colleagues = [...new Set(changes.map(change => change.person === "SCOPERTO" ? "turno scoperto" : change.person))].join(", ");
-      content = `
-        <span class="agenda-day__label">Cambio turno</span>
-        <strong class="agenda-day__turn">${escapeHtml(changeTurns)}</strong>
-        <span class="agenda-day__colleague">${escapeHtml(colleagues)}</span>
-        <span class="agenda-day__base">Turno previsto: ${escapeHtml(entry.turn)}</span>`;
-    }
+    const saved = agendaDayData[entry.date] || {};
+    const weeklyVacation = vacationWeeks.has(String(entry.week));
+    const vacationStatus = saved.vacationStatus === "none"
+      ? ""
+      : saved.vacationStatus || (weeklyVacation ? "requested" : "");
+    const changes = selectedChangesFor(entry);
+    const changeTurns = [...new Set(changes.map(change => `MS${change.turn}`))].join(" · ");
+    const colleagues = [...new Set(changes.map(change => change.person === "SCOPERTO" ? "turno scoperto" : change.person))].join(", ");
+    const stateClasses = [
+      entry.turn === "RIP" ? "agenda-day--rest" : "",
+      changes.length ? "agenda-day--change" : "",
+      vacationStatus ? `agenda-day--vacation-${vacationStatus}` : "",
+      entry.day === "DOM" ? "agenda-day--sunday" : ""
+    ].filter(Boolean).join(" ");
+    const vacationBadge = vacationStatus === "approved"
+      ? '<span class="agenda-status agenda-status--approved">FERIE CONCESSE</span>'
+      : vacationStatus === "requested"
+        ? '<span class="agenda-status agenda-status--requested">FERIE RICHIESTE</span>'
+        : "";
+    const note = saved.note
+      ? `<p class="agenda-day__note"><strong>Nota:</strong> ${escapeHtml(saved.note)}</p>`
+      : "";
 
     return `
-      <article class="agenda-day${stateClass}">
+      <article class="agenda-day${stateClasses ? ` ${stateClasses}` : ""}">
         <div class="agenda-date"><span>${escapeHtml(weekday)}</span><strong>${dayNumber}</strong></div>
-        <div class="agenda-day__content">${content}</div>
-        <span class="agenda-day__week">Sett. ${entry.week}</span>
+        <div class="agenda-day__content">
+          <div class="agenda-info-row">
+            <span class="agenda-day__label">Turno previsto</span>
+            <strong class="agenda-day__turn">${escapeHtml(agendaTurnLabel(entry.turn))}</strong>
+          </div>
+          <div class="agenda-info-row agenda-info-row--change">
+            <span class="agenda-day__label">Cambio turno</span>
+            <div>
+              <strong class="agenda-day__change-turn">${escapeHtml(changeTurns || "—")}</strong>
+              ${colleagues ? `<span class="agenda-day__colleague">${escapeHtml(colleagues)}</span>` : ""}
+            </div>
+          </div>
+          ${vacationBadge}${note}
+        </div>
+        <div class="agenda-day__tools">
+          <span class="agenda-day__week">Sett. ${entry.week}</span>
+          <button class="agenda-day__menu" type="button" data-edit-agenda="${entry.date}" aria-label="Opzioni per ${entry.date}" title="Ferie e note">⋯</button>
+        </div>
       </article>`;
   }
 
@@ -239,7 +260,66 @@
     agendaDaysEl.innerHTML = agendaEntries.filter(entry => entry.date.startsWith(month)).map(agendaDay).join("");
   }
 
-  function setView(view, persist = true) {
+  function setPendingAgendaStatus(status) {
+    pendingAgendaStatus = status;
+    agendaEditDialog.querySelectorAll("[data-agenda-status]").forEach(button => {
+      const selected = button.dataset.agendaStatus === status;
+      button.classList.toggle("is-selected", selected);
+      button.setAttribute("aria-pressed", String(selected));
+    });
+  }
+
+  function openAgendaEditor(date) {
+    const entry = agendaEntries.find(item => item.date === date);
+    if (!entry) return;
+    editingAgendaDate = date;
+    const saved = agendaDayData[date] || {};
+    const weeklyVacation = vacationWeeks.has(String(entry.week));
+    const status = saved.vacationStatus || (weeklyVacation ? "requested" : "none");
+    agendaEditTitle.textContent = new Intl.DateTimeFormat("it-IT", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      timeZone: "UTC"
+    }).format(new Date(`${date}T12:00:00Z`));
+    agendaNote.value = saved.note || "";
+    setPendingAgendaStatus(status);
+    agendaEditDialog.showModal();
+  }
+
+  function closeAgendaEditor() {
+    editingAgendaDate = "";
+    agendaEditDialog.close();
+  }
+
+  function saveAgendaEditor() {
+    if (!editingAgendaDate) return;
+    const entry = agendaEntries.find(item => item.date === editingAgendaDate);
+    const note = agendaNote.value.trim();
+    const needsWeeklyOverride = entry && vacationWeeks.has(String(entry.week)) && pendingAgendaStatus === "none";
+    if (!note && pendingAgendaStatus === "none" && !needsWeeklyOverride) {
+      delete agendaDayData[editingAgendaDate];
+    } else {
+      agendaDayData[editingAgendaDate] = {
+        vacationStatus: pendingAgendaStatus,
+        note
+      };
+    }
+    saveAgendaDayData();
+    closeAgendaEditor();
+    renderAgenda();
+  }
+
+  function clearAgendaEditor() {
+    if (!editingAgendaDate) return;
+    delete agendaDayData[editingAgendaDate];
+    saveAgendaDayData();
+    closeAgendaEditor();
+    renderAgenda();
+  }
+
+  function setView(view) {
     const agendaIsActive = view === "agenda";
     prospettoView.hidden = agendaIsActive;
     agendaView.hidden = !agendaIsActive;
@@ -249,7 +329,6 @@
       button.setAttribute("aria-selected", String(active));
     });
     if (agendaIsActive) renderAgenda();
-    if (persist) localStorage.setItem(VIEW_STORAGE_KEY, view);
   }
 
   function openTurn(turn, group, displayTurn = `MS${turn}`) {
@@ -424,7 +503,20 @@
       renderAgenda();
     }
   });
+  agendaDaysEl.addEventListener("click", event => {
+    const button = event.target.closest("[data-edit-agenda]");
+    if (button) openAgendaEditor(button.dataset.editAgenda);
+  });
+  agendaEditDialog.querySelectorAll("[data-agenda-status]").forEach(button => {
+    button.addEventListener("click", () => setPendingAgendaStatus(button.dataset.agendaStatus));
+  });
+  document.querySelector("#saveAgendaEdit").addEventListener("click", saveAgendaEditor);
+  document.querySelector("#clearAgendaEdit").addEventListener("click", clearAgendaEditor);
+  document.querySelector("#closeAgendaEdit").addEventListener("click", closeAgendaEditor);
+  agendaEditDialog.addEventListener("click", event => {
+    if (event.target === agendaEditDialog) closeAgendaEditor();
+  });
   renderWeeks();
   renderAgenda();
-  setView(loadActiveView(), false);
+  setView("agenda");
 })();
