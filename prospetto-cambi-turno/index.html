@@ -6,23 +6,25 @@
   <meta name="theme-color" content="#10264b">
   <meta name="description" content="Prospetto cambi turno dal 15 settembre 2026 al 10 giugno 2027.">
   <title>Prospetto Cambi Turno</title>
-  <link rel="stylesheet" href="styles.css?v=20260910-3">
+  <link rel="icon" href="agenda-icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="agenda-icon.svg">
+  <link rel="stylesheet" href="styles.css?v=20260910-4">
 </head>
 <body>
   <header class="top-switcher">
     <nav class="view-tabs" aria-label="Sezioni del prospetto">
-      <button class="view-tab is-active" type="button" data-app-view="prospetto" aria-selected="true">Prospetto</button>
-      <button class="view-tab" type="button" data-app-view="agenda" aria-selected="false">Agenda</button>
+      <button class="view-tab" type="button" data-app-view="prospetto" aria-selected="false">Prospetto</button>
+      <button class="view-tab is-active" type="button" data-app-view="agenda" aria-selected="true">Agenda</button>
     </nav>
   </header>
 
   <main class="schedule-board">
-    <section id="prospettoView" aria-label="Prospetto cambi turno">
+    <section id="prospettoView" aria-label="Prospetto cambi turno" hidden>
       <p id="loadingStatus" class="loading-status">Caricamento del prospetto…</p>
       <div id="weeks" class="weeks"></div>
     </section>
 
-    <section id="agendaView" class="agenda-view" aria-label="Agenda personale" hidden>
+    <section id="agendaView" class="agenda-view" aria-label="Agenda personale">
       <div class="agenda-toolbar">
         <button id="agendaPrevious" class="agenda-month-button" type="button" aria-label="Mese precedente">‹</button>
         <div>
@@ -31,7 +33,7 @@
         </div>
         <button id="agendaNext" class="agenda-month-button" type="button" aria-label="Mese successivo">›</button>
       </div>
-      <p class="agenda-legend"><span class="legend-dot legend-dot--turn"></span>Turno previsto <span class="legend-dot legend-dot--change"></span>Cambio <span class="legend-dot legend-dot--vacation"></span>Ferie <span class="legend-dot legend-dot--rest"></span>Riposo</p>
+      <p class="agenda-legend"><span class="legend-dot legend-dot--turn"></span>Turno previsto <span class="legend-dot legend-dot--change"></span>Cambio <span class="legend-dot legend-dot--vacation"></span>Ferie <span class="legend-dot legend-dot--rest"></span>Riposo <span class="legend-dot legend-dot--sunday"></span>Domenica</p>
       <div id="agendaDays" class="agenda-days" aria-live="polite"></div>
     </section>
   </main>
@@ -46,8 +48,33 @@
     </div>
   </dialog>
 
+  <dialog class="agenda-edit-dialog" id="agendaEditDialog" aria-labelledby="agendaEditTitle">
+    <div class="agenda-edit-shell">
+      <header class="agenda-edit-header">
+        <div><p>Agenda personale</p><h2 id="agendaEditTitle">Modifica giornata</h2></div>
+        <button class="agenda-edit-close" id="closeAgendaEdit" type="button" aria-label="Chiudi">×</button>
+      </header>
+      <div class="agenda-edit-body">
+        <p class="agenda-edit-label">Ferie</p>
+        <div class="agenda-status-options" role="group" aria-label="Stato ferie">
+          <button type="button" data-agenda-status="requested">Chiedere ferie</button>
+          <button type="button" data-agenda-status="approved">Ferie concesse</button>
+          <button type="button" data-agenda-status="none">Nessuna ferie</button>
+        </div>
+        <label class="agenda-note-field" for="agendaNote">
+          <span>Note</span>
+          <textarea id="agendaNote" rows="4" placeholder="Scrivi qui quello che desideri…"></textarea>
+        </label>
+      </div>
+      <footer class="agenda-edit-footer">
+        <button class="agenda-clear-button" id="clearAgendaEdit" type="button">Azzera</button>
+        <button class="agenda-save-button" id="saveAgendaEdit" type="button">Salva</button>
+      </footer>
+    </div>
+  </dialog>
+
   <noscript><p class="loading-status loading-status--error">Per visualizzare il prospetto è necessario attivare JavaScript.</p></noscript>
   <script src="data.js?v=20260910-1"></script>
-    <script src="app.js?v=20260910-1"></script>
+    <script src="app.js?v=20260910-2"></script>
 </body>
 </html>
