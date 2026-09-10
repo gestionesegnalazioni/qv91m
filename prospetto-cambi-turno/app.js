@@ -25,7 +25,9 @@
   const weekdayFormat = new Intl.DateTimeFormat("it-IT", { weekday: "short", timeZone: "UTC" });
   const agendaEntries = Array.isArray(data.agenda) ? data.agenda : [];
   const agendaMonths = [...new Set(agendaEntries.map(entry => entry.date.slice(0, 7)))];
-  const currentMonthKey = new Date().toISOString().slice(0, 7);
+  const now = new Date();
+  const todayKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+  const currentMonthKey = todayKey.slice(0, 7);
   let agendaMonthIndex = Math.max(0, agendaMonths.indexOf(currentMonthKey));
   let selections = loadSelections();
   let vacationWeeks = loadVacationWeeks();
@@ -291,7 +293,32 @@
   }
 
   function agendaTurnLabel(turn) {
-    return turn === "RIP" ? "RIPOSO" : turn;
+    if (turn === "RIP") return "RIPOSO";
+    return String(turn || "").replace(/^MS/i, "") || "—";
+  }
+
+  function dayCodeForDate(date) {
+    return ["DOM", "LUN", "MAR", "MER", "GIO", "VEN", "SAB"][date.getUTCDay()];
+  }
+
+  function agendaEntryForDate(dateValue) {
+    const existing = agendaEntries.find(item => item.date === dateValue);
+    if (existing) return existing;
+    if (dateValue.startsWith("2026-09-")) {
+      const date = new Date(`${dateValue}T12:00:00Z`);
+      return { date: dateValue, day: dayCodeForDate(date), turn: "", week: null };
+    }
+    return null;
+  }
+
+  function entriesForAgendaMonth(month) {
+    if (month !== "2026-09") return agendaEntries.filter(entry => entry.date.startsWith(month));
+    const result = [];
+    for (let day = 1; day <= 30; day += 1) {
+      const dateValue = `${month}-${String(day).padStart(2, "0")}`;
+      result.push(agendaEntryForDate(dateValue));
+    }
+    return result;
   }
 
   function selectedChangesFor(entry) {
@@ -316,48 +343,37 @@
       ? ""
       : saved.vacationStatus || (weeklyVacation ? "requested" : "");
     const changes = selectedChangesFor(entry);
-    const changeTurns = [...new Set(changes.map(change => `MS${change.turn}`))].join(" · ");
+    const changeTurns = [...new Set(changes.map(change => String(change.turn).replace(/^MS/i, "")))].join(" · ");
     const colleagues = [...new Set(changes.map(change => change.person === "SCOPERTO" ? "turno scoperto" : change.person))].join(", ");
     const stateClasses = [
       entry.turn === "RIP" ? "agenda-day--rest" : "",
       changes.length ? "agenda-day--change" : "",
       vacationStatus ? `agenda-day--vacation-${vacationStatus}` : "",
-      entry.day === "DOM" ? "agenda-day--sunday" : ""
+      entry.day === "DOM" ? "agenda-day--sunday" : "",
+      entry.date === todayKey ? "agenda-day--today" : ""
     ].filter(Boolean).join(" ");
     const vacationBadge = vacationStatus === "approved"
       ? '<span class="agenda-status agenda-status--approved">FERIE CONCESSE</span>'
       : vacationStatus === "requested"
         ? '<span class="agenda-status agenda-status--requested">FERIE RICHIESTE</span>'
         : "";
-    const note = saved.note
-      ? `<p class="agenda-day__note"><strong>Nota:</strong> ${escapeHtml(saved.note)}</p>`
-      : "";
-
     return `
-      <article class="agenda-day${stateClasses ? ` ${stateClasses}` : ""}">
-        <div class="agenda-date"><span>${escapeHtml(weekday)}</span><strong>${dayNumber}</strong></div>
+      <article class="agenda-day${stateClasses ? ` ${stateClasses}` : ""}" data-agenda-date="${entry.date}">
+        <div class="agenda-date"><span>${escapeHtml(weekday)}</span><strong>${dayNumber}</strong>${entry.date === todayKey ? '<em class="agenda-today">OGGI</em>' : ""}</div>
         <div class="agenda-day__content">
-          <div class="agenda-info-row">
-            <span class="agenda-day__label">Turno previsto</span>
-            <strong class="agenda-day__turn">${escapeHtml(agendaTurnLabel(entry.turn))}</strong>
-          </div>
-          <div class="agenda-info-row agenda-info-row--change">
-            <span class="agenda-day__label">Cambio turno</span>
-            <div>
-              <strong class="agenda-day__change-turn">${escapeHtml(changeTurns || "—")}</strong>
-              ${colleagues ? `<span class="agenda-day__colleague">${escapeHtml(colleagues)}</span>` : ""}
-            </div>
-          </div>
-          ${vacationBadge}${note}
+          <strong class="agenda-day__turn">${escapeHtml(agendaTurnLabel(entry.turn))}</strong>
+          ${changes.length ? `<div class="agenda-day__change"><span>${escapeHtml(colleagues)}</span><strong>Turno ${escapeHtml(changeTurns)}</strong></div>` : ""}
+          ${vacationBadge}
+          <button class="agenda-day__note-space${saved.note ? " has-note" : ""}" type="button" data-edit-agenda="${entry.date}">${saved.note ? escapeHtml(saved.note) : "Aggiungi una nota…"}</button>
         </div>
         <div class="agenda-day__tools">
-          <span class="agenda-day__week">Sett. ${entry.week}</span>
+          ${entry.week ? `<span class="agenda-day__week">Sett. ${entry.week}</span>` : ""}
           <button class="agenda-day__menu" type="button" data-edit-agenda="${entry.date}" aria-label="Opzioni per ${entry.date}" title="Ferie e note">⋯</button>
         </div>
       </article>`;
   }
 
-  function renderAgenda() {
+  function renderAgenda(scrollToToday = false) {
     if (!agendaMonths.length) {
       agendaMonthTitle.textContent = "Agenda";
       agendaDaysEl.innerHTML = '<p class="loading-status loading-status--error">Dati dell’agenda non disponibili.</p>';
@@ -367,7 +383,12 @@
     agendaMonthTitle.textContent = monthFormat.format(new Date(`${month}-01T12:00:00Z`));
     agendaPrevious.disabled = agendaMonthIndex === 0;
     agendaNext.disabled = agendaMonthIndex === agendaMonths.length - 1;
-    agendaDaysEl.innerHTML = agendaEntries.filter(entry => entry.date.startsWith(month)).map(agendaDay).join("");
+    agendaDaysEl.innerHTML = entriesForAgendaMonth(month).map(agendaDay).join("");
+    if (scrollToToday && month === currentMonthKey) {
+      requestAnimationFrame(() => {
+        agendaDaysEl.querySelector(`[data-agenda-date="${todayKey}"]`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
+    }
   }
 
   function setPendingAgendaStatus(status) {
@@ -380,7 +401,7 @@
   }
 
   function openAgendaEditor(date) {
-    const entry = agendaEntries.find(item => item.date === date);
+    const entry = agendaEntryForDate(date);
     if (!entry) return;
     editingAgendaDate = date;
     const saved = agendaDayData[date] || {};
@@ -405,7 +426,7 @@
 
   function saveAgendaEditor() {
     if (!editingAgendaDate) return;
-    const entry = agendaEntries.find(item => item.date === editingAgendaDate);
+    const entry = agendaEntryForDate(editingAgendaDate);
     const note = agendaNote.value.trim();
     const needsWeeklyOverride = entry && vacationWeeks.has(String(entry.week)) && pendingAgendaStatus === "none";
     if (!note && pendingAgendaStatus === "none" && !needsWeeklyOverride) {
@@ -438,7 +459,11 @@
       button.classList.toggle("is-active", active);
       button.setAttribute("aria-selected", String(active));
     });
-    if (agendaIsActive) renderAgenda();
+    if (agendaIsActive) {
+      const todayMonthIndex = agendaMonths.indexOf(currentMonthKey);
+      if (todayMonthIndex >= 0) agendaMonthIndex = todayMonthIndex;
+      renderAgenda(true);
+    }
   }
 
   function openTurn(turn, group, displayTurn = `MS${turn}`) {
