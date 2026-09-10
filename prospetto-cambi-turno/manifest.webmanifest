@@ -1,0 +1,16 @@
+{
+  "name": "Prospetto Cambi Turno",
+  "short_name": "Agenda Turni",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f3f6fa",
+  "theme_color": "#24a35a",
+  "icons": [
+    {
+      "src": "agenda-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
