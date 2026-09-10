@@ -4,10 +4,10 @@
   "start_url": "./",
   "display": "standalone",
   "background_color": "#f3f6fa",
-  "theme_color": "#24a35a",
+  "theme_color": "#000000",
   "icons": [
     {
-      "src": "agenda-icon.svg",
+      "src": "agenda-icon-nero.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
