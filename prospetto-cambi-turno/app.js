@@ -4,13 +4,26 @@
   const data = window.PROSPETTO_DATA;
   const STORAGE_KEY = "prospetto-cambi-turno:selected-v1";
   const VACATION_STORAGE_KEY = "prospetto-cambi-turno:vacations-v1";
+  const VIEW_STORAGE_KEY = "prospetto-cambi-turno:view-v1";
   const weeksEl = document.querySelector("#weeks");
+  const prospettoView = document.querySelector("#prospettoView");
+  const agendaView = document.querySelector("#agendaView");
+  const agendaDaysEl = document.querySelector("#agendaDays");
+  const agendaMonthTitle = document.querySelector("#agendaMonthTitle");
+  const agendaPrevious = document.querySelector("#agendaPrevious");
+  const agendaNext = document.querySelector("#agendaNext");
   const dialog = document.querySelector("#turnDialog");
   const dialogBody = document.querySelector("#dialogBody");
   const dialogTitle = document.querySelector("#dialogTitle");
   const dialogGroup = document.querySelector("#dialogGroup");
   const EVENING_TURNS = new Set(["128", "154", "156", "158"]);
   const dateFormat = new Intl.DateTimeFormat("it-IT", { day: "numeric", month: "short", timeZone: "UTC" });
+  const monthFormat = new Intl.DateTimeFormat("it-IT", { month: "long", year: "numeric", timeZone: "UTC" });
+  const weekdayFormat = new Intl.DateTimeFormat("it-IT", { weekday: "short", timeZone: "UTC" });
+  const agendaEntries = Array.isArray(data.agenda) ? data.agenda : [];
+  const agendaMonths = [...new Set(agendaEntries.map(entry => entry.date.slice(0, 7)))];
+  const currentMonthKey = new Date().toISOString().slice(0, 7);
+  let agendaMonthIndex = Math.max(0, agendaMonths.indexOf(currentMonthKey));
   let selections = loadSelections();
   let vacationWeeks = loadVacationWeeks();
 
@@ -30,6 +43,10 @@
 
   function saveVacationWeeks() {
     localStorage.setItem(VACATION_STORAGE_KEY, JSON.stringify([...vacationWeeks]));
+  }
+
+  function loadActiveView() {
+    return localStorage.getItem(VIEW_STORAGE_KEY) === "agenda" ? "agenda" : "prospetto";
   }
 
   function escapeHtml(value) {
@@ -150,6 +167,89 @@
         <div class="week__groups">${week.groups.map(group => groupColumn(week, group)).join("")}</div>
       </article>`).join("");
     document.querySelector("#loadingStatus")?.remove();
+  }
+
+  function agendaTurnLabel(turn) {
+    return turn === "RIP" ? "RIPOSO" : turn;
+  }
+
+  function selectedChangesFor(entry) {
+    if (entry.day === "DOM" || entry.turn === "RIP") return [];
+    return [...selections].map(key => {
+      const [week, group, turn, person, selectedDays] = key.split("|");
+      return { week: Number(week), group, turn, person, selectedDays };
+    }).filter(change => {
+      if (change.week !== entry.week) return false;
+      if (change.selectedDays === "base") return true;
+      return change.selectedDays.split(",").includes(entry.day);
+    });
+  }
+
+  function agendaDay(entry) {
+    const date = new Date(`${entry.date}T12:00:00Z`);
+    const weekday = weekdayFormat.format(date).replace(".", "").toUpperCase();
+    const dayNumber = date.getUTCDate();
+    const onVacation = vacationWeeks.has(String(entry.week)) && entry.turn !== "RIP";
+    const changes = onVacation ? [] : selectedChangesFor(entry);
+    let stateClass = "";
+    let content = `
+      <span class="agenda-day__label">Turno previsto</span>
+      <strong class="agenda-day__turn">${escapeHtml(agendaTurnLabel(entry.turn))}</strong>`;
+
+    if (entry.turn === "RIP") {
+      stateClass = " agenda-day--rest";
+      content = `
+        <span class="agenda-day__label">Giorno di riposo</span>
+        <strong class="agenda-day__turn">RIPOSO</strong>`;
+    } else if (onVacation) {
+      stateClass = " agenda-day--vacation";
+      content = `
+        <span class="agenda-day__label">Ferie richieste</span>
+        <strong class="agenda-day__turn">FERIE</strong>
+        <span class="agenda-day__base">Turno previsto: ${escapeHtml(entry.turn)}</span>`;
+    } else if (changes.length) {
+      stateClass = " agenda-day--change";
+      const changeTurns = [...new Set(changes.map(change => `MS${change.turn}`))].join(" · ");
+      const colleagues = [...new Set(changes.map(change => change.person === "SCOPERTO" ? "turno scoperto" : change.person))].join(", ");
+      content = `
+        <span class="agenda-day__label">Cambio turno</span>
+        <strong class="agenda-day__turn">${escapeHtml(changeTurns)}</strong>
+        <span class="agenda-day__colleague">${escapeHtml(colleagues)}</span>
+        <span class="agenda-day__base">Turno previsto: ${escapeHtml(entry.turn)}</span>`;
+    }
+
+    return `
+      <article class="agenda-day${stateClass}">
+        <div class="agenda-date"><span>${escapeHtml(weekday)}</span><strong>${dayNumber}</strong></div>
+        <div class="agenda-day__content">${content}</div>
+        <span class="agenda-day__week">Sett. ${entry.week}</span>
+      </article>`;
+  }
+
+  function renderAgenda() {
+    if (!agendaMonths.length) {
+      agendaMonthTitle.textContent = "Agenda";
+      agendaDaysEl.innerHTML = '<p class="loading-status loading-status--error">Dati dell’agenda non disponibili.</p>';
+      return;
+    }
+    const month = agendaMonths[agendaMonthIndex];
+    agendaMonthTitle.textContent = monthFormat.format(new Date(`${month}-01T12:00:00Z`));
+    agendaPrevious.disabled = agendaMonthIndex === 0;
+    agendaNext.disabled = agendaMonthIndex === agendaMonths.length - 1;
+    agendaDaysEl.innerHTML = agendaEntries.filter(entry => entry.date.startsWith(month)).map(agendaDay).join("");
+  }
+
+  function setView(view, persist = true) {
+    const agendaIsActive = view === "agenda";
+    prospettoView.hidden = agendaIsActive;
+    agendaView.hidden = !agendaIsActive;
+    document.querySelectorAll("[data-app-view]").forEach(button => {
+      const active = button.dataset.appView === view;
+      button.classList.toggle("is-active", active);
+      button.setAttribute("aria-selected", String(active));
+    });
+    if (agendaIsActive) renderAgenda();
+    if (persist) localStorage.setItem(VIEW_STORAGE_KEY, view);
   }
 
   function openTurn(turn, group, displayTurn = `MS${turn}`) {
@@ -282,6 +382,7 @@
     checkbox.checked ? selections.add(key) : selections.delete(key);
     label.classList.toggle("is-selected", checkbox.checked);
     saveSelections();
+    renderAgenda();
   });
 
   weeksEl.addEventListener("click", event => {
@@ -299,6 +400,7 @@
       vacationButton.textContent = action;
       vacationButton.closest("details")?.removeAttribute("open");
       saveVacationWeeks();
+      renderAgenda();
       return;
     }
     const button = event.target.closest("[data-open-turn]");
@@ -307,5 +409,22 @@
 
   document.querySelector("#closeDialog").addEventListener("click", () => dialog.close());
   dialog.addEventListener("click", event => { if (event.target === dialog) dialog.close(); });
+  document.querySelectorAll("[data-app-view]").forEach(button => {
+    button.addEventListener("click", () => setView(button.dataset.appView));
+  });
+  agendaPrevious.addEventListener("click", () => {
+    if (agendaMonthIndex > 0) {
+      agendaMonthIndex -= 1;
+      renderAgenda();
+    }
+  });
+  agendaNext.addEventListener("click", () => {
+    if (agendaMonthIndex < agendaMonths.length - 1) {
+      agendaMonthIndex += 1;
+      renderAgenda();
+    }
+  });
   renderWeeks();
+  renderAgenda();
+  setView(loadActiveView(), false);
 })();
