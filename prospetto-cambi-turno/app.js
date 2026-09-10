@@ -38,6 +38,7 @@
   let cloudDocument = null;
   let cloudReady = false;
   let cloudSaveTimer = null;
+  let loginRecoveryTimer = null;
   let stopCloudListener = null;
   let firebaseServices = null;
 
@@ -116,6 +117,7 @@
   }
 
   async function connectCloudUser(user) {
+    clearTimeout(loginRecoveryTimer);
     cloudReady = false;
     cloudUser = user;
     if (stopCloudListener) stopCloudListener();
@@ -172,6 +174,8 @@
         auth,
         provider: new firebaseAuth.GoogleAuthProvider(),
         signInWithPopup: firebaseAuth.signInWithPopup,
+        signInWithRedirect: firebaseAuth.signInWithRedirect,
+        getRedirectResult: firebaseAuth.getRedirectResult,
         db: firestore.getFirestore(app),
         doc: firestore.doc,
         getDoc: firestore.getDoc,
@@ -180,6 +184,16 @@
         serverTimestamp: firestore.serverTimestamp
       };
       firebaseAuth.onAuthStateChanged(auth, connectCloudUser);
+      firebaseAuth.getRedirectResult(auth).then(result => {
+        sessionStorage.removeItem("prospetto-sync-login");
+        if (!result && !auth.currentUser) {
+          setSyncState("Dati salvati su questo dispositivo", "local", true);
+        }
+      }).catch(error => {
+        console.error("Rientro dall’accesso Google non riuscito", error);
+        sessionStorage.removeItem("prospetto-sync-login");
+        setSyncState("Accedi per sincronizzare", "error", true);
+      });
     } catch (error) {
       console.error("Firebase non disponibile", error);
       setSyncState("Dati salvati su questo dispositivo", "local", true);
@@ -193,10 +207,24 @@
     }
     syncButton.disabled = true;
     setSyncState("Accesso in corso…", "saving");
+    clearTimeout(loginRecoveryTimer);
+    loginRecoveryTimer = setTimeout(() => {
+      if (!cloudUser) {
+        syncButton.disabled = false;
+        setSyncState("Accesso non completato: riprova", "error", true);
+      }
+    }, 12000);
     try {
+      const isIphone = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+      if (isIphone) {
+        sessionStorage.setItem("prospetto-sync-login", "1");
+        await firebaseServices.signInWithRedirect(firebaseServices.auth, firebaseServices.provider);
+        return;
+      }
       await firebaseServices.signInWithPopup(firebaseServices.auth, firebaseServices.provider);
     } catch (error) {
       console.error("Accesso Google non riuscito", error);
+      clearTimeout(loginRecoveryTimer);
       setSyncState("Accedi per sincronizzare", "local", true);
     } finally {
       syncButton.disabled = false;
