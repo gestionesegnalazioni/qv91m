@@ -324,8 +324,7 @@
   }
 
   function resizeNoteField(field) {
-    field.style.height = "auto";
-    field.style.height = `${Math.max(42, field.scrollHeight)}px`;
+    field.style.height = "42px";
   }
 
   function saveInlineNote(field) {
