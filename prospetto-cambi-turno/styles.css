@@ -60,45 +60,6 @@ button { font: inherit; cursor: pointer; }
   box-shadow: 0 2px 7px rgba(16, 38, 75, .2);
 }
 
-.sync-bar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 25px;
-  margin: 4px auto -2px;
-  color: #5b687b;
-  font-size: .75rem;
-  font-weight: 750;
-}
-
-.sync-status::before {
-  content: "";
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  margin-right: 6px;
-  border-radius: 50%;
-  background: #8994a5;
-}
-
-.sync-status[data-mode="synced"] { color: #177345; }
-.sync-status[data-mode="synced"]::before { background: #24a35a; }
-.sync-status[data-mode="saving"]::before { background: #d1aa00; }
-.sync-status[data-mode="error"] { color: #a1221b; }
-.sync-status[data-mode="error"]::before { background: #d02b2b; }
-
-.sync-button {
-  min-height: 25px;
-  padding: 2px 9px;
-  border: 1px solid #91a4bc;
-  border-radius: 7px;
-  background: #fff;
-  color: #24486f;
-  font-size: .72rem;
-  font-weight: 850;
-}
-
 .schedule-board {
   width: min(1900px, calc(100% - 24px));
   margin: 0 auto;
