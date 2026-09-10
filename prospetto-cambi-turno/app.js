@@ -281,7 +281,7 @@
 
   function renderWeeks() {
     weeksEl.innerHTML = data.weeks.map(week => `
-      <article class="week">
+      <article class="week" data-week="${week.index}">
         <header class="week__header">
           <div>
             <h1>Settimana ${week.index}</h1>
@@ -382,7 +382,7 @@
         ? '<span class="agenda-status agenda-status--requested">FERIE RICHIESTE</span>'
         : "";
     return `
-      <article class="agenda-day${stateClasses ? ` ${stateClasses}` : ""}" data-agenda-date="${entry.date}">
+      <article class="agenda-day${stateClasses ? ` ${stateClasses}` : ""}" data-agenda-date="${entry.date}" data-agenda-week="${entry.week || ""}">
         <div class="agenda-date"><span>${escapeHtml(weekday)}</span><strong>${dayNumber}</strong>${entry.date === todayKey ? '<em class="agenda-today">OGGI</em>' : ""}</div>
         <div class="agenda-day__content">
           <strong class="agenda-day__turn">${escapeHtml(agendaTurnLabel(entry.turn))}</strong>
@@ -483,7 +483,36 @@
     renderAgenda();
   }
 
+  let activeView = null;
+
+  function closestVisibleWeek(selector, datasetKey) {
+    const elements = [...document.querySelectorAll(selector)].filter(element => element.dataset[datasetKey]);
+    if (!elements.length) return null;
+    const viewportMiddle = window.innerHeight / 2;
+    const closest = elements.reduce((best, element) => {
+      const rect = element.getBoundingClientRect();
+      const distance = Math.abs(rect.top + rect.height / 2 - viewportMiddle);
+      return !best || distance < best.distance ? { element, distance } : best;
+    }, null);
+    return Number(closest.element.dataset[datasetKey]) || null;
+  }
+
+  function scrollToWeek(view, week) {
+    const target = view === "agenda"
+      ? agendaDaysEl.querySelector(`[data-agenda-week="${week}"]`)
+      : weeksEl.querySelector(`[data-week="${week}"]`);
+    requestAnimationFrame(() => target?.scrollIntoView({ behavior: "smooth", block: "start" }));
+  }
+
   function setView(view) {
+    if (view === activeView) return;
+    let targetWeek = null;
+    if (activeView === "agenda") {
+      targetWeek = closestVisibleWeek(".agenda-day[data-agenda-week]", "agendaWeek");
+    } else if (activeView === "prospetto") {
+      targetWeek = closestVisibleWeek(".week[data-week]", "week");
+    }
+
     const agendaIsActive = view === "agenda";
     prospettoView.hidden = agendaIsActive;
     agendaView.hidden = !agendaIsActive;
@@ -493,10 +522,22 @@
       button.setAttribute("aria-selected", String(active));
     });
     if (agendaIsActive) {
-      const todayMonthIndex = agendaMonths.indexOf(currentMonthKey);
-      if (todayMonthIndex >= 0) agendaMonthIndex = todayMonthIndex;
-      renderAgenda(true);
+      if (targetWeek) {
+        const matchingEntry = agendaEntries.find(entry => entry.week === targetWeek);
+        const matchingMonth = matchingEntry?.date.slice(0, 7);
+        const matchingMonthIndex = agendaMonths.indexOf(matchingMonth);
+        if (matchingMonthIndex >= 0) agendaMonthIndex = matchingMonthIndex;
+        renderAgenda();
+        scrollToWeek("agenda", targetWeek);
+      } else {
+        const todayMonthIndex = agendaMonths.indexOf(currentMonthKey);
+        if (todayMonthIndex >= 0) agendaMonthIndex = todayMonthIndex;
+        renderAgenda(true);
+      }
+    } else if (targetWeek) {
+      scrollToWeek("prospetto", targetWeek);
     }
+    activeView = view;
   }
 
   function openTurn(turn, group, displayTurn = `MS${turn}`) {
