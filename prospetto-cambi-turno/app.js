@@ -15,6 +15,8 @@
   const agendaEditDialog = document.querySelector("#agendaEditDialog");
   const agendaEditTitle = document.querySelector("#agendaEditTitle");
   const agendaNote = document.querySelector("#agendaNote");
+  const syncStatus = document.querySelector("#syncStatus");
+  const syncButton = document.querySelector("#syncButton");
   const dialog = document.querySelector("#turnDialog");
   const dialogBody = document.querySelector("#dialogBody");
   const dialogTitle = document.querySelector("#dialogTitle");
@@ -32,6 +34,12 @@
   let agendaDayData = loadAgendaDayData();
   let editingAgendaDate = "";
   let pendingAgendaStatus = "none";
+  let cloudUser = null;
+  let cloudDocument = null;
+  let cloudReady = false;
+  let cloudSaveTimer = null;
+  let stopCloudListener = null;
+  let firebaseServices = null;
 
   function loadSelections() {
     try { return new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]")); }
@@ -40,6 +48,7 @@
 
   function saveSelections() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify([...selections]));
+    scheduleCloudSave();
   }
 
   function loadVacationWeeks() {
@@ -49,6 +58,7 @@
 
   function saveVacationWeeks() {
     localStorage.setItem(VACATION_STORAGE_KEY, JSON.stringify([...vacationWeeks]));
+    scheduleCloudSave();
   }
 
   function loadAgendaDayData() {
@@ -58,6 +68,139 @@
 
   function saveAgendaDayData() {
     localStorage.setItem(AGENDA_DAY_STORAGE_KEY, JSON.stringify(agendaDayData));
+    scheduleCloudSave();
+  }
+
+  function setSyncState(message, mode = "idle", showButton = false) {
+    syncStatus.textContent = message;
+    syncStatus.dataset.mode = mode;
+    syncButton.hidden = !showButton;
+  }
+
+  function storeCloudDataLocally(payload) {
+    selections = new Set(Array.isArray(payload.selections) ? payload.selections : []);
+    vacationWeeks = new Set(Array.isArray(payload.vacationWeeks) ? payload.vacationWeeks : []);
+    agendaDayData = payload.agendaDayData && typeof payload.agendaDayData === "object" ? payload.agendaDayData : {};
+    localStorage.setItem(STORAGE_KEY, JSON.stringify([...selections]));
+    localStorage.setItem(VACATION_STORAGE_KEY, JSON.stringify([...vacationWeeks]));
+    localStorage.setItem(AGENDA_DAY_STORAGE_KEY, JSON.stringify(agendaDayData));
+    renderWeeks();
+    renderAgenda();
+  }
+
+  function cloudPayload() {
+    return {
+      selections: [...selections],
+      vacationWeeks: [...vacationWeeks],
+      agendaDayData,
+      updatedAt: firebaseServices.serverTimestamp()
+    };
+  }
+
+  async function saveToCloud() {
+    if (!cloudReady || !cloudUser || !cloudDocument || !firebaseServices) return;
+    setSyncState("Salvataggio…", "saving");
+    try {
+      await firebaseServices.setDoc(cloudDocument, cloudPayload(), { merge: true });
+      setSyncState("Dati sincronizzati", "synced");
+    } catch (error) {
+      console.error("Salvataggio online non riuscito", error);
+      setSyncState("Sincronizzazione non riuscita", "error", true);
+    }
+  }
+
+  function scheduleCloudSave() {
+    if (!cloudReady || !cloudUser) return;
+    clearTimeout(cloudSaveTimer);
+    cloudSaveTimer = setTimeout(saveToCloud, 350);
+  }
+
+  async function connectCloudUser(user) {
+    cloudReady = false;
+    cloudUser = user;
+    if (stopCloudListener) stopCloudListener();
+    stopCloudListener = null;
+    if (!user) {
+      cloudDocument = null;
+      setSyncState("Dati salvati su questo dispositivo", "local", true);
+      return;
+    }
+
+    setSyncState("Caricamento dati online…", "saving");
+    cloudDocument = firebaseServices.doc(firebaseServices.db, "prospettoCambiTurno", user.uid);
+    try {
+      const snapshot = await firebaseServices.getDoc(cloudDocument);
+      if (snapshot.exists()) {
+        storeCloudDataLocally(snapshot.data());
+      } else {
+        await firebaseServices.setDoc(cloudDocument, cloudPayload());
+      }
+      cloudReady = true;
+      setSyncState("Dati sincronizzati", "synced");
+      stopCloudListener = firebaseServices.onSnapshot(cloudDocument, remote => {
+        if (!remote.exists() || !cloudReady) return;
+        storeCloudDataLocally(remote.data());
+        setSyncState("Dati sincronizzati", "synced");
+      }, error => {
+        console.error("Aggiornamento online non disponibile", error);
+        setSyncState("Sincronizzazione non riuscita", "error", true);
+      });
+    } catch (error) {
+      console.error("Collegamento al database non riuscito", error);
+      setSyncState("Sincronizzazione non riuscita", "error", true);
+    }
+  }
+
+  async function initCloudSync() {
+    try {
+      const firebaseApp = await import("https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js");
+      const firestore = await import("https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js");
+      const firebaseAuth = await import("https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js");
+      const app = firebaseApp.initializeApp({
+        apiKey: "AIzaSyBdwNH43PZFgSfKZOEfJtBrF-ooC4NOnGc",
+        authDomain: "gestionesegnalazioni.firebaseapp.com",
+        projectId: "gestionesegnalazioni",
+        storageBucket: "gestionesegnalazioni.firebasestorage.app",
+        messagingSenderId: "930504240088",
+        appId: "1:930504240088:web:60e43f95f82883b43b20ad"
+      });
+      const auth = firebaseAuth.initializeAuth(app, {
+        persistence: firebaseAuth.browserLocalPersistence,
+        popupRedirectResolver: firebaseAuth.browserPopupRedirectResolver
+      });
+      firebaseServices = {
+        auth,
+        provider: new firebaseAuth.GoogleAuthProvider(),
+        signInWithPopup: firebaseAuth.signInWithPopup,
+        db: firestore.getFirestore(app),
+        doc: firestore.doc,
+        getDoc: firestore.getDoc,
+        setDoc: firestore.setDoc,
+        onSnapshot: firestore.onSnapshot,
+        serverTimestamp: firestore.serverTimestamp
+      };
+      firebaseAuth.onAuthStateChanged(auth, connectCloudUser);
+    } catch (error) {
+      console.error("Firebase non disponibile", error);
+      setSyncState("Dati salvati su questo dispositivo", "local", true);
+    }
+  }
+
+  async function requestCloudLogin() {
+    if (!firebaseServices) {
+      setSyncState("Connessione non disponibile", "error", true);
+      return;
+    }
+    syncButton.disabled = true;
+    setSyncState("Accesso in corso…", "saving");
+    try {
+      await firebaseServices.signInWithPopup(firebaseServices.auth, firebaseServices.provider);
+    } catch (error) {
+      console.error("Accesso Google non riuscito", error);
+      setSyncState("Accedi per sincronizzare", "local", true);
+    } finally {
+      syncButton.disabled = false;
+    }
   }
 
   function escapeHtml(value) {
@@ -516,7 +659,9 @@
   agendaEditDialog.addEventListener("click", event => {
     if (event.target === agendaEditDialog) closeAgendaEditor();
   });
+  syncButton.addEventListener("click", requestCloudLogin);
   renderWeeks();
   renderAgenda();
   setView("agenda");
+  initCloudSync();
 })();
