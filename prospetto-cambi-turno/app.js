@@ -15,8 +15,6 @@
   const agendaEditDialog = document.querySelector("#agendaEditDialog");
   const agendaEditTitle = document.querySelector("#agendaEditTitle");
   const agendaNote = document.querySelector("#agendaNote");
-  const syncStatus = document.querySelector("#syncStatus");
-  const syncButton = document.querySelector("#syncButton");
   const dialog = document.querySelector("#turnDialog");
   const dialogBody = document.querySelector("#dialogBody");
   const dialogTitle = document.querySelector("#dialogTitle");
@@ -38,7 +36,6 @@
   let cloudDocument = null;
   let cloudReady = false;
   let cloudSaveTimer = null;
-  let loginRecoveryTimer = null;
   let stopCloudListener = null;
   let firebaseServices = null;
 
@@ -72,12 +69,6 @@
     scheduleCloudSave();
   }
 
-  function setSyncState(message, mode = "idle", showButton = false) {
-    syncStatus.textContent = message;
-    syncStatus.dataset.mode = mode;
-    syncButton.hidden = !showButton;
-  }
-
   function storeCloudDataLocally(payload) {
     selections = new Set(Array.isArray(payload.selections) ? payload.selections : []);
     vacationWeeks = new Set(Array.isArray(payload.vacationWeeks) ? payload.vacationWeeks : []);
@@ -100,13 +91,10 @@
 
   async function saveToCloud() {
     if (!cloudReady || !cloudUser || !cloudDocument || !firebaseServices) return;
-    setSyncState("Salvataggio…", "saving");
     try {
       await firebaseServices.setDoc(cloudDocument, cloudPayload(), { merge: true });
-      setSyncState("Dati sincronizzati", "synced");
     } catch (error) {
       console.error("Salvataggio online non riuscito", error);
-      setSyncState("Sincronizzazione non riuscita", "error", true);
     }
   }
 
@@ -117,19 +105,16 @@
   }
 
   async function connectCloudUser(user) {
-    clearTimeout(loginRecoveryTimer);
     cloudReady = false;
     cloudUser = user;
     if (stopCloudListener) stopCloudListener();
     stopCloudListener = null;
     if (!user) {
       cloudDocument = null;
-      setSyncState("Dati salvati su questo dispositivo", "local", true);
       return;
     }
 
-    setSyncState("Caricamento dati online…", "saving");
-    cloudDocument = firebaseServices.doc(firebaseServices.db, "prospettoCambiTurno", user.uid);
+    cloudDocument = firebaseServices.doc(firebaseServices.db, "prospettoCambiTurno", "archivioCondiviso");
     try {
       const snapshot = await firebaseServices.getDoc(cloudDocument);
       if (snapshot.exists()) {
@@ -138,18 +123,14 @@
         await firebaseServices.setDoc(cloudDocument, cloudPayload());
       }
       cloudReady = true;
-      setSyncState("Dati sincronizzati", "synced");
       stopCloudListener = firebaseServices.onSnapshot(cloudDocument, remote => {
         if (!remote.exists() || !cloudReady) return;
         storeCloudDataLocally(remote.data());
-        setSyncState("Dati sincronizzati", "synced");
       }, error => {
         console.error("Aggiornamento online non disponibile", error);
-        setSyncState("Sincronizzazione non riuscita", "error", true);
       });
     } catch (error) {
       console.error("Collegamento al database non riuscito", error);
-      setSyncState("Sincronizzazione non riuscita", "error", true);
     }
   }
 
@@ -172,10 +153,7 @@
       });
       firebaseServices = {
         auth,
-        provider: new firebaseAuth.GoogleAuthProvider(),
-        signInWithPopup: firebaseAuth.signInWithPopup,
-        signInWithRedirect: firebaseAuth.signInWithRedirect,
-        getRedirectResult: firebaseAuth.getRedirectResult,
+        signInAnonymously: firebaseAuth.signInAnonymously,
         db: firestore.getFirestore(app),
         doc: firestore.doc,
         getDoc: firestore.getDoc,
@@ -183,51 +161,12 @@
         onSnapshot: firestore.onSnapshot,
         serverTimestamp: firestore.serverTimestamp
       };
-      firebaseAuth.onAuthStateChanged(auth, connectCloudUser);
-      firebaseAuth.getRedirectResult(auth).then(result => {
-        sessionStorage.removeItem("prospetto-sync-login");
-        if (!result && !auth.currentUser) {
-          setSyncState("Dati salvati su questo dispositivo", "local", true);
-        }
-      }).catch(error => {
-        console.error("Rientro dall’accesso Google non riuscito", error);
-        sessionStorage.removeItem("prospetto-sync-login");
-        setSyncState("Accedi per sincronizzare", "error", true);
+      firebaseAuth.onAuthStateChanged(auth, user => {
+        if (user) connectCloudUser(user);
       });
+      if (!auth.currentUser) await firebaseAuth.signInAnonymously(auth);
     } catch (error) {
       console.error("Firebase non disponibile", error);
-      setSyncState("Dati salvati su questo dispositivo", "local", true);
-    }
-  }
-
-  async function requestCloudLogin() {
-    if (!firebaseServices) {
-      setSyncState("Connessione non disponibile", "error", true);
-      return;
-    }
-    syncButton.disabled = true;
-    setSyncState("Accesso in corso…", "saving");
-    clearTimeout(loginRecoveryTimer);
-    loginRecoveryTimer = setTimeout(() => {
-      if (!cloudUser) {
-        syncButton.disabled = false;
-        setSyncState("Accesso non completato: riprova", "error", true);
-      }
-    }, 12000);
-    try {
-      const isIphone = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-      if (isIphone) {
-        sessionStorage.setItem("prospetto-sync-login", "1");
-        await firebaseServices.signInWithRedirect(firebaseServices.auth, firebaseServices.provider);
-        return;
-      }
-      await firebaseServices.signInWithPopup(firebaseServices.auth, firebaseServices.provider);
-    } catch (error) {
-      console.error("Accesso Google non riuscito", error);
-      clearTimeout(loginRecoveryTimer);
-      setSyncState("Accedi per sincronizzare", "local", true);
-    } finally {
-      syncButton.disabled = false;
     }
   }
 
@@ -687,7 +626,6 @@
   agendaEditDialog.addEventListener("click", event => {
     if (event.target === agendaEditDialog) closeAgendaEditor();
   });
-  syncButton.addEventListener("click", requestCloudLogin);
   renderWeeks();
   renderAgenda();
   setView("agenda");
