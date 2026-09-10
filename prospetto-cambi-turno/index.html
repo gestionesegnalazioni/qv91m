@@ -12,13 +12,13 @@
   <link rel="icon" href="agenda-icon-nero.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="agenda-icon-nero.svg">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="styles.css?v=20260910-6">
+  <link rel="stylesheet" href="styles.css?v=20260910-7">
 </head>
 <body>
   <header class="top-switcher">
     <nav class="view-tabs" aria-label="Sezioni del prospetto">
-      <button class="view-tab" type="button" data-app-view="prospetto" aria-selected="false">Prospetto</button>
       <button class="view-tab is-active" type="button" data-app-view="agenda" aria-selected="true">Agenda</button>
+      <button class="view-tab" type="button" data-app-view="prospetto" aria-selected="false">Prospetto</button>
     </nav>
   </header>
 
@@ -32,12 +32,10 @@
       <div class="agenda-toolbar">
         <button id="agendaPrevious" class="agenda-month-button" type="button" aria-label="Mese precedente">‹</button>
         <div>
-          <p class="agenda-kicker">La mia agenda</p>
           <h1 id="agendaMonthTitle">Agenda</h1>
         </div>
         <button id="agendaNext" class="agenda-month-button" type="button" aria-label="Mese successivo">›</button>
       </div>
-      <p class="agenda-legend"><span class="legend-dot legend-dot--turn"></span>Turno previsto <span class="legend-dot legend-dot--change"></span>Cambio <span class="legend-dot legend-dot--vacation"></span>Ferie <span class="legend-dot legend-dot--rest"></span>Riposo <span class="legend-dot legend-dot--sunday"></span>Domenica</p>
       <div id="agendaDays" class="agenda-days" aria-live="polite"></div>
     </section>
   </main>
@@ -79,6 +77,6 @@
 
   <noscript><p class="loading-status loading-status--error">Per visualizzare il prospetto è necessario attivare JavaScript.</p></noscript>
   <script src="data.js?v=20260910-1"></script>
-    <script src="app.js?v=20260910-5"></script>
+    <script src="app.js?v=20260910-6"></script>
 </body>
 </html>
