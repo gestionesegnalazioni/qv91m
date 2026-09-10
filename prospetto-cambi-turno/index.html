@@ -12,7 +12,7 @@
   <link rel="icon" href="agenda-icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="agenda-icon.svg">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="styles.css?v=20260910-4">
+  <link rel="stylesheet" href="styles.css?v=20260910-5">
 </head>
 <body>
   <header class="top-switcher">
@@ -20,6 +20,10 @@
       <button class="view-tab" type="button" data-app-view="prospetto" aria-selected="false">Prospetto</button>
       <button class="view-tab is-active" type="button" data-app-view="agenda" aria-selected="true">Agenda</button>
     </nav>
+    <div class="sync-bar" id="syncBar">
+      <span class="sync-status" id="syncStatus">Verifica sincronizzazione…</span>
+      <button class="sync-button" id="syncButton" type="button" hidden>Accedi e sincronizza</button>
+    </div>
   </header>
 
   <main class="schedule-board">
@@ -79,6 +83,6 @@
 
   <noscript><p class="loading-status loading-status--error">Per visualizzare il prospetto è necessario attivare JavaScript.</p></noscript>
   <script src="data.js?v=20260910-1"></script>
-    <script src="app.js?v=20260910-2"></script>
+    <script src="app.js?v=20260910-3"></script>
 </body>
 </html>
