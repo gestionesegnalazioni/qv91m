@@ -275,9 +275,9 @@ button { font: inherit; cursor: pointer; }
 .agenda-day__note-space {
   width: 100%;
   min-width: 0;
-  height: 32px;
-  min-height: 32px;
-  max-height: 32px;
+  height: 28px;
+  min-height: 28px;
+  max-height: 28px;
   margin-top: auto;
   padding: 3px 6px;
   border: 1px dashed #b7c1cf;
@@ -807,9 +807,15 @@ button { font: inherit; cursor: pointer; }
   .agenda-toolbar h1 { font-size: 1.08rem; }
   .agenda-day {
     grid-template-columns: 48px minmax(0, 1fr) 44px;
-    min-height: 84px;
+    height: 76px;
+    min-height: 76px;
+    max-height: 76px;
   }
-  .agenda-day__content { padding: 5px 6px; }
+  .agenda-day__content { gap: 2px; padding: 4px 6px; overflow: hidden; }
+  .agenda-day__turn { font-size: 1.08rem; line-height: 1; }
+  .agenda-day__change { padding-top: 2px; font-size: .7rem; line-height: 1.05; }
+  .agenda-status { margin-top: 0; padding: 2px 5px; font-size: .58rem; }
+  .agenda-day__note-space { margin-top: 1px; }
   .agenda-day__week { margin-right: 0; font-size: .58rem; }
   .agenda-status-options { grid-template-columns: 1fr; }
   .agenda-change-fields { grid-template-columns: 1fr; }
