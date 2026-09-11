@@ -324,7 +324,14 @@
   }
 
   function resizeNoteField(field) {
-    field.style.height = "32px";
+    field.style.height = "28px";
+  }
+
+  function mondayDateKey(dateValue) {
+    const date = new Date(`${dateValue}T12:00:00Z`);
+    const daysFromMonday = (date.getUTCDay() + 6) % 7;
+    date.setUTCDate(date.getUTCDate() - daysFromMonday);
+    return date.toISOString().slice(0, 10);
   }
 
   function saveInlineNote(field) {
@@ -410,7 +417,10 @@
     agendaDaysEl.querySelectorAll("[data-agenda-note]").forEach(resizeNoteField);
     if (scrollToToday && month === currentMonthKey) {
       requestAnimationFrame(() => {
-        agendaDaysEl.querySelector(`[data-agenda-date="${todayKey}"]`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+        const monday = mondayDateKey(todayKey);
+        const target = agendaDaysEl.querySelector(`[data-agenda-date="${monday}"]`)
+          || agendaDaysEl.querySelector(`[data-agenda-date="${todayKey}"]`);
+        target?.scrollIntoView({ behavior: "smooth", block: "start" });
       });
     }
   }
@@ -497,9 +507,14 @@
   }
 
   function scrollToWeek(view, week) {
-    const target = view === "agenda"
-      ? agendaDaysEl.querySelector(`[data-agenda-week="${week}"]`)
-      : weeksEl.querySelector(`[data-week="${week}"]`);
+    let target;
+    if (view === "agenda") {
+      const firstWeekDay = agendaDaysEl.querySelector(`[data-agenda-week="${week}"]`);
+      const monday = firstWeekDay ? mondayDateKey(firstWeekDay.dataset.agendaDate) : "";
+      target = agendaDaysEl.querySelector(`[data-agenda-date="${monday}"]`) || firstWeekDay;
+    } else {
+      target = weeksEl.querySelector(`[data-week="${week}"]`);
+    }
     requestAnimationFrame(() => target?.scrollIntoView({ behavior: "smooth", block: "start" }));
   }
 
