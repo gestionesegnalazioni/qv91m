@@ -9,9 +9,6 @@
   const prospettoView = document.querySelector("#prospettoView");
   const agendaView = document.querySelector("#agendaView");
   const agendaDaysEl = document.querySelector("#agendaDays");
-  const agendaMonthTitle = document.querySelector("#agendaMonthTitle");
-  const agendaPrevious = document.querySelector("#agendaPrevious");
-  const agendaNext = document.querySelector("#agendaNext");
   const agendaEditDialog = document.querySelector("#agendaEditDialog");
   const agendaEditTitle = document.querySelector("#agendaEditTitle");
   const agendaChangeTurn = document.querySelector("#agendaChangeTurn");
@@ -25,11 +22,9 @@
   const monthFormat = new Intl.DateTimeFormat("it-IT", { month: "long", year: "numeric", timeZone: "UTC" });
   const weekdayFormat = new Intl.DateTimeFormat("it-IT", { weekday: "short", timeZone: "UTC" });
   const agendaEntries = Array.isArray(data.agenda) ? data.agenda : [];
-  const agendaMonths = [...new Set(agendaEntries.map(entry => entry.date.slice(0, 7)))];
+  const agendaMonths = [...new Set(agendaEntries.map(entry => entry.date.slice(0, 7)))].sort();
   const now = new Date();
   const todayKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
-  const currentMonthKey = todayKey.slice(0, 7);
-  let agendaMonthIndex = Math.max(0, agendaMonths.indexOf(currentMonthKey));
   let selections = loadSelections();
   let vacationWeeks = loadVacationWeeks();
   let agendaDayData = loadAgendaDayData();
@@ -405,17 +400,18 @@
 
   function renderAgenda(scrollToToday = false) {
     if (!agendaMonths.length) {
-      agendaMonthTitle.textContent = "Agenda";
       agendaDaysEl.innerHTML = '<p class="loading-status loading-status--error">Dati dell’agenda non disponibili.</p>';
       return;
     }
-    const month = agendaMonths[agendaMonthIndex];
-    agendaMonthTitle.textContent = monthFormat.format(new Date(`${month}-01T12:00:00Z`));
-    agendaPrevious.disabled = agendaMonthIndex === 0;
-    agendaNext.disabled = agendaMonthIndex === agendaMonths.length - 1;
-    agendaDaysEl.innerHTML = entriesForAgendaMonth(month).map(agendaDay).join("");
+    agendaDaysEl.innerHTML = agendaMonths.map(month => `
+      <section class="agenda-month" data-agenda-month="${month}" aria-labelledby="agenda-month-${month}">
+        <header class="agenda-month-header">
+          <h2 id="agenda-month-${month}">${escapeHtml(monthFormat.format(new Date(`${month}-01T12:00:00Z`)))}</h2>
+        </header>
+        <div class="agenda-days">${entriesForAgendaMonth(month).map(agendaDay).join("")}</div>
+      </section>`).join("");
     agendaDaysEl.querySelectorAll("[data-agenda-note]").forEach(resizeNoteField);
-    if (scrollToToday && month === currentMonthKey) {
+    if (scrollToToday) {
       requestAnimationFrame(() => {
         const monday = mondayDateKey(todayKey);
         const target = agendaDaysEl.querySelector(`[data-agenda-date="${monday}"]`)
@@ -537,15 +533,9 @@
     });
     if (agendaIsActive) {
       if (targetWeek) {
-        const matchingEntry = agendaEntries.find(entry => entry.week === targetWeek);
-        const matchingMonth = matchingEntry?.date.slice(0, 7);
-        const matchingMonthIndex = agendaMonths.indexOf(matchingMonth);
-        if (matchingMonthIndex >= 0) agendaMonthIndex = matchingMonthIndex;
         renderAgenda();
         scrollToWeek("agenda", targetWeek);
       } else {
-        const todayMonthIndex = agendaMonths.indexOf(currentMonthKey);
-        if (todayMonthIndex >= 0) agendaMonthIndex = todayMonthIndex;
         renderAgenda(true);
       }
     } else if (targetWeek) {
@@ -702,18 +692,6 @@
   dialog.addEventListener("click", event => { if (event.target === dialog) dialog.close(); });
   document.querySelectorAll("[data-app-view]").forEach(button => {
     button.addEventListener("click", () => setView(button.dataset.appView));
-  });
-  agendaPrevious.addEventListener("click", () => {
-    if (agendaMonthIndex > 0) {
-      agendaMonthIndex -= 1;
-      renderAgenda();
-    }
-  });
-  agendaNext.addEventListener("click", () => {
-    if (agendaMonthIndex < agendaMonths.length - 1) {
-      agendaMonthIndex += 1;
-      renderAgenda();
-    }
   });
   agendaDaysEl.addEventListener("click", event => {
     const button = event.target.closest("[data-edit-agenda]");

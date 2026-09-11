@@ -15,7 +15,7 @@
   <link rel="icon" href="agenda-icon-nero.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="agenda-icon-nero.svg">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="styles.css?v=20260911-5">
+  <link rel="stylesheet" href="styles.css?v=20260911-6">
 </head>
 <body>
   <header class="top-switcher">
@@ -32,14 +32,7 @@
     </section>
 
     <section id="agendaView" class="agenda-view" aria-label="Agenda personale">
-      <div class="agenda-toolbar">
-        <button id="agendaPrevious" class="agenda-month-button" type="button" aria-label="Mese precedente">‹</button>
-        <div>
-          <h1 id="agendaMonthTitle">Agenda</h1>
-        </div>
-        <button id="agendaNext" class="agenda-month-button" type="button" aria-label="Mese successivo">›</button>
-      </div>
-      <div id="agendaDays" class="agenda-days" aria-live="polite"></div>
+      <div id="agendaDays" class="agenda-months" aria-live="polite"></div>
     </section>
   </main>
 
@@ -81,6 +74,6 @@
 
   <noscript><p class="loading-status loading-status--error">Per visualizzare il prospetto è necessario attivare JavaScript.</p></noscript>
   <script src="data.js?v=20260910-1"></script>
-    <script src="app.js?v=20260911-2"></script>
+  <script src="app.js?v=20260911-6"></script>
 </body>
 </html>

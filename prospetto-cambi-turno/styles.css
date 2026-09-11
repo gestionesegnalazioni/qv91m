@@ -91,11 +91,14 @@ button { font: inherit; cursor: pointer; }
   margin: 0 auto;
 }
 
-.agenda-toolbar {
+.agenda-months {
   display: grid;
-  grid-template-columns: 44px minmax(0, 1fr) 44px;
-  align-items: center;
-  gap: 10px;
+  gap: 16px;
+}
+
+.agenda-month { min-width: 0; }
+
+.agenda-month-header {
   padding: 14px;
   border: 1px solid rgba(196, 181, 253, .72);
   border-radius: 12px;
@@ -105,31 +108,12 @@ button { font: inherit; cursor: pointer; }
   text-align: center;
 }
 
-.agenda-toolbar h1 {
+.agenda-month-header h2 {
   margin: 1px 0 0;
   font-size: 1.25rem;
+  font-weight: 400;
   line-height: 1.1;
   text-transform: capitalize;
-}
-
-.agenda-month-button {
-  display: grid;
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  place-items: center;
-  border: 1px solid rgba(167, 139, 250, .55);
-  border-radius: 9px;
-  background: rgba(255, 255, 255, .72);
-  color: #7c3aed;
-  font-size: 1.65rem;
-  font-weight: 800;
-  line-height: 1;
-}
-
-.agenda-month-button:disabled {
-  cursor: default;
-  opacity: .3;
 }
 
 .agenda-days {
@@ -808,11 +792,10 @@ button { font: inherit; cursor: pointer; }
   .week__groups { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .person { font-size: .68rem; }
 
-  .agenda-toolbar {
-    grid-template-columns: 40px minmax(0, 1fr) 40px;
+  .agenda-month-header {
     padding: 11px;
   }
-  .agenda-toolbar h1 { font-size: 1.08rem; }
+  .agenda-month-header h2 { font-size: 1.08rem; }
   .agenda-day {
     grid-template-columns: 48px minmax(0, 1fr) 44px;
     height: 88px;
