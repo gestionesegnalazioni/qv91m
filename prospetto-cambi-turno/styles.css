@@ -218,6 +218,17 @@ button { font: inherit; cursor: pointer; }
   overflow-y: auto;
   overflow-wrap: anywhere;
   resize: none;
+  -webkit-appearance: none;
+  appearance: none;
+  outline: none;
+  box-shadow: none;
+}
+
+.agenda-day__note-space:focus,
+.agenda-day__note-space:focus-visible {
+  border: 0;
+  outline: none;
+  box-shadow: none;
 }
 
 .agenda-day__note-space.has-note {
