@@ -60,6 +60,11 @@ button { font: inherit; cursor: pointer; }
   box-shadow: 0 2px 7px rgba(20, 99, 55, .24);
 }
 
+.view-tab[data-app-view="agenda"].is-active {
+  background: #7c3aed;
+  box-shadow: 0 2px 9px rgba(109, 40, 217, .24);
+}
+
 .schedule-board {
   width: min(1900px, calc(100% - 24px));
   margin: 0 auto;
@@ -91,11 +96,11 @@ button { font: inherit; cursor: pointer; }
   align-items: center;
   gap: 10px;
   padding: 14px;
-  border: 1px solid #bfc9d8;
+  border: 1px solid rgba(196, 181, 253, .72);
   border-radius: 12px;
-  background: #c18400;
-  color: white;
-  box-shadow: 0 4px 12px rgba(16, 38, 75, .1);
+  background: linear-gradient(145deg, #f5f3ff, #ddd6fe);
+  color: #5b21b6;
+  box-shadow: 0 8px 22px rgba(109, 40, 217, .12);
   text-align: center;
 }
 
@@ -112,10 +117,10 @@ button { font: inherit; cursor: pointer; }
   height: 40px;
   padding: 0;
   place-items: center;
-  border: 1px solid rgba(255, 255, 255, .45);
+  border: 1px solid rgba(167, 139, 250, .55);
   border-radius: 9px;
-  background: rgba(255, 255, 255, .08);
-  color: white;
+  background: rgba(255, 255, 255, .72);
+  color: #7c3aed;
   font-size: 1.65rem;
   font-weight: 800;
   line-height: 1;
@@ -137,11 +142,11 @@ button { font: inherit; cursor: pointer; }
   grid-template-columns: 56px minmax(0, 1fr) 50px;
   min-height: 84px;
   overflow: hidden;
-  border: 1px solid #cbd4e1;
-  border-left: 5px solid var(--blue);
+  border: 1px solid rgba(196, 181, 253, .72);
+  border-left: 5px solid #8b5cf6;
   border-radius: 10px;
   background: white;
-  box-shadow: 0 2px 7px rgba(16, 38, 75, .06);
+  box-shadow: 0 4px 12px rgba(109, 40, 217, .07);
   scroll-margin-top: 72px;
 }
 
@@ -152,13 +157,13 @@ button { font: inherit; cursor: pointer; }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-right: 1px solid #d7deea;
-  background: var(--blue-soft);
-  color: var(--navy);
+  border-right: 1px solid #ddd6fe;
+  background: #f5f3ff;
+  color: #5b21b6;
 }
 
 .agenda-date span {
-  color: var(--muted);
+  color: #8b5cf6;
   font-size: .64rem;
   font-weight: 900;
   letter-spacing: .05em;
@@ -173,7 +178,7 @@ button { font: inherit; cursor: pointer; }
   margin-top: 5px;
   padding: 2px 5px;
   border-radius: 4px;
-  background: #111;
+  background: #7c3aed;
   color: #fff;
   font-size: .56rem;
   font-style: normal;
@@ -210,7 +215,7 @@ button { font: inherit; cursor: pointer; }
 }
 
 .agenda-day__turn {
-  color: var(--blue);
+  color: #7c3aed;
   font-size: 1.2rem;
   line-height: 1.15;
 }
@@ -280,10 +285,10 @@ button { font: inherit; cursor: pointer; }
   max-height: 32px;
   margin-top: auto;
   padding: 3px 6px;
-  border: 1px dashed #b7c1cf;
+  border: 1px dashed #c4b5fd;
   border-radius: 6px;
-  background: #f8fafc;
-  color: #7a8494;
+  background: #fbfaff;
+  color: #8a7ca1;
   font: inherit;
   font-size: 16px;
   text-align: left;
@@ -295,8 +300,8 @@ button { font: inherit; cursor: pointer; }
 
 .agenda-day__note-space.has-note {
   border-style: solid;
-  background: #eef3f8;
-  color: var(--ink);
+  background: #f5f3ff;
+  color: #35205a;
   font-size: 14px;
   font-weight: 400;
   white-space: pre-wrap;
@@ -308,11 +313,11 @@ button { font: inherit; cursor: pointer; }
   align-items: center;
   justify-content: center;
   gap: 7px;
-  border-left: 1px solid #e0e5ed;
+  border-left: 1px solid #ddd6fe;
 }
 
 .agenda-day__week {
-  color: var(--muted);
+  color: #76668e;
   font-size: .65rem;
   font-weight: 800;
   white-space: nowrap;
@@ -324,16 +329,16 @@ button { font: inherit; cursor: pointer; }
   height: 34px;
   padding: 0;
   place-items: center;
-  border: 1px solid #aeb9ca;
+  border: 1px solid #c4b5fd;
   border-radius: 8px;
   background: white;
-  color: var(--navy);
+  color: #6d28d9;
   font-size: 1.15rem;
   font-weight: 900;
   line-height: 1;
 }
 
-.agenda-day__menu:hover { background: var(--blue-soft); }
+.agenda-day__menu:hover { background: #f1edff; }
 
 .agenda-day--change {
   border-left-color: #d1aa00;
@@ -372,8 +377,8 @@ button { font: inherit; cursor: pointer; }
 .agenda-day--sunday .agenda-date span { color: #ffe5e5; }
 
 .agenda-day--today {
-  border-color: #111;
-  box-shadow: 0 0 0 3px #111, 0 5px 14px rgba(0, 0, 0, .18);
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 3px #c4b5fd, 0 5px 14px rgba(109, 40, 217, .18);
 }
 
 .agenda-edit-dialog {
