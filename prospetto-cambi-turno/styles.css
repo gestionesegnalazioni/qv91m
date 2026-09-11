@@ -13,6 +13,14 @@
 
 * { box-sizing: border-box; }
 
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+  overscroll-behavior-x: none;
+}
+
 body {
   margin: 0;
   background: var(--canvas);
@@ -27,8 +35,12 @@ button { font: inherit; cursor: pointer; }
 
 .schedule-board {
   width: min(1900px, calc(100% - 24px));
+  max-width: calc(100% - 24px);
   margin: 0 auto;
   padding: 12px 0 28px;
+  overflow-x: clip;
+  overscroll-behavior-x: none;
+  touch-action: pan-y;
 }
 
 .loading-status {
@@ -47,7 +59,10 @@ button { font: inherit; cursor: pointer; }
 #prospettoView,
 .agenda-view {
   width: min(760px, 100%);
+  max-width: 100%;
+  min-width: 0;
   margin: 0 auto;
+  overflow-x: clip;
 }
 
 .agenda-quick-nav {
@@ -86,10 +101,16 @@ button { font: inherit; cursor: pointer; }
 
 .agenda-months {
   display: grid;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   gap: 42px;
+  overflow-x: clip;
 }
 
-.agenda-month { min-width: 0; }
+.agenda-month,
+.agenda-days,
+.agenda-day { width: 100%; max-width: 100%; min-width: 0; }
 
 .agenda-month-header {
   padding: 14px;
