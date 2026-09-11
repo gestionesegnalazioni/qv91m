@@ -15,6 +15,19 @@
   const dialogTitle = document.querySelector("#dialogTitle");
   const dialogGroup = document.querySelector("#dialogGroup");
   const EVENING_TURNS = new Set(["128", "154", "156", "158"]);
+  const ITALIAN_HOLIDAYS = new Map([
+    ["2026-11-01", "Tutti i Santi"],
+    ["2026-12-08", "Immacolata Concezione"],
+    ["2026-12-25", "Natale"],
+    ["2026-12-26", "Santo Stefano"],
+    ["2027-01-01", "Capodanno"],
+    ["2027-01-06", "Epifania"],
+    ["2027-03-28", "Pasqua"],
+    ["2027-03-29", "Lunedì dell’Angelo"],
+    ["2027-04-25", "Festa della Liberazione"],
+    ["2027-05-01", "Festa del Lavoro"],
+    ["2027-06-02", "Festa della Repubblica"]
+  ]);
   const dateFormat = new Intl.DateTimeFormat("it-IT", { day: "numeric", month: "short", timeZone: "UTC" });
   const monthFormat = new Intl.DateTimeFormat("it-IT", { month: "long", year: "numeric", timeZone: "UTC" });
   const weekdayFormat = new Intl.DateTimeFormat("it-IT", { weekday: "short", timeZone: "UTC" });
@@ -404,11 +417,13 @@
     const weekday = weekdayFormat.format(date).replace(".", "").toUpperCase();
     const dayNumber = date.getUTCDate();
     const saved = agendaDayData[entry.date] || {};
+    const holidayName = ITALIAN_HOLIDAYS.get(entry.date) || "";
     const stateClasses = [
-      entry.day === "DOM" ? "agenda-day--sunday" : ""
+      entry.day === "DOM" ? "agenda-day--sunday" : "",
+      holidayName ? "agenda-day--holiday" : ""
     ].filter(Boolean).join(" ");
     return `
-      <article class="agenda-day${stateClasses ? ` ${stateClasses}` : ""}" data-agenda-date="${entry.date}" data-agenda-week="${entry.week || ""}"${entry.date === todayKey ? ' aria-current="date"' : ""}>
+      <article class="agenda-day${stateClasses ? ` ${stateClasses}` : ""}" data-agenda-date="${entry.date}" data-agenda-week="${entry.week || ""}"${holidayName ? ` title="${escapeHtml(holidayName)}" aria-label="${escapeHtml(`${weekday} ${dayNumber}, ${holidayName}`)}"` : ""}${entry.date === todayKey ? ' aria-current="date"' : ""}>
         <div class="agenda-date"><span>${escapeHtml(weekday)}</span><strong>${dayNumber}</strong><small class="agenda-date__month">${escapeHtml(dayMonthFormat.format(date))}</small></div>
         <div class="agenda-day__content">
           <div class="agenda-day__heading">
