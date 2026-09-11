@@ -93,7 +93,7 @@ button { font: inherit; cursor: pointer; }
 
 .agenda-months {
   display: grid;
-  gap: 16px;
+  gap: 32px;
 }
 
 .agenda-month { min-width: 0; }
