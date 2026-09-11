@@ -23,10 +23,8 @@ jobs:
           p = Path('index.html')
           s = p.read_text(encoding='utf-8')
 
-          # 1) Non cancellare più la cache ad ogni apertura.
           s = s.replace("['cache_buses','cache_seg','cache_temi'].forEach(key => localStorage.removeItem(key));", "// Mantieni la cache locale per un'apertura immediata dell'app.", 1)
 
-          # 2) Carica subito la cache dopo le dichiarazioni principali.
           marker = """let attentionReportEntries = [];
 let selectedBus = null;"""
           replacement = """let attentionReportEntries = [];
@@ -46,26 +44,12 @@ let selectedBus = null;"""
               raise SystemExit('Marker dichiarazioni non trovato')
           s = s.replace(marker, replacement, 1)
 
-          # 3) Salva gli snapshot aggiornati nella cache.
-          replacements = [
-            ("buses = snap.docs.map(d => ({ id:d.id, ...d.data() })).sort(byMat);",
-             "buses = snap.docs.map(d => ({ id:d.id, ...d.data() })).sort(byMat);\n    localStorage.setItem('cache_buses', JSON.stringify(buses));"),
-            ("segnalazioni = snap.docs.map(d => ({ id:d.id, ...d.data() }));",
-             "segnalazioni = snap.docs.map(d => ({ id:d.id, ...d.data() }));\n    localStorage.setItem('cache_seg', JSON.stringify(segnalazioni));"),
-            ("fermateSoppresse = snap.docs.map(d => ({ id:d.id, ...d.data() }))",
-             "fermateSoppresse = snap.docs.map(d => ({ id:d.id, ...d.data() }))"),
-            ("modifiche = snap.docs.map(d => ({ id:d.id, ...d.data() }));",
-             "modifiche = snap.docs.map(d => ({ id:d.id, ...d.data() }));\n    localStorage.setItem('cache_modifiche', JSON.stringify(modifiche));"),
-            ("attentionReportEntries = snap.docs.map(d => ({ id:d.id, ...d.data() }))",
-             "attentionReportEntries = snap.docs.map(d => ({ id:d.id, ...d.data() }))"),
-            ("temi = snap.docs.map(d => ({ id:d.id, ...d.data() }))",
-             "temi = snap.docs.map(d => ({ id:d.id, ...d.data() }))"),
-          ]
-          for old, new in replacements:
-              if old in s and old != new:
-                  s = s.replace(old, new, 1)
-
-          # Inserisci salvataggi per collezioni che hanno .sort() su righe successive.
+          s = s.replace("buses = snap.docs.map(d => ({ id:d.id, ...d.data() })).sort(byMat);",
+                        "buses = snap.docs.map(d => ({ id:d.id, ...d.data() })).sort(byMat);\n    localStorage.setItem('cache_buses', JSON.stringify(buses));", 1)
+          s = s.replace("segnalazioni = snap.docs.map(d => ({ id:d.id, ...d.data() }));",
+                        "segnalazioni = snap.docs.map(d => ({ id:d.id, ...d.data() }));\n    localStorage.setItem('cache_seg', JSON.stringify(segnalazioni));", 1)
+          s = s.replace("modifiche = snap.docs.map(d => ({ id:d.id, ...d.data() }));",
+                        "modifiche = snap.docs.map(d => ({ id:d.id, ...d.data() }));\n    localStorage.setItem('cache_modifiche', JSON.stringify(modifiche));", 1)
           s = s.replace(".sort((a, b) => (a.createdAt || '').localeCompare(b.createdAt || ''));\n    renderBusGrid();\n    renderStops();",
                         ".sort((a, b) => (a.createdAt || '').localeCompare(b.createdAt || ''));\n    localStorage.setItem('cache_fermate', JSON.stringify(fermateSoppresse));\n    renderBusGrid();\n    renderStops();", 1)
           s = s.replace("});\n    renderAttentionReport();\n  }, err => {\n    console.error('Report autobus non disponibile'",
@@ -73,7 +57,6 @@ let selectedBus = null;"""
           s = s.replace(".sort((a, b) => (a.createdAt || '').localeCompare(b.createdAt || ''));\n    renderBusGrid();\n    renderTopics();",
                         ".sort((a, b) => (a.createdAt || '').localeCompare(b.createdAt || ''));\n    localStorage.setItem('cache_temi', JSON.stringify(temi));\n    renderBusGrid();\n    renderTopics();", 1)
 
-          # 4) Accesso diretto: mostra immediatamente l'app usando la cache, poi aggiorna in background.
           old = """} else {
   const gate = document.getElementById('authGate');
   const shell = document.getElementById('appShell');
@@ -95,8 +78,7 @@ let selectedBus = null;"""
               raise SystemExit('Blocco accesso diretto 9.69 non trovato')
           s = s.replace(old, new, 1)
 
-          # Se non c'è ancora cache, evita comunque i falsi "0 autobus" mostrando un caricamento neutro.
-          target = """function renderCategoryView() {"""
+          target = "function renderCategoryView() {"
           if target in s:
               s = s.replace(target, """function renderCategoryView() {
   if (!initialDataReady.buses && !buses.length) {
