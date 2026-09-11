@@ -5,6 +5,7 @@
   const STORAGE_KEY = "prospetto-cambi-turno:selected-v1";
   const VACATION_STORAGE_KEY = "prospetto-cambi-turno:vacations-v1";
   const AGENDA_DAY_STORAGE_KEY = "prospetto-cambi-turno:agenda-days-v1";
+  const AGENDA_PENDING_STORAGE_KEY = "prospetto-cambi-turno:agenda-pending-v1";
   const weeksEl = document.querySelector("#weeks");
   const prospettoView = document.querySelector("#prospettoView");
   const agendaView = document.querySelector("#agendaView");
@@ -24,6 +25,7 @@
   let selections = loadSelections();
   let vacationWeeks = loadVacationWeeks();
   let agendaDayData = loadAgendaDayData();
+  let agendaPendingDates = loadAgendaPendingDates();
   let cloudUser = null;
   let cloudDocument = null;
   let cloudReady = false;
@@ -64,47 +66,80 @@
     catch { return {}; }
   }
 
-  function saveAgendaDayData() {
+  function loadAgendaPendingDates() {
+    try { return new Set(JSON.parse(localStorage.getItem(AGENDA_PENDING_STORAGE_KEY) || "[]")); }
+    catch { return new Set(); }
+  }
+
+  function saveAgendaPendingDates() {
+    localStorage.setItem(AGENDA_PENDING_STORAGE_KEY, JSON.stringify([...agendaPendingDates]));
+  }
+
+  function saveAgendaDayData(date) {
     localStorage.setItem(AGENDA_DAY_STORAGE_KEY, JSON.stringify(agendaDayData));
+    if (date) {
+      agendaPendingDates.add(date);
+      saveAgendaPendingDates();
+    }
     scheduleCloudSave();
   }
 
   function storeCloudDataLocally(payload) {
     selections = new Set(Array.isArray(payload.selections) ? payload.selections : []);
     vacationWeeks = new Set(Array.isArray(payload.vacationWeeks) ? payload.vacationWeeks : []);
-    agendaDayData = payload.agendaDayData && typeof payload.agendaDayData === "object" ? payload.agendaDayData : {};
+    const remoteAgenda = payload.agendaDayData && typeof payload.agendaDayData === "object" ? payload.agendaDayData : {};
+    const pendingLocalAgenda = {};
+    agendaPendingDates.forEach(date => {
+      if (agendaDayData[date]) pendingLocalAgenda[date] = agendaDayData[date];
+    });
+    agendaDayData = { ...remoteAgenda, ...pendingLocalAgenda };
     localStorage.setItem(STORAGE_KEY, JSON.stringify([...selections]));
     localStorage.setItem(VACATION_STORAGE_KEY, JSON.stringify([...vacationWeeks]));
     localStorage.setItem(AGENDA_DAY_STORAGE_KEY, JSON.stringify(agendaDayData));
     renderWeeks();
-    renderAgenda();
+    if (!document.activeElement?.matches("[data-agenda-note]")) renderAgenda();
   }
 
-  function cloudPayload() {
-    return {
+  function cloudPayload(pendingAgenda = {}) {
+    const payload = {
       selections: [...selections],
       vacationWeeks: [...vacationWeeks],
-      agendaDayData,
       updatedAt: firebaseServices.serverTimestamp()
     };
+    if (Object.keys(pendingAgenda).length) payload.agendaDayData = pendingAgenda;
+    return payload;
   }
 
   async function saveToCloud() {
     if (!cloudReady || !cloudUser || !cloudDocument || !firebaseServices) return;
+    const pendingDates = [...agendaPendingDates];
+    const pendingAgenda = {};
+    const capturedValues = new Map();
+    pendingDates.forEach(date => {
+      if (!agendaDayData[date]) return;
+      pendingAgenda[date] = agendaDayData[date];
+      capturedValues.set(date, JSON.stringify(agendaDayData[date]));
+    });
     try {
       ignoreOwnCloudUpdate = true;
-      await firebaseServices.setDoc(cloudDocument, cloudPayload(), { merge: true });
+      await firebaseServices.setDoc(cloudDocument, cloudPayload(pendingAgenda), { merge: true });
+      pendingDates.forEach(date => {
+        if (capturedValues.get(date) === JSON.stringify(agendaDayData[date])) agendaPendingDates.delete(date);
+      });
+      saveAgendaPendingDates();
       setTimeout(() => { ignoreOwnCloudUpdate = false; }, 1000);
+      if (agendaPendingDates.size) scheduleCloudSave(0);
     } catch (error) {
       ignoreOwnCloudUpdate = false;
+      saveAgendaPendingDates();
       console.error("Salvataggio online non riuscito", error);
     }
   }
 
-  function scheduleCloudSave() {
-    if (!cloudReady || !cloudUser) return;
+  function scheduleCloudSave(delay = 350) {
     clearTimeout(cloudSaveTimer);
-    cloudSaveTimer = setTimeout(saveToCloud, 350);
+    if (!cloudReady || !cloudUser) return;
+    cloudSaveTimer = setTimeout(saveToCloud, delay);
   }
 
   async function connectCloudUser(user) {
@@ -123,9 +158,12 @@
       if (snapshot.exists()) {
         storeCloudDataLocally(snapshot.data());
       } else {
-        await firebaseServices.setDoc(cloudDocument, cloudPayload());
+        await firebaseServices.setDoc(cloudDocument, cloudPayload(agendaDayData));
+        agendaPendingDates.clear();
+        saveAgendaPendingDates();
       }
       cloudReady = true;
+      if (agendaPendingDates.size) scheduleCloudSave(0);
       stopCloudListener = firebaseServices.onSnapshot(cloudDocument, remote => {
         if (!remote.exists() || !cloudReady || ignoreOwnCloudUpdate) return;
         storeCloudDataLocally(remote.data());
@@ -350,14 +388,11 @@
   function saveInlineNote(field) {
     const date = field.dataset.agendaNote;
     if (!date) return;
-    const saved = { ...(agendaDayData[date] || {}) };
-    if (field.value) saved.note = field.value;
-    else delete saved.note;
-    if (Object.keys(saved).length) agendaDayData[date] = saved;
-    else delete agendaDayData[date];
+    const saved = { ...(agendaDayData[date] || {}), note: field.value, updatedAt: Date.now() };
+    agendaDayData[date] = saved;
     field.classList.toggle("has-note", Boolean(field.value));
     resizeNoteField(field);
-    saveAgendaDayData();
+    saveAgendaDayData(date);
   }
 
   function agendaDay(entry) {
@@ -649,8 +684,10 @@
     if (activeView === "agenda") renderAgenda(true);
   });
   document.addEventListener("visibilitychange", () => {
-    if (!document.hidden && activeView === "agenda") renderAgenda(true);
+    if (document.hidden) scheduleCloudSave(0);
+    else if (activeView === "agenda") renderAgenda(true);
   });
+  window.addEventListener("pagehide", () => scheduleCloudSave(0));
   renderWeeks();
   setView("agenda");
   initCloudSync();
