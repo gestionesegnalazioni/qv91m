@@ -479,7 +479,7 @@ button { font: inherit; cursor: pointer; }
   color: #7c3aed;
   text-align: left;
   font-size: .85rem;
-  font-weight: 400;
+  font-weight: 900;
 }
 
 .turn__number:hover { text-decoration: underline; }
@@ -493,14 +493,15 @@ button { font: inherit; cursor: pointer; }
   display: block;
   min-width: 0;
   padding: 3px 2px;
+  color: #7c3aed;
   font-size: .71rem;
   font-weight: 700;
   line-height: 1.22;
 }
 
 .person__text { min-width: 0; overflow-wrap: anywhere; }
-.person__days { display: block; margin-top: 1px; color: #c28f00; font-size: .64rem; font-weight: 700; }
-.person--open .person__text { color: var(--muted); font-style: italic; }
+.person__days { display: block; margin-top: 1px; color: #ffd400; font-size: .64rem; font-weight: 800; text-shadow: 0 1px 0 rgba(91, 68, 0, .35); }
+.person--open .person__text { color: #7c3aed; font-style: italic; }
 
 .turn-dialog {
   width: min(1000px, calc(100% - 24px));
