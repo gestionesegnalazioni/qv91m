@@ -287,9 +287,9 @@ button { font: inherit; cursor: pointer; }
 
 .week__header {
   position: relative;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
-  justify-content: space-between;
   gap: 8px;
   min-height: 52px;
   padding: 8px 10px;
@@ -297,22 +297,28 @@ button { font: inherit; cursor: pointer; }
   color: white;
 }
 
+.week__header > div:first-child {
+  min-width: 0;
+  justify-self: start;
+}
+
 .week__header h1 { margin: 0; font-size: 1.08rem; line-height: 1.15; }
 .week__dates { margin: 2px 0 0; color: #ede9fe; font-size: .76rem; }
 
 .week__agenda-link {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: 2;
-  transform: translate(-50%, -50%);
-  padding: 5px 8px;
+  display: grid;
+  grid-column: 3;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  place-items: center;
+  justify-self: end;
   border: 1px solid rgba(255, 255, 255, .55);
-  border-radius: 7px;
+  border-radius: 8px;
   background: rgba(255, 255, 255, .12);
   color: #fff;
-  font-size: .68rem;
-  font-weight: 800;
+  font-size: .9rem;
+  font-weight: 900;
   line-height: 1;
 }
 
@@ -339,7 +345,7 @@ button { font: inherit; cursor: pointer; }
 .rotation-code-list {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   gap: 3px;
 }
 
@@ -361,6 +367,7 @@ button { font: inherit; cursor: pointer; }
   font-size: .62rem;
   font-weight: 700;
   line-height: 1;
+  text-align: center;
   white-space: nowrap;
 }
 
@@ -373,16 +380,19 @@ button { font: inherit; cursor: pointer; }
 
 .week__actions {
   display: flex;
+  grid-column: 2;
+  grid-row: 1;
   flex-direction: column;
-  align-items: flex-end;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
   gap: 3px;
 }
 
 .week__action-row {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   gap: 6px;
 }
 
@@ -576,8 +586,8 @@ button { font: inherit; cursor: pointer; }
   .agenda-day__turn { font-size: 1.08rem; line-height: 1; }
   .agenda-day__note-space { margin-top: 0; }
   .agenda-day__note-space:focus { font-size: 16px !important; font-weight: 400 !important; }
-  .agenda-day__prospect { width: 30px; height: 30px; font-size: .82rem; }
-  .week__agenda-link { padding: 4px 6px; font-size: .62rem; }
+  .agenda-day__prospect,
+  .week__agenda-link { width: 30px; height: 30px; font-size: .82rem; }
 
   .turn-dialog {
     width: calc(100% - 16px);
