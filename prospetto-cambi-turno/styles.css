@@ -302,8 +302,13 @@ button { font: inherit; cursor: pointer; }
   justify-self: start;
 }
 
-.week__header h1 { margin: 0; font-size: 1.08rem; line-height: 1.15; }
-.week__dates { margin: 2px 0 0; color: #ede9fe; font-size: .76rem; }
+.week__dates {
+  margin: 0;
+  color: #ede9fe;
+  font-size: .82rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
 
 .week__agenda-link {
   display: grid;
@@ -328,18 +333,19 @@ button { font: inherit; cursor: pointer; }
 }
 
 .rotation-code {
-  display: grid;
-  width: 34px;
-  height: 34px;
-  min-width: 34px;
+  display: inline-flex;
+  width: auto;
+  height: auto;
+  min-width: 0;
   padding: 0;
-  place-items: center;
-  box-sizing: border-box;
-  border: 1px solid rgba(255, 255, 255, .4);
-  border-radius: 7px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 0;
   text-align: center;
-  font-size: .82rem;
+  font-size: .86rem;
   font-weight: 900;
+  line-height: 1.1;
 }
 
 .rotation-code-list {
@@ -356,9 +362,9 @@ button { font: inherit; cursor: pointer; }
 
 .rotation-code-list--multiple .rotation-code {
   width: auto;
-  min-width: 30px;
-  padding: 0 5px;
-  font-size: .7rem;
+  min-width: 0;
+  padding: 0 3px;
+  font-size: .72rem;
   line-height: 1;
 }
 
@@ -372,11 +378,15 @@ button { font: inherit; cursor: pointer; }
 }
 
 .rotation-code--button {
-  background: rgba(255, 255, 255, .08);
+  background: transparent;
   color: white;
 }
 
-.rotation-code--button:hover { background: rgba(255, 255, 255, .2); }
+.rotation-code--button:hover,
+.rotation-code--button:active {
+  background: transparent;
+  text-decoration: underline;
+}
 
 .week__actions {
   display: flex;
