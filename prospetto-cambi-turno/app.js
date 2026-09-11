@@ -674,12 +674,8 @@
     const field = event.target.closest("[data-agenda-note]");
     if (field) saveInlineNote(field);
   });
-  window.addEventListener("pageshow", () => {
-    if (activeView === "agenda") renderAgenda(true);
-  });
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) scheduleCloudSave(0);
-    else if (activeView === "agenda") renderAgenda(true);
   });
   window.addEventListener("pagehide", () => scheduleCloudSave(0));
   renderWeeks();
