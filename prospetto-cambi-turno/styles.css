@@ -56,9 +56,9 @@ button { font: inherit; cursor: pointer; }
 }
 
 .view-tab.is-active {
-  background: #23894d;
+  background: #7c3aed;
   color: white;
-  box-shadow: 0 2px 7px rgba(20, 99, 55, .24);
+  box-shadow: 0 2px 9px rgba(109, 40, 217, .24);
 }
 
 .view-tab[data-app-view="agenda"].is-active {
@@ -290,10 +290,10 @@ button { font: inherit; cursor: pointer; }
 
 .week {
   min-width: 0;
-  border: 1px solid #bfc9d8;
+  border: 1px solid #c4b5fd;
   border-radius: 10px;
   background: white;
-  box-shadow: 0 4px 12px rgba(16, 38, 75, .08);
+  box-shadow: 0 4px 14px rgba(109, 40, 217, .10);
   overflow: hidden;
 }
 
@@ -305,12 +305,12 @@ button { font: inherit; cursor: pointer; }
   gap: 8px;
   min-height: 52px;
   padding: 8px 10px;
-  background: #356b9a;
+  background: linear-gradient(135deg, #7c3aed, #5b21b6);
   color: white;
 }
 
 .week__header h1 { margin: 0; font-size: 1.08rem; line-height: 1.15; }
-.week__dates { margin: 2px 0 0; color: #d9e7fb; font-size: .76rem; }
+.week__dates { margin: 2px 0 0; color: #ede9fe; font-size: .76rem; }
 
 .rotation-code {
   display: grid;
@@ -348,7 +348,7 @@ button { font: inherit; cursor: pointer; }
 }
 
 .rotation-rest {
-  color: #d9e7fb;
+  color: #ede9fe;
   font-size: .62rem;
   font-weight: 700;
   line-height: 1;
@@ -450,8 +450,8 @@ button { font: inherit; cursor: pointer; }
   margin: 0;
   padding: 7px 4px;
   border-bottom: 1px solid var(--line);
-  background: #e7ecf4;
-  color: #273a59;
+  background: #f5f3ff;
+  color: #5b21b6;
   text-align: center;
   font-size: .83rem;
   font-weight: 900;
@@ -467,7 +467,7 @@ button { font: inherit; cursor: pointer; }
   border: 0;
   padding: 2px 3px 4px;
   background: transparent;
-  color: var(--blue);
+  color: #7c3aed;
   text-align: left;
   font-size: .85rem;
   font-weight: 900;
