@@ -268,18 +268,21 @@ button { font: inherit; cursor: pointer; }
 .agenda-day__note-space {
   width: 100%;
   min-width: 0;
-  height: 32px;
-  min-height: 32px;
-  max-height: 32px;
+  height: 42px;
+  min-height: 42px;
+  max-height: 42px;
   margin-top: 0;
-  padding: 2px 3px 0;
+  padding: 0 3px;
   border: 0;
   border-radius: 0;
   background-color: transparent;
-  background-image: linear-gradient(to bottom, transparent calc(50% - .5px), #ddd6fe calc(50% - .5px), #ddd6fe calc(50% + .5px), transparent calc(50% + .5px));
-  color: #8a7ca1;
-  font: inherit;
+  background-image: repeating-linear-gradient(to bottom, transparent 0, transparent 20px, #ddd6fe 20px, #ddd6fe 21px);
+  background-size: 100% 21px;
+  color: #35205a;
+  font-family: inherit;
   font-size: 16px;
+  font-weight: 400;
+  line-height: 21px;
   text-align: left;
   overflow-x: hidden;
   overflow-y: auto;
@@ -292,7 +295,7 @@ button { font: inherit; cursor: pointer; }
   color: #35205a;
   font-size: 13px !important;
   font-weight: 400 !important;
-  line-height: 1.15;
+  line-height: 21px;
   white-space: pre-wrap;
 }
 
