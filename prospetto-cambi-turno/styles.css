@@ -89,7 +89,7 @@ button { font: inherit; cursor: pointer; }
   --agenda-date-background: #ede9fe;
   --agenda-shadow: rgba(109, 40, 217, .07);
   display: grid;
-  grid-template-columns: 56px minmax(0, 1fr) 50px;
+  grid-template-columns: 62px minmax(0, 1fr) 50px;
   min-height: 84px;
   overflow: hidden;
   border: 1px solid var(--agenda-border);
@@ -127,7 +127,7 @@ button { font: inherit; cursor: pointer; }
 .agenda-date__month {
   max-width: 100%;
   margin-top: 2px;
-  padding: 0 2px;
+  padding: 0 4px;
   color: inherit;
   font-size: .6rem;
   font-weight: 400;
@@ -587,7 +587,7 @@ button { font: inherit; cursor: pointer; }
   }
   .agenda-month-header h2 { font-size: 1.08rem; }
   .agenda-day {
-    grid-template-columns: 48px minmax(0, 1fr) 44px;
+    grid-template-columns: 56px minmax(0, 1fr) 44px;
     height: 88px;
     min-height: 88px;
     max-height: 88px;
