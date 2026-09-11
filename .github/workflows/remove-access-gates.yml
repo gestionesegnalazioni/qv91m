@@ -1,0 +1,57 @@
+name: Remove access gate from Gestione Bus
+
+on:
+  push:
+    paths:
+      - '.github/workflows/remove-access-gates.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Remove introductory access screens
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+
+          checks = [
+              'const GOOGLE_ACCESS_ENABLED = true;',
+              '<div class="auth-gate" id="authGate" aria-live="polite">',
+              '<div class="wrapper" id="appShell" aria-hidden="true">',
+              '<meta name="app-version" content="9.67">',
+              '<title>Gestione Bus v9.67</title>',
+          ]
+          missing = [x for x in checks if x not in s]
+          if missing:
+              raise SystemExit('Pattern non trovati, modifica annullata: ' + repr(missing))
+
+          s = s.replace('const GOOGLE_ACCESS_ENABLED = true;', 'const GOOGLE_ACCESS_ENABLED = false;', 1)
+          s = s.replace('<div class="auth-gate" id="authGate" aria-live="polite">', '<div class="auth-gate hidden" id="authGate" aria-live="polite">', 1)
+          s = s.replace('<div class="wrapper" id="appShell" aria-hidden="true">', '<div class="wrapper" id="appShell" aria-hidden="false">', 1)
+          s = s.replace('<meta name="app-version" content="9.67">', '<meta name="app-version" content="9.68">', 1)
+          s = s.replace('<title>Gestione Bus v9.67</title>', '<title>Gestione Bus v9.68</title>', 1)
+          s = s.replace('// Accesso Google ripristinato (v9.67).\n// Impostare su true per ripristinare la schermata protetta.', '// Accesso diretto attivo (v9.68). La schermata Google resta disattivata.', 1)
+
+          p.write_text(s, encoding='utf-8')
+          Path('version.txt').write_text('9.68\n', encoding='utf-8')
+          PY
+
+      - name: Commit changes
+        shell: bash
+        run: |
+          git config user.name "gestionesegnalazioni"
+          git config user.email "actions@users.noreply.github.com"
+          git add index.html version.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Open Gestione Bus directly without access screen"
+          git push
