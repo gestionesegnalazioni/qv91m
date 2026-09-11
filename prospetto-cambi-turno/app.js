@@ -418,7 +418,7 @@
           <textarea class="agenda-day__note-space${saved.note ? " has-note" : ""}" rows="2" data-agenda-note="${entry.date}" aria-label="Nota del ${entry.date}" placeholder="">${escapeHtml(saved.note || "")}</textarea>
         </div>
         <div class="agenda-day__tools">
-          ${entry.week ? `<button class="agenda-day__prospect" type="button" data-go-prospetto-week="${entry.week}" aria-label="Apri il prospetto della settimana ${entry.week}" title="Prospetto settimana ${entry.week}">P</button>` : ""}
+          ${entry.week && entry.day !== "DOM" ? `<button class="agenda-day__prospect" type="button" data-go-prospetto-week="${entry.week}" aria-label="Apri il prospetto della settimana ${entry.week}" title="Prospetto settimana ${entry.week}">P</button>` : ""}
         </div>
       </article>`;
   }
