@@ -324,7 +324,7 @@
   }
 
   function resizeNoteField(field) {
-    field.style.height = "28px";
+    field.style.height = "32px";
   }
 
   function mondayDateKey(dateValue) {
