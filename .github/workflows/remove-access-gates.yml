@@ -1,87 +1,21 @@
-name: Remove access gate from Gestione Bus
-
+name: Patch Gestione Bus startup
 on:
   push:
     paths:
-      - '.github/workflows/remove-access-gates.yml'
-  workflow_dispatch:
-
+      - .github/workflows/remove-access-gates.yml
+  workflow_dispatch: {}
 permissions:
   contents: write
-
 jobs:
   patch:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Make startup immediate and clean
-        shell: bash
+      - name: Patch
         run: |
-          python - <<'PY'
-          from pathlib import Path
-
-          p = Path('index.html')
-          s = p.read_text(encoding='utf-8')
-
-          # Non cancellare più la cache all'apertura.
-          s = s.replace("['cache_buses','cache_seg','cache_temi'].forEach(key => localStorage.removeItem(key));", "// Cache mantenuta per apertura immediata.", 1)
-
-          # Ripristina subito l'ultimo stato noto prima del collegamento Firestore.
-          marker = "let attentionReportEntries = [];\nlet selectedBus = null;"
-          if marker in s:
-              cached = """let attentionReportEntries = [];
-try {
-  buses = JSON.parse(localStorage.getItem('cache_buses') || '[]');
-  segnalazioni = JSON.parse(localStorage.getItem('cache_seg') || '[]');
-} catch (_) {}
-let selectedBus = null;"""
-              s = s.replace(marker, cached, 1)
-
-          # Aggiorna la cache ogni volta che Firestore restituisce i dati.
-          s = s.replace(
-              "buses = snap.docs.map(d => ({ id:d.id, ...d.data() })).sort(byMat);",
-              "buses = snap.docs.map(d => ({ id:d.id, ...d.data() })).sort(byMat);\n    localStorage.setItem('cache_buses', JSON.stringify(buses));",
-              1
-          )
-          s = s.replace(
-              "segnalazioni = snap.docs.map(d => ({ id:d.id, ...d.data() }));",
-              "segnalazioni = snap.docs.map(d => ({ id:d.id, ...d.data() }));\n    localStorage.setItem('cache_seg', JSON.stringify(segnalazioni));",
-              1
-          )
-
-          # Accesso diretto: niente schermo nero, mostra subito la pagina usando la cache.
-          s = s.replace(
-              "gate.classList.add('hidden');\n  // Mantieni l'app nascosta finché autobus e segnalazioni non sono arrivati.\n  shell.setAttribute('aria-hidden', 'true');",
-              "gate.classList.add('hidden');\n  shell.setAttribute('aria-hidden', 'false');",
-              1
-          )
-
-          # Se è il primissimo accesso e non esiste ancora cache, mostra solo un caricamento neutro,
-          # mai le tessere con 0 autobus.
-          marker2 = "function renderCategoryView() {"
-          if marker2 in s and "Caricamento autobus…" not in s:
-              s = s.replace(marker2, """function renderCategoryView() {
-  if (!initialDataReady.buses && !buses.length) {
-    const list = document.getElementById('categoryBusList');
-    if (list) list.innerHTML = '<div class=\"loading\">Caricamento autobus…</div>';
-    return;
-  }""", 1)
-
-          s = s.replace('content="9.69"', 'content="9.70"', 1)
-          s = s.replace('<title>Gestione Bus v9.69</title>', '<title>Gestione Bus v9.70</title>', 1)
-          s = s.replace('// Accesso diretto attivo (v9.69).', '// Accesso diretto attivo (v9.70).', 1)
-
-          p.write_text(s, encoding='utf-8')
-          Path('version.txt').write_text('9.70\n', encoding='utf-8')
-          PY
-
-      - name: Commit changes
-        shell: bash
-        run: |
-          git config user.name "gestionesegnalazioni"
-          git config user.email "actions@users.noreply.github.com"
+          python3 -c "from pathlib import Path; p=Path('index.html'); s=p.read_text(); s=s.replace(\"['cache_buses','cache_seg','cache_temi'].forEach(key => localStorage.removeItem(key));\",\"// cache kept for fast startup\",1); s=s.replace(\"let attentionReportEntries = [];\\nlet selectedBus = null;\",\"let attentionReportEntries = [];\\ntry { buses = JSON.parse(localStorage.getItem('cache_buses') || '[]'); segnalazioni = JSON.parse(localStorage.getItem('cache_seg') || '[]'); } catch (_) {}\\nlet selectedBus = null;\",1); s=s.replace(\"buses = snap.docs.map(d => ({ id:d.id, ...d.data() })).sort(byMat);\",\"buses = snap.docs.map(d => ({ id:d.id, ...d.data() })).sort(byMat);\\n    localStorage.setItem('cache_buses', JSON.stringify(buses));\",1); s=s.replace(\"segnalazioni = snap.docs.map(d => ({ id:d.id, ...d.data() }));\",\"segnalazioni = snap.docs.map(d => ({ id:d.id, ...d.data() }));\\n    localStorage.setItem('cache_seg', JSON.stringify(segnalazioni));\",1); s=s.replace(\"gate.classList.add('hidden');\\n  // Mantieni l'app nascosta finché autobus e segnalazioni non sono arrivati.\\n  shell.setAttribute('aria-hidden', 'true');\",\"gate.classList.add('hidden');\\n  shell.setAttribute('aria-hidden', 'false');\",1); s=s.replace('content=\\\"9.69\\\"','content=\\\"9.70\\\"',1).replace('<title>Gestione Bus v9.69</title>','<title>Gestione Bus v9.70</title>',1).replace('// Accesso diretto attivo (v9.69).','// Accesso diretto attivo (v9.70).',1); p.write_text(s); Path('version.txt').write_text('9.70\\n')"
+          git config user.name gestionesegnalazioni
+          git config user.email actions@users.noreply.github.com
           git add index.html version.txt
-          git diff --cached --quiet && exit 0
-          git commit -m "Simplify Gestione Bus startup"
+          git commit -m "Simplify startup" || exit 0
           git push
