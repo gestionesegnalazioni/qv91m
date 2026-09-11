@@ -10,6 +10,7 @@
   const prospettoView = document.querySelector("#prospettoView");
   const agendaView = document.querySelector("#agendaView");
   const agendaDaysEl = document.querySelector("#agendaDays");
+  const goTodayButton = document.querySelector("#goToday");
   const dialog = document.querySelector("#turnDialog");
   const dialogBody = document.querySelector("#dialogBody");
   const dialogTitle = document.querySelector("#dialogTitle");
@@ -687,6 +688,17 @@
   agendaDaysEl.addEventListener("input", event => {
     const field = event.target.closest("[data-agenda-note]");
     if (field) saveInlineNote(field);
+  });
+
+  goTodayButton.addEventListener("click", () => {
+    todayKey = currentDateKey();
+    renderAgenda();
+    requestAnimationFrame(() => {
+      agendaDaysEl.querySelector(`[data-agenda-date="${todayKey}"]`)?.scrollIntoView({
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+        block: "start"
+      });
+    });
   });
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) scheduleCloudSave(0);
