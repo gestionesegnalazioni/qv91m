@@ -209,10 +209,10 @@
     const normalized = value.toLocaleLowerCase("it-IT");
     const exceptions = new Map([
       ["bertanelli matteo", "Matteo"],
-      ["menconi simone", "Menconi Simone"],
-      ["menconi marco", "Menconi Marco"],
-      ["volpi paolo", "Volpi Paolo"],
-      ["volpi marco", "Volpi Marco"]
+      ["menconi simone", "Menconi S."],
+      ["menconi marco", "Menconi M."],
+      ["volpi paolo", "Volpi P."],
+      ["volpi marco", "Volpi M."]
     ]);
     if (exceptions.has(normalized)) return exceptions.get(normalized);
     const parts = value.split(" ");
