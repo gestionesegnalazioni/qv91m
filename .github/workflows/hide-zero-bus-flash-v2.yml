@@ -1,0 +1,26 @@
+name: Hide zero bus flash v2
+
+on:
+  push:
+    paths:
+      - '.github/workflows/hide-zero-bus-flash-v2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch index
+        run: |
+          python -c "from pathlib import Path; p=Path('index.html'); s=p.read_text(encoding='utf-8'); old=\"} else {\\n  const gate = document.getElementById('authGate');\\n  const shell = document.getElementById('appShell');\\n  gate.classList.add('hidden');\\n  shell.setAttribute('aria-hidden', 'false');\\n  resetProtectedViews();\\n  startDataSubscriptions();\\n}\"; new=\"} else {\\n  const gate = document.getElementById('authGate');\\n  const shell = document.getElementById('appShell');\\n  gate.classList.add('hidden');\\n  shell.setAttribute('aria-hidden', 'true');\\n  resetProtectedViews();\\n  startDataSubscriptions();\\n}\"; assert old in s; s=s.replace(old,new,1).replace('content=\\\"9.68\\\"','content=\\\"9.69\\\"',1).replace('<title>Gestione Bus v9.68</title>','<title>Gestione Bus v9.69</title>',1).replace('// Accesso diretto attivo (v9.68).','// Accesso diretto attivo (v9.69).',1); p.write_text(s,encoding='utf-8'); Path('version.txt').write_text('9.69\\n',encoding='utf-8')"
+      - name: Commit
+        run: |
+          git config user.name "gestionesegnalazioni"
+          git config user.email "antonio.mauceri82@gmail.com"
+          git add index.html version.txt
+          git commit -m "Hide empty bus screen during initial load"
+          git push
