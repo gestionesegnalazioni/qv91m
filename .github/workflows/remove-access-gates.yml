@@ -1,21 +1,12 @@
 name: Patch Gestione Bus startup
+
 on:
   push:
     paths:
-      - .github/workflows/remove-access-gates.yml
-  workflow_dispatch: {}
-permissions:
-  contents: write
+      - '.github/workflows/remove-access-gates.yml'
+
 jobs:
   patch:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Patch
-        run: |
-          python3 -c "from pathlib import Path; p=Path('index.html'); s=p.read_text(); s=s.replace(\"['cache_buses','cache_seg','cache_temi'].forEach(key => localStorage.removeItem(key));\",\"// cache kept for fast startup\",1); s=s.replace(\"let attentionReportEntries = [];\\nlet selectedBus = null;\",\"let attentionReportEntries = [];\\ntry { buses = JSON.parse(localStorage.getItem('cache_buses') || '[]'); segnalazioni = JSON.parse(localStorage.getItem('cache_seg') || '[]'); } catch (_) {}\\nlet selectedBus = null;\",1); s=s.replace(\"buses = snap.docs.map(d => ({ id:d.id, ...d.data() })).sort(byMat);\",\"buses = snap.docs.map(d => ({ id:d.id, ...d.data() })).sort(byMat);\\n    localStorage.setItem('cache_buses', JSON.stringify(buses));\",1); s=s.replace(\"segnalazioni = snap.docs.map(d => ({ id:d.id, ...d.data() }));\",\"segnalazioni = snap.docs.map(d => ({ id:d.id, ...d.data() }));\\n    localStorage.setItem('cache_seg', JSON.stringify(segnalazioni));\",1); s=s.replace(\"gate.classList.add('hidden');\\n  // Mantieni l'app nascosta finché autobus e segnalazioni non sono arrivati.\\n  shell.setAttribute('aria-hidden', 'true');\",\"gate.classList.add('hidden');\\n  shell.setAttribute('aria-hidden', 'false');\",1); s=s.replace('content=\\\"9.69\\\"','content=\\\"9.70\\\"',1).replace('<title>Gestione Bus v9.69</title>','<title>Gestione Bus v9.70</title>',1).replace('// Accesso diretto attivo (v9.69).','// Accesso diretto attivo (v9.70).',1); p.write_text(s); Path('version.txt').write_text('9.70\\n')"
-          git config user.name gestionesegnalazioni
-          git config user.email actions@users.noreply.github.com
-          git add index.html version.txt
-          git commit -m "Simplify startup" || exit 0
-          git push
+      - run: echo ready
