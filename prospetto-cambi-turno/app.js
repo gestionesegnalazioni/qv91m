@@ -88,11 +88,15 @@
     selections = new Set(Array.isArray(payload.selections) ? payload.selections : []);
     vacationWeeks = new Set(Array.isArray(payload.vacationWeeks) ? payload.vacationWeeks : []);
     const remoteAgenda = payload.agendaDayData && typeof payload.agendaDayData === "object" ? payload.agendaDayData : {};
-    const pendingLocalAgenda = {};
-    agendaPendingDates.forEach(date => {
-      if (agendaDayData[date]) pendingLocalAgenda[date] = agendaDayData[date];
+    const localAgendaToPreserve = {};
+    Object.entries(agendaDayData).forEach(([date, value]) => {
+      if (agendaPendingDates.has(date) || !Object.prototype.hasOwnProperty.call(remoteAgenda, date)) {
+        localAgendaToPreserve[date] = value;
+        agendaPendingDates.add(date);
+      }
     });
-    agendaDayData = { ...remoteAgenda, ...pendingLocalAgenda };
+    agendaDayData = { ...remoteAgenda, ...localAgendaToPreserve };
+    saveAgendaPendingDates();
     localStorage.setItem(STORAGE_KEY, JSON.stringify([...selections]));
     localStorage.setItem(VACATION_STORAGE_KEY, JSON.stringify([...vacationWeeks]));
     localStorage.setItem(AGENDA_DAY_STORAGE_KEY, JSON.stringify(agendaDayData));
