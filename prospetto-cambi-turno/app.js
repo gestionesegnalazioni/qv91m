@@ -342,8 +342,8 @@
             <h1>Settimana ${week.index}</h1>
             <p class="week__dates">${shortDate(week.start)} – ${shortDate(week.end)}</p>
           </div>
-          <button class="week__agenda-link" type="button" data-go-agenda-week="${week.index}" aria-label="Apri l’agenda della settimana ${week.index}">Agenda</button>
           ${weekActions(week)}
+          <button class="week__agenda-link" type="button" data-go-agenda-week="${week.index}" aria-label="Apri l’agenda della settimana ${week.index}" title="Agenda settimana ${week.index}">A</button>
         </header>
         <div class="week__groups">${week.groups.map(group => groupColumn(week, group)).join("")}</div>
       </article>`).join("");
