@@ -206,7 +206,7 @@
   }
 
   function dayLabel(days) {
-    return `Solo ${italianDayList(days)}`;
+    return `(${days.map(day => String(day).slice(0, 3).toLocaleUpperCase("it-IT")).join(", ")})`;
   }
 
   function prospectPersonName(person) {
