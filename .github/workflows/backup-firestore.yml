@@ -1,0 +1,87 @@
+name: Backup Firestore Gestione Bus
+
+on:
+  push:
+    paths:
+      - '.github/workflows/backup-firestore.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  PROJECT_ID: gestionesegnalazioni
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create Firestore backup
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, os, urllib.parse, urllib.request, datetime
+
+          project = os.environ['PROJECT_ID']
+          collections = [
+              'buses',
+              'segnalazioni',
+              'temi',
+              'fermateSoppresse',
+              'modifiche',
+              'reportAttenzione',
+          ]
+
+          base = f'https://firestore.googleapis.com/v1/projects/{project}/databases/(default)/documents'
+          out_dir = 'firestore-backup'
+          os.makedirs(out_dir, exist_ok=True)
+
+          def fetch_collection(name):
+              docs = []
+              token = None
+              while True:
+                  params = {'pageSize': '1000'}
+                  if token:
+                      params['pageToken'] = token
+                  url = f"{base}/{urllib.parse.quote(name)}?{urllib.parse.urlencode(params)}"
+                  with urllib.request.urlopen(url, timeout=30) as resp:
+                      payload = json.load(resp)
+                  docs.extend(payload.get('documents', []))
+                  token = payload.get('nextPageToken')
+                  if not token:
+                      break
+              return docs
+
+          backup = {
+              'projectId': project,
+              'database': '(default)',
+              'createdAtUtc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+              'collections': {}
+          }
+
+          summary = {}
+          for collection in collections:
+              docs = fetch_collection(collection)
+              backup['collections'][collection] = docs
+              summary[collection] = len(docs)
+              with open(os.path.join(out_dir, collection + '.json'), 'w', encoding='utf-8') as f:
+                  json.dump(docs, f, ensure_ascii=False, indent=2)
+
+          backup['documentCounts'] = summary
+          with open(os.path.join(out_dir, 'gestione-bus-firestore-backup.json'), 'w', encoding='utf-8') as f:
+              json.dump(backup, f, ensure_ascii=False, indent=2)
+          with open(os.path.join(out_dir, 'README.txt'), 'w', encoding='utf-8') as f:
+              f.write('Backup Firestore Gestione Bus\n')
+              f.write('Creato: ' + backup['createdAtUtc'] + '\n')
+              for k, v in summary.items():
+                  f.write(f'{k}: {v} documenti\n')
+          print(json.dumps(summary, ensure_ascii=False))
+          PY
+
+      - name: Upload backup artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: gestione-bus-firestore-backup
+          path: firestore-backup/
+          retention-days: 90
+          if-no-files-found: error
