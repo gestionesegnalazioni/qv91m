@@ -339,7 +339,6 @@
       <article class="week" data-week="${week.index}">
         <header class="week__header">
           <div>
-            <h1>Settimana ${week.index}</h1>
             <p class="week__dates">${shortDate(week.start)} – ${shortDate(week.end)}</p>
           </div>
           ${weekActions(week)}
