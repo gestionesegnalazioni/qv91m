@@ -20,8 +20,7 @@
   const dayMonthFormat = new Intl.DateTimeFormat("it-IT", { month: "long", timeZone: "UTC" });
   const agendaEntries = Array.isArray(data.agenda) ? data.agenda : [];
   const agendaMonths = [...new Set(agendaEntries.map(entry => entry.date.slice(0, 7)))].sort();
-  const now = new Date();
-  const todayKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+  let todayKey = currentDateKey();
   let selections = loadSelections();
   let vacationWeeks = loadVacationWeeks();
   let agendaDayData = loadAgendaDayData();
@@ -32,6 +31,13 @@
   let ignoreOwnCloudUpdate = false;
   let stopCloudListener = null;
   let firebaseServices = null;
+
+  if ("scrollRestoration" in window.history) window.history.scrollRestoration = "manual";
+
+  function currentDateKey() {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+  }
 
   function loadSelections() {
     try { return new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]")); }
@@ -360,14 +366,16 @@
     const dayNumber = date.getUTCDate();
     const saved = agendaDayData[entry.date] || {};
     const stateClasses = [
-      entry.day === "DOM" ? "agenda-day--sunday" : "",
-      entry.date === todayKey ? "agenda-day--today" : ""
+      entry.day === "DOM" ? "agenda-day--sunday" : ""
     ].filter(Boolean).join(" ");
     return `
-      <article class="agenda-day${stateClasses ? ` ${stateClasses}` : ""}" data-agenda-date="${entry.date}" data-agenda-week="${entry.week || ""}">
-        <div class="agenda-date"><span>${escapeHtml(weekday)}</span><strong>${dayNumber}</strong><small class="agenda-date__month">${escapeHtml(dayMonthFormat.format(date))}</small>${entry.date === todayKey ? '<em class="agenda-today">OGGI</em>' : ""}</div>
+      <article class="agenda-day${stateClasses ? ` ${stateClasses}` : ""}" data-agenda-date="${entry.date}" data-agenda-week="${entry.week || ""}"${entry.date === todayKey ? ' aria-current="date"' : ""}>
+        <div class="agenda-date"><span>${escapeHtml(weekday)}</span><strong>${dayNumber}</strong><small class="agenda-date__month">${escapeHtml(dayMonthFormat.format(date))}</small></div>
         <div class="agenda-day__content">
-          <strong class="agenda-day__turn">${escapeHtml(agendaTurnLabel(entry.turn))}</strong>
+          <div class="agenda-day__heading">
+            <strong class="agenda-day__turn">${escapeHtml(agendaTurnLabel(entry.turn))}</strong>
+            ${entry.date === todayKey ? '<span class="agenda-today">OGGI</span>' : ""}
+          </div>
           <textarea class="agenda-day__note-space${saved.note ? " has-note" : ""}" rows="2" data-agenda-note="${entry.date}" aria-label="Nota del ${entry.date}" placeholder="">${escapeHtml(saved.note || "")}</textarea>
         </div>
         <div class="agenda-day__tools">
@@ -377,6 +385,7 @@
   }
 
   function renderAgenda(scrollToToday = false) {
+    todayKey = currentDateKey();
     if (!agendaMonths.length) {
       agendaDaysEl.innerHTML = '<p class="loading-status loading-status--error">Dati dell’agenda non disponibili.</p>';
       return;
@@ -391,10 +400,8 @@
     agendaDaysEl.querySelectorAll("[data-agenda-note]").forEach(resizeNoteField);
     if (scrollToToday) {
       requestAnimationFrame(() => {
-        const monday = mondayDateKey(todayKey);
-        const target = agendaDaysEl.querySelector(`[data-agenda-date="${monday}"]`)
-          || agendaDaysEl.querySelector(`[data-agenda-date="${todayKey}"]`);
-        target?.scrollIntoView({ behavior: "smooth", block: "start" });
+        const target = agendaDaysEl.querySelector(`[data-agenda-date="${todayKey}"]`);
+        target?.scrollIntoView({ behavior: "auto", block: "start" });
       });
     }
   }
@@ -426,7 +433,10 @@
   }
 
   function setView(view) {
-    if (view === activeView) return;
+    if (view === activeView) {
+      if (view === "agenda") renderAgenda(true);
+      return;
+    }
     let targetWeek = null;
     if (activeView === "agenda") {
       targetWeek = closestVisibleWeek(".agenda-day[data-agenda-week]", "agendaWeek");
@@ -443,12 +453,7 @@
       button.setAttribute("aria-selected", String(active));
     });
     if (agendaIsActive) {
-      if (targetWeek) {
-        renderAgenda();
-        scrollToWeek("agenda", targetWeek);
-      } else {
-        renderAgenda(true);
-      }
+      renderAgenda(true);
     } else if (targetWeek) {
       scrollToWeek("prospetto", targetWeek);
     }
@@ -608,8 +613,13 @@
     const field = event.target.closest("[data-agenda-note]");
     if (field) saveInlineNote(field);
   });
+  window.addEventListener("pageshow", () => {
+    if (activeView === "agenda") renderAgenda(true);
+  });
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden && activeView === "agenda") renderAgenda(true);
+  });
   renderWeeks();
-  renderAgenda();
   setView("agenda");
   initCloudSync();
 })();

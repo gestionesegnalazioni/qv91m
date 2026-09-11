@@ -177,14 +177,16 @@ button { font: inherit; cursor: pointer; }
 }
 
 .agenda-today {
-  margin-top: 5px;
-  padding: 2px 5px;
+  grid-column: 2;
+  justify-self: center;
+  padding: 2px 8px;
   border-radius: 4px;
   background: var(--agenda-accent);
   color: #fff;
-  font-size: .56rem;
+  font-size: .75rem;
   font-style: normal;
   font-weight: 900;
+  line-height: 1.2;
   letter-spacing: .04em;
 }
 
@@ -197,10 +199,17 @@ button { font: inherit; cursor: pointer; }
   padding: 5px 8px;
 }
 
-.agenda-day__turn {
+.agenda-day__heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
   min-height: 24px;
   padding: 1px 3px 3px;
   border-bottom: 1px solid var(--agenda-line);
+}
+
+.agenda-day__turn {
+  justify-self: start;
   color: var(--agenda-accent);
   font-size: 1.2rem;
   line-height: 1.15;
@@ -286,11 +295,6 @@ button { font: inherit; cursor: pointer; }
 }
 
 .agenda-day--sunday .agenda-date span { color: #ffe5e5; }
-
-.agenda-day--today {
-  border-color: var(--agenda-accent);
-  box-shadow: 0 0 0 3px var(--agenda-line);
-}
 
 .weeks {
   display: grid;
