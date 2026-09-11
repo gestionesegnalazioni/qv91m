@@ -389,7 +389,7 @@
           <strong class="agenda-day__turn">${escapeHtml(agendaTurnLabel(entry.turn))}</strong>
           ${changes.length ? `<div class="agenda-day__change"><span>${escapeHtml(colleagues)}</span><strong>Turno ${escapeHtml(changeTurns)}</strong></div>` : ""}
           ${vacationBadge}
-          <textarea class="agenda-day__note-space${saved.note ? " has-note" : ""}" rows="2" data-agenda-note="${entry.date}" aria-label="Nota del ${entry.date}" placeholder="Scrivi una nota…">${escapeHtml(saved.note || "")}</textarea>
+          <textarea class="agenda-day__note-space${saved.note ? " has-note" : ""}" rows="2" data-agenda-note="${entry.date}" aria-label="Nota del ${entry.date}" placeholder="">${escapeHtml(saved.note || "")}</textarea>
         </div>
         <div class="agenda-day__tools">
           ${entry.week ? `<span class="agenda-day__week">Sett. ${entry.week}</span>` : ""}
