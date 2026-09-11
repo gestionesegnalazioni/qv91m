@@ -284,7 +284,7 @@
   }
 
   function agendaTurnLabel(turn) {
-    if (turn === "RIP") return "RIPOSO";
+    if (turn === "RIP") return "R";
     return String(turn || "").replace(/^MS/i, "") || "—";
   }
 
