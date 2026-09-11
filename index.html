@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="9.69">
-<title>Gestione Bus v9.69</title>
+<meta name="app-version" content="9.70">
+<title>Gestione Bus v9.70</title>
 <link rel="icon" type="image/svg+xml" href="icon.svg?v=920">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3441,7 +3441,7 @@ const auth = initializeAuth(app, {
 });
 const googleProvider = new GoogleAuthProvider();
 
-['cache_buses','cache_seg','cache_temi'].forEach(key => localStorage.removeItem(key));
+// cache kept for fast startup
 
 let buses = [];
 let segnalazioni = [];
@@ -3449,6 +3449,7 @@ let temi = [];
 let fermateSoppresse = [];
 let modifiche = [];
 let attentionReportEntries = [];
+try { buses = JSON.parse(localStorage.getItem('cache_buses') || '[]'); segnalazioni = JSON.parse(localStorage.getItem('cache_seg') || '[]'); } catch (_) {}
 let selectedBus = null;
 let editingSegId = null;
 let currentBusForModal = null;
@@ -3748,6 +3749,7 @@ function startDataSubscriptions() {
 
   dataUnsubscribers.push(onSnapshot(collection(db, 'buses'), { includeMetadataChanges:true }, snap => {
     buses = snap.docs.map(d => ({ id:d.id, ...d.data() })).sort(byMat);
+    localStorage.setItem('cache_buses', JSON.stringify(buses));
     initialDataReady.buses = buses.length > 0;
     renderAll();
     revealProtectedAppWhenReady();
@@ -3758,6 +3760,7 @@ function startDataSubscriptions() {
 
   dataUnsubscribers.push(onSnapshot(collection(db, 'segnalazioni'), { includeMetadataChanges:true }, snap => {
     segnalazioni = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+    localStorage.setItem('cache_seg', JSON.stringify(segnalazioni));
     initialDataReady.segnalazioni = true;
 
     const activeEl = document.activeElement;
@@ -3851,7 +3854,7 @@ window.esciAreaRiservata = async function() {
   }
 };
 
-// Accesso diretto attivo (v9.69). La schermata Google resta disattivata.
+// Accesso diretto attivo (v9.70). La schermata Google resta disattivata.
 const GOOGLE_ACCESS_ENABLED = false;
 
 if (GOOGLE_ACCESS_ENABLED) {
@@ -3899,8 +3902,7 @@ if (GOOGLE_ACCESS_ENABLED) {
   const gate = document.getElementById('authGate');
   const shell = document.getElementById('appShell');
   gate.classList.add('hidden');
-  // Mantieni l'app nascosta finché autobus e segnalazioni non sono arrivati.
-  shell.setAttribute('aria-hidden', 'true');
+  shell.setAttribute('aria-hidden', 'false');
   resetProtectedViews();
   startDataSubscriptions();
 }
