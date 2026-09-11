@@ -3,14 +3,20 @@
   "short_name": "Agenda Turni",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#f3f6fa",
-  "theme_color": "#000000",
+  "background_color": "#f5f3ff",
+  "theme_color": "#c4b5fd",
   "icons": [
     {
-      "src": "agenda-icon-nero.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "src": "agenda-icon-lavanda-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "agenda-icon-lavanda-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }

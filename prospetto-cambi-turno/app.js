@@ -9,10 +9,6 @@
   const prospettoView = document.querySelector("#prospettoView");
   const agendaView = document.querySelector("#agendaView");
   const agendaDaysEl = document.querySelector("#agendaDays");
-  const agendaEditDialog = document.querySelector("#agendaEditDialog");
-  const agendaEditTitle = document.querySelector("#agendaEditTitle");
-  const agendaChangeTurn = document.querySelector("#agendaChangeTurn");
-  const agendaChangeColleague = document.querySelector("#agendaChangeColleague");
   const dialog = document.querySelector("#turnDialog");
   const dialogBody = document.querySelector("#dialogBody");
   const dialogTitle = document.querySelector("#dialogTitle");
@@ -28,8 +24,6 @@
   let selections = loadSelections();
   let vacationWeeks = loadVacationWeeks();
   let agendaDayData = loadAgendaDayData();
-  let editingAgendaDate = "";
-  let pendingAgendaStatus = "none";
   let cloudUser = null;
   let cloudDocument = null;
   let cloudReady = false;
@@ -342,58 +336,24 @@
     saveAgendaDayData();
   }
 
-  function selectedChangesFor(entry) {
-    if (entry.day === "DOM" || entry.turn === "RIP") return [];
-    return [...selections].map(key => {
-      const [week, group, turn, person, selectedDays] = key.split("|");
-      return { week: Number(week), group, turn, person, selectedDays };
-    }).filter(change => {
-      if (change.week !== entry.week) return false;
-      if (change.selectedDays === "base") return true;
-      return change.selectedDays.split(",").includes(entry.day);
-    });
-  }
-
   function agendaDay(entry) {
     const date = new Date(`${entry.date}T12:00:00Z`);
     const weekday = weekdayFormat.format(date).replace(".", "").toUpperCase();
     const dayNumber = date.getUTCDate();
     const saved = agendaDayData[entry.date] || {};
-    const weeklyVacation = vacationWeeks.has(String(entry.week));
-    const vacationStatus = saved.vacationStatus === "none"
-      ? ""
-      : saved.vacationStatus || (weeklyVacation ? "requested" : "");
-    const legacyChanges = selectedChangesFor(entry);
-    const hasManualChange = saved.changeOverride === true || Boolean(saved.changeTurn || saved.changeColleague);
-    const changes = hasManualChange
-      ? (saved.changeTurn || saved.changeColleague ? [{ turn: saved.changeTurn || "—", person: saved.changeColleague || "—" }] : [])
-      : legacyChanges;
-    const changeTurns = [...new Set(changes.map(change => String(change.turn).replace(/^MS/i, "")))].join(" · ");
-    const colleagues = [...new Set(changes.map(change => change.person === "SCOPERTO" ? "turno scoperto" : change.person))].join(", ");
     const stateClasses = [
-      entry.turn === "RIP" ? "agenda-day--rest" : "",
-      changes.length ? "agenda-day--change" : "",
-      vacationStatus ? `agenda-day--vacation-${vacationStatus}` : "",
       entry.day === "DOM" ? "agenda-day--sunday" : "",
       entry.date === todayKey ? "agenda-day--today" : ""
     ].filter(Boolean).join(" ");
-    const vacationBadge = vacationStatus === "approved"
-      ? '<span class="agenda-status agenda-status--approved">FERIE CONCESSE</span>'
-      : vacationStatus === "requested"
-        ? '<span class="agenda-status agenda-status--requested">FERIE RICHIESTE</span>'
-        : "";
     return `
       <article class="agenda-day${stateClasses ? ` ${stateClasses}` : ""}" data-agenda-date="${entry.date}" data-agenda-week="${entry.week || ""}">
         <div class="agenda-date"><span>${escapeHtml(weekday)}</span><strong>${dayNumber}</strong>${entry.date === todayKey ? '<em class="agenda-today">OGGI</em>' : ""}</div>
         <div class="agenda-day__content">
           <strong class="agenda-day__turn">${escapeHtml(agendaTurnLabel(entry.turn))}</strong>
-          ${changes.length ? `<div class="agenda-day__change"><span>${escapeHtml(colleagues)}</span><strong>Turno ${escapeHtml(changeTurns)}</strong></div>` : ""}
-          ${vacationBadge}
           <textarea class="agenda-day__note-space${saved.note ? " has-note" : ""}" rows="2" data-agenda-note="${entry.date}" aria-label="Nota del ${entry.date}" placeholder="">${escapeHtml(saved.note || "")}</textarea>
         </div>
         <div class="agenda-day__tools">
           ${entry.week ? `<span class="agenda-day__week">Sett. ${entry.week}</span>` : ""}
-          <button class="agenda-day__menu" type="button" data-edit-agenda="${entry.date}" aria-label="Opzioni per ${entry.date}" title="Ferie e note">⋯</button>
         </div>
       </article>`;
   }
@@ -419,73 +379,6 @@
         target?.scrollIntoView({ behavior: "smooth", block: "start" });
       });
     }
-  }
-
-  function setPendingAgendaStatus(status) {
-    pendingAgendaStatus = status;
-    agendaEditDialog.querySelectorAll("[data-agenda-status]").forEach(button => {
-      const selected = button.dataset.agendaStatus === status;
-      button.classList.toggle("is-selected", selected);
-      button.setAttribute("aria-pressed", String(selected));
-    });
-  }
-
-  function openAgendaEditor(date) {
-    const entry = agendaEntryForDate(date);
-    if (!entry) return;
-    editingAgendaDate = date;
-    const saved = agendaDayData[date] || {};
-    const weeklyVacation = vacationWeeks.has(String(entry.week));
-    const status = saved.vacationStatus || (weeklyVacation ? "requested" : "none");
-    agendaEditTitle.textContent = new Intl.DateTimeFormat("it-IT", {
-      weekday: "long",
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-      timeZone: "UTC"
-    }).format(new Date(`${date}T12:00:00Z`));
-    agendaChangeTurn.value = saved.changeTurn || "";
-    agendaChangeColleague.value = saved.changeColleague || "";
-    setPendingAgendaStatus(status);
-    agendaEditDialog.showModal();
-  }
-
-  function closeAgendaEditor() {
-    editingAgendaDate = "";
-    agendaEditDialog.close();
-  }
-
-  function saveAgendaEditor() {
-    if (!editingAgendaDate) return;
-    const entry = agendaEntryForDate(editingAgendaDate);
-    const existing = agendaDayData[editingAgendaDate] || {};
-    const note = existing.note || "";
-    const changeTurn = agendaChangeTurn.value.trim().replace(/^MS/i, "");
-    const changeColleague = agendaChangeColleague.value.trim();
-    const needsWeeklyOverride = entry && vacationWeeks.has(String(entry.week)) && pendingAgendaStatus === "none";
-    if (!note && !changeTurn && !changeColleague && pendingAgendaStatus === "none" && !needsWeeklyOverride) {
-      delete agendaDayData[editingAgendaDate];
-    } else {
-      agendaDayData[editingAgendaDate] = {
-        vacationStatus: pendingAgendaStatus,
-        note,
-        changeTurn,
-        changeColleague,
-        changeOverride: true
-      };
-    }
-    saveAgendaDayData();
-    closeAgendaEditor();
-    renderAgenda();
-  }
-
-  function clearAgendaEditor() {
-    if (!editingAgendaDate) return;
-    const note = agendaDayData[editingAgendaDate]?.note || "";
-    agendaDayData[editingAgendaDate] = { note, changeOverride: true };
-    saveAgendaDayData();
-    closeAgendaEditor();
-    renderAgenda();
   }
 
   let activeView = null;
@@ -693,25 +586,13 @@
   document.querySelectorAll("[data-app-view]").forEach(button => {
     button.addEventListener("click", () => setView(button.dataset.appView));
   });
-  agendaDaysEl.addEventListener("click", event => {
-    const button = event.target.closest("[data-edit-agenda]");
-    if (button) openAgendaEditor(button.dataset.editAgenda);
-  });
   agendaDaysEl.addEventListener("input", event => {
     const field = event.target.closest("[data-agenda-note]");
     if (field) saveInlineNote(field);
-  });
-  agendaEditDialog.querySelectorAll("[data-agenda-status]").forEach(button => {
-    button.addEventListener("click", () => setPendingAgendaStatus(button.dataset.agendaStatus));
-  });
-  document.querySelector("#saveAgendaEdit").addEventListener("click", saveAgendaEditor);
-  document.querySelector("#clearAgendaEdit").addEventListener("click", clearAgendaEditor);
-  document.querySelector("#closeAgendaEdit").addEventListener("click", closeAgendaEditor);
-  agendaEditDialog.addEventListener("click", event => {
-    if (event.target === agendaEditDialog) closeAgendaEditor();
   });
   renderWeeks();
   renderAgenda();
   setView("agenda");
   initCloudSync();
 })();
+
