@@ -50,6 +50,40 @@ button { font: inherit; cursor: pointer; }
   margin: 0 auto;
 }
 
+.agenda-quick-nav {
+  position: sticky;
+  top: max(6px, env(safe-area-inset-top));
+  z-index: 30;
+  display: flex;
+  justify-content: center;
+  width: min(210px, calc(100% - 32px));
+  margin: 0 auto 7px;
+  padding: 4px;
+  border: 1px solid rgba(196, 181, 253, .85);
+  border-radius: 12px;
+  background: rgba(245, 243, 255, .94);
+  box-shadow: 0 6px 18px rgba(91, 33, 182, .14);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.agenda-go-today {
+  width: 100%;
+  min-height: 32px;
+  padding: 5px 16px;
+  border: 0;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #7c3aed, #5b21b6);
+  color: #fff;
+  font-size: .82rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: .08em;
+  box-shadow: 0 3px 9px rgba(91, 33, 182, .18);
+}
+
+.agenda-go-today:active { transform: translateY(1px); }
+
 .agenda-months {
   display: grid;
   gap: 42px;
