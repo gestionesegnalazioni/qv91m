@@ -432,7 +432,7 @@
     requestAnimationFrame(() => target?.scrollIntoView({ behavior: "smooth", block: "start" }));
   }
 
-  function setView(view) {
+  function setView(view, swipeDirection = 0) {
     if (view === activeView) {
       if (view === "agenda") renderAgenda(true);
       return;
@@ -458,6 +458,14 @@
       scrollToWeek("prospetto", targetWeek);
     }
     activeView = view;
+    if (swipeDirection && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const incomingView = agendaIsActive ? agendaView : prospettoView;
+      const startOffset = swipeDirection < 0 ? "28px" : "-28px";
+      incomingView.animate(
+        [{ transform: `translateX(${startOffset})`, opacity: 0.72 }, { transform: "translateX(0)", opacity: 1 }],
+        { duration: 190, easing: "ease-out" }
+      );
+    }
   }
 
   function openTurn(turn, group, displayTurn = `MS${turn}`) {
@@ -609,6 +617,30 @@
   document.querySelectorAll("[data-app-view]").forEach(button => {
     button.addEventListener("click", () => setView(button.dataset.appView));
   });
+  let swipeStartX = 0;
+  let swipeStartY = 0;
+  let swipeTracking = false;
+
+  document.querySelector(".schedule-board").addEventListener("touchstart", event => {
+    if (event.touches.length !== 1 || event.target.closest("button, input, textarea, select, a, dialog")) {
+      swipeTracking = false;
+      return;
+    }
+    swipeStartX = event.touches[0].clientX;
+    swipeStartY = event.touches[0].clientY;
+    swipeTracking = true;
+  }, { passive: true });
+
+  document.querySelector(".schedule-board").addEventListener("touchend", event => {
+    if (!swipeTracking || event.changedTouches.length !== 1) return;
+    swipeTracking = false;
+    const deltaX = event.changedTouches[0].clientX - swipeStartX;
+    const deltaY = event.changedTouches[0].clientY - swipeStartY;
+    if (Math.abs(deltaX) < 55 || Math.abs(deltaX) < Math.abs(deltaY) * 1.25) return;
+    if (activeView === "agenda" && deltaX < 0) setView("prospetto", -1);
+    if (activeView === "prospetto" && deltaX > 0) setView("agenda", 1);
+  }, { passive: true });
+
   agendaDaysEl.addEventListener("input", event => {
     const field = event.target.closest("[data-agenda-note]");
     if (field) saveInlineNote(field);
