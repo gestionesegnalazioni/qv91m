@@ -200,6 +200,9 @@ button { font: inherit; cursor: pointer; }
 }
 
 .agenda-day__turn {
+  min-height: 24px;
+  padding: 1px 3px 3px;
+  border-bottom: 1px solid #ddd6fe;
   color: #7c3aed;
   font-size: 1.2rem;
   line-height: 1.15;
@@ -268,11 +271,12 @@ button { font: inherit; cursor: pointer; }
   height: 32px;
   min-height: 32px;
   max-height: 32px;
-  margin-top: auto;
-  padding: 3px 6px;
-  border: 1px dashed #c4b5fd;
-  border-radius: 6px;
-  background: #fbfaff;
+  margin-top: 0;
+  padding: 2px 3px 0;
+  border: 0;
+  border-radius: 0;
+  background-color: transparent;
+  background-image: linear-gradient(to bottom, transparent calc(50% - .5px), #ddd6fe calc(50% - .5px), #ddd6fe calc(50% + .5px), transparent calc(50% + .5px));
   color: #8a7ca1;
   font: inherit;
   font-size: 16px;
@@ -284,8 +288,7 @@ button { font: inherit; cursor: pointer; }
 }
 
 .agenda-day__note-space.has-note {
-  border-style: solid;
-  background: #f5f3ff;
+  background-color: transparent;
   color: #35205a;
   font-size: 13px !important;
   font-weight: 400 !important;
@@ -806,7 +809,7 @@ button { font: inherit; cursor: pointer; }
   .agenda-day__turn { font-size: 1.08rem; line-height: 1; }
   .agenda-day__change { padding-top: 2px; font-size: .7rem; line-height: 1.05; }
   .agenda-status { margin-top: 0; padding: 2px 5px; font-size: .58rem; }
-  .agenda-day__note-space { margin-top: 1px; }
+  .agenda-day__note-space { margin-top: 0; }
   .agenda-day__note-space:focus { font-size: 16px !important; font-weight: 400 !important; }
   .agenda-day__week { margin-right: 0; font-size: .58rem; }
   .agenda-status-options { grid-template-columns: 1fr; }
