@@ -249,7 +249,8 @@ button { font: inherit; cursor: pointer; }
   background: var(--agenda-date-background);
 }
 
-.agenda-day--sunday {
+.agenda-day--sunday,
+.agenda-day--holiday {
   --agenda-border: #d43b3b;
   --agenda-line: #efb1b1;
   --agenda-accent: #c92727;
@@ -261,13 +262,15 @@ button { font: inherit; cursor: pointer; }
   background: #fff4f4;
 }
 
-.agenda-day--sunday .agenda-date {
+.agenda-day--sunday .agenda-date,
+.agenda-day--holiday .agenda-date {
   border-right-color: #efb1b1;
   background: #d93636;
   color: white;
 }
 
-.agenda-day--sunday .agenda-date span { color: #ffe5e5; }
+.agenda-day--sunday .agenda-date span,
+.agenda-day--holiday .agenda-date span { color: #ffe5e5; }
 
 .weeks {
   display: grid;
