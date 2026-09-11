@@ -17,6 +17,7 @@
   const dateFormat = new Intl.DateTimeFormat("it-IT", { day: "numeric", month: "short", timeZone: "UTC" });
   const monthFormat = new Intl.DateTimeFormat("it-IT", { month: "long", year: "numeric", timeZone: "UTC" });
   const weekdayFormat = new Intl.DateTimeFormat("it-IT", { weekday: "short", timeZone: "UTC" });
+  const dayMonthFormat = new Intl.DateTimeFormat("it-IT", { month: "long", timeZone: "UTC" });
   const agendaEntries = Array.isArray(data.agenda) ? data.agenda : [];
   const agendaMonths = [...new Set(agendaEntries.map(entry => entry.date.slice(0, 7)))].sort();
   const now = new Date();
@@ -364,7 +365,7 @@
     ].filter(Boolean).join(" ");
     return `
       <article class="agenda-day${stateClasses ? ` ${stateClasses}` : ""}" data-agenda-date="${entry.date}" data-agenda-week="${entry.week || ""}">
-        <div class="agenda-date"><span>${escapeHtml(weekday)}</span><strong>${dayNumber}</strong>${entry.date === todayKey ? '<em class="agenda-today">OGGI</em>' : ""}</div>
+        <div class="agenda-date"><span>${escapeHtml(weekday)}</span><strong>${dayNumber}</strong><small class="agenda-date__month">${escapeHtml(dayMonthFormat.format(date))}</small>${entry.date === todayKey ? '<em class="agenda-today">OGGI</em>' : ""}</div>
         <div class="agenda-day__content">
           <strong class="agenda-day__turn">${escapeHtml(agendaTurnLabel(entry.turn))}</strong>
           <textarea class="agenda-day__note-space${saved.note ? " has-note" : ""}" rows="2" data-agenda-note="${entry.date}" aria-label="Nota del ${entry.date}" placeholder="">${escapeHtml(saved.note || "")}</textarea>

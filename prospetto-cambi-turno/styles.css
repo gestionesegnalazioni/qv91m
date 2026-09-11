@@ -165,6 +165,17 @@ button { font: inherit; cursor: pointer; }
   line-height: 1.05;
 }
 
+.agenda-date__month {
+  max-width: 100%;
+  margin-top: 2px;
+  padding: 0 2px;
+  color: inherit;
+  font-size: .6rem;
+  font-weight: 400;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
 .agenda-today {
   margin-top: 5px;
   padding: 2px 5px;
