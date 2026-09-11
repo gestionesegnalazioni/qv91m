@@ -1,0 +1,65 @@
+name: Hide initial zero-bus flash
+
+on:
+  push:
+    paths:
+      - '.github/workflows/hide-zero-bus-flash.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch initial loading behavior
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+
+          old = """} else {
+  const gate = document.getElementById('authGate');
+  const shell = document.getElementById('appShell');
+  gate.classList.add('hidden');
+  shell.setAttribute('aria-hidden', 'false');
+  resetProtectedViews();
+  startDataSubscriptions();
+}"""
+
+          new = """} else {
+  const gate = document.getElementById('authGate');
+  const shell = document.getElementById('appShell');
+  gate.classList.add('hidden');
+  // Mantieni l'app nascosta finché autobus e segnalazioni non sono arrivati,
+  // così non compare per un attimo la schermata con 0 autobus.
+  shell.setAttribute('aria-hidden', 'true');
+  resetProtectedViews();
+  startDataSubscriptions();
+}"""
+
+          if old not in s:
+              raise SystemExit('Blocco di accesso diretto non trovato: nessuna modifica eseguita')
+
+          s = s.replace(old, new, 1)
+          s = s.replace('content="9.68"', 'content="9.69"', 1)
+          s = s.replace('<title>Gestione Bus v9.68</title>', '<title>Gestione Bus v9.69</title>', 1)
+          s = s.replace('// Accesso diretto attivo (v9.68).', '// Accesso diretto attivo (v9.69).', 1)
+          p.write_text(s, encoding='utf-8')
+
+          Path('version.txt').write_text('9.69\n', encoding='utf-8')
+          PY
+
+      - name: Commit patch
+        shell: bash
+        run: |
+          git config user.name "gestionesegnalazioni"
+          git config user.email "antonio.mauceri82@gmail.com"
+          git add index.html version.txt
+          git commit -m "Hide empty bus screen during initial load" || exit 0
+          git push
