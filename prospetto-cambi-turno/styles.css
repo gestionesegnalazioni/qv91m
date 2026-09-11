@@ -815,9 +815,9 @@ button { font: inherit; cursor: pointer; }
   .agenda-toolbar h1 { font-size: 1.08rem; }
   .agenda-day {
     grid-template-columns: 48px minmax(0, 1fr) 44px;
-    height: 98px;
-    min-height: 98px;
-    max-height: 98px;
+    height: 88px;
+    min-height: 88px;
+    max-height: 88px;
   }
   .agenda-day__content { gap: 2px; padding: 4px 6px; overflow: hidden; }
   .agenda-day__turn { font-size: 1.08rem; line-height: 1; }
