@@ -500,7 +500,7 @@ button { font: inherit; cursor: pointer; }
 }
 
 .person__text { min-width: 0; overflow-wrap: anywhere; }
-.person__days { display: block; margin-top: 1px; color: #ffd400; font-size: .64rem; font-weight: 800; text-shadow: 0 1px 0 rgba(91, 68, 0, .35); }
+.person__days { display: block; margin-top: 1px; color: #d32f2f; font-size: .64rem; font-weight: 800; }
 .person--open .person__text { color: #7c3aed; font-style: italic; }
 
 .turn-dialog {
