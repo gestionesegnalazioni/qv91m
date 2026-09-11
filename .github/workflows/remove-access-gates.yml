@@ -5,8 +5,37 @@ on:
     paths:
       - '.github/workflows/remove-access-gates.yml'
 
+permissions:
+  contents: write
+
 jobs:
   patch:
     runs-on: ubuntu-latest
     steps:
-      - run: echo ready
+      - uses: actions/checkout@v4
+      - name: Patch startup
+        shell: bash
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace("['cache_buses','cache_seg','cache_temi'].forEach(key => localStorage.removeItem(key));", "// cache retained for instant startup", 1)
+          s = s.replace("let attentionReportEntries = [];\nlet selectedBus = null;", "let attentionReportEntries = [];\ntry {\n  buses = JSON.parse(localStorage.getItem('cache_buses') || '[]');\n  segnalazioni = JSON.parse(localStorage.getItem('cache_seg') || '[]');\n} catch (_) {}\nlet selectedBus = null;", 1)
+          s = s.replace("buses = snap.docs.map(d => ({ id:d.id, ...d.data() })).sort(byMat);", "buses = snap.docs.map(d => ({ id:d.id, ...d.data() })).sort(byMat);\n    localStorage.setItem('cache_buses', JSON.stringify(buses));", 1)
+          s = s.replace("segnalazioni = snap.docs.map(d => ({ id:d.id, ...d.data() }));", "segnalazioni = snap.docs.map(d => ({ id:d.id, ...d.data() }));\n    localStorage.setItem('cache_seg', JSON.stringify(segnalazioni));", 1)
+          s = s.replace("gate.classList.add('hidden');\n  // Mantieni l'app nascosta finché autobus e segnalazioni non sono arrivati.\n  shell.setAttribute('aria-hidden', 'true');", "gate.classList.add('hidden');\n  shell.setAttribute('aria-hidden', 'false');", 1)
+          marker = "function renderCategoryView() {\n  if (!currentCategory) return;"
+          replacement = "function renderCategoryView() {\n  if (!initialDataReady.buses && !buses.length) {\n    const list = document.getElementById('categoryBusList');\n    if (list) list.innerHTML = '<div class=\"loading\">Caricamento autobus…</div>';\n    return;\n  }\n  if (!currentCategory) return;"
+          s = s.replace(marker, replacement, 1)
+          s = s.replace('content="9.69"', 'content="9.70"', 1)
+          s = s.replace('<title>Gestione Bus v9.69</title>', '<title>Gestione Bus v9.70</title>', 1)
+          s = s.replace('// Accesso diretto attivo (v9.69).', '// Accesso diretto attivo (v9.70).', 1)
+          p.write_text(s, encoding='utf-8')
+          Path('version.txt').write_text('9.70\n', encoding='utf-8')
+          PY
+          git config user.name gestionesegnalazioni
+          git config user.email actions@users.noreply.github.com
+          git add index.html version.txt
+          git commit -m "Clean initial startup" || exit 0
+          git push
