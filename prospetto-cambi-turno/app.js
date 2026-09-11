@@ -202,11 +202,30 @@
     return `Solo ${italianDayList(days)}`;
   }
 
+  function prospectPersonName(person) {
+    const value = String(person || "").trim().replace(/\\s+/g, " ");
+    if (!value || value.toUpperCase() === "SCOPERTO") return value;
+    const normalized = value.toLocaleLowerCase("it-IT");
+    const exceptions = new Map([
+      ["bertanelli matteo", "Matteo"],
+      ["menconi simone", "Menconi Simone"],
+      ["menconi marco", "Menconi Marco"],
+      ["volpi paolo", "Volpi Paolo"],
+      ["volpi marco", "Volpi Marco"]
+    ]);
+    if (exceptions.has(normalized)) return exceptions.get(normalized);
+    const parts = value.split(" ");
+    const compoundPrefixes = new Set(["de", "del", "della", "di"]);
+    return compoundPrefixes.has(parts[0].toLocaleLowerCase("it-IT")) && parts.length > 1
+      ? `${parts[0]} ${parts[1]}`
+      : parts[0];
+  }
+
   function personRow(week, group, turn, person, days = [], open = false) {
     const daysHtml = days.length ? `<small class="person__days">${escapeHtml(dayLabel(days))}</small>` : "";
     return `
       <div class="person${open ? " person--open" : ""}">
-        <span class="person__text">${escapeHtml(person)}${daysHtml}</span>
+        <span class="person__text">${escapeHtml(prospectPersonName(person))}${daysHtml}</span>
       </div>`;
   }
 
@@ -214,10 +233,9 @@
     const people = [personRow(week, group, item.turn, item.base, [], item.base === "SCOPERTO")]
       .concat(item.variations.map(v => personRow(week, group, item.turn, v.person, v.days)))
       .join("");
-    const eveningClass = EVENING_TURNS.has(String(item.turn)) ? " turn__number--evening" : "";
     return `
       <div class="turn">
-        <button class="turn__number${eveningClass}" type="button" data-open-turn="${item.turn}" data-group="${group}" title="Apri il turno MS${item.turn}">MS${item.turn}</button>
+        <button class="turn__number" type="button" data-open-turn="${item.turn}" data-group="${group}" title="Apri il turno MS${item.turn}">MS${item.turn}</button>
         <div class="names">${people}</div>
       </div>`;
   }
@@ -252,8 +270,7 @@
     const controls = turnCodes.map(code => {
       const value = String(code);
       if (/^\d+$/.test(value)) {
-        const eveningClass = EVENING_TURNS.has(value) ? " rotation-code--evening" : "";
-        return `<button class="rotation-code rotation-code--button${eveningClass}" type="button" data-open-turn="${escapeHtml(value)}" data-group="Il mio turno" data-display-turn="${escapeHtml(value)}" title="Apri il mio turno ${escapeHtml(value)}">${escapeHtml(value)}</button>`;
+        return `<button class="rotation-code rotation-code--button" type="button" data-open-turn="${escapeHtml(value)}" data-group="Il mio turno" data-display-turn="${escapeHtml(value)}" title="Apri il mio turno ${escapeHtml(value)}">${escapeHtml(value)}</button>`;
       }
       return `<span class="rotation-code">${escapeHtml(value)}</span>`;
     }).join("");
@@ -265,7 +282,7 @@
     const restCaption = restDays.length
       ? `<small class="rotation-rest">Riposo: ${escapeHtml(italianDayList(restDays))}</small>`
       : "";
-    return `<div class="week__actions"><div class="week__action-row">${vacationControl(week)}${ownTurnControl(week)}</div>${restCaption}</div>`;
+    return `<div class="week__actions"><div class="week__action-row">${ownTurnControl(week)}</div>${restCaption}</div>`;
   }
 
   function renderWeeks() {
