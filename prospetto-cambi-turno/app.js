@@ -342,6 +342,7 @@
             <h1>Settimana ${week.index}</h1>
             <p class="week__dates">${shortDate(week.start)} – ${shortDate(week.end)}</p>
           </div>
+          <button class="week__agenda-link" type="button" data-go-agenda-week="${week.index}" aria-label="Apri l’agenda della settimana ${week.index}">Agenda</button>
           ${weekActions(week)}
         </header>
         <div class="week__groups">${week.groups.map(group => groupColumn(week, group)).join("")}</div>
@@ -418,7 +419,7 @@
           <textarea class="agenda-day__note-space${saved.note ? " has-note" : ""}" rows="2" data-agenda-note="${entry.date}" aria-label="Nota del ${entry.date}" placeholder="">${escapeHtml(saved.note || "")}</textarea>
         </div>
         <div class="agenda-day__tools">
-          ${entry.week ? `<span class="agenda-day__week">Sett. ${entry.week}</span>` : ""}
+          ${entry.week ? `<button class="agenda-day__prospect" type="button" data-go-prospetto-week="${entry.week}" aria-label="Apri il prospetto della settimana ${entry.week}" title="Prospetto settimana ${entry.week}">P</button>` : ""}
         </div>
       </article>`;
   }
@@ -630,6 +631,13 @@
   }
 
   weeksEl.addEventListener("click", event => {
+    const agendaButton = event.target.closest("[data-go-agenda-week]");
+    if (agendaButton) {
+      const week = Number(agendaButton.dataset.goAgendaWeek);
+      setView("agenda");
+      scrollToWeek("agenda", week);
+      return;
+    }
     const vacationButton = event.target.closest("[data-vacation-week]");
     if (vacationButton) {
       const key = vacationButton.dataset.vacationWeek;
@@ -653,32 +661,14 @@
 
   document.querySelector("#closeDialog").addEventListener("click", () => dialog.close());
   dialog.addEventListener("click", event => { if (event.target === dialog) dialog.close(); });
-  document.querySelectorAll("[data-app-view]").forEach(button => {
-    button.addEventListener("click", () => setView(button.dataset.appView));
+
+  agendaDaysEl.addEventListener("click", event => {
+    const prospectButton = event.target.closest("[data-go-prospetto-week]");
+    if (!prospectButton) return;
+    const week = Number(prospectButton.dataset.goProspettoWeek);
+    setView("prospetto");
+    scrollToWeek("prospetto", week);
   });
-  let swipeStartX = 0;
-  let swipeStartY = 0;
-  let swipeTracking = false;
-
-  document.querySelector(".schedule-board").addEventListener("touchstart", event => {
-    if (event.touches.length !== 1 || event.target.closest("button, input, textarea, select, a, dialog")) {
-      swipeTracking = false;
-      return;
-    }
-    swipeStartX = event.touches[0].clientX;
-    swipeStartY = event.touches[0].clientY;
-    swipeTracking = true;
-  }, { passive: true });
-
-  document.querySelector(".schedule-board").addEventListener("touchend", event => {
-    if (!swipeTracking || event.changedTouches.length !== 1) return;
-    swipeTracking = false;
-    const deltaX = event.changedTouches[0].clientX - swipeStartX;
-    const deltaY = event.changedTouches[0].clientY - swipeStartY;
-    if (Math.abs(deltaX) < 55 || Math.abs(deltaX) < Math.abs(deltaY) * 1.25) return;
-    if (activeView === "agenda" && deltaX < 0) setView("prospetto", -1);
-    if (activeView === "prospetto" && deltaX > 0) setView("agenda", 1);
-  }, { passive: true });
 
   agendaDaysEl.addEventListener("input", event => {
     const field = event.target.closest("[data-agenda-note]");
