@@ -19,42 +19,19 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
-
           p = Path('index.html')
           s = p.read_text(encoding='utf-8')
-
-          old = """} else {
-  const gate = document.getElementById('authGate');
-  const shell = document.getElementById('appShell');
-  gate.classList.add('hidden');
-  shell.setAttribute('aria-hidden', 'false');
-  resetProtectedViews();
-  startDataSubscriptions();
-}"""
-
-          new = """} else {
-  const gate = document.getElementById('authGate');
-  const shell = document.getElementById('appShell');
-  gate.classList.add('hidden');
-  // Mantieni l'app nascosta finché autobus e segnalazioni non sono arrivati,
-  // così non compare per un attimo la schermata con 0 autobus.
-  shell.setAttribute('aria-hidden', 'true');
-  resetProtectedViews();
-  startDataSubscriptions();
-}"""
-
+          old = "} else {\n  const gate = document.getElementById('authGate');\n  const shell = document.getElementById('appShell');\n  gate.classList.add('hidden');\n  shell.setAttribute('aria-hidden', 'false');\n  resetProtectedViews();\n  startDataSubscriptions();\n}"
+          new = "} else {\n  const gate = document.getElementById('authGate');\n  const shell = document.getElementById('appShell');\n  gate.classList.add('hidden');\n  // Mantieni l'app nascosta finché autobus e segnalazioni non sono arrivati.\n  shell.setAttribute('aria-hidden', 'true');\n  resetProtectedViews();\n  startDataSubscriptions();\n}"
           if old not in s:
-              raise SystemExit('Blocco di accesso diretto non trovato: nessuna modifica eseguita')
-
+              raise SystemExit('Blocco di accesso diretto non trovato')
           s = s.replace(old, new, 1)
           s = s.replace('content="9.68"', 'content="9.69"', 1)
           s = s.replace('<title>Gestione Bus v9.68</title>', '<title>Gestione Bus v9.69</title>', 1)
           s = s.replace('// Accesso diretto attivo (v9.68).', '// Accesso diretto attivo (v9.69).', 1)
           p.write_text(s, encoding='utf-8')
-
           Path('version.txt').write_text('9.69\n', encoding='utf-8')
           PY
-
       - name: Commit patch
         shell: bash
         run: |
