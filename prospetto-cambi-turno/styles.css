@@ -20,6 +20,7 @@ body {
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 16px;
   line-height: 1.35;
+  -webkit-text-size-adjust: 100%;
 }
 
 button { font: inherit; cursor: pointer; }
@@ -302,8 +303,9 @@ button { font: inherit; cursor: pointer; }
   border-style: solid;
   background: #f5f3ff;
   color: #35205a;
-  font-size: 14px;
-  font-weight: 400;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  line-height: 1.15;
   white-space: pre-wrap;
 }
 
@@ -813,16 +815,16 @@ button { font: inherit; cursor: pointer; }
   .agenda-toolbar h1 { font-size: 1.08rem; }
   .agenda-day {
     grid-template-columns: 48px minmax(0, 1fr) 44px;
-    height: 96px;
-    min-height: 96px;
-    max-height: 96px;
+    height: 98px;
+    min-height: 98px;
+    max-height: 98px;
   }
   .agenda-day__content { gap: 2px; padding: 4px 6px; overflow: hidden; }
   .agenda-day__turn { font-size: 1.08rem; line-height: 1; }
   .agenda-day__change { padding-top: 2px; font-size: .7rem; line-height: 1.05; }
   .agenda-status { margin-top: 0; padding: 2px 5px; font-size: .58rem; }
   .agenda-day__note-space { margin-top: 1px; }
-  .agenda-day__note-space:focus { font-size: 16px; }
+  .agenda-day__note-space:focus { font-size: 16px !important; font-weight: 400 !important; }
   .agenda-day__week { margin-right: 0; font-size: .58rem; }
   .agenda-status-options { grid-template-columns: 1fr; }
   .agenda-change-fields { grid-template-columns: 1fr; }
