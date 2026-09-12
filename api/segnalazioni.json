@@ -1,5 +1,5 @@
 {
-  "aggiornatoIl": "2026-09-12T07:59:38.443Z",
+  "aggiornatoIl": "2026-09-12T12:07:21.004Z",
   "numeroSegnalazioni": 180,
   "segnalazioni": [
     {
@@ -87,7 +87,8 @@
       "desc": "Malfunzionamento aria condizionata",
       "date": [
         "2026-08-19",
-        "2026-08-24"
+        "2026-08-24",
+        "2026-08-28"
       ],
       "stato": "aperta",
       "pregressa": false,
