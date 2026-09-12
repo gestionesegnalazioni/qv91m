@@ -65,21 +65,26 @@ button { font: inherit; cursor: pointer; }
   overflow-x: clip;
 }
 
+.agenda-view { padding-top: 47px; }
+
 .agenda-quick-nav {
-  position: sticky;
-  top: max(6px, env(safe-area-inset-top));
+  position: fixed;
+  top: calc(env(safe-area-inset-top, 0px) + 6px);
+  right: 0;
+  left: 0;
   z-index: 30;
   display: flex;
   justify-content: center;
   width: min(210px, calc(100% - 32px));
-  margin: 0 auto 7px;
+  margin: 0 auto;
   padding: 4px;
-  border: 1px solid rgba(196, 181, 253, .85);
+  border: 1px solid #c4b5fd;
   border-radius: 12px;
-  background: rgba(245, 243, 255, .94);
+  background: #f5f3ff;
   box-shadow: 0 6px 18px rgba(91, 33, 182, .14);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  contain: layout paint;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
 .agenda-go-today {
