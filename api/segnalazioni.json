@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-09-12T15:30:20.978Z",
-  "numeroSegnalazioni": 185,
+  "aggiornatoIl": "2026-09-12T17:48:30.561Z",
+  "numeroSegnalazioni": 188,
   "segnalazioni": [
     {
       "id": "1TrRqez4bvkT038FDI5d",
@@ -281,7 +281,7 @@
         "2026-08-17"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-16T19:47:23.477Z",
@@ -374,7 +374,7 @@
         "2026-08-27"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-07-29T15:08:42.192Z",
@@ -428,7 +428,9 @@
         "2026-08-22",
         "2026-08-31",
         "2026-09-03",
-        "2026-09-06"
+        "2026-09-05",
+        "2026-09-06",
+        "2026-09-12"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -1398,6 +1400,20 @@
       "order": 2
     },
     {
+      "id": "Q6t4PdevnozPhyZk6fet",
+      "bus": "A5153",
+      "desc": "Dalle bocchette del cruscotto non esce aria",
+      "date": [
+        "2026-09-12"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-12T17:36:06.857Z",
+      "order": null
+    },
+    {
       "id": "QB2zH7V0tOojO5WXVTOA",
       "bus": "A5122",
       "desc": "Tendenza a inchiodare in fase di arresto. Guida non pulita",
@@ -1424,6 +1440,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-11T17:18:30.071Z",
+      "order": null
+    },
+    {
+      "id": "QF21AVe6Bn7nozQp4wk9",
+      "bus": "A3044",
+      "desc": "Malfunzionamento aria condizionata",
+      "date": [
+        "2026-05-22"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-12T16:59:14.477Z",
       "order": null
     },
     {
@@ -1753,7 +1783,8 @@
       "date": [
         "2026-09-02",
         "2026-09-03",
-        "2026-09-06"
+        "2026-09-06",
+        "2026-09-12"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -1854,7 +1885,8 @@
       "desc": "Nel plurimus frontale non compare il numero di linea",
       "date": [
         "2026-09-08",
-        "2026-09-10"
+        "2026-09-10",
+        "2026-09-12"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -2385,7 +2417,7 @@
         "2026-08-17"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-07T12:33:43.419Z",
@@ -2610,7 +2642,7 @@
         "2026-08-17"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-16T19:48:22.897Z",
@@ -2839,7 +2871,7 @@
         "2026-08-17"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-13T17:28:13.066Z",
@@ -3210,6 +3242,18 @@
       "order": null
     },
     {
+      "id": "xR1mgkRQ7M9JQA1XsULM",
+      "bus": "K4200",
+      "desc": "Spia usura freni",
+      "date": [],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-12T15:57:12.329Z",
+      "order": null
+    },
+    {
       "id": "xVDawViILS2h0p4zbGbX",
       "bus": "A5153",
       "desc": "Freccia lat dx",
@@ -3244,7 +3288,7 @@
         "2026-08-26"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-26T18:00:42.463Z",
