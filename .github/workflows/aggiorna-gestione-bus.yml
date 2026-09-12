@@ -1,0 +1,49 @@
+name: Aggiorna dati Gestione Bus
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/5 * * * *'
+
+permissions:
+  contents: write
+
+jobs:
+  aggiorna:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Scarica dati live dal Worker
+        run: |
+          mkdir -p api
+          curl --fail --silent --show-error \
+            --retry 3 \
+            --connect-timeout 15 \
+            --max-time 60 \
+            "https://gestione-bus-api.antonio-mauceri82.workers.dev/pubblico/segnalazioni" \
+            -o api/segnalazioni.json
+
+      - name: Verifica JSON
+        run: |
+          python - <<'PY'
+          import json
+          with open('api/segnalazioni.json', encoding='utf-8') as f:
+              data = json.load(f)
+          assert isinstance(data.get('segnalazioni'), list)
+          assert isinstance(data.get('numeroSegnalazioni'), int)
+          print('Segnalazioni:', data['numeroSegnalazioni'])
+          PY
+
+      - name: Pubblica aggiornamento se cambiato
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add api/segnalazioni.json
+          if git diff --cached --quiet; then
+            echo "Nessuna modifica nei dati."
+            exit 0
+          fi
+          git commit -m "Aggiorna dati live Gestione Bus"
+          git push
