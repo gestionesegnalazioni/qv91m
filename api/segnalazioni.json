@@ -1,0 +1,3334 @@
+{
+  "aggiornatoIl": "2026-09-12T07:59:38.443Z",
+  "numeroSegnalazioni": 180,
+  "segnalazioni": [
+    {
+      "id": "1TrRqez4bvkT038FDI5d",
+      "bus": "K3142",
+      "desc": "Malfunzionamento aria condizionata",
+      "date": [
+        "2026-09-02"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-02T19:45:48.866Z",
+      "order": null
+    },
+    {
+      "id": "1Va6PKjfINr4HH86Djkq",
+      "bus": "L2006",
+      "desc": "Spia vaschetta acqua radiatore",
+      "date": [
+        "2026-06-18"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-06-18T16:52:36.304Z",
+      "order": null
+    },
+    {
+      "id": "1ZjPhTavKHnp1cgZCwam",
+      "bus": "A5123",
+      "desc": "Sospensioni",
+      "date": [
+        "2026-08-14",
+        "2026-08-18",
+        "2026-08-18"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-15T15:34:31.905Z",
+      "order": 1
+    },
+    {
+      "id": "1ltdEBBONJR8yuiqNZxG",
+      "bus": "A5153",
+      "desc": "Spia rossa pneumatici",
+      "date": [
+        "2026-07-19",
+        "2026-07-20",
+        "2026-07-21",
+        "2026-07-23",
+        "2026-07-24",
+        "2026-07-26",
+        "2026-07-27",
+        "2026-08-01",
+        "2026-08-02",
+        "2026-08-05",
+        "2026-08-06",
+        "2026-08-07",
+        "2026-08-14",
+        "2026-08-15",
+        "2026-08-16",
+        "2026-08-17",
+        "2026-08-18",
+        "2026-08-19",
+        "2026-08-20",
+        "2026-08-23",
+        "2026-08-24",
+        "2026-08-26"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": true,
+      "createdAt": "2026-07-20T21:24:43.515Z",
+      "order": 0
+    },
+    {
+      "id": "2340o7ADy5ysdcdIqCtf",
+      "bus": "K3152",
+      "desc": "Malfunzionamento aria condizionata",
+      "date": [
+        "2026-08-19",
+        "2026-08-24"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-24T08:33:47.023Z",
+      "order": null
+    },
+    {
+      "id": "2CMoykFhoyQBCGimCTPD",
+      "bus": "K3089",
+      "desc": "Spia freni AEBS fissa",
+      "date": [
+        "2026-06-09",
+        "2026-06-14",
+        "2026-08-05",
+        "2026-08-07"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-06-09T23:03:02.908Z",
+      "order": null
+    },
+    {
+      "id": "2HLx0hEPvmTyAp9C4Ngf",
+      "bus": "A2053",
+      "desc": "Il cambio è tutto un singhiozzo",
+      "date": [
+        "2025-12-27",
+        "2026-01-22",
+        "2026-01-23",
+        "2026-07-20"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-20T18:28:06.646Z",
+      "order": 1
+    },
+    {
+      "id": "2TgATWv2pjgdzzVAjYmS",
+      "bus": "K2073",
+      "desc": "Telecamera retromarcia e porta post",
+      "date": [
+        "2025-11-03",
+        "2025-11-05",
+        "2025-11-07",
+        "2025-11-08",
+        "2025-11-09",
+        "2025-11-10",
+        "2025-11-10",
+        "2025-11-23",
+        "2026-02-19",
+        "2026-03-02",
+        "2026-03-03",
+        "2026-05-27",
+        "2026-07-02",
+        "2026-07-03",
+        "2026-07-10"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-06-09T23:00:28.280Z",
+      "order": null
+    },
+    {
+      "id": "2d3Ec9Dl5Pox9bBnQc1o",
+      "bus": "A3056",
+      "desc": "A volte la porta posteriore si richiude da sola",
+      "date": [
+        "2026-08-05"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-12T17:25:01.425Z",
+      "order": null
+    },
+    {
+      "id": "2dlaIwOuUXulPqcAqpjY",
+      "bus": "K2096",
+      "desc": "Manca tendina laterale autista",
+      "date": [
+        "2025-06-22",
+        "2025-07-17",
+        "2025-08-08",
+        "2025-08-09",
+        "2025-08-09",
+        "2025-08-10",
+        "2025-10-01",
+        "2026-08-23",
+        "2026-08-23"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-28T15:56:52.142Z",
+      "order": null
+    },
+    {
+      "id": "32h7ovcp6F4cuYbluOWf",
+      "bus": "A5115",
+      "desc": "Sospensioni rigide, sollecitazioni su buchi e dossi",
+      "date": [
+        "2026-09-08"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-08T06:54:21.383Z",
+      "order": 0
+    },
+    {
+      "id": "3YoVzA3YJw3vkTJfhA5S",
+      "bus": "A5149",
+      "desc": "Malfunzionamento impianto di climatizzazione",
+      "date": [
+        "2026-06-27",
+        "2026-07-14",
+        "2026-07-15",
+        "2026-07-17",
+        "2026-07-18",
+        "2026-08-02"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-02T15:30:48.111Z",
+      "order": null
+    },
+    {
+      "id": "411Jz4wsyYaV2oV6JlMV",
+      "bus": "A5063",
+      "desc": "Spia punto esclamativo e spia stabilità",
+      "date": [],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-13T10:16:57.068Z",
+      "order": null
+    },
+    {
+      "id": "4AFpAa2bsxVf8N6tcgK0",
+      "bus": "A5153",
+      "desc": "Volante non allineato",
+      "date": [
+        "2026-08-16",
+        "2026-08-17",
+        "2026-08-24"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-17T08:17:05.718Z",
+      "order": 2
+    },
+    {
+      "id": "4SOODkz0H1Jizo8aqy13",
+      "bus": "L2006",
+      "desc": "Spia freni",
+      "date": [
+        "2026-08-03",
+        "2026-08-05",
+        "2026-08-13"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-03T19:37:48.372Z",
+      "order": null
+    },
+    {
+      "id": "4UgErl31TgGvPfYd5kHB",
+      "bus": "A5060",
+      "desc": "Controllare pannello sopra la testa dell’autista, si sta staccando",
+      "date": [
+        "2026-08-16",
+        "2026-08-17"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-16T19:47:23.477Z",
+      "order": 2
+    },
+    {
+      "id": "4lgc1BdP4V3i49CvxCxH",
+      "bus": "K2130",
+      "desc": "Specchio retrovisore dx",
+      "date": [
+        "2026-09-07"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-07T17:29:16.565Z",
+      "order": null
+    },
+    {
+      "id": "4y6MPuPj4itS87KbBYjr",
+      "bus": "A2053",
+      "desc": "Telecamera porta post",
+      "date": [
+        "2025-10-25",
+        "2026-06-17",
+        "2026-07-16",
+        "2026-07-16",
+        "2026-07-20",
+        "2026-07-20",
+        "2026-07-22"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-16T21:43:09.649Z",
+      "order": 0
+    },
+    {
+      "id": "5G1RxFPcIQHC842TFk9d",
+      "bus": "A5123",
+      "desc": "Verificare spia rossa livello acqua",
+      "date": [
+        "2023-07-10",
+        "2025-06-10",
+        "2025-09-27",
+        "2026-06-21",
+        "2026-06-28",
+        "2026-07-05",
+        "2026-07-10"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-06-21T22:36:11.488Z",
+      "order": 2
+    },
+    {
+      "id": "5NQn5FBQiNama41QCvEE",
+      "bus": "A2053",
+      "desc": "Abitacolo eccessivamente rumoroso",
+      "date": [
+        "2025-11-05",
+        "2026-01-22",
+        "2026-01-23",
+        "2026-03-10",
+        "2026-07-20"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-20T18:28:31.402Z",
+      "order": null
+    },
+    {
+      "id": "5OwpzLwj5aX18qxCnLmJ",
+      "bus": "A5121",
+      "desc": "Malfunzionamento impianto di climatizzazione",
+      "date": [
+        "2026-07-19",
+        "2026-07-21",
+        "2026-07-27",
+        "2026-07-29",
+        "2026-07-29",
+        "2026-07-29",
+        "2026-07-30",
+        "2026-08-27"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-29T15:08:42.192Z",
+      "order": null
+    },
+    {
+      "id": "5pADio5uUN4kNKzutfr7",
+      "bus": "A4148",
+      "desc": "Dalle bocchette del cruscotto non esce aria",
+      "date": [
+        "2025-04-03",
+        "2025-04-04",
+        "2025-04-05",
+        "2025-04-29",
+        "2025-05-03",
+        "2025-05-10",
+        "2025-05-12",
+        "2025-05-14",
+        "2025-05-21",
+        "2025-05-26",
+        "2025-05-27",
+        "2025-05-27",
+        "2025-06-05",
+        "2025-06-06",
+        "2025-06-07",
+        "2025-06-11",
+        "2025-06-13",
+        "2025-06-22",
+        "2025-08-11",
+        "2026-04-17",
+        "2026-05-02",
+        "2026-05-17",
+        "2026-05-21",
+        "2026-06-27",
+        "2026-06-29",
+        "2026-07-06",
+        "2026-07-07",
+        "2026-07-08",
+        "2026-07-09",
+        "2026-07-10",
+        "2026-07-11",
+        "2026-07-14",
+        "2026-07-14",
+        "2026-07-15",
+        "2026-07-15",
+        "2026-07-16",
+        "2026-07-17",
+        "2026-07-20",
+        "2026-08-15",
+        "2026-08-18",
+        "2026-08-22",
+        "2026-08-31",
+        "2026-09-03",
+        "2026-09-06"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-06T17:56:28.317Z",
+      "order": 1
+    },
+    {
+      "id": "5vdFqp3An6WRR5hDAgoI",
+      "bus": "L3312",
+      "desc": "Motore soffocato + spia motore fissa",
+      "date": [
+        "2026-01-15",
+        "2026-07-30",
+        "2026-08-01",
+        "2026-08-04"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-30T17:02:35.238Z",
+      "order": 1
+    },
+    {
+      "id": "64IkxXAYtIu6IWabtwWa",
+      "bus": "A5064",
+      "desc": "Aria condizionata insufficiente",
+      "date": [
+        "2026-06-16",
+        "2026-06-28",
+        "2026-07-01",
+        "2026-08-31"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-01T18:38:05.770Z",
+      "order": null
+    },
+    {
+      "id": "6gQQgbj8dDiJkJUkCwu7",
+      "bus": "K2092",
+      "desc": "Malfunzionamento aria condizionata",
+      "date": [
+        "2026-05-26",
+        "2026-06-04",
+        "2026-06-08",
+        "2026-06-09",
+        "2026-06-10",
+        "2026-06-12",
+        "2026-06-29",
+        "2026-06-30",
+        "2026-07-01",
+        "2026-07-02",
+        "2026-07-04",
+        "2026-07-06",
+        "2026-07-07",
+        "2026-07-08",
+        "2026-07-15"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-06-09T23:01:22.064Z",
+      "order": 0
+    },
+    {
+      "id": "7u2zaZ96LrzsVm1fAvnE",
+      "bus": "K1114",
+      "desc": "Ugelli lavavetro tappati",
+      "date": [
+        "2026-06-14"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-06-15T07:16:04.105Z",
+      "order": null
+    },
+    {
+      "id": "8GdL0Tl08tkCK6VbP4Ae",
+      "bus": "A5116",
+      "desc": "AC insuff",
+      "date": [
+        "2026-06-18",
+        "2026-06-19"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-06-19T15:30:14.197Z",
+      "order": null
+    },
+    {
+      "id": "8gq360lH46RzkYkePXDD",
+      "bus": "A5155",
+      "desc": "Rotta maniglia autista",
+      "date": [
+        "2026-07-14",
+        "2026-07-25",
+        "2026-07-27"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-27T21:19:15.625Z",
+      "order": null
+    },
+    {
+      "id": "9eHL0LF4LOaQWeYhMT1K",
+      "bus": "K2125",
+      "desc": "Aria condizionata insufficiente",
+      "date": [
+        "2026-08-28",
+        "2026-08-30"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-28T17:41:36.815Z",
+      "order": null
+    },
+    {
+      "id": "A8sqI0l4gzigxaNE6EFl",
+      "bus": "K1092",
+      "desc": "Freccia ant sx",
+      "date": [
+        "2026-05-17",
+        "2026-05-28",
+        "2026-06-05",
+        "2026-06-06",
+        "2026-08-31"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-04T15:28:07.623Z",
+      "order": 2
+    },
+    {
+      "id": "AeQyNuj4Ylu85gSqNVaZ",
+      "bus": "L2006",
+      "desc": "Aria condizionata non costante",
+      "date": [
+        "2026-06-22",
+        "2026-06-29",
+        "2026-08-03"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-06-22T12:10:18.582Z",
+      "order": null
+    },
+    {
+      "id": "AovCvBzRZTYiXvP9yQKV",
+      "bus": "A5124",
+      "desc": "Sospensioni rigide",
+      "date": [
+        "2026-08-19"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-19T18:00:45.647Z",
+      "order": null
+    },
+    {
+      "id": "B0cxt5ydjiOrsG9B5kAM",
+      "bus": "A5117",
+      "desc": "Pulsante porta anteriore sta venendo via",
+      "date": [
+        "2026-07-04",
+        "2026-07-05",
+        "2026-07-10",
+        "2026-07-13",
+        "2026-07-16",
+        "2026-07-25"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-25T18:18:27.083Z",
+      "order": 2
+    },
+    {
+      "id": "BJMVLK9iVIXDAWLDB9b1",
+      "bus": "A5137",
+      "desc": "Poca aria dalle bocchette autista",
+      "date": [
+        "2026-08-17"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-17T18:27:39.492Z",
+      "order": null
+    },
+    {
+      "id": "BccTq7FsZw7ewGwL00HH",
+      "bus": "K1114",
+      "desc": "Retrovisore sx venato",
+      "date": [
+        "2026-06-16",
+        "2026-06-19",
+        "2026-06-21",
+        "2026-06-24",
+        "2026-06-25",
+        "2026-06-26",
+        "2026-06-28",
+        "2026-06-30",
+        "2026-07-01",
+        "2026-07-06",
+        "2026-07-08",
+        "2026-07-18",
+        "2026-07-19",
+        "2026-07-21",
+        "2026-07-23",
+        "2026-07-26",
+        "2026-07-29",
+        "2026-07-30",
+        "2026-08-01",
+        "2026-08-03",
+        "2026-08-07",
+        "2026-08-08",
+        "2026-08-08",
+        "2026-08-09",
+        "2026-08-10",
+        "2026-08-11",
+        "2026-08-12",
+        "2026-08-16",
+        "2026-08-18"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": true,
+      "createdAt": "2026-06-21T22:37:45.768Z",
+      "order": 0
+    },
+    {
+      "id": "Bg8CZDdREz2RyhAQS7qX",
+      "bus": "A2053",
+      "desc": "Sospensioni inesistenti",
+      "date": [
+        "2026-01-22",
+        "2026-01-23"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-26T23:01:05.610Z",
+      "order": null
+    },
+    {
+      "id": "BgLGXinUSyWMWD8xJMRy",
+      "bus": "A5046",
+      "desc": "Display in tedesco",
+      "date": [
+        "2026-06-26",
+        "2026-07-28",
+        "2026-07-29",
+        "2026-07-30",
+        "2026-08-20",
+        "2026-08-27"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-06-27T07:03:18.499Z",
+      "order": 0
+    },
+    {
+      "id": "CmXEaUf677Mv0HrEehnv",
+      "bus": "A5045",
+      "desc": "In fase di chiusura a volte le porte si riaprono",
+      "date": [
+        "2026-07-07",
+        "2026-09-11"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-07T17:28:47.307Z",
+      "order": 1
+    },
+    {
+      "id": "DFSAI5vUQp5uDNuUQjmj",
+      "bus": "A5117",
+      "desc": "Spia usura freni",
+      "date": [
+        "2026-07-21"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-25T18:20:33.721Z",
+      "order": null
+    },
+    {
+      "id": "DqPy8wjTBfoMvXvmryhP",
+      "bus": "K1105",
+      "desc": "Luci diurne fuori servizio",
+      "date": [
+        "2026-08-25"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-25T18:46:17.691Z",
+      "order": null
+    },
+    {
+      "id": "ENtyP3Xp94PuQvKOo4Ia",
+      "bus": "K2096",
+      "desc": "Entrambi i retrovisori non si regolano",
+      "date": [
+        "2025-10-01",
+        "2026-01-19"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-28T18:18:01.042Z",
+      "order": null
+    },
+    {
+      "id": "EwfJnsWCQi08DVNZ79GD",
+      "bus": "K1105",
+      "desc": "Luci diurne fuori servizio",
+      "date": [
+        "2026-08-25",
+        "2026-08-28"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-28T17:44:23.073Z",
+      "order": null
+    },
+    {
+      "id": "H2IycOjmhwzteaQqktfr",
+      "bus": "A5115",
+      "desc": "Malfunzionamento clacson",
+      "date": [
+        "2026-07-13",
+        "2026-07-13",
+        "2026-07-15",
+        "2026-07-15"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-13T16:35:49.586Z",
+      "order": null
+    },
+    {
+      "id": "HBR0Zx38GRh4jWwTZR7f",
+      "bus": "K1044",
+      "desc": "Aria condizionata fuori servizio",
+      "date": [
+        "2026-05-05",
+        "2026-06-13",
+        "2026-06-22",
+        "2026-06-23",
+        "2026-06-29",
+        "2026-06-30",
+        "2026-07-01",
+        "2026-07-02",
+        "2026-07-10",
+        "2026-07-11",
+        "2026-07-13",
+        "2026-07-14",
+        "2026-07-20",
+        "2026-07-21",
+        "2026-08-05",
+        "2026-08-06",
+        "2026-08-12",
+        "2026-09-07",
+        "2026-09-09"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-06-22T12:10:54.282Z",
+      "order": null
+    },
+    {
+      "id": "HQZFeF1HWmmtH4KVXvM6",
+      "bus": "K4121",
+      "desc": "Entrambi i retrovisori non si regolano",
+      "date": [
+        "2026-07-18"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-08T14:49:24.064Z",
+      "order": null
+    },
+    {
+      "id": "HdXJMygpJTQTaKKiF9JD",
+      "bus": "A2026",
+      "desc": "Motore va in protezione",
+      "date": [
+        "2026-06-04",
+        "2026-06-30",
+        "2026-07-01",
+        "2026-07-03",
+        "2026-07-20"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-20T17:12:19.828Z",
+      "order": 0
+    },
+    {
+      "id": "I4VYsY1ZhSw9oCTGmP0w",
+      "bus": "K3142",
+      "desc": "Spia rossa freni EBS e antislittamento",
+      "date": [
+        "2026-04-15",
+        "2026-04-29",
+        "2026-07-31",
+        "2026-08-12"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": true,
+      "createdAt": "2026-07-31T17:02:30.022Z",
+      "order": 0
+    },
+    {
+      "id": "IGv6ohRrJyKKhHmpbv3s",
+      "bus": "K1130",
+      "desc": "Spia sospensioni",
+      "date": [
+        "2026-09-08"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-08T17:40:46.685Z",
+      "order": null
+    },
+    {
+      "id": "IQRLVX91aNFoigrFkz0c",
+      "bus": "K2125",
+      "desc": "Braccio retrovisore destro si muove durante la marcia",
+      "date": [
+        "2026-08-01",
+        "2026-08-04"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-05T08:05:20.395Z",
+      "order": null
+    },
+    {
+      "id": "IldLv6vSB9HyJrzIsKc3",
+      "bus": "K3089",
+      "desc": "Tendina parasole rotta",
+      "date": [
+        "2026-08-12"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-13T17:24:31.748Z",
+      "order": null
+    },
+    {
+      "id": "IokRrrTUocbzOmIE6znS",
+      "bus": "A5121",
+      "desc": "Martelletto corridoio",
+      "date": [],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-26T21:06:48.494Z",
+      "order": null
+    },
+    {
+      "id": "IvRxK8IU0rGnqBDxq2yZ",
+      "bus": "A5123",
+      "desc": "Spia rossa gomme",
+      "date": [
+        "2023-12-10",
+        "2026-01-26",
+        "2026-01-27",
+        "2026-02-03",
+        "2026-06-21",
+        "2026-07-05",
+        "2026-07-10",
+        "2026-07-11",
+        "2026-07-13"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-06-21T22:35:33.262Z",
+      "order": 1
+    },
+    {
+      "id": "J5s4NOkjUC9YbOhAvTMs",
+      "bus": "A5058",
+      "desc": "Rotta la leva per inclinare il sedile autista",
+      "date": [
+        "2026-07-02",
+        "2026-07-04",
+        "2026-07-05",
+        "2026-07-06",
+        "2026-07-07",
+        "2026-07-08",
+        "2026-07-09"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-02T17:58:52.486Z",
+      "order": null
+    },
+    {
+      "id": "Ji0b869hSj2G1LVY9xjb",
+      "bus": "K2073",
+      "desc": "Aria condizionata fuori servizio",
+      "date": [
+        "2025-05-17",
+        "2025-06-30",
+        "2025-08-18",
+        "2025-08-28",
+        "2026-05-26",
+        "2026-05-27"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-06-09T23:00:13.034Z",
+      "order": null
+    },
+    {
+      "id": "KQ57aPAFcFR9K4fYS5Zj",
+      "bus": "K1112",
+      "desc": "Aria condizionata passeggeri insufficiente",
+      "date": [
+        "2026-08-12"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-12T17:45:14.138Z",
+      "order": null
+    },
+    {
+      "id": "KYOBKYNjTidxGdBTHxA6",
+      "bus": "A5154",
+      "desc": "Freccia lat dx",
+      "date": [
+        "2026-08-28"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-28T17:42:29.823Z",
+      "order": null
+    },
+    {
+      "id": "L2ezJW3WhYlihiwEt8zx",
+      "bus": "A5154",
+      "desc": "Malfunzionamento impianto di climatizzazione",
+      "date": [
+        "2026-06-30",
+        "2026-07-11",
+        "2026-07-13",
+        "2026-07-15",
+        "2026-08-09"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-11T16:38:29.211Z",
+      "order": null
+    },
+    {
+      "id": "LnGxYqmXGirkoqvN5tbJ",
+      "bus": "A5154",
+      "desc": "Porta centrale sfrenata",
+      "date": [
+        "2026-08-28"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-28T17:43:00.433Z",
+      "order": null
+    },
+    {
+      "id": "LtBdg0JCVuYfKXFwuhL1",
+      "bus": "A2053",
+      "desc": "Malfunzionamento impianto di climatizzazione",
+      "date": [
+        "2025-04-11",
+        "2025-04-14",
+        "2025-05-02",
+        "2025-05-14",
+        "2025-05-14",
+        "2025-05-15",
+        "2025-05-16",
+        "2025-06-12",
+        "2025-06-13",
+        "2025-06-16",
+        "2025-06-17",
+        "2025-06-18",
+        "2025-07-26",
+        "2025-07-29",
+        "2025-07-30",
+        "2025-08-08",
+        "2025-09-16"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-26T22:47:52.574Z",
+      "order": null
+    },
+    {
+      "id": "Lx8RsXAO7p8jBMLYtTWO",
+      "bus": "K1105",
+      "desc": "Malfunzionamento aria condizionata",
+      "date": [
+        "2026-09-03"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-03T18:11:44.277Z",
+      "order": null
+    },
+    {
+      "id": "MA2t1DReC7mYDOV3PEta",
+      "bus": "A3057",
+      "desc": "Malfunzionamento impianto di climatizzazione",
+      "date": [
+        "2026-07-19",
+        "2026-07-26",
+        "2026-08-03",
+        "2026-08-14"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-20T08:53:49.620Z",
+      "order": null
+    },
+    {
+      "id": "MIrgPu21yROG896i64ww",
+      "bus": "A5155",
+      "desc": "Malfunzionamento impianto di climatizzazione",
+      "date": [
+        "2026-06-23",
+        "2026-07-16",
+        "2026-07-29"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-31T18:44:46.831Z",
+      "order": null
+    },
+    {
+      "id": "MSJXkNuWCB4IdCsXRctA",
+      "bus": "K3089",
+      "desc": "Aria condizionata passeggeri fuori servizio",
+      "date": [
+        "2026-05-28",
+        "2026-06-09",
+        "2026-07-06",
+        "2026-07-11",
+        "2026-07-19"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-06-09T23:03:38.973Z",
+      "order": null
+    },
+    {
+      "id": "MY1pqX09S4EyXChQPYIB",
+      "bus": "F4006",
+      "desc": "Strattona nei cambi di marcia",
+      "date": [
+        "2025-11-27"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-26T18:47:38.937Z",
+      "order": null
+    },
+    {
+      "id": "MnJ5nPjBzEA0w2flkMV5",
+      "bus": "A5119",
+      "desc": "Sospensioni scariche",
+      "date": [
+        "2026-08-19"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-19T18:02:27.113Z",
+      "order": null
+    },
+    {
+      "id": "Nc4nm3HOSKAGrK6xSc0R",
+      "bus": "A5115",
+      "desc": "Anomalia sistema frenante",
+      "date": [
+        "2026-08-01"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-08T20:39:38.330Z",
+      "order": null
+    },
+    {
+      "id": "NpL6DV7v8LoqOaiiwxBS",
+      "bus": "K2125",
+      "desc": "Spia motore e spia AEBS",
+      "date": [
+        "2026-08-11"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-11T20:48:09.651Z",
+      "order": null
+    },
+    {
+      "id": "O5nvZjxpCjuAFHwuIVIg",
+      "bus": "A5123",
+      "desc": "Aria condizionata insufficiente",
+      "date": [
+        "2026-08-13",
+        "2026-08-14"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-15T15:35:18.692Z",
+      "order": 0
+    },
+    {
+      "id": "O8JxhxBApMObBfLETHZJ",
+      "bus": "A3057",
+      "desc": "Sistemare leva schienale",
+      "date": [
+        "2026-01-09",
+        "2026-01-12",
+        "2026-05-20"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-06-12T18:13:22.835Z",
+      "order": 1
+    },
+    {
+      "id": "OE2EijLaYLqDimrvQpss",
+      "bus": "K1043",
+      "desc": "Aria condizionata fuori servizio",
+      "date": [
+        "2025-08-15",
+        "2025-09-16",
+        "2026-06-10",
+        "2026-06-16",
+        "2026-06-17",
+        "2026-06-22",
+        "2026-06-24",
+        "2026-06-25",
+        "2026-06-26",
+        "2026-06-30",
+        "2026-07-01",
+        "2026-07-03",
+        "2026-07-04",
+        "2026-07-10",
+        "2026-07-11",
+        "2026-08-08",
+        "2026-08-27",
+        "2026-08-28",
+        "2026-09-02",
+        "2026-09-09"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-06-10T12:46:10.713Z",
+      "order": null
+    },
+    {
+      "id": "OVL2vqQ2Ee0EakwEeWBC",
+      "bus": "K2093",
+      "desc": "Malfunzionamento impianto di climatizzazione",
+      "date": [
+        "2026-06-08",
+        "2026-07-13",
+        "2026-07-14",
+        "2026-07-23"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-14T09:38:55.913Z",
+      "order": null
+    },
+    {
+      "id": "PLGIHeZrcEOe83wMOshl",
+      "bus": "A5121",
+      "desc": "Spia anomalia porta",
+      "date": [
+        "2026-08-23"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-23T14:43:23.526Z",
+      "order": null
+    },
+    {
+      "id": "PxDEsLfm9X5xjw802tod",
+      "bus": "A5045",
+      "desc": "Il volante tira a dx",
+      "date": [
+        "2026-09-11"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-11T17:00:05.374Z",
+      "order": null
+    },
+    {
+      "id": "PzEQ3is1PuNYcFxarNHZ",
+      "bus": "K3142",
+      "desc": "Infiltrazioni quando piove",
+      "date": [
+        "2026-08-21",
+        "2026-08-21"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-22T16:03:54.935Z",
+      "order": 2
+    },
+    {
+      "id": "QB2zH7V0tOojO5WXVTOA",
+      "bus": "A5122",
+      "desc": "Tendenza a inchiodare in fase di arresto. Guida non pulita",
+      "date": [
+        "2026-06-12"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-06-12T10:09:12.426Z",
+      "order": null
+    },
+    {
+      "id": "QBqGco8dvnJQC4DDcW70",
+      "bus": "A5063",
+      "desc": "Aria condizionata insufficiente",
+      "date": [
+        "2026-08-07",
+        "2026-08-11"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-11T17:18:30.071Z",
+      "order": null
+    },
+    {
+      "id": "QIaCdRiuFYiWUmqTBlSL",
+      "bus": "K1044",
+      "desc": "Volante sfaldato",
+      "date": [
+        "2026-09-07",
+        "2026-09-09"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-07T17:28:20.535Z",
+      "order": null
+    },
+    {
+      "id": "QQqboakdHzhD4d2qaBmK",
+      "bus": "K1092",
+      "desc": "Ventilazione aria",
+      "date": [
+        "2026-05-04",
+        "2026-05-07",
+        "2026-05-17",
+        "2026-05-22",
+        "2026-05-25",
+        "2026-05-26",
+        "2026-05-27",
+        "2026-05-28",
+        "2026-06-01",
+        "2026-06-05",
+        "2026-06-06",
+        "2026-07-06",
+        "2026-07-15",
+        "2026-07-17",
+        "2026-07-20",
+        "2026-07-23",
+        "2026-08-28",
+        "2026-09-04"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-17T21:52:53.442Z",
+      "order": 0
+    },
+    {
+      "id": "QZoVAhDPeBc56xtvUsE2",
+      "bus": "K2073",
+      "desc": "Durante la marcia il cambio passa in folle",
+      "date": [
+        "2025-08-18",
+        "2025-10-16",
+        "2025-10-17",
+        "2026-05-12",
+        "2026-05-27",
+        "2026-06-06",
+        "2026-06-29",
+        "2026-07-02",
+        "2026-07-03",
+        "2026-07-10"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-06-09T23:00:39.550Z",
+      "order": null
+    },
+    {
+      "id": "Qjdw3uRIoLH5BjBpdUPu",
+      "bus": "A5118",
+      "desc": "Freccia laterale sinistra",
+      "date": [
+        "2026-08-11"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-11T17:38:23.857Z",
+      "order": null
+    },
+    {
+      "id": "RM6w5f9OR64HUkGbRaBN",
+      "bus": "K3122",
+      "desc": "Tendina parasole bloccata",
+      "date": [
+        "2026-07-28",
+        "2026-07-30",
+        "2026-08-01",
+        "2026-08-06",
+        "2026-08-07"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": true,
+      "createdAt": "2026-07-30T08:07:12.674Z",
+      "order": null
+    },
+    {
+      "id": "RTVV2RJNNZEbIpXnIpC7",
+      "bus": "A2052",
+      "desc": "Malfunzionamento impianto climatizzazione",
+      "date": [
+        "2025-06-05",
+        "2025-06-06",
+        "2025-06-06",
+        "2025-06-07",
+        "2025-06-09",
+        "2025-06-18",
+        "2025-06-19",
+        "2025-06-19",
+        "2025-06-21",
+        "2025-06-21",
+        "2025-06-21",
+        "2025-08-01",
+        "2025-08-11",
+        "2026-05-23",
+        "2026-05-25",
+        "2026-07-02",
+        "2026-07-15",
+        "2026-07-16",
+        "2026-07-16",
+        "2026-07-18"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-18T11:41:12.889Z",
+      "order": null
+    },
+    {
+      "id": "S9EcZNwsB89CdQFsJb8U",
+      "bus": "K2131",
+      "desc": "Aria condizionata si stacca",
+      "date": [],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-07T12:33:13.886Z",
+      "order": null
+    },
+    {
+      "id": "SOK2bD7ISLMeFENbLB9g",
+      "bus": "A5137",
+      "desc": "Forti e fastidiosi cigolii dal corridoio",
+      "date": [
+        "2023-12-09",
+        "2025-05-09",
+        "2025-08-19",
+        "2025-10-04",
+        "2025-10-06",
+        "2025-11-10",
+        "2025-11-10",
+        "2025-11-11",
+        "2025-11-14",
+        "2025-11-15",
+        "2025-11-21",
+        "2025-11-22",
+        "2025-12-03",
+        "2025-12-09",
+        "2025-12-10",
+        "2026-01-14",
+        "2026-01-18",
+        "2026-01-19",
+        "2026-01-23",
+        "2026-01-24",
+        "2026-06-23",
+        "2026-06-24",
+        "2026-07-09",
+        "2026-07-09",
+        "2026-07-11",
+        "2026-07-22",
+        "2026-07-23",
+        "2026-07-24",
+        "2026-07-25",
+        "2026-07-26",
+        "2026-07-27",
+        "2026-07-28",
+        "2026-08-01",
+        "2026-08-02",
+        "2026-08-03",
+        "2026-08-07",
+        "2026-08-08",
+        "2026-08-08",
+        "2026-08-09",
+        "2026-08-17",
+        "2026-08-28",
+        "2026-09-05",
+        "2026-09-10"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-09T16:49:53.486Z",
+      "order": 0
+    },
+    {
+      "id": "SuxTwv2SA5JVJr5CIW1f",
+      "bus": "K1109",
+      "desc": "Sedile autista non ammortizza",
+      "date": [
+        "2026-01-15",
+        "2026-01-16",
+        "2026-01-19",
+        "2026-09-07",
+        "2026-09-08",
+        "2026-09-11"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-07T07:59:39.110Z",
+      "order": null
+    },
+    {
+      "id": "UjpfRb5cY47lIOYh4WWU",
+      "bus": "K1123",
+      "desc": "Rotto supporto metallico Tip Tap",
+      "date": [
+        "2026-08-29"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-30T15:52:08.642Z",
+      "order": null
+    },
+    {
+      "id": "UoIfqIBDponV1qexLTq5",
+      "bus": "A5116",
+      "desc": "Malfunzionamento clacson",
+      "date": [
+        "2026-06-19",
+        "2026-06-30",
+        "2026-07-07",
+        "2026-07-30",
+        "2026-08-24",
+        "2026-08-24",
+        "2026-08-25",
+        "2026-08-26",
+        "2026-08-27",
+        "2026-09-02",
+        "2026-09-03",
+        "2026-09-04",
+        "2026-09-04",
+        "2026-09-05",
+        "2026-09-06",
+        "2026-09-07"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-06-30T17:09:57.251Z",
+      "order": null
+    },
+    {
+      "id": "VGHzFrOEpW0FBaCqwN7x",
+      "bus": "A5122",
+      "desc": "Il plurimus si stacca",
+      "date": [
+        "2026-05-25",
+        "2026-06-05",
+        "2026-06-07",
+        "2026-06-11",
+        "2026-06-12",
+        "2026-06-30",
+        "2026-07-15",
+        "2026-07-17",
+        "2026-07-21",
+        "2026-09-04",
+        "2026-09-05"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-06-12T10:09:28.353Z",
+      "order": null
+    },
+    {
+      "id": "VlCo8Orqq927ZehqDj01",
+      "bus": "A2026",
+      "desc": "Malfunzionamento impianto di climatizzazione",
+      "date": [
+        "2026-07-30"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-30T18:45:14.929Z",
+      "order": null
+    },
+    {
+      "id": "VnedfUpokWYZiZASvx99",
+      "bus": "K1114",
+      "desc": "Spia rossa cambio",
+      "date": [
+        "2026-06-28",
+        "2026-08-07",
+        "2026-08-09",
+        "2026-08-12",
+        "2026-08-18"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-07T18:10:12.887Z",
+      "order": 2
+    },
+    {
+      "id": "VnzDOokV8yEzTPSl4wDG",
+      "bus": "A4148",
+      "desc": "Entrambi i retrovisori non si regolano lateralmente",
+      "date": [
+        "2026-09-02",
+        "2026-09-03",
+        "2026-09-06"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-02T15:54:31.539Z",
+      "order": 0
+    },
+    {
+      "id": "WKCIdXpTk1flVrQsYaEx",
+      "bus": "F4006",
+      "desc": "Spie rosse lampeggianti",
+      "date": [
+        "2026-05-25"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-26T18:53:20.967Z",
+      "order": null
+    },
+    {
+      "id": "WiKhyIQ8Evyr7Sud4ISK",
+      "bus": "A4098",
+      "desc": "Spia punto esclamativo impianto frenante",
+      "date": [
+        "2026-07-29"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": true,
+      "createdAt": "2026-07-29T22:05:08.220Z",
+      "order": null
+    },
+    {
+      "id": "Wm81P631Cb79MRBlnv42",
+      "bus": "K3143",
+      "desc": "In fase di chiusura le porte si riaprono con veicolo in movimento",
+      "date": [
+        "2026-09-05"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-05T17:49:53.690Z",
+      "order": null
+    },
+    {
+      "id": "XShCBi4QgpIbyxeO1bIi",
+      "bus": "K2096",
+      "desc": "La vettura tira a destra",
+      "date": [
+        "2025-08-09",
+        "2026-08-23",
+        "2026-08-23"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-28T15:57:22.410Z",
+      "order": null
+    },
+    {
+      "id": "Xe0Y2Qf8w3zZXFgnXLas",
+      "bus": "K1104",
+      "desc": "Volante si sbriciola",
+      "date": [
+        "2026-08-21"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-22T16:01:52.223Z",
+      "order": null
+    },
+    {
+      "id": "XePR2oPjDfOHje2y3bzi",
+      "bus": "K3152",
+      "desc": "Il volante cigola",
+      "date": [
+        "2026-07-28"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-28T18:24:54.760Z",
+      "order": null
+    },
+    {
+      "id": "XrJpjqFycuilU77r84YS",
+      "bus": "A5153",
+      "desc": "Nel plurimus frontale non compare il numero di linea",
+      "date": [
+        "2026-09-08",
+        "2026-09-10"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-10T15:01:20.684Z",
+      "order": 1
+    },
+    {
+      "id": "Y940kOq9GH9sJmmeMIuU",
+      "bus": "A4098",
+      "desc": "Spia ESP",
+      "date": [
+        "2026-07-29"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": true,
+      "createdAt": "2026-07-29T21:26:55.085Z",
+      "order": null
+    },
+    {
+      "id": "YUr2CfuZmtyfTwg5DTWt",
+      "bus": "K3140",
+      "desc": "La fermata prenotata rimane accesa non suonando il campanello",
+      "date": [
+        "2026-08-11"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-11T17:40:29.545Z",
+      "order": 1
+    },
+    {
+      "id": "Yhdd8ubO2f7jcj35g5GW",
+      "bus": "A5117",
+      "desc": "Regolazione retrovisore dx",
+      "date": [
+        "2026-06-21",
+        "2026-06-28",
+        "2026-06-29",
+        "2026-06-30",
+        "2026-07-02",
+        "2026-07-03",
+        "2026-07-04",
+        "2026-07-04",
+        "2026-07-05",
+        "2026-07-06",
+        "2026-07-07",
+        "2026-07-09",
+        "2026-07-10",
+        "2026-07-11",
+        "2026-07-12",
+        "2026-07-13",
+        "2026-07-16",
+        "2026-07-16",
+        "2026-07-18"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-06-28T13:56:54.169Z",
+      "order": 1
+    },
+    {
+      "id": "Yuv5VRWYSLsxa4GMRCYg",
+      "bus": "A4188",
+      "desc": "Fermata prenotata non si stacca",
+      "date": [
+        "2026-08-15"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-16T09:30:37.660Z",
+      "order": null
+    },
+    {
+      "id": "ZcAw6MAGxYwaKFVmj1jx",
+      "bus": "A5117",
+      "desc": "Anomalia alternatore",
+      "date": [
+        "2026-08-01"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-01T21:01:05.549Z",
+      "order": 2
+    },
+    {
+      "id": "a46OACVc3eSpYFmg7t1M",
+      "bus": "A5123",
+      "desc": "Spia rossa porta + avvisatore acustico di pericolo",
+      "date": [
+        "2026-08-18",
+        "2026-08-18"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-18T16:00:44.314Z",
+      "order": 0
+    },
+    {
+      "id": "adgQCkrycXl3Jmh0e4O6",
+      "bus": "K3137",
+      "desc": "Porta ant",
+      "date": [
+        "2026-08-24"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-25T22:32:49.234Z",
+      "order": null
+    },
+    {
+      "id": "b5YSQfNj8Il28jKwGaKM",
+      "bus": "K3138",
+      "desc": "In fase di chiusura la porta posteriore si riapre e il mezzo continua a circolare con porta aperta",
+      "date": [
+        "2026-07-07",
+        "2026-07-08"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-08T14:26:54.809Z",
+      "order": null
+    },
+    {
+      "id": "bCmRyhQDT2xBfltKVzOh",
+      "bus": "K1106",
+      "desc": "Spia livello acqua",
+      "date": [
+        "2026-08-12"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-12T17:44:24.916Z",
+      "order": null
+    },
+    {
+      "id": "bJvXbYsxLP1fyArJTxJv",
+      "bus": "A3056",
+      "desc": "Inclinazione sedile autista",
+      "date": [
+        "2026-01-21",
+        "2026-01-26",
+        "2026-01-27",
+        "2026-01-29",
+        "2026-02-02",
+        "2026-02-03",
+        "2026-04-28",
+        "2026-04-30",
+        "2026-05-02",
+        "2026-05-05",
+        "2026-05-20",
+        "2026-06-04"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-06-09T22:45:48.990Z",
+      "order": 1
+    },
+    {
+      "id": "bixGlNzUwk9eshQZNHpB",
+      "bus": "K4121",
+      "desc": "Spia ABS",
+      "date": [
+        "2026-07-31"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-08T14:48:20.791Z",
+      "order": null
+    },
+    {
+      "id": "bqhhQgPD6Mv61t9CniuF",
+      "bus": "L3312",
+      "desc": "Fischio durante la marcia",
+      "date": [
+        "2026-07-30",
+        "2026-07-30",
+        "2026-08-01",
+        "2026-08-04"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-30T16:59:41.899Z",
+      "order": 0
+    },
+    {
+      "id": "c9fDG8KebJz4NDh0Fs48",
+      "bus": "K2093",
+      "desc": "Clacson fuori servizio",
+      "date": [
+        "2026-04-02"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-26T16:13:37.669Z",
+      "order": null
+    },
+    {
+      "id": "coaJwHtiIRCjEutvooow",
+      "bus": "A5045",
+      "desc": "Malfunzionamento aria condizionata",
+      "date": [
+        "2025-04-12",
+        "2025-05-19",
+        "2025-05-19",
+        "2025-05-20",
+        "2025-10-16",
+        "2026-06-23",
+        "2026-06-24",
+        "2026-06-26",
+        "2026-06-26",
+        "2026-06-29",
+        "2026-07-07",
+        "2026-07-21",
+        "2026-07-22",
+        "2026-08-03",
+        "2026-08-07",
+        "2026-08-11",
+        "2026-08-13",
+        "2026-08-29",
+        "2026-09-07",
+        "2026-09-11"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-06-27T07:32:07.361Z",
+      "order": 0
+    },
+    {
+      "id": "d1sVSHnExzlr3WH8CjcB",
+      "bus": "A5046",
+      "desc": "Malfunzionamento impianto di climatizzazione",
+      "date": [
+        "2026-04-18",
+        "2026-05-06",
+        "2026-06-26",
+        "2026-06-29",
+        "2026-07-02",
+        "2026-07-02",
+        "2026-07-06",
+        "2026-07-06",
+        "2026-07-08",
+        "2026-07-14"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-06-27T07:03:03.172Z",
+      "order": 1
+    },
+    {
+      "id": "dUPNDCZQy25yDyCsG3VA",
+      "bus": "A5117",
+      "desc": "Malfunzionamento impianto di climatizzazione",
+      "date": [
+        "2026-08-04",
+        "2026-08-05",
+        "2026-08-06",
+        "2026-08-07",
+        "2026-08-08",
+        "2026-08-10",
+        "2026-08-12",
+        "2026-08-12",
+        "2026-08-18",
+        "2026-08-31"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-04T12:38:01.295Z",
+      "order": 1
+    },
+    {
+      "id": "dzkzd9x5PaPQcwlB8Aeo",
+      "bus": "F4006",
+      "desc": "Aria condizionata fuori servizio",
+      "date": [
+        "2026-06-06"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-26T18:53:59.612Z",
+      "order": null
+    },
+    {
+      "id": "e502v9UGdLk3HokpsnF8",
+      "bus": "A4097",
+      "desc": "Spia impianto frenante e stabilità",
+      "date": [
+        "2026-07-01"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-12T00:34:46.654Z",
+      "order": null
+    },
+    {
+      "id": "eTQ1I0fhLmMN2QJIqF7k",
+      "bus": "K2096",
+      "desc": "Malfunzionamento impianto di climatizzazione",
+      "date": [
+        "2025-06-27",
+        "2025-06-28",
+        "2025-08-08",
+        "2025-08-09",
+        "2025-08-09",
+        "2026-04-16",
+        "2026-05-25",
+        "2026-06-04",
+        "2026-07-15",
+        "2026-08-23",
+        "2026-08-23",
+        "2026-08-27"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-20T14:56:23.491Z",
+      "order": null
+    },
+    {
+      "id": "fTpv0ZHuVjywwl82H75P",
+      "bus": "K3137",
+      "desc": "Aria condizionata insufficiente",
+      "date": [
+        "2026-07-31",
+        "2026-08-10",
+        "2026-08-14"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-11T17:36:10.212Z",
+      "order": null
+    },
+    {
+      "id": "fZmj3fvxlOcQ0qcsco6m",
+      "bus": "K2093",
+      "desc": "Spia motore gialla",
+      "date": [
+        "2026-03-26"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-26T16:12:37.142Z",
+      "order": null
+    },
+    {
+      "id": "fgNH2rCZqC7K1pbZNJjC",
+      "bus": "K3140",
+      "desc": "La porta posteriore si riapre con veicolo in movimento",
+      "date": [
+        "2026-06-09",
+        "2026-07-02",
+        "2026-07-07",
+        "2026-07-08",
+        "2026-07-10",
+        "2026-07-14",
+        "2026-07-14",
+        "2026-07-16",
+        "2026-08-10",
+        "2026-08-11",
+        "2026-08-14",
+        "2026-08-18",
+        "2026-08-19",
+        "2026-08-29",
+        "2026-08-31",
+        "2026-09-01",
+        "2026-09-02",
+        "2026-09-03",
+        "2026-09-04",
+        "2026-09-05",
+        "2026-09-07"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-02T22:20:59.336Z",
+      "order": 0
+    },
+    {
+      "id": "fqHfOwpVcjvcFSN3tvY3",
+      "bus": "A4189",
+      "desc": "Posizione post sx fuori servizio",
+      "date": [
+        "2026-07-18"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-18T18:16:46.929Z",
+      "order": null
+    },
+    {
+      "id": "fswTcqI9a3oJMbQSPhHC",
+      "bus": "A5122",
+      "desc": "Vano portaoggetti porta conducente si apre continuamente",
+      "date": [
+        "2026-06-12",
+        "2026-07-15",
+        "2026-07-16",
+        "2026-07-17",
+        "2026-07-22"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-06-12T10:09:47.674Z",
+      "order": null
+    },
+    {
+      "id": "gb8QVFEJJVpkGUkJWzN9",
+      "bus": "A4148",
+      "desc": "Tasti regolazione sedile autista fuori servizio",
+      "date": [
+        "2026-09-03"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-03T18:14:00.771Z",
+      "order": 2
+    },
+    {
+      "id": "gfZCea7M9mbD1pgjv2z6",
+      "bus": "A5149",
+      "desc": "Spia rossa porta + segnale acustico di pericolo",
+      "date": [
+        "2026-05-24",
+        "2026-06-06",
+        "2026-06-17",
+        "2026-06-27",
+        "2026-06-28",
+        "2026-07-04",
+        "2026-07-19",
+        "2026-07-24"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-06-27T09:19:15.584Z",
+      "order": 0
+    },
+    {
+      "id": "h4YY5tapSNX6HX7ktr8a",
+      "bus": "K3137",
+      "desc": "La porta posteriore si riapre con veicolo in movimento",
+      "date": [
+        "2026-05-18",
+        "2026-05-19",
+        "2026-08-01",
+        "2026-08-04",
+        "2026-08-08"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-09T18:01:54.183Z",
+      "order": null
+    },
+    {
+      "id": "ieQDTFuPZgqJxo3YDUdx",
+      "bus": "A5060",
+      "desc": "Difficoltà ad ancorare il carrello sedile autista",
+      "date": [
+        "2026-08-07",
+        "2026-08-09",
+        "2026-08-16",
+        "2026-08-17"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-07T12:33:43.419Z",
+      "order": 0
+    },
+    {
+      "id": "iiTwf5HqPUzEYxOu80nd",
+      "bus": "K3142",
+      "desc": "Telecamera interna fuori servizio",
+      "date": [
+        "2026-08-12"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-12T17:43:26.711Z",
+      "order": 1
+    },
+    {
+      "id": "iwBQi9tBw5bLYJFdSAlW",
+      "bus": "A3044",
+      "desc": "Spia rossa motore",
+      "date": [
+        "2025-07-16",
+        "2025-09-20",
+        "2025-10-01",
+        "2025-11-05",
+        "2026-01-21"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-26T23:04:27.047Z",
+      "order": null
+    },
+    {
+      "id": "j89h4AfA7XTCt7YkmMiL",
+      "bus": "K1114",
+      "desc": "Spia sospensioni",
+      "date": [
+        "2026-06-21",
+        "2026-06-24",
+        "2026-06-25",
+        "2026-06-26",
+        "2026-07-02",
+        "2026-08-07",
+        "2026-08-09",
+        "2026-08-14",
+        "2026-08-16",
+        "2026-08-18",
+        "2026-08-18"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-06-21T22:37:07.531Z",
+      "order": 1
+    },
+    {
+      "id": "jWwdNIcMq9u1vDZwMEak",
+      "bus": "A2026",
+      "desc": "Spia ABS",
+      "date": [
+        "2026-07-20"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-20T21:31:28.507Z",
+      "order": 1
+    },
+    {
+      "id": "jXhLvmOsNbv2jyQuZpPM",
+      "bus": "A5122",
+      "desc": "Tendina parasole laterale non tiene la posizione",
+      "date": [
+        "2023-09-17",
+        "2023-09-23",
+        "2025-11-04",
+        "2025-11-10",
+        "2025-11-11",
+        "2025-12-24",
+        "2025-12-26",
+        "2025-12-28",
+        "2025-12-28",
+        "2026-01-06",
+        "2026-01-07",
+        "2026-01-07",
+        "2026-01-08",
+        "2026-01-17",
+        "2026-01-20",
+        "2026-01-24",
+        "2026-04-04",
+        "2026-04-09",
+        "2026-04-16",
+        "2026-06-05",
+        "2026-06-07",
+        "2026-06-12"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-06-12T10:30:46.093Z",
+      "order": 0
+    },
+    {
+      "id": "kNgR0j8xLTwkXB3ch7LV",
+      "bus": "A5137",
+      "desc": "Spia rossa gomme + segnale acustico di pericolo",
+      "date": [
+        "2026-07-09",
+        "2026-07-11",
+        "2026-07-18",
+        "2026-07-22",
+        "2026-07-23",
+        "2026-07-24",
+        "2026-07-25",
+        "2026-07-26",
+        "2026-07-27",
+        "2026-07-28",
+        "2026-07-29",
+        "2026-08-01",
+        "2026-08-02",
+        "2026-08-03",
+        "2026-08-05",
+        "2026-08-06",
+        "2026-08-07",
+        "2026-08-08",
+        "2026-08-08",
+        "2026-08-09",
+        "2026-08-17",
+        "2026-09-01",
+        "2026-09-05",
+        "2026-09-10"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": true,
+      "createdAt": "2026-07-09T21:57:56.729Z",
+      "order": 1
+    },
+    {
+      "id": "kXgWsjT2Y6Kit9EjbyGZ",
+      "bus": "K2092",
+      "desc": "Plurimus fuori servizio",
+      "date": [
+        "2026-02-28",
+        "2026-07-18"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-19T23:09:22.445Z",
+      "order": 1
+    },
+    {
+      "id": "kaxLUP6cCbC507HGQjQE",
+      "bus": "F4006",
+      "desc": "Il motore va in protezione",
+      "date": [
+        "2025-10-04",
+        "2025-10-08",
+        "2025-10-09",
+        "2025-10-15",
+        "2025-10-17",
+        "2025-10-23",
+        "2025-10-24",
+        "2025-10-24",
+        "2026-05-14",
+        "2026-05-25"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-26T18:50:02.513Z",
+      "order": null
+    },
+    {
+      "id": "ke5yaRmar55pe38AK2Ti",
+      "bus": "K2130",
+      "desc": "Entrambi gli stop fuori servizio",
+      "date": [
+        "2026-08-01"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-01T11:33:06.693Z",
+      "order": null
+    },
+    {
+      "id": "kqWBOiIdhRQTVOXDudu3",
+      "bus": "A5064",
+      "desc": "Avvisatore acustico di pericolo quando si aziona il manettino",
+      "date": [
+        "2026-06-12",
+        "2026-06-16"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-01T18:37:20.738Z",
+      "order": null
+    },
+    {
+      "id": "krzomJI31MjMlKboGhql",
+      "bus": "A5060",
+      "desc": "Guaina sollevata davanti alla porta centrale, pericolo di inciampo per l’utenza",
+      "date": [
+        "2026-08-16",
+        "2026-08-17"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-16T19:48:22.897Z",
+      "order": 1
+    },
+    {
+      "id": "kycle2FeahlAIkAum6J9",
+      "bus": "A4189",
+      "desc": "In fase di chiusura la porta ant si riapre",
+      "date": [
+        "2026-08-16",
+        "2026-08-26",
+        "2026-08-26"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-26T17:43:41.744Z",
+      "order": null
+    },
+    {
+      "id": "l2sLEwvqDtLh9x0jbLqZ",
+      "bus": "K3122",
+      "desc": "Anab sx",
+      "date": [
+        "2026-08-01",
+        "2026-08-06"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-01T18:13:46.573Z",
+      "order": null
+    },
+    {
+      "id": "mR5zwgjuEQchzvsmuHst",
+      "bus": "K3143",
+      "desc": "Entrambi i retrovisori non si regolano",
+      "date": [
+        "2026-07-15",
+        "2026-07-20",
+        "2026-07-23",
+        "2026-07-25",
+        "2026-08-04",
+        "2026-08-07",
+        "2026-08-08",
+        "2026-08-13",
+        "2026-08-19"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": true,
+      "createdAt": "2026-07-15T19:45:14.450Z",
+      "order": null
+    },
+    {
+      "id": "mrbha8AYHGVhT3h1J40A",
+      "bus": "A4149",
+      "desc": "Durante la marcia il volante sprofonda",
+      "date": [
+        "2024-10-31",
+        "2024-11-09",
+        "2024-11-11",
+        "2025-10-06",
+        "2025-10-11",
+        "2025-10-17",
+        "2025-11-08",
+        "2026-09-01"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-01T10:22:31.550Z",
+      "order": null
+    },
+    {
+      "id": "n1hnBrkdhQwdi2ZPGJKB",
+      "bus": "A3056",
+      "desc": "Malfunzionamento AC. Va in blocco",
+      "date": [
+        "2026-04-28",
+        "2026-04-30",
+        "2026-05-02",
+        "2026-05-19",
+        "2026-05-20",
+        "2026-05-28",
+        "2026-06-04",
+        "2026-06-05",
+        "2026-06-05"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-06-09T22:45:31.015Z",
+      "order": 0
+    },
+    {
+      "id": "nCy7wyT8lGOL03Zhxppn",
+      "bus": "K2130",
+      "desc": "Malfunzionamento aria condizionata",
+      "date": [
+        "2026-08-22"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-22T16:05:10.648Z",
+      "order": null
+    },
+    {
+      "id": "nFVtLIZA9ewZbFVOdRib",
+      "bus": "K3122",
+      "desc": "Entrambi i retrovisori non si regolano lateralmente",
+      "date": [
+        "2026-01-27",
+        "2026-01-30",
+        "2026-08-01",
+        "2026-08-06",
+        "2026-08-14",
+        "2026-08-17",
+        "2026-08-18",
+        "2026-08-19",
+        "2026-08-21",
+        "2026-08-22",
+        "2026-08-24",
+        "2026-09-05"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-01T18:13:17.126Z",
+      "order": null
+    },
+    {
+      "id": "nxpQz8dhSTOIkM2OSI63",
+      "bus": "A5155",
+      "desc": "Rivestimento in plastica aggancio cintura rotto, con parti sporgenti. Pericolo di lesioni",
+      "date": [
+        "2026-08-30",
+        "2028-09-01"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-30T16:36:39.770Z",
+      "order": null
+    },
+    {
+      "id": "o7WhVJB7vQVXtcw1yRPt",
+      "bus": "A5153",
+      "desc": "Distacco pannello esterno sotto il telaio vicino la porta centrale",
+      "date": [
+        "2026-09-10"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-10T16:04:59.335Z",
+      "order": 2
+    },
+    {
+      "id": "oTazwQlhvCiWb129tWHI",
+      "bus": "A5115",
+      "desc": "Malfunzionamento aria condizionata",
+      "date": [
+        "2026-07-29",
+        "2026-08-05",
+        "2026-08-07"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-08T20:37:59.130Z",
+      "order": 2
+    },
+    {
+      "id": "odHWVBUxUfn1siT7JNbS",
+      "bus": "A5155",
+      "desc": "Spia rossa porta ant + segnale acustico di pericolo",
+      "date": [
+        "2026-09-02"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-02T19:44:55.192Z",
+      "order": null
+    },
+    {
+      "id": "oun7QEvokdYU6yOY9xwW",
+      "bus": "K1114",
+      "desc": "Spia fermata prenotata fuori servizio",
+      "date": [
+        "2026-06-24",
+        "2026-06-25",
+        "2026-06-26",
+        "2026-07-02",
+        "2026-07-25"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-06-24T09:02:52.860Z",
+      "order": 1
+    },
+    {
+      "id": "pxxKVmdWSFWBUCWjCNmd",
+      "bus": "A5060",
+      "desc": "Aria condizionata insufficiente",
+      "date": [
+        "2026-07-30",
+        "2026-08-13",
+        "2026-08-16",
+        "2026-08-17"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-13T17:28:13.066Z",
+      "order": 3
+    },
+    {
+      "id": "qOOfUhZ6RIRkzB65WI9u",
+      "bus": "A5153",
+      "desc": "Spia rossa anomalia porte + avvisatore acustico di pericolo",
+      "date": [
+        "2026-01-20",
+        "2026-04-01",
+        "2026-04-06",
+        "2026-04-08",
+        "2026-04-09",
+        "2026-05-07",
+        "2026-05-08",
+        "2026-05-15",
+        "2026-05-30",
+        "2026-06-01",
+        "2026-06-22",
+        "2026-06-24",
+        "2026-06-30",
+        "2026-06-30",
+        "2026-07-01",
+        "2026-07-02",
+        "2026-07-16",
+        "2026-07-19",
+        "2026-07-20",
+        "2026-07-21",
+        "2026-08-17",
+        "2026-08-21",
+        "2026-08-22",
+        "2026-08-24",
+        "2026-08-26",
+        "2026-09-09",
+        "2026-09-10"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-06-09T22:52:30.441Z",
+      "order": 0
+    },
+    {
+      "id": "qRgFWHmAgg8k5eob8WT7",
+      "bus": "A4098",
+      "desc": "Sospensioni ant scariche, la frenata si allunga",
+      "date": [
+        "2026-09-01"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-01T10:21:28.910Z",
+      "order": null
+    },
+    {
+      "id": "qpKLJdwnVlux8teMZ5kH",
+      "bus": "A5118",
+      "desc": "Malfunzionamento bocchette autista",
+      "date": [
+        "2026-07-20",
+        "2026-07-21",
+        "2026-07-21"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-20T21:30:23.044Z",
+      "order": null
+    },
+    {
+      "id": "qsV7o2WtbT3AiSAXkAHl",
+      "bus": "A5058",
+      "desc": "Retrovisore dx non si regola",
+      "date": [
+        "2026-08-12",
+        "2026-08-13",
+        "2026-08-18",
+        "2026-08-20",
+        "2026-08-22",
+        "2026-08-24"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-12T14:03:26.763Z",
+      "order": 0
+    },
+    {
+      "id": "r8SFA9bAYU7eUPDdilmY",
+      "bus": "A3056",
+      "desc": "In fase di chiusura la porta anteriore si riapre",
+      "date": [
+        "2026-08-12"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-12T17:28:45.181Z",
+      "order": null
+    },
+    {
+      "id": "r8wkYV7IsYE6hlTsmBT7",
+      "bus": "K3122",
+      "desc": "Inchioda durante la marcia",
+      "date": [
+        "2026-07-04",
+        "2026-08-06"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-01T18:17:41.127Z",
+      "order": null
+    },
+    {
+      "id": "rWyGf1s8Gcp8nQZaPAvu",
+      "bus": "K2096",
+      "desc": "Seduta sedile autista si muove avanti e indietro",
+      "date": [
+        "2025-12-01",
+        "2026-01-19",
+        "2026-08-16",
+        "2026-08-23",
+        "2026-08-23"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-28T15:56:12.157Z",
+      "order": null
+    },
+    {
+      "id": "riInLJbcgh1G72xktWWg",
+      "bus": "K3122",
+      "desc": "Maniglie finestrino scollate",
+      "date": [
+        "2026-07-30",
+        "2026-08-01",
+        "2026-08-06",
+        "2026-08-14",
+        "2026-08-17",
+        "2026-08-18",
+        "2026-08-19",
+        "2026-08-21",
+        "2026-08-22",
+        "2026-08-24",
+        "2026-09-05"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-30T08:08:04.375Z",
+      "order": null
+    },
+    {
+      "id": "sPRCrET8560YhRF9bmQU",
+      "bus": "A5153",
+      "desc": "Malfunzionamento impianto di climatizzazione",
+      "date": [
+        "2026-07-09",
+        "2026-07-15",
+        "2026-08-07",
+        "2026-08-08"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-20T21:27:12.912Z",
+      "order": 1
+    },
+    {
+      "id": "slq4Wnyy8bJ1oE5Rxu0C",
+      "bus": "A5122",
+      "desc": "Malfunzionamento impianto di climatizzazione",
+      "date": [
+        "2026-07-13",
+        "2026-07-17",
+        "2026-07-18",
+        "2026-07-20"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-14T09:33:48.227Z",
+      "order": 1
+    },
+    {
+      "id": "stWGXTYnY5R5yC0hi02b",
+      "bus": "K3152",
+      "desc": "Il livello del carburante non funziona",
+      "date": [
+        "2026-07-28"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-28T18:24:36.008Z",
+      "order": null
+    },
+    {
+      "id": "u3kqYNAGXxNPResumyj8",
+      "bus": "K3089",
+      "desc": "Quando si richiudono le porte salta la marcia e si accende spia rossa cambio",
+      "date": [],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-07T18:37:57.476Z",
+      "order": null
+    },
+    {
+      "id": "vqFFrto8qag8eGDayYtp",
+      "bus": "F4006",
+      "desc": "Riscaldamento e sbrinatore fuori servizio",
+      "date": [
+        "2025-10-04",
+        "2025-10-06",
+        "2025-10-07",
+        "2025-10-09",
+        "2025-10-13"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-26T18:48:30.917Z",
+      "order": null
+    },
+    {
+      "id": "woRqaAFc4uevkSsWFE2L",
+      "bus": "A4188",
+      "desc": "Problemi apertura porta ant",
+      "date": [
+        "2026-06-29",
+        "2026-07-06",
+        "2026-07-08",
+        "2026-08-05",
+        "2026-08-15",
+        "2026-08-17",
+        "2026-08-18",
+        "2026-08-25",
+        "2026-08-25",
+        "2026-08-27",
+        "2026-08-28"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-16T09:31:13.620Z",
+      "order": null
+    },
+    {
+      "id": "x8PRNH6DVzJvR4DSVNoF",
+      "bus": "A4098",
+      "desc": "Forti rumori nell’abitacolo",
+      "date": [
+        "2026-09-01"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-01T10:57:29.759Z",
+      "order": null
+    },
+    {
+      "id": "x9Wf1b3qIUSJ3knchOp2",
+      "bus": "A5117",
+      "desc": "Spia rossa pressione gomme",
+      "date": [
+        "2026-05-07",
+        "2026-05-26",
+        "2026-05-27",
+        "2026-05-28",
+        "2026-05-29",
+        "2026-05-31",
+        "2026-06-14",
+        "2026-06-15",
+        "2026-06-18",
+        "2026-06-20",
+        "2026-06-21",
+        "2026-06-27",
+        "2026-06-28",
+        "2026-06-29",
+        "2026-06-30",
+        "2026-07-02",
+        "2026-07-03",
+        "2026-07-04",
+        "2026-07-04",
+        "2026-07-05",
+        "2026-07-06",
+        "2026-07-07",
+        "2026-07-09",
+        "2026-07-10",
+        "2026-07-12",
+        "2026-07-13",
+        "2026-07-13",
+        "2026-07-16",
+        "2026-07-16",
+        "2026-07-18",
+        "2026-07-25",
+        "2026-07-25",
+        "2026-07-31",
+        "2026-08-01",
+        "2026-08-01",
+        "2026-08-04",
+        "2026-08-05",
+        "2026-08-06",
+        "2026-08-06",
+        "2026-08-07",
+        "2026-08-08",
+        "2026-08-10",
+        "2026-08-12",
+        "2026-08-19",
+        "2026-08-20",
+        "2026-08-25",
+        "2026-08-26",
+        "2026-08-27",
+        "2026-08-28",
+        "2026-08-31",
+        "2026-09-07",
+        "2026-09-07",
+        "2026-09-08",
+        "2026-09-09"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": true,
+      "createdAt": "2026-06-09T22:49:41.501Z",
+      "order": 0
+    },
+    {
+      "id": "xBfcFksW2oSVO4rpmH9M",
+      "bus": "K3089",
+      "desc": "Spia motore fissa",
+      "date": [
+        "2026-06-09",
+        "2026-06-14",
+        "2026-07-06",
+        "2026-07-14",
+        "2026-07-19",
+        "2026-08-05",
+        "2026-08-07",
+        "2026-08-12"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-05T18:12:45.590Z",
+      "order": null
+    },
+    {
+      "id": "xVDawViILS2h0p4zbGbX",
+      "bus": "A5153",
+      "desc": "Freccia lat dx",
+      "date": [
+        "2026-07-20",
+        "2026-07-24"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-24T16:00:04.020Z",
+      "order": null
+    },
+    {
+      "id": "xnXdDNJjjiU8JvrXEFHi",
+      "bus": "A5115",
+      "desc": "Indicatore livello carburante fuori servizio",
+      "date": [],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-08T06:54:56.273Z",
+      "order": 1
+    },
+    {
+      "id": "yANaTCckIo8gBmugIknm",
+      "bus": "A5119",
+      "desc": "Malfunzionamento aria condizionata",
+      "date": [
+        "2026-08-26"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-26T18:00:42.463Z",
+      "order": null
+    },
+    {
+      "id": "yJfQuYwSg1BMq9hYNqw5",
+      "bus": "K2096",
+      "desc": "Telecamere non funzionanti",
+      "date": [
+        "2025-08-09"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-28T18:16:46.095Z",
+      "order": null
+    },
+    {
+      "id": "yM7vZ4mZN1jh8lIiQ2cy",
+      "bus": "A5064",
+      "desc": "Acqua radiatore",
+      "date": [
+        "2026-06-12"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-01T18:36:33.174Z",
+      "order": null
+    },
+    {
+      "id": "yYoTJxMmn0NqD0C0x4Ey",
+      "bus": "L2315",
+      "desc": "Spia motore",
+      "date": [
+        "2026-09-03"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-03T18:12:45.758Z",
+      "order": null
+    },
+    {
+      "id": "yePy610jAc2U31ZnhuJx",
+      "bus": "A3057",
+      "desc": "Sedile sobbalza",
+      "date": [
+        "2026-06-17"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-06-17T06:20:06.190Z",
+      "order": 0
+    },
+    {
+      "id": "yhFgzHO42l3Qb5I2ihys",
+      "bus": "K2125",
+      "desc": "Volante non si regola",
+      "date": [
+        "2026-08-01"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-05T08:06:03.704Z",
+      "order": null
+    },
+    {
+      "id": "yqqv0eX8hPPrKj03apgD",
+      "bus": "A5124",
+      "desc": "Malfunzionamento impianto di climatizzazione",
+      "date": [
+        "2026-07-12",
+        "2026-07-12",
+        "2026-07-20",
+        "2026-07-21",
+        "2026-08-02",
+        "2026-08-03",
+        "2026-08-09",
+        "2026-08-17",
+        "2026-08-18",
+        "2026-08-19"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-07-12T16:42:11.671Z",
+      "order": 0
+    },
+    {
+      "id": "ys9i7omSDBPI9VTIEppl",
+      "bus": "K1109",
+      "desc": "Indicatore di direzione ant sx fuori servizio dal 10.05.26",
+      "date": [
+        "2026-05-10",
+        "2026-07-12",
+        "2026-07-28",
+        "2026-08-01",
+        "2026-08-04",
+        "2026-08-17"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-23T17:25:01.155Z",
+      "order": null
+    },
+    {
+      "id": "yyxId1xViXEl8WcFpqlP",
+      "bus": "K3122",
+      "desc": "Porta ant tocca il marciapiede",
+      "date": [
+        "2026-06-19",
+        "2026-08-06"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-06T17:04:32.482Z",
+      "order": null
+    },
+    {
+      "id": "zRKiE92x8GJI1PrCVeGU",
+      "bus": "K1104",
+      "desc": "Perdita liquido refrigerante",
+      "date": [],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-08-27T06:54:24.671Z",
+      "order": null
+    },
+    {
+      "id": "zz4yInzSO48UWbbQA3UH",
+      "bus": "A5058",
+      "desc": "Aria condizionata insufficiente",
+      "date": [
+        "2026-06-29",
+        "2026-06-29",
+        "2026-07-05"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-06-29T14:46:49.757Z",
+      "order": 1
+    }
+  ]
+}
