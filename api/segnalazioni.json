@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-09-12T19:41:33.994Z",
-  "numeroSegnalazioni": 188,
+  "aggiornatoIl": "2026-09-12T21:41:35.951Z",
+  "numeroSegnalazioni": 189,
   "segnalazioni": [
     {
       "id": "1TrRqez4bvkT038FDI5d",
@@ -918,6 +918,21 @@
       "order": 0
     },
     {
+      "id": "Hy820a8PKeZaqf49yC1S",
+      "bus": "K1101",
+      "desc": "Malfunzionamento aria condizionata",
+      "date": [
+        "2026-06-29",
+        "2026-07-27"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-12T20:46:05.008Z",
+      "order": null
+    },
+    {
       "id": "I4VYsY1ZhSw9oCTGmP0w",
       "bus": "K3142",
       "desc": "Spia rossa freni EBS e antislittamento",
@@ -1159,6 +1174,12 @@
       "bus": "K1105",
       "desc": "Malfunzionamento aria condizionata",
       "date": [
+        "2026-04-22",
+        "2026-04-29",
+        "2026-04-30",
+        "2026-05-08",
+        "2026-05-09",
+        "2026-08-11",
         "2026-09-03"
       ],
       "stato": "aperta",
@@ -1344,10 +1365,12 @@
       "bus": "K2093",
       "desc": "Malfunzionamento impianto di climatizzazione",
       "date": [
+        "2023-09-07",
         "2026-06-08",
         "2026-07-13",
         "2026-07-14",
-        "2026-07-23"
+        "2026-07-23",
+        "2026-09-09"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -1433,7 +1456,8 @@
       "desc": "Aria condizionata insufficiente",
       "date": [
         "2026-08-07",
-        "2026-08-11"
+        "2026-08-11",
+        "2026-09-07"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -1447,7 +1471,10 @@
       "bus": "A3044",
       "desc": "Malfunzionamento aria condizionata",
       "date": [
-        "2026-05-22"
+        "2026-05-22",
+        "2026-06-22",
+        "2026-07-01",
+        "2026-07-02"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -1798,7 +1825,8 @@
       "bus": "F4006",
       "desc": "Spie rosse lampeggianti",
       "date": [
-        "2026-05-25"
+        "2026-05-25",
+        "2026-06-08"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -2209,7 +2237,9 @@
       "bus": "F4006",
       "desc": "Aria condizionata fuori servizio",
       "date": [
-        "2026-06-06"
+        "2026-05-21",
+        "2026-06-06",
+        "2026-06-08"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -2446,7 +2476,8 @@
         "2025-09-20",
         "2025-10-01",
         "2025-11-05",
-        "2026-01-21"
+        "2026-01-21",
+        "2026-07-02"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -2594,8 +2625,11 @@
         "2025-10-23",
         "2025-10-24",
         "2025-10-24",
+        "2026-02-27",
+        "2026-05-12",
         "2026-05-14",
-        "2026-05-25"
+        "2026-05-25",
+        "2026-06-08"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -2725,7 +2759,7 @@
     {
       "id": "n1hnBrkdhQwdi2ZPGJKB",
       "bus": "A3056",
-      "desc": "Malfunzionamento AC. Va in blocco",
+      "desc": "Malfunzionamento aria condizionata",
       "date": [
         "2026-04-28",
         "2026-04-30",
@@ -2735,10 +2769,15 @@
         "2026-05-28",
         "2026-06-04",
         "2026-06-05",
-        "2026-06-05"
+        "2026-06-05",
+        "2026-08-24",
+        "2026-08-26",
+        "2026-09-01",
+        "2026-09-02",
+        "2026-09-03"
       ],
       "stato": "aperta",
-      "pregressa": true,
+      "pregressa": false,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-06-09T22:45:31.015Z",
