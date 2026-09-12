@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-09-12T12:07:21.004Z",
-  "numeroSegnalazioni": 180,
+  "aggiornatoIl": "2026-09-12T15:30:20.978Z",
+  "numeroSegnalazioni": 185,
   "segnalazioni": [
     {
       "id": "1TrRqez4bvkT038FDI5d",
@@ -88,7 +88,7 @@
       "date": [
         "2026-08-19",
         "2026-08-24",
-        "2026-08-28"
+        "2026-08-25"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -460,7 +460,7 @@
       "desc": "Aria condizionata insufficiente",
       "date": [
         "2026-06-16",
-        "2026-06-28",
+        "2026-06-29",
         "2026-07-01",
         "2026-08-31"
       ],
@@ -498,6 +498,20 @@
       "urgente": false,
       "createdAt": "2026-06-09T23:01:22.064Z",
       "order": 0
+    },
+    {
+      "id": "7nQrvlUe7j3XakQee1xI",
+      "bus": "K1098",
+      "desc": "Malfunzionamento impianto di climatizzazione",
+      "date": [
+        "2026-09-11"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-12T15:28:17.972Z",
+      "order": null
     },
     {
       "id": "7u2zaZ96LrzsVm1fAvnE",
@@ -601,7 +615,7 @@
         "2026-08-19"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-19T18:00:45.647Z",
@@ -775,6 +789,22 @@
       "order": null
     },
     {
+      "id": "EZZaRUCcA7225iDMnfEI",
+      "bus": "K1098",
+      "desc": "Volante deteriorato",
+      "date": [
+        "2026-09-11",
+        "2026-09-12",
+        "2026-09-12"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-12T15:27:37.570Z",
+      "order": null
+    },
+    {
       "id": "EwfJnsWCQi08DVNZ79GD",
       "bus": "K1105",
       "desc": "Luci diurne fuori servizio",
@@ -787,6 +817,21 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-28T17:44:23.073Z",
+      "order": null
+    },
+    {
+      "id": "GJNaiwGylk8k74I3sUOb",
+      "bus": "K1098",
+      "desc": "Spia anomalia motore",
+      "date": [
+        "2026-09-12",
+        "2026-09-12"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-12T15:29:40.144Z",
       "order": null
     },
     {
@@ -963,6 +1008,20 @@
       "urgente": false,
       "createdAt": "2026-06-21T22:35:33.262Z",
       "order": 1
+    },
+    {
+      "id": "J1n0xluyABMT2F46CIA9",
+      "bus": "K1106",
+      "desc": "Malfunzionamento aria condizionata",
+      "date": [
+        "2026-08-01"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-12T13:47:18.164Z",
+      "order": null
     },
     {
       "id": "J5s4NOkjUC9YbOhAvTMs",
@@ -1833,6 +1892,20 @@
       "order": 1
     },
     {
+      "id": "YdfTjcJyZieIMXIZMmgY",
+      "bus": "A2052",
+      "desc": "Regolazione sterzo fuori servizio",
+      "date": [
+        "2026-09-04"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-12T13:51:39.060Z",
+      "order": null
+    },
+    {
       "id": "Yhdd8ubO2f7jcj35g5GW",
       "bus": "A5117",
       "desc": "Regolazione retrovisore dx",
@@ -2466,7 +2539,8 @@
       "desc": "Plurimus fuori servizio",
       "date": [
         "2026-02-28",
-        "2026-07-18"
+        "2026-07-18",
+        "2026-07-22"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -3263,7 +3337,7 @@
         "2026-08-19"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-07-12T16:42:11.671Z",
