@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-09-13T21:15:29.132Z",
-  "numeroSegnalazioni": 191,
+  "aggiornatoIl": "2026-09-13T23:13:34.728Z",
+  "numeroSegnalazioni": 192,
   "segnalazioni": [
     {
       "id": "1TrRqez4bvkT038FDI5d",
@@ -1321,10 +1321,12 @@
       "desc": "Aria condizionata insufficiente",
       "date": [
         "2026-08-13",
-        "2026-08-14"
+        "2026-08-14",
+        "2026-09-02",
+        "2026-09-05"
       ],
       "stato": "aperta",
-      "pregressa": true,
+      "pregressa": false,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-15T15:35:18.692Z",
@@ -1741,7 +1743,7 @@
     {
       "id": "UoIfqIBDponV1qexLTq5",
       "bus": "A5116",
-      "desc": "Malfunzionamento clacson",
+      "desc": "Il clacson smette di funzionare",
       "date": [
         "2026-06-19",
         "2026-06-30",
@@ -1758,10 +1760,11 @@
         "2026-09-04",
         "2026-09-05",
         "2026-09-06",
-        "2026-09-07"
+        "2026-09-07",
+        "2026-09-13"
       ],
       "stato": "aperta",
-      "pregressa": true,
+      "pregressa": false,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-06-30T17:09:57.251Z",
@@ -2051,7 +2054,8 @@
       "desc": "Spia rossa porta + avvisatore acustico di pericolo",
       "date": [
         "2026-08-18",
-        "2026-08-18"
+        "2026-08-18",
+        "2026-08-29"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -3176,6 +3180,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-13T16:08:56.929Z",
+      "order": null
+    },
+    {
+      "id": "vdCfnm7DBnTzYFmAShTX",
+      "bus": "A5116",
+      "desc": "Spia motore",
+      "date": [
+        "2026-09-13"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-13T22:05:41.091Z",
       "order": null
     },
     {
