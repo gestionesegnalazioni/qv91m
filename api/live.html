@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Dati live Gestione Bus</title>
+<style>
+  :root { color-scheme:dark; }
+  body { margin:0; padding:16px; background:#080b12; color:#f4f7fb; font-family:system-ui,-apple-system,sans-serif; }
+  header { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; }
+  h1 { margin:0; font-size:1rem; }
+  #status { color:#9aa4b2; font-size:.78rem; }
+  button { border:0; border-radius:999px; padding:9px 14px; background:#34d399; color:#07110d; font-weight:700; }
+  pre { margin:0; padding:14px; border:1px solid rgba(255,255,255,.14); border-radius:14px; background:#101623; white-space:pre-wrap; overflow-wrap:anywhere; font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace; }
+  iframe { width:100%; height:80vh; border:1px solid rgba(255,255,255,.14); border-radius:14px; background:#fff; }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Dati live Gestione Bus</h1>
+    <div id="status">Collegamento in corso…</div>
+  </div>
+  <button type="button" id="refresh">Aggiorna</button>
+</header>
+<pre id="data">Caricamento…</pre>
+<script>
+const ENDPOINT='https://gestione-bus-api.antonio-mauceri82.workers.dev/pubblico/segnalazioni';
+const dataEl=document.getElementById('data');
+const statusEl=document.getElementById('status');
+let loading=false;
+
+async function loadLive(){
+  if(loading) return;
+  loading=true;
+  statusEl.textContent='Aggiornamento…';
+  try{
+    const separator=ENDPOINT.includes('?')?'&':'?';
+    const response=await fetch(ENDPOINT+separator+'_='+Date.now(),{
+      cache:'no-store',
+      headers:{'Accept':'application/json'}
+    });
+    if(!response.ok) throw new Error('HTTP '+response.status);
+    const data=await response.json();
+    dataEl.textContent=JSON.stringify(data,null,2);
+    const when=new Date();
+    statusEl.textContent='Letto dal Worker alle '+when.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  }catch(error){
+    statusEl.textContent='Lettura diretta non disponibile: apertura della fonte live';
+    dataEl.outerHTML='<iframe title="Dati live Gestione Bus" src="'+ENDPOINT+'?_='+Date.now()+'"></iframe>';
+  }finally{
+    loading=false;
+  }
+}
+document.getElementById('refresh').addEventListener('click',loadLive);
+loadLive();
+setInterval(loadLive,30000);
+</script>
+</body>
+</html>
