@@ -11,39 +11,54 @@ permissions:
 jobs:
   aggiorna:
     runs-on: ubuntu-latest
+    timeout-minutes: 3
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Scarica dati live dal Worker
+      - name: Scarica e controlla i dati live
+        id: scarica
+        shell: bash
         run: |
           mkdir -p api
-          curl --fail --silent --show-error \
+          rm -f api/segnalazioni.tmp
+
+          if ! curl --fail --silent --show-error \
             --retry 3 \
             --connect-timeout 15 \
             --max-time 60 \
             "https://gestione-bus-api.antonio-mauceri82.workers.dev/pubblico/segnalazioni" \
-            -o api/segnalazioni.json
+            -o api/segnalazioni.tmp
+          then
+            echo "Worker temporaneamente non disponibile: aggiornamento rinviato."
+            echo "disponibile=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
 
-      - name: Verifica JSON
-        run: |
-          python - <<'PY'
-          import json
-          with open('api/segnalazioni.json', encoding='utf-8') as f:
-              data = json.load(f)
-          assert isinstance(data.get('segnalazioni'), list)
-          assert isinstance(data.get('numeroSegnalazioni'), int)
-          print('Segnalazioni:', data['numeroSegnalazioni'])
-          PY
+          if ! python -c 'import json; d=json.load(open("api/segnalazioni.tmp", encoding="utf-8")); assert isinstance(d.get("segnalazioni"), list); assert isinstance(d.get("numeroSegnalazioni"), int); print("Segnalazioni:", d["numeroSegnalazioni"])'
+          then
+            echo "Risposta non valida: il file precedente rimane invariato."
+            rm -f api/segnalazioni.tmp
+            echo "disponibile=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          mv api/segnalazioni.tmp api/segnalazioni.json
+          echo "disponibile=true" >> "$GITHUB_OUTPUT"
 
       - name: Pubblica aggiornamento se cambiato
+        if: steps.scarica.outputs.disponibile == 'true'
+        shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add api/segnalazioni.json
+
           if git diff --cached --quiet; then
             echo "Nessuna modifica nei dati."
             exit 0
           fi
+
           git commit -m "Aggiorna dati live Gestione Bus"
+          git pull --rebase origin main
           git push
