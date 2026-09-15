@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-09-15T15:03:54.496Z",
-  "numeroSegnalazioni": 195,
+  "aggiornatoIl": "2026-09-15T18:56:30.122Z",
+  "numeroSegnalazioni": 200,
   "segnalazioni": [
     {
       "id": "1TrRqez4bvkT038FDI5d",
@@ -80,6 +80,20 @@
       "urgente": true,
       "createdAt": "2026-07-20T21:24:43.515Z",
       "order": 0
+    },
+    {
+      "id": "1wAyPlpWGo0WDRQIFVZA",
+      "bus": "K2092",
+      "desc": "Entrambi i retrovisori non si regolano",
+      "date": [
+        "2026-09-15"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-15T16:27:02.537Z",
+      "order": null
     },
     {
       "id": "2340o7ADy5ysdcdIqCtf",
@@ -495,7 +509,7 @@
         "2026-07-15"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-06-09T23:01:22.064Z",
@@ -552,17 +566,20 @@
         "2025-11-05",
         "2025-11-06",
         "2025-11-07",
+        "2025-11-08",
         "2025-11-10",
         "2025-11-10",
+        "2025-11-11",
         "2025-11-12",
         "2025-11-13",
         "2025-11-14",
+        "2025-11-15",
+        "2025-11-17",
         "2025-11-27",
         "2026-03-23",
         "2026-03-24",
         "2026-03-25",
-        "2026-03-26",
-        "2026-11-15"
+        "2026-03-26"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -766,7 +783,8 @@
       "desc": "In fase di chiusura a volte le porte si riaprono",
       "date": [
         "2026-07-07",
-        "2026-09-11"
+        "2026-09-11",
+        "2026-09-15"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -1167,6 +1185,21 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-28T17:43:00.433Z",
+      "order": null
+    },
+    {
+      "id": "LqjbKRsBFVIN3ROdWhlE",
+      "bus": "A5122",
+      "desc": "Spia rossa pressione gomme",
+      "date": [
+        "2026-09-15",
+        "2026-09-15"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-15T16:32:34.547Z",
       "order": null
     },
     {
@@ -1578,6 +1611,20 @@
       "order": 0
     },
     {
+      "id": "QXIEnt7SeUlTb5c2oVfV",
+      "bus": "A5045",
+      "desc": "Sedile autista si livella di continuo",
+      "date": [
+        "2026-09-15"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-15T16:29:15.205Z",
+      "order": null
+    },
+    {
       "id": "QZoVAhDPeBc56xtvUsE2",
       "bus": "K2073",
       "desc": "Durante la marcia il cambio passa in folle",
@@ -1812,7 +1859,8 @@
         "2026-07-17",
         "2026-07-21",
         "2026-09-04",
-        "2026-09-05"
+        "2026-09-05",
+        "2026-09-15"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -1911,6 +1959,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-05T17:49:53.690Z",
+      "order": null
+    },
+    {
+      "id": "X5kRA14Ia2UsBcjzBmtF",
+      "bus": "K2092",
+      "desc": "Telecamera retromarcia fuori servizio",
+      "date": [
+        "2026-09-15"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-15T16:27:28.399Z",
       "order": null
     },
     {
@@ -2315,6 +2377,21 @@
       "order": null
     },
     {
+      "id": "e8cIwWfvDekV5ieVh56f",
+      "bus": "A5122",
+      "desc": "Spia riserva olio",
+      "date": [
+        "2026-09-15",
+        "2026-09-15"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-15T16:32:55.090Z",
+      "order": null
+    },
+    {
       "id": "eTQ1I0fhLmMN2QJIqF7k",
       "bus": "K2096",
       "desc": "Malfunzionamento impianto di climatizzazione",
@@ -2616,10 +2693,11 @@
         "2026-04-16",
         "2026-06-05",
         "2026-06-07",
-        "2026-06-12"
+        "2026-06-12",
+        "2026-09-15"
       ],
       "stato": "aperta",
-      "pregressa": true,
+      "pregressa": false,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-06-12T10:30:46.093Z",
@@ -2679,7 +2757,7 @@
         "2026-07-22"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-07-19T23:09:22.445Z",
@@ -2820,7 +2898,8 @@
         "2025-10-11",
         "2025-10-17",
         "2025-11-08",
-        "2026-09-01"
+        "2026-09-01",
+        "2026-09-15"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -3200,10 +3279,11 @@
     {
       "id": "tvU4U2yn9aAL9qUnnmyZ",
       "bus": "A4149",
-      "desc": "AC",
+      "desc": "Malfunzionamento impianto di climatizzazione",
       "date": [
         "2026-09-03",
-        "2026-09-06"
+        "2026-09-06",
+        "2026-09-15"
       ],
       "stato": "aperta",
       "pregressa": false,
