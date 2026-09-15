@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-09-15T10:13:14.820Z",
-  "numeroSegnalazioni": 192,
+  "aggiornatoIl": "2026-09-15T15:03:54.496Z",
+  "numeroSegnalazioni": 195,
   "segnalazioni": [
     {
       "id": "1TrRqez4bvkT038FDI5d",
@@ -542,6 +542,33 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-06-19T15:30:14.197Z",
+      "order": null
+    },
+    {
+      "id": "8Yz2Kk9bKXmGiowfKNmc",
+      "bus": "K1031",
+      "desc": "Riscaldamento fuori servizio",
+      "date": [
+        "2025-11-05",
+        "2025-11-06",
+        "2025-11-07",
+        "2025-11-10",
+        "2025-11-10",
+        "2025-11-12",
+        "2025-11-13",
+        "2025-11-14",
+        "2025-11-27",
+        "2026-03-23",
+        "2026-03-24",
+        "2026-03-25",
+        "2026-03-26",
+        "2026-11-15"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-15T11:08:53.994Z",
       "order": null
     },
     {
@@ -2313,6 +2340,20 @@
       "order": null
     },
     {
+      "id": "f3xhMFM6mSmmRjFjVph6",
+      "bus": "A4149",
+      "desc": "Leva sedile autista",
+      "date": [
+        "2026-09-04"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-15T12:11:09.246Z",
+      "order": null
+    },
+    {
       "id": "fTpv0ZHuVjywwl82H75P",
       "bus": "K3137",
       "desc": "Aria condizionata insufficiente",
@@ -3154,6 +3195,21 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-07-28T18:24:36.008Z",
+      "order": null
+    },
+    {
+      "id": "tvU4U2yn9aAL9qUnnmyZ",
+      "bus": "A4149",
+      "desc": "AC",
+      "date": [
+        "2026-09-03",
+        "2026-09-06"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-15T12:09:47.175Z",
       "order": null
     },
     {
