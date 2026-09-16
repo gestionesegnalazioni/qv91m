@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-09-16T04:57:17.346Z",
-  "numeroSegnalazioni": 201,
+  "aggiornatoIl": "2026-09-16T09:49:57.609Z",
+  "numeroSegnalazioni": 204,
   "segnalazioni": [
     {
       "id": "1TrRqez4bvkT038FDI5d",
@@ -623,7 +623,7 @@
         "2026-08-30"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-28T17:41:36.815Z",
@@ -1045,7 +1045,7 @@
         "2026-08-04"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-05T08:05:20.395Z",
@@ -1389,7 +1389,7 @@
     {
       "id": "NpL6DV7v8LoqOaiiwxBS",
       "bus": "K2125",
-      "desc": "Spia motore e spia AEBS",
+      "desc": "Spia AEBS",
       "date": [
         "2026-08-11"
       ],
@@ -3083,6 +3083,20 @@
       "order": 1
     },
     {
+      "id": "pJEN3gLQQz2f1gkG1myc",
+      "bus": "K2125",
+      "desc": "Retrovisore destro non si regola verticalmente",
+      "date": [
+        "2026-09-16"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-16T07:09:55.329Z",
+      "order": null
+    },
+    {
       "id": "pxxKVmdWSFWBUCWjCNmd",
       "bus": "A5060",
       "desc": "Aria condizionata insufficiente",
@@ -3098,6 +3112,20 @@
       "urgente": false,
       "createdAt": "2026-08-13T17:28:13.066Z",
       "order": 3
+    },
+    {
+      "id": "qO59vML2h7CEEaTnSM26",
+      "bus": "K2125",
+      "desc": "Il volante tira a dx",
+      "date": [
+        "2026-09-16"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-16T07:10:39.756Z",
+      "order": null
     },
     {
       "id": "qOOfUhZ6RIRkzB65WI9u",
@@ -3361,6 +3389,21 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-13T22:05:41.091Z",
+      "order": null
+    },
+    {
+      "id": "vetU0uFJFC93v9mR4GWV",
+      "bus": "K2125",
+      "desc": "Spia motore",
+      "date": [
+        "2026-08-11",
+        "2026-09-16"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-16T07:08:55.433Z",
       "order": null
     },
     {
