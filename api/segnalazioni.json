@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-09-18T14:57:23.197Z",
-  "numeroSegnalazioni": 204,
+  "aggiornatoIl": "2026-09-18T18:17:48.989Z",
+  "numeroSegnalazioni": 208,
   "segnalazioni": [
     {
       "id": "1TrRqez4bvkT038FDI5d",
@@ -96,7 +96,8 @@
         "2025-12-13",
         "2026-01-24",
         "2026-01-31",
-        "2026-09-15"
+        "2026-09-15",
+        "2026-09-16"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -526,6 +527,20 @@
       "order": 0
     },
     {
+      "id": "7fpzQYRxYyODKwpyYuWb",
+      "bus": "K2093",
+      "desc": "Sedile perde pressione e si appoggia sul ferro",
+      "date": [
+        "2026-09-18"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-18T16:20:10.385Z",
+      "order": null
+    },
+    {
       "id": "7nQrvlUe7j3XakQee1xI",
       "bus": "K1098",
       "desc": "Malfunzionamento impianto di climatizzazione",
@@ -788,6 +803,18 @@
       "order": 0
     },
     {
+      "id": "Bywx8wVp8GNRBhr2NL3k",
+      "bus": "K3143",
+      "desc": "In caso di pioggia abbondanti infiltrazioni nell’abitacolo",
+      "date": [],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-18T16:18:22.475Z",
+      "order": null
+    },
+    {
       "id": "CmXEaUf677Mv0HrEehnv",
       "bus": "A5045",
       "desc": "In fase di chiusura a volte le porte si riaprono",
@@ -866,6 +893,7 @@
       "bus": "K1098",
       "desc": "Volante deteriorato",
       "date": [
+        "2026-06-17",
         "2026-09-11",
         "2026-09-12",
         "2026-09-12",
@@ -1476,7 +1504,8 @@
         "2026-07-13",
         "2026-07-14",
         "2026-07-23",
-        "2026-09-09"
+        "2026-09-09",
+        "2026-09-18"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -1960,6 +1989,20 @@
       "order": null
     },
     {
+      "id": "WPXzWHgnQJ5rWg8iEZQb",
+      "bus": "K1105",
+      "desc": "Pedale frizione rimane basso",
+      "date": [
+        "2026-09-17"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-18T16:17:13.355Z",
+      "order": null
+    },
+    {
       "id": "WiKhyIQ8Evyr7Sud4ISK",
       "bus": "A4098",
       "desc": "Spia punto esclamativo impianto frenante",
@@ -1985,6 +2028,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-05T17:49:53.690Z",
+      "order": null
+    },
+    {
+      "id": "X54V91vi8cIN1S9VfNoR",
+      "bus": "K1105",
+      "desc": "Sbrinatore fuori servizio",
+      "date": [
+        "2026-09-17"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-18T16:16:44.783Z",
       "order": null
     },
     {
@@ -2786,10 +2843,11 @@
       "date": [
         "2026-02-28",
         "2026-07-18",
-        "2026-07-22"
+        "2026-07-22",
+        "2026-09-17"
       ],
       "stato": "aperta",
-      "pregressa": true,
+      "pregressa": false,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-07-19T23:09:22.445Z",
@@ -3176,7 +3234,9 @@
         "2026-09-01",
         "2026-09-15",
         "2026-09-16",
-        "2026-09-17"
+        "2026-09-17",
+        "2026-09-18",
+        "2026-09-18"
       ],
       "stato": "aperta",
       "pregressa": false,
