@@ -1,5 +1,5 @@
 {
-  "aggiornatoIl": "2026-09-19T19:21:51.434Z",
+  "aggiornatoIl": "2026-09-19T21:35:06.747Z",
   "numeroSegnalazioni": 211,
   "segnalazioni": [
     {
@@ -945,7 +945,7 @@
         "2026-08-28"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-28T17:44:23.073Z",
@@ -1329,7 +1329,7 @@
         "2026-09-03"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-03T18:11:44.277Z",
@@ -2023,7 +2023,8 @@
       "bus": "K1105",
       "desc": "Pedale frizione rimane basso",
       "date": [
-        "2026-09-17"
+        "2026-09-17",
+        "2026-09-19"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -2065,7 +2066,8 @@
       "bus": "K1105",
       "desc": "Sbrinatore fuori servizio",
       "date": [
-        "2026-09-17"
+        "2026-09-17",
+        "2026-09-19"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -2857,7 +2859,9 @@
         "2026-09-01",
         "2026-09-05",
         "2026-09-10",
-        "2026-09-11"
+        "2026-09-11",
+        "2026-09-15",
+        "2026-09-19"
       ],
       "stato": "aperta",
       "pregressa": false,
