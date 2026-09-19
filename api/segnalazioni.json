@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-09-19T14:02:02.699Z",
-  "numeroSegnalazioni": 209,
+  "aggiornatoIl": "2026-09-19T17:13:34.490Z",
+  "numeroSegnalazioni": 210,
   "segnalazioni": [
     {
       "id": "1TrRqez4bvkT038FDI5d",
@@ -828,6 +828,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-18T16:18:22.475Z",
+      "order": null
+    },
+    {
+      "id": "CGUz7bQpgrZ9iliYa62L",
+      "bus": "A4189",
+      "desc": "Spia avaria motore",
+      "date": [
+        "2026-09-13"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-19T16:45:07.512Z",
       "order": null
     },
     {
@@ -2946,7 +2960,8 @@
       "date": [
         "2026-08-16",
         "2026-08-26",
-        "2026-08-26"
+        "2026-08-26",
+        "2026-09-17"
       ],
       "stato": "aperta",
       "pregressa": false,
