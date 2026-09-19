@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-09-19T10:49:41.441Z",
-  "numeroSegnalazioni": 208,
+  "aggiornatoIl": "2026-09-19T14:02:02.699Z",
+  "numeroSegnalazioni": 209,
   "segnalazioni": [
     {
       "id": "1TrRqez4bvkT038FDI5d",
@@ -693,6 +693,22 @@
       "order": null
     },
     {
+      "id": "AqgwFLzEO7Cxi8BmBmTO",
+      "bus": "A5116",
+      "desc": "Freccia lat sx",
+      "date": [
+        "2026-09-17",
+        "2026-09-18",
+        "2026-09-19"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-19T13:36:02.889Z",
+      "order": null
+    },
+    {
       "id": "B0cxt5ydjiOrsG9B5kAM",
       "bus": "A5117",
       "desc": "Pulsante porta anteriore sta venendo via",
@@ -1380,7 +1396,7 @@
         "2026-09-13"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-13T17:36:23.051Z",
@@ -1893,7 +1909,7 @@
         "2026-09-13"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-06-30T17:09:57.251Z",
@@ -3449,7 +3465,7 @@
         "2026-09-13"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-13T22:05:41.091Z",
