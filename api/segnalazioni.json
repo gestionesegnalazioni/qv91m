@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-09-19T17:13:34.490Z",
-  "numeroSegnalazioni": 210,
+  "aggiornatoIl": "2026-09-19T19:21:51.434Z",
+  "numeroSegnalazioni": 211,
   "segnalazioni": [
     {
       "id": "1TrRqez4bvkT038FDI5d",
@@ -3267,7 +3267,9 @@
         "2026-09-16",
         "2026-09-17",
         "2026-09-18",
-        "2026-09-18"
+        "2026-09-18",
+        "2026-09-19",
+        "2026-09-19"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -3836,6 +3838,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-27T06:54:24.671Z",
+      "order": null
+    },
+    {
+      "id": "zgUdvYfjQpzgDopjpd4q",
+      "bus": "A4098",
+      "desc": "Con porta ant aperta il mezzo non rimane frenato",
+      "date": [
+        "2026-09-19"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-19T19:17:39.582Z",
       "order": null
     },
     {
