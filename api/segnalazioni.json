@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-09-21T13:14:38.123Z",
-  "numeroSegnalazioni": 211,
+  "aggiornatoIl": "2026-09-21T18:46:32.351Z",
+  "numeroSegnalazioni": 212,
   "segnalazioni": [
     {
       "id": "1TrRqez4bvkT038FDI5d",
@@ -1236,6 +1236,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-28T17:42:29.823Z",
+      "order": null
+    },
+    {
+      "id": "KvB2HNT7qEp3o3DWtjyF",
+      "bus": "L2315",
+      "desc": "Volante rotto",
+      "date": [
+        "2026-09-21"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-21T18:13:34.224Z",
       "order": null
     },
     {
