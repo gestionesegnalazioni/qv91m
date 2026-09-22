@@ -1,5 +1,5 @@
 {
-  "aggiornatoIl": "2026-09-22T06:00:06.203Z",
+  "aggiornatoIl": "2026-09-22T11:27:19.136Z",
   "numeroSegnalazioni": 212,
   "segnalazioni": [
     {
@@ -2023,7 +2023,8 @@
       "desc": "Spie rosse lampeggianti",
       "date": [
         "2026-05-25",
-        "2026-06-08"
+        "2026-06-08",
+        "2026-09-22"
       ],
       "stato": "aperta",
       "pregressa": false,
