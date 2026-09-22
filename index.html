@@ -5501,7 +5501,7 @@ window.toggleShareBus = function(bus, checked) {
   shareChecksForBus(bus).forEach(check => {
     check.checked = checked;
   });
-  aggiornaSelezioneBus(bus);
+  window.aggiornaSelezioneBus(bus);
 };
 
 window.aggiornaSelezioneBus = function(bus) {
@@ -5517,7 +5517,7 @@ window.aggiornaSelezioneBus = function(bus) {
 
 function aggiornaTutteLeSelezioniBus() {
   document.querySelectorAll('.share-bus-check').forEach(check => {
-    aggiornaSelezioneBus(check.dataset.bus);
+    window.aggiornaSelezioneBus(check.dataset.bus);
   });
 }
 
