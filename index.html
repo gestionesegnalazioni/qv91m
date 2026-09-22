@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="9.75">
-<title>Gestione Bus v9.75</title>
+<meta name="app-version" content="9.76">
+<title>Gestione Bus v9.76</title>
 <link rel="icon" type="image/svg+xml" href="icon.svg?v=920">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3148,7 +3148,7 @@
         <div class="attention-report-list" id="attentionReportList"></div>
       </section>
 
-      <button class="urgent-share-toggle" onclick="openUrgentShareModal()">Condividi bus urgenti</button>
+      <button class="urgent-share-toggle" onclick="openUrgentShareModal()">Condividi bus da monitorare</button>
     </div>
   </div>
 
@@ -3486,7 +3486,7 @@
 
 <div class="modal-overlay" id="urgentShareModalOverlay">
   <div class="modal">
-    <h2>CONDIVIDI BUS URGENTI</h2>
+    <h2>CONDIVIDI BUS DA MONITORARE</h2>
     <div class="share-actions-row">
       <button class="btn-ghost" onclick="selezionaTutteAnomalieUrgenti()">Seleziona tutte</button>
       <button class="btn-ghost" onclick="deselezionaTutteAnomalieUrgenti()">Deseleziona</button>
@@ -4982,7 +4982,7 @@ function showBusDetail(mat) {
         <div class="archive-box">
           ${arch.length ? `<div class="seg-list">${arch.map(s => renderSeg(s, true)).join('')}</div>` : '<div class="empty">Archivio vuoto.</div>'}
         </div>` : ''}
-      <button class="btn-urgent-bus ${bus?.urgente ? 'active' : ''}" onclick="toggleBusUrgent()">${bus?.urgente ? 'Urgente ✓' : 'Urgente'}</button>
+      <button class="btn-urgent-bus ${bus?.urgente ? 'active' : ''}" onclick="toggleBusUrgent()">${bus?.urgente ? 'Da monitorare ✓' : 'Da monitorare'}</button>
       <button class="btn-share-main" onclick="openShareModal()">Condividi anomalie</button>
     </div>`;
 
@@ -5222,9 +5222,9 @@ window.toggleBusUrgent = async function() {
   await updateDoc(doc(db, 'buses', bus.id), { urgente });
   await registraModifica(
     bus.matricola,
-    urgente ? 'Autobus contrassegnato come urgente' : 'Urgenza autobus rimossa'
+    urgente ? 'Autobus contrassegnato da monitorare' : 'Monitoraggio autobus rimosso'
   );
-  showToast(urgente ? 'Autobus urgente' : 'Urgenza rimossa');
+  showToast(urgente ? 'Bus da monitorare' : 'Monitoraggio rimosso');
 };
 
 window.resolveBusUrgent = async function(id, event) {
@@ -5458,7 +5458,7 @@ function testoCondivisioneBusUrgenti(gruppi) {
     return `🔴 *${gruppo.bus}*\n\n${righe.join('\n\n')}`;
   });
 
-  return `*AUTOBUS URGENTI*\n\n${blocchi.join('\n\n──────────\n\n')}\n\nSe ritieni opportuno, segnala sul diario. Grazie`;
+  return `*BUS DA MONITORARE*\n\n${blocchi.join('\n\n──────────\n\n')}\n\nSe ritieni opportuno, segnala sul diario. Grazie`;
 }
 
 async function condividiTesto(text) {
@@ -5549,7 +5549,7 @@ window.openUrgentShareModal = function() {
   const autobusUrgenti = buses.filter(bus => !!bus.urgente).sort(byMat);
 
   if (!autobusUrgenti.length) {
-    list.innerHTML = '<div class="empty">Nessun autobus urgente.</div>';
+    list.innerHTML = '<div class="empty">Nessun bus da monitorare.</div>';
   } else {
     list.innerHTML = autobusUrgenti.map((bus, index) => {
       const matricola = String(bus.matricola || '').trim();
