@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="9.76">
-<title>Gestione Bus v9.76</title>
+<meta name="app-version" content="9.77">
+<title>Gestione Bus v9.77</title>
 <link rel="icon" type="image/svg+xml" href="icon.svg?v=920">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -400,6 +400,56 @@
   .share-bus-anomalies .share-item {
     padding:9px 10px;
     background:rgba(0,0,0,.13);
+  }
+
+  #urgentShareModalOverlay {
+    padding:max(12px,env(safe-area-inset-top)) 12px max(12px,env(safe-area-inset-bottom));
+  }
+
+  #urgentShareModalOverlay .modal {
+    width:min(100%,480px);
+    height:min(88dvh,760px);
+    max-height:calc(100dvh - 24px);
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+
+  #urgentShareModalOverlay .modal h2,
+  #urgentShareModalOverlay .share-actions-row,
+  #urgentShareModalOverlay .modal-footer {
+    flex:0 0 auto;
+  }
+
+  #urgentShareList {
+    flex:1 1 auto;
+    min-height:0;
+    max-height:none;
+    overflow-y:auto;
+    overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
+    padding:2px 3px 10px 0;
+    margin:6px 0 8px;
+  }
+
+  #urgentShareList .share-bus-group {
+    flex:0 0 auto;
+    overflow:visible;
+  }
+
+  #urgentShareList .share-bus-summary {
+    cursor:default;
+    border-bottom:1px solid rgba(255,255,255,.10);
+  }
+
+  #urgentShareList .share-bus-anomalies {
+    padding-top:9px;
+  }
+
+  #urgentShareModalOverlay .modal-footer {
+    padding-top:4px;
+    margin-top:0;
+    background:linear-gradient(180deg,rgba(16,22,35,0),rgba(16,22,35,.98) 18%);
   }
 
   .share-actions-row {
@@ -5546,31 +5596,29 @@ function urgentShareChecksForBus(bus) {
 
 window.openUrgentShareModal = function() {
   const list = document.getElementById('urgentShareList');
-  const autobusUrgenti = buses.filter(bus => !!bus.urgente).sort(byMat);
+  const autobusDaMonitorare = buses.filter(bus => !!bus.urgente).sort(byMat);
 
-  if (!autobusUrgenti.length) {
+  if (!autobusDaMonitorare.length) {
     list.innerHTML = '<div class="empty">Nessun bus da monitorare.</div>';
   } else {
-    list.innerHTML = autobusUrgenti.map((bus, index) => {
+    list.innerHTML = autobusDaMonitorare.map(bus => {
       const matricola = String(bus.matricola || '').trim();
       const anomalie = segnalazioni
         .filter(s => String(s.bus || '').trim() === matricola && !s.pregressa)
         .sort(bySeg);
-      const aperto = index === 0 ? ' open' : '';
       const disabilitato = anomalie.length ? '' : ' disabled';
 
       return `
-        <details class="share-bus-group"${aperto}>
-          <summary class="share-bus-summary">
+        <section class="share-bus-group">
+          <div class="share-bus-summary">
             <input type="checkbox"
                    class="urgent-share-bus-check"
                    data-bus="${esc(matricola)}"
-                   onclick="event.stopPropagation()"
                    onchange="toggleUrgentShareBus(this.dataset.bus, this.checked)"
                    aria-label="Seleziona tutte le anomalie di ${esc(matricola)}"${disabilitato}>
             <span class="share-bus-name urgente">${esc(matricola)}</span>
             <span class="share-bus-count">${anomalie.length} ${anomalie.length === 1 ? 'anomalia' : 'anomalie'}</span>
-          </summary>
+          </div>
           <div class="share-bus-anomalies">
             ${anomalie.length ? anomalie.map(s => `
               <label class="share-item">
@@ -5583,11 +5631,12 @@ window.openUrgentShareModal = function() {
               </label>
             `).join('') : '<div class="empty">Nessuna anomalia attiva.</div>'}
           </div>
-        </details>
+        </section>
       `;
     }).join('');
   }
 
+  list.scrollTop = 0;
   document.getElementById('urgentShareModalOverlay').classList.add('open');
 };
 
