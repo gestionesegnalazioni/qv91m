@@ -1,5 +1,5 @@
 {
-  "aggiornatoIl": "2026-09-22T11:27:19.136Z",
+  "aggiornatoIl": "2026-09-22T15:37:59.314Z",
   "numeroSegnalazioni": 212,
   "segnalazioni": [
     {
@@ -699,7 +699,8 @@
       "date": [
         "2026-09-17",
         "2026-09-18",
-        "2026-09-19"
+        "2026-09-19",
+        "2026-09-22"
       ],
       "stato": "aperta",
       "pregressa": false,
