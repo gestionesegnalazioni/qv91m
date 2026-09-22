@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="9.74">
-<title>Gestione Bus v9.74</title>
+<meta name="app-version" content="9.75">
+<title>Gestione Bus v9.75</title>
 <link rel="icon" type="image/svg+xml" href="icon.svg?v=920">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2659,13 +2659,26 @@
   }
 
   .category-bottom-actions > .btn-add-bus-main,
-  .category-bottom-actions > .attention-report-toggle {
+  .category-bottom-actions > .attention-report-toggle,
+  .category-bottom-actions > .urgent-share-toggle {
     width:100%;
     height:54px;
     min-height:54px;
     font-family:var(--font-mono);
     font-size:1rem;
     font-weight:800;
+  }
+
+  .urgent-share-toggle {
+    color:#ffffff;
+    background:linear-gradient(135deg,#f87171 0%,#ef4444 52%,#b91c1c 100%);
+    border:1px solid #f87171;
+    border-radius:999px;
+    box-shadow:0 10px 24px rgba(239,68,68,.24);
+  }
+
+  .urgent-share-toggle:active {
+    transform:scale(.985);
   }
 
   .urgent-reports {
@@ -3135,6 +3148,7 @@
         <div class="attention-report-list" id="attentionReportList"></div>
       </section>
 
+      <button class="urgent-share-toggle" onclick="openUrgentShareModal()">Condividi bus urgenti</button>
     </div>
   </div>
 
@@ -3466,6 +3480,21 @@
     <div class="modal-footer">
       <button class="btn-ghost" onclick="closeShareModal()">Annulla</button>
       <button class="btn-primary" onclick="condividiAnomalieSelezionate()">Condividi</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="urgentShareModalOverlay">
+  <div class="modal">
+    <h2>CONDIVIDI BUS URGENTI</h2>
+    <div class="share-actions-row">
+      <button class="btn-ghost" onclick="selezionaTutteAnomalieUrgenti()">Seleziona tutte</button>
+      <button class="btn-ghost" onclick="deselezionaTutteAnomalieUrgenti()">Deseleziona</button>
+    </div>
+    <div id="urgentShareList" class="share-list"></div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeUrgentShareModal()">Annulla</button>
+      <button class="btn-primary" onclick="condividiBusUrgentiSelezionati()">Condividi</button>
     </div>
   </div>
 </div>
@@ -5404,7 +5433,19 @@ window.deleteBus = async function() {
   }
 };
 
-function testoCondivisioneAnomalie(gruppi) {
+function testoCondivisioneAnomalie(bus, anomalie) {
+  const righe = anomalie.map(a => {
+    const desc = String(a.desc || '').trim();
+    if (!desc) return '';
+    const count = Array.isArray(a.date) ? a.date.length : 0;
+    const label = count === 1 ? 'segnalato 1 volta' : `segnalato ${count} volte`;
+    return `• *${desc}*\n_(${label})_`;
+  }).filter(Boolean);
+
+  return `${bus}\n\nVerifica quanto segue:\n\n${righe.join('\n\n')}\n\nSe ritieni opportuno, segnala sul diario. Grazie`;
+}
+
+function testoCondivisioneBusUrgenti(gruppi) {
   const blocchi = gruppi.map(gruppo => {
     const righe = gruppo.anomalie.map(a => {
       const desc = String(a.desc || '').trim();
@@ -5414,10 +5455,10 @@ function testoCondivisioneAnomalie(gruppi) {
       return `• *${desc}*\n_(${label})_`;
     }).filter(Boolean);
 
-    return `*${gruppo.bus}*\n\nVerifica quanto segue:\n\n${righe.join('\n\n')}`;
+    return `🔴 *${gruppo.bus}*\n\n${righe.join('\n\n')}`;
   });
 
-  return `${blocchi.join('\n\n──────────\n\n')}\n\nSe ritieni opportuno, segnala sul diario. Grazie`;
+  return `*AUTOBUS URGENTI*\n\n${blocchi.join('\n\n──────────\n\n')}\n\nSe ritieni opportuno, segnala sul diario. Grazie`;
 }
 
 async function condividiTesto(text) {
@@ -5442,47 +5483,23 @@ async function condividiTesto(text) {
 }
 
 window.openShareModal = function() {
-  const list = document.getElementById('shareList');
-  const active = segnalazioni.filter(s => !s.pregressa && String(s.bus || '').trim());
-  const matricole = [...new Set(active.map(s => String(s.bus).trim()))]
-    .sort((a, b) => a.localeCompare(b, 'it', { numeric:true }));
+  if (!selectedBus) return;
 
-  if (!matricole.length) {
+  const active = segnalazioni
+    .filter(s => s.bus === selectedBus && !s.pregressa)
+    .sort(bySeg);
+
+  const list = document.getElementById('shareList');
+
+  if (!active.length) {
     list.innerHTML = '<div class="empty">Nessuna anomalia attiva da condividere.</div>';
   } else {
-    list.innerHTML = matricole.map(matricola => {
-      const anomalie = active.filter(s => String(s.bus).trim() === matricola).sort(bySeg);
-      const bus = buses.find(b => b.matricola === matricola);
-      const classeUrgente = bus?.urgente ? ' urgente' : '';
-      const aperto = matricola === selectedBus ? ' open' : '';
-
-      return `
-        <details class="share-bus-group"${aperto}>
-          <summary class="share-bus-summary">
-            <input type="checkbox"
-                   class="share-bus-check"
-                   data-bus="${esc(matricola)}"
-                   onclick="event.stopPropagation()"
-                   onchange="toggleShareBus(this.dataset.bus, this.checked)"
-                   aria-label="Seleziona tutte le anomalie di ${esc(matricola)}">
-            <span class="share-bus-name${classeUrgente}">${esc(matricola)}</span>
-            <span class="share-bus-count">${anomalie.length} ${anomalie.length === 1 ? 'anomalia' : 'anomalie'}</span>
-          </summary>
-          <div class="share-bus-anomalies">
-            ${anomalie.map(s => `
-              <label class="share-item">
-                <input type="checkbox"
-                       class="share-check"
-                       value="${esc(s.id)}"
-                       data-bus="${esc(matricola)}"
-                       onchange="aggiornaSelezioneBus(this.dataset.bus)">
-                <span>${esc(s.desc)}</span>
-              </label>
-            `).join('')}
-          </div>
-        </details>
-      `;
-    }).join('');
+    list.innerHTML = active.map(s => `
+      <label class="share-item">
+        <input type="checkbox" class="share-check" value="${esc(s.id)}">
+        <span>${esc(s.desc)}</span>
+      </label>
+    `).join('');
   }
 
   document.getElementById('shareModalOverlay').classList.add('open');
@@ -5492,21 +5509,102 @@ window.closeShareModal = function() {
   document.getElementById('shareModalOverlay').classList.remove('open');
 };
 
-function shareChecksForBus(bus) {
-  return Array.from(document.querySelectorAll('.share-check'))
+window.selezionaTutteAnomalie = function() {
+  document.querySelectorAll('#shareModalOverlay .share-check').forEach(check => {
+    check.checked = true;
+  });
+};
+
+window.deselezionaTutteAnomalie = function() {
+  document.querySelectorAll('#shareModalOverlay .share-check').forEach(check => {
+    check.checked = false;
+  });
+};
+
+window.condividiAnomalieSelezionate = async function() {
+  if (!selectedBus) return;
+
+  const ids = Array.from(document.querySelectorAll('#shareModalOverlay .share-check:checked'))
+    .map(check => check.value);
+  if (!ids.length) {
+    showToast('Seleziona almeno una anomalia');
+    return;
+  }
+
+  const selected = segnalazioni
+    .filter(s => ids.includes(s.id))
+    .sort(bySeg);
+
+  await condividiTesto(testoCondivisioneAnomalie(selectedBus, selected));
+  closeShareModal();
+};
+
+function urgentShareChecksForBus(bus) {
+  return Array.from(document.querySelectorAll('.urgent-share-check'))
     .filter(check => check.dataset.bus === bus);
 }
 
-window.toggleShareBus = function(bus, checked) {
-  shareChecksForBus(bus).forEach(check => {
-    check.checked = checked;
-  });
-  window.aggiornaSelezioneBus(bus);
+window.openUrgentShareModal = function() {
+  const list = document.getElementById('urgentShareList');
+  const autobusUrgenti = buses.filter(bus => !!bus.urgente).sort(byMat);
+
+  if (!autobusUrgenti.length) {
+    list.innerHTML = '<div class="empty">Nessun autobus urgente.</div>';
+  } else {
+    list.innerHTML = autobusUrgenti.map((bus, index) => {
+      const matricola = String(bus.matricola || '').trim();
+      const anomalie = segnalazioni
+        .filter(s => String(s.bus || '').trim() === matricola && !s.pregressa)
+        .sort(bySeg);
+      const aperto = index === 0 ? ' open' : '';
+      const disabilitato = anomalie.length ? '' : ' disabled';
+
+      return `
+        <details class="share-bus-group"${aperto}>
+          <summary class="share-bus-summary">
+            <input type="checkbox"
+                   class="urgent-share-bus-check"
+                   data-bus="${esc(matricola)}"
+                   onclick="event.stopPropagation()"
+                   onchange="toggleUrgentShareBus(this.dataset.bus, this.checked)"
+                   aria-label="Seleziona tutte le anomalie di ${esc(matricola)}"${disabilitato}>
+            <span class="share-bus-name urgente">${esc(matricola)}</span>
+            <span class="share-bus-count">${anomalie.length} ${anomalie.length === 1 ? 'anomalia' : 'anomalie'}</span>
+          </summary>
+          <div class="share-bus-anomalies">
+            ${anomalie.length ? anomalie.map(s => `
+              <label class="share-item">
+                <input type="checkbox"
+                       class="urgent-share-check"
+                       value="${esc(s.id)}"
+                       data-bus="${esc(matricola)}"
+                       onchange="aggiornaSelezioneBusUrgente(this.dataset.bus)">
+                <span>${esc(s.desc)}</span>
+              </label>
+            `).join('') : '<div class="empty">Nessuna anomalia attiva.</div>'}
+          </div>
+        </details>
+      `;
+    }).join('');
+  }
+
+  document.getElementById('urgentShareModalOverlay').classList.add('open');
 };
 
-window.aggiornaSelezioneBus = function(bus) {
-  const checks = shareChecksForBus(bus);
-  const busCheck = Array.from(document.querySelectorAll('.share-bus-check'))
+window.closeUrgentShareModal = function() {
+  document.getElementById('urgentShareModalOverlay').classList.remove('open');
+};
+
+window.toggleUrgentShareBus = function(bus, checked) {
+  urgentShareChecksForBus(bus).forEach(check => {
+    check.checked = checked;
+  });
+  window.aggiornaSelezioneBusUrgente(bus);
+};
+
+window.aggiornaSelezioneBusUrgente = function(bus) {
+  const checks = urgentShareChecksForBus(bus);
+  const busCheck = Array.from(document.querySelectorAll('.urgent-share-bus-check'))
     .find(check => check.dataset.bus === bus);
   if (!busCheck) return;
 
@@ -5515,28 +5613,29 @@ window.aggiornaSelezioneBus = function(bus) {
   busCheck.indeterminate = selezionate > 0 && selezionate < checks.length;
 };
 
-function aggiornaTutteLeSelezioniBus() {
-  document.querySelectorAll('.share-bus-check').forEach(check => {
-    window.aggiornaSelezioneBus(check.dataset.bus);
+function aggiornaTutteLeSelezioniUrgenti() {
+  document.querySelectorAll('.urgent-share-bus-check').forEach(check => {
+    window.aggiornaSelezioneBusUrgente(check.dataset.bus);
   });
 }
 
-window.selezionaTutteAnomalie = function() {
-  document.querySelectorAll('.share-check').forEach(check => {
+window.selezionaTutteAnomalieUrgenti = function() {
+  document.querySelectorAll('.urgent-share-check').forEach(check => {
     check.checked = true;
   });
-  aggiornaTutteLeSelezioniBus();
+  aggiornaTutteLeSelezioniUrgenti();
 };
 
-window.deselezionaTutteAnomalie = function() {
-  document.querySelectorAll('.share-check').forEach(check => {
+window.deselezionaTutteAnomalieUrgenti = function() {
+  document.querySelectorAll('.urgent-share-check').forEach(check => {
     check.checked = false;
   });
-  aggiornaTutteLeSelezioniBus();
+  aggiornaTutteLeSelezioniUrgenti();
 };
 
-window.condividiAnomalieSelezionate = async function() {
-  const ids = Array.from(document.querySelectorAll('.share-check:checked')).map(check => check.value);
+window.condividiBusUrgentiSelezionati = async function() {
+  const ids = Array.from(document.querySelectorAll('.urgent-share-check:checked'))
+    .map(check => check.value);
   if (!ids.length) {
     showToast('Seleziona almeno una anomalia');
     return;
@@ -5552,8 +5651,8 @@ window.condividiAnomalieSelezionate = async function() {
     anomalie:selezionate.filter(s => String(s.bus || '').trim() === bus).sort(bySeg)
   }));
 
-  await condividiTesto(testoCondivisioneAnomalie(gruppi));
-  closeShareModal();
+  await condividiTesto(testoCondivisioneBusUrgenti(gruppi));
+  closeUrgentShareModal();
 };
 
 
