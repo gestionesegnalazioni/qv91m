@@ -1,5 +1,5 @@
 {
-  "aggiornatoIl": "2026-09-23T18:58:17.465Z",
+  "aggiornatoIl": "2026-09-23T22:11:48.570Z",
   "numeroSegnalazioni": 213,
   "segnalazioni": [
     {
@@ -1166,7 +1166,7 @@
         "2026-08-01"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-12T13:47:18.164Z",
@@ -2327,7 +2327,7 @@
         "2026-08-12"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-12T17:44:24.916Z",
