@@ -1,5 +1,5 @@
 {
-  "aggiornatoIl": "2026-09-25T10:30:31.491Z",
+  "aggiornatoIl": "2026-09-25T15:30:46.477Z",
   "numeroSegnalazioni": 213,
   "segnalazioni": [
     {
@@ -2021,11 +2021,12 @@
     {
       "id": "WKCIdXpTk1flVrQsYaEx",
       "bus": "F4006",
-      "desc": "Spie rosse lampeggianti",
+      "desc": "Doppia spia rossa di pericolo",
       "date": [
         "2026-05-25",
         "2026-06-08",
-        "2026-09-22"
+        "2026-09-22",
+        "2026-09-25"
       ],
       "stato": "aperta",
       "pregressa": false,
