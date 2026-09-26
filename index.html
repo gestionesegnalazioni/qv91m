@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="app-version" content="9.77">
-<title>Gestione Bus v9.77</title>
+<meta name="app-version" content="9.78">
+<title>Gestione Bus v9.78</title>
 <link rel="icon" type="image/svg+xml" href="icon.svg?v=920">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v889.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -954,6 +954,10 @@
     color:var(--muted);
     min-width:0;
     width:100%;
+  }
+
+  .date-tag.no-date {
+    border-color:transparent;
   }
 
   .date-main {
@@ -4929,7 +4933,7 @@ function renderSeg(s, pregressa = false, hasArchive = false) {
   const dates = Array.isArray(s.date) ? s.date : [];
   const datesHtml = dates.length
     ? renderDateColumns(dates, s.id)
-    : '<div class="date-columns"><div class="date-column"><span class="date-tag">Nessuna data registrata</span></div><div></div><div></div></div>';
+    : '<div class="date-columns"><div class="date-column"><span class="date-tag no-date">Nessuna data registrata</span></div><div></div><div></div></div>';
 
   return `
     <details class="seg-card ${pregressa ? 'pregressa' : ''}" id="seg-${s.id}" ${openSegIds.has(s.id) ? 'open' : ''} ontoggle="trackSegOpen(\'${s.id}\', this)">
