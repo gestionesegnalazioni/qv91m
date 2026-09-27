@@ -3602,6 +3602,7 @@ let currentBusForModal = null;
 let archiveVisible = false;
 let openSegIds = new Set();
 let openNoteIds = new Set();
+let activeDateSegId = null;
 let homeScrollPosition = 0;
 let categoryScrollPosition = 0;
 let currentCategory = null;
@@ -5294,9 +5295,17 @@ window.resolveBusUrgent = async function(id, event) {
 window.trackSegOpen = function(id, el) {
   if (el && el.open) {
     openSegIds.add(id);
+    activeDateSegId = id;
   } else {
     openSegIds.delete(id);
     openNoteIds.delete(id);
+    if (activeDateSegId === id) {
+      const lastOpen = Array.from(document.querySelectorAll('.seg-card[open]'))
+        .map(card => String(card.id || '').replace(/^seg-/, ''))
+        .filter(Boolean)
+        .pop();
+      activeDateSegId = lastOpen || null;
+    }
   }
 };
 
@@ -5380,6 +5389,40 @@ window.hideTodayInline = function(id) {
   if (!el) return;
   setTimeout(() => el.classList.remove('visible'), 120);
 };
+
+document.addEventListener('keydown', event => {
+  if (!/^\d$/.test(event.key) || event.ctrlKey || event.metaKey || event.altKey) return;
+
+  const target = event.target;
+  if (
+    target instanceof HTMLInputElement ||
+    target instanceof HTMLTextAreaElement ||
+    target instanceof HTMLSelectElement ||
+    target?.isContentEditable
+  ) return;
+
+  if (!document.getElementById('detailView')?.classList.contains('open')) return;
+
+  let id = activeDateSegId;
+  let input = id ? document.getElementById('date-' + id) : null;
+  let card = id ? document.getElementById('seg-' + id) : null;
+
+  if (!input || !card?.open) {
+    const openCards = Array.from(document.querySelectorAll('.seg-card[open]'));
+    card = openCards[openCards.length - 1] || null;
+    id = card ? String(card.id || '').replace(/^seg-/, '') : null;
+    input = id ? document.getElementById('date-' + id) : null;
+  }
+
+  if (!id || !input || !card?.open) return;
+
+  event.preventDefault();
+  activeDateSegId = id;
+  input.focus({ preventScroll:true });
+  input.value = (input.value || '') + event.key;
+  autoSaveDate(id, input);
+});
+
 
 window.autoSaveDate = async function(id, input) {
   const raw = input.value.replace(/\D/g, '').slice(0, 6);
