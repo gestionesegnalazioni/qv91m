@@ -3658,13 +3658,7 @@ function cleanHistoryUrl() {
 }
 
 function viewHistoryUrl(view, extra = {}) {
-  if (view === 'category' && extra.category) {
-    return cleanHistoryUrl() + '#' + encodeURIComponent(extra.category);
-  }
-  if (view === 'detail' && extra.bus) {
-    return cleanHistoryUrl() + '#bus-' + encodeURIComponent(extra.bus);
-  }
-  return cleanHistoryUrl() + '#' + view;
+  return cleanHistoryUrl();
 }
 
 function pushViewState(view, extra = {}) {
