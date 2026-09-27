@@ -1011,7 +1011,7 @@
   }
 
   .today-inline {
-    display:none;
+    display:flex;
     align-items:center;
     justify-content:center;
     gap:10px;
@@ -4946,11 +4946,13 @@ function renderSeg(s, pregressa = false, hasArchive = false) {
 
         ${!pregressa ? `
           <div class="date-add-wrap">
-            <div class="today-inline" id="today-${s.id}"></div>
+            <div class="today-inline visible" id="today-${s.id}">
+              <span class="today-arrow" aria-hidden="true">→</span>
+              <span class="today-text">OGGI È IL ${shortTodayDate()}</span>
+              <span class="today-arrow" aria-hidden="true">←</span>
+            </div>
             <div class="date-add-row">
               <input class="date-input" id="date-${s.id}" placeholder="GG/MM/AA" maxlength="8" inputmode="numeric"
-                onfocus="showTodayInline('${s.id}')"
-                onblur="hideTodayInline('${s.id}')"
                 oninput="autoSaveDate('${s.id}',this)">
             </div>
           </div>` : ''}
