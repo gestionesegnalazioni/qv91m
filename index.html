@@ -5009,6 +5009,11 @@ function showBusDetail(mat) {
   html += `
     <div class="detail-main-actions">
       <button class="btn-primary" onclick="openModal('${esc(mat)}')">+ Aggiungi segnalazione</button>
+      <button class="btn-yellow-main" onclick="togglePregresse()">Vecchie segnalazioni (${arch.length})</button>
+      ${archiveVisible ? `
+        <div class="archive-box">
+          ${arch.length ? `<div class="seg-list">${arch.map(s => renderSeg(s, true)).join('')}</div>` : '<div class="empty">Archivio vuoto.</div>'}
+        </div>` : ''}
       <button class="btn-return-main" onclick="toggleBusReturn()">Mezzo fermato · ${allReturns.length ? 'Sì' : 'No'}</button>
       <div class="return-box bus-return-box" id="busReturnBox">
         
@@ -5025,11 +5030,6 @@ function showBusDetail(mat) {
           <button class="return-save" onclick="saveBusReturn()">Aggiungi rientro</button>
         </div>
       </div>
-      <button class="btn-yellow-main" onclick="togglePregresse()">Vecchie segnalazioni (${arch.length})</button>
-      ${archiveVisible ? `
-        <div class="archive-box">
-          ${arch.length ? `<div class="seg-list">${arch.map(s => renderSeg(s, true)).join('')}</div>` : '<div class="empty">Archivio vuoto.</div>'}
-        </div>` : ''}
       <button class="btn-urgent-bus ${bus?.urgente ? 'active' : ''}" onclick="toggleBusUrgent()">${bus?.urgente ? 'Da monitorare ✓' : 'Da monitorare'}</button>
       <button class="btn-share-main" onclick="openShareModal()">Condividi anomalie</button>
     </div>`;
