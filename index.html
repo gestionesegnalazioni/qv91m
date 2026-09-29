@@ -4944,18 +4944,17 @@ function renderSeg(s, pregressa = false, hasArchive = false) {
       <div class="seg-body">
         ${datesHtml}
 
-        ${!pregressa ? `
-          <div class="date-add-wrap">
-            <div class="today-inline visible" id="today-${s.id}">
-              <span class="today-arrow" aria-hidden="true">→</span>
-              <span class="today-text">OGGI È IL ${shortTodayDate()}</span>
-              <span class="today-arrow" aria-hidden="true">←</span>
-            </div>
-            <div class="date-add-row">
-              <input class="date-input" id="date-${s.id}" placeholder="GG/MM/AA" maxlength="8" inputmode="numeric"
-                oninput="autoSaveDate('${s.id}',this)">
-            </div>
-          </div>` : ''}
+        <div class="date-add-wrap">
+          <div class="today-inline visible" id="today-${s.id}">
+            <span class="today-arrow" aria-hidden="true">→</span>
+            <span class="today-text">OGGI È IL ${shortTodayDate()}</span>
+            <span class="today-arrow" aria-hidden="true">←</span>
+          </div>
+          <div class="date-add-row">
+            <input class="date-input" id="date-${s.id}" placeholder="GG/MM/AA" maxlength="8" inputmode="numeric"
+              oninput="autoSaveDate('${s.id}',this)">
+          </div>
+        </div>
 
         <div class="seg-actions">
           ${!pregressa ? `
