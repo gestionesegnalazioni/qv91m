@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-09-30T15:49:52.134Z",
-  "numeroSegnalazioni": 242,
+  "aggiornatoIl": "2026-09-30T20:23:00.166Z",
+  "numeroSegnalazioni": 244,
   "segnalazioni": [
     {
       "id": "1TrRqez4bvkT038FDI5d",
@@ -554,6 +554,20 @@
       "urgente": false,
       "createdAt": "2026-06-09T23:01:22.064Z",
       "order": 0
+    },
+    {
+      "id": "70G8Dd2Mz34aPcd0M5KX",
+      "bus": "K1043",
+      "desc": "Spia EDC",
+      "date": [
+        "2026-09-30"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-30T15:55:57.759Z",
+      "order": null
     },
     {
       "id": "71TMiaHE0aUtLblP29IE",
@@ -1714,7 +1728,8 @@
         "2026-08-27",
         "2026-08-28",
         "2026-09-02",
-        "2026-09-09"
+        "2026-09-09",
+        "2026-09-30"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -2588,6 +2603,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-25T22:32:49.234Z",
+      "order": null
+    },
+    {
+      "id": "b2Ij2tB69Lf7wgGtm9gH",
+      "bus": "K1043",
+      "desc": "Pomello cambio si stacca",
+      "date": [
+        "2026-09-30"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-30T15:56:17.888Z",
       "order": null
     },
     {
