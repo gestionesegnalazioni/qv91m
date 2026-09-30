@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-09-30T02:28:29.395Z",
-  "numeroSegnalazioni": 241,
+  "aggiornatoIl": "2026-09-30T08:56:49.695Z",
+  "numeroSegnalazioni": 242,
   "segnalazioni": [
     {
       "id": "1TrRqez4bvkT038FDI5d",
@@ -912,14 +912,15 @@
       "date": [
         "2026-07-07",
         "2026-09-11",
-        "2026-09-15"
+        "2026-09-15",
+        "2026-09-30"
       ],
       "stato": "aperta",
-      "pregressa": true,
+      "pregressa": false,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-07-07T17:28:47.307Z",
-      "order": 1
+      "order": 2
     },
     {
       "id": "DBkJ2z756E72wEV75y3S",
@@ -1587,6 +1588,20 @@
       "order": null
     },
     {
+      "id": "MnSHeHRYgCNxzCpbJmrU",
+      "bus": "A5045",
+      "desc": "Fendinebbia dx fuori servizio",
+      "date": [
+        "2026-09-30"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-09-30T08:22:48.639Z",
+      "order": null
+    },
+    {
       "id": "MyulHsGufTgem8Effz0j",
       "bus": "A5154",
       "desc": "Pulsante sbrinatore serpentine non funzionante",
@@ -1747,7 +1762,8 @@
       "bus": "A5045",
       "desc": "Il volante tira a dx",
       "date": [
-        "2026-09-11"
+        "2026-09-11",
+        "2026-09-30"
       ],
       "stato": "aperta",
       "pregressa": true,
@@ -1885,14 +1901,15 @@
       "desc": "Sedile autista si livella di continuo",
       "date": [
         "2026-09-15",
-        "2026-09-29"
+        "2026-09-29",
+        "2026-09-30"
       ],
       "stato": "aperta",
       "pregressa": false,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-15T16:29:15.205Z",
-      "order": null
+      "order": 1
     },
     {
       "id": "QZoVAhDPeBc56xtvUsE2",
@@ -3373,14 +3390,15 @@
       "bus": "A5045",
       "desc": "Aria fredda da riscaldamento e sbrinatore",
       "date": [
-        "2026-09-29"
+        "2026-09-29",
+        "2026-09-30"
       ],
       "stato": "aperta",
       "pregressa": false,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-29T09:04:13.451Z",
-      "order": null
+      "order": 0
     },
     {
       "id": "mR5zwgjuEQchzvsmuHst",
@@ -3680,7 +3698,7 @@
         "2026-09-28"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-06-09T22:52:30.441Z",
