@@ -1027,6 +1027,13 @@
 
   .today-inline.visible {
     display:flex;
+    cursor:pointer;
+  }
+
+  .today-inline:focus-visible {
+    outline:2px solid #22c55e;
+    outline-offset:3px;
+    border-radius:8px;
   }
 
   .today-arrow {
@@ -4945,7 +4952,10 @@ function renderSeg(s, pregressa = false, hasArchive = false) {
         ${datesHtml}
 
         <div class="date-add-wrap">
-          <div class="today-inline visible" id="today-${s.id}">
+          <div class="today-inline visible" id="today-${s.id}" role="button" tabindex="0"
+            onclick="insertTodayDate('${s.id}')"
+            onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();insertTodayDate('${s.id}')}"
+            aria-label="Inserisci la data di oggi">
             <span class="today-arrow" aria-hidden="true">→</span>
             <span class="today-text">OGGI È IL ${shortTodayDate()}</span>
             <span class="today-arrow" aria-hidden="true">←</span>
@@ -5421,6 +5431,14 @@ document.addEventListener('keydown', event => {
   autoSaveDate(id, input);
 });
 
+
+window.insertTodayDate = function(id) {
+  const input = document.getElementById('date-' + id);
+  if (!input) return;
+  input.value = shortTodayDate();
+  activeDateSegId = id;
+  autoSaveDate(id, input);
+};
 
 window.autoSaveDate = async function(id, input) {
   const raw = input.value.replace(/\D/g, '').slice(0, 6);
