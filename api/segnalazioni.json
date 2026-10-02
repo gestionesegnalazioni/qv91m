@@ -1,5 +1,5 @@
 {
-  "aggiornatoIl": "2026-10-02T14:06:10.149Z",
+  "aggiornatoIl": "2026-10-02T19:16:17.395Z",
   "numeroSegnalazioni": 243,
   "segnalazioni": [
     {
@@ -873,7 +873,8 @@
         "2026-08-20",
         "2026-08-27",
         "2026-09-08",
-        "2026-09-28"
+        "2026-09-28",
+        "2026-10-02"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -2588,20 +2589,6 @@
       "order": 0
     },
     {
-      "id": "adgQCkrycXl3Jmh0e4O6",
-      "bus": "K3137",
-      "desc": "Porta ant",
-      "date": [
-        "2026-08-24"
-      ],
-      "stato": "aperta",
-      "pregressa": true,
-      "standby": false,
-      "urgente": false,
-      "createdAt": "2026-08-25T22:32:49.234Z",
-      "order": null
-    },
-    {
       "id": "b2Ij2tB69Lf7wgGtm9gH",
       "bus": "K1043",
       "desc": "Pomello cambio si stacca",
@@ -2800,6 +2787,20 @@
       "urgente": false,
       "createdAt": "2026-06-27T07:03:03.172Z",
       "order": 1
+    },
+    {
+      "id": "dRH5fmTf1lKEn9C05IMa",
+      "bus": "A5046",
+      "desc": "Il sedile si abbassa e si rialza di continuo",
+      "date": [
+        "2026-10-02"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-02T16:45:11.282Z",
+      "order": null
     },
     {
       "id": "dUPNDCZQy25yDyCsG3VA",
@@ -3062,7 +3063,8 @@
         "2026-05-19",
         "2026-08-01",
         "2026-08-04",
-        "2026-08-08"
+        "2026-08-08",
+        "2026-10-02"
       ],
       "stato": "aperta",
       "pregressa": true,
