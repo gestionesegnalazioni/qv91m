@@ -1,5 +1,5 @@
 {
-  "aggiornatoIl": "2026-10-01T22:01:28.241Z",
+  "aggiornatoIl": "2026-10-02T01:37:15.393Z",
   "numeroSegnalazioni": 243,
   "segnalazioni": [
     {
@@ -902,7 +902,7 @@
       "desc": "In caso di pioggia abbondanti infiltrazioni nell’abitacolo",
       "date": [],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-18T16:18:22.475Z",
@@ -2324,7 +2324,7 @@
         "2026-09-05"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-05T17:49:53.690Z",
@@ -2964,7 +2964,7 @@
         "2026-09-07"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-07-02T22:20:59.336Z",
