@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-10-03T07:43:15.417Z",
-  "numeroSegnalazioni": 243,
+  "aggiornatoIl": "2026-10-03T12:45:39.939Z",
+  "numeroSegnalazioni": 242,
   "segnalazioni": [
     {
       "id": "1TrRqez4bvkT038FDI5d",
@@ -1218,18 +1218,6 @@
       "order": null
     },
     {
-      "id": "IokRrrTUocbzOmIE6znS",
-      "bus": "A5121",
-      "desc": "Martelletto corridoio",
-      "date": [],
-      "stato": "aperta",
-      "pregressa": false,
-      "standby": false,
-      "urgente": false,
-      "createdAt": "2026-08-26T21:06:48.494Z",
-      "order": null
-    },
-    {
       "id": "IvRxK8IU0rGnqBDxq2yZ",
       "bus": "A5123",
       "desc": "Spia rossa gomme",
@@ -2281,7 +2269,8 @@
         "2026-09-25",
         "2026-09-26",
         "2026-10-01",
-        "2026-10-02"
+        "2026-10-02",
+        "2026-10-03"
       ],
       "stato": "aperta",
       "pregressa": false,
