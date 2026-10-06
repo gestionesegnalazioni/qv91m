@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-10-06T19:05:46.821Z",
-  "numeroSegnalazioni": 244,
+  "aggiornatoIl": "2026-10-06T23:02:02.976Z",
+  "numeroSegnalazioni": 248,
   "segnalazioni": [
     {
       "id": "1TrRqez4bvkT038FDI5d",
@@ -132,7 +132,8 @@
         "2026-08-05",
         "2026-08-07",
         "2026-09-29",
-        "2026-10-01"
+        "2026-10-01",
+        "2026-10-05"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -2422,6 +2423,20 @@
       "order": 1
     },
     {
+      "id": "Y5cCP716kpYKaGPURHej",
+      "bus": "A5063",
+      "desc": "Frenata lunga",
+      "date": [
+        "2026-10-06"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-06T19:22:39.675Z",
+      "order": null
+    },
+    {
       "id": "Y940kOq9GH9sJmmeMIuU",
       "bus": "A4098",
       "desc": "Spia ESP",
@@ -2810,6 +2825,20 @@
       "order": 1
     },
     {
+      "id": "dJli54IZcFPggfENA6FZ",
+      "bus": "K3089",
+      "desc": "Controllare frenata, sembra poco efficace",
+      "date": [
+        "2026-10-05"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-06T19:21:33.829Z",
+      "order": null
+    },
+    {
       "id": "dRH5fmTf1lKEn9C05IMa",
       "bus": "A5046",
       "desc": "Il sedile si abbassa e si rialza di continuo",
@@ -3043,6 +3072,20 @@
       "order": null
     },
     {
+      "id": "gJ2MUNh9vNl8ISpSBytX",
+      "bus": "K1092",
+      "desc": "In frenata rumore di ferraglia, controllare freni",
+      "date": [
+        "2026-10-06"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-06T19:33:35.957Z",
+      "order": null
+    },
+    {
       "id": "gb8QVFEJJVpkGUkJWzN9",
       "bus": "A4148",
       "desc": "Tasti regolazione sedile autista fuori servizio",
@@ -3076,6 +3119,20 @@
       "urgente": false,
       "createdAt": "2026-06-27T09:19:15.584Z",
       "order": 0
+    },
+    {
+      "id": "glfMUyVHOP4EW1J3eMQM",
+      "bus": "A5063",
+      "desc": "Sedile autista si blocca durante la discesa",
+      "date": [
+        "2026-10-06"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-06T19:23:15.271Z",
+      "order": null
     },
     {
       "id": "h4YY5tapSNX6HX7ktr8a",
@@ -3584,7 +3641,8 @@
       "desc": "Plurimus fuori servizio",
       "date": [
         "2026-09-28",
-        "2026-09-28"
+        "2026-09-28",
+        "2026-10-06"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -3978,6 +4036,7 @@
       "desc": "Quando si richiudono le porte salta la marcia",
       "date": [
         "2026-10-01",
+        "2026-10-05",
         "2029-09-29"
       ],
       "stato": "aperta",
@@ -4180,7 +4239,8 @@
         "2026-09-26",
         "2026-09-28",
         "2026-09-29",
-        "2026-10-01"
+        "2026-10-01",
+        "2026-10-05"
       ],
       "stato": "aperta",
       "pregressa": false,
