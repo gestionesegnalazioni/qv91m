@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-10-07T16:08:19.103Z",
-  "numeroSegnalazioni": 248,
+  "aggiornatoIl": "2026-10-07T21:18:08.292Z",
+  "numeroSegnalazioni": 251,
   "segnalazioni": [
     {
       "id": "1TrRqez4bvkT038FDI5d",
@@ -890,7 +890,8 @@
         "2026-08-27",
         "2026-09-08",
         "2026-09-28",
-        "2026-10-02"
+        "2026-10-02",
+        "2026-10-07"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -1189,6 +1190,20 @@
       "urgente": true,
       "createdAt": "2026-07-31T17:02:30.022Z",
       "order": 0
+    },
+    {
+      "id": "IAwhco9l7rrT4HOsWSFB",
+      "bus": "A2052",
+      "desc": "Manca fermo di gancio porta abitacolo",
+      "date": [
+        "2026-10-07"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-07T20:30:38.342Z",
+      "order": null
     },
     {
       "id": "IGv6ohRrJyKKhHmpbv3s",
@@ -1636,6 +1651,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-25T16:19:35.130Z",
+      "order": null
+    },
+    {
+      "id": "N2DhKje0Ti3v6KN2DPI2",
+      "bus": "L2917",
+      "desc": "Clacson fuori servizio",
+      "date": [
+        "2026-10-07"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-07T20:28:22.848Z",
       "order": null
     },
     {
@@ -2550,6 +2579,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-25T16:30:15.232Z",
+      "order": null
+    },
+    {
+      "id": "Yz3vNZYViMVuVUACPwwW",
+      "bus": "A5046",
+      "desc": "Telecamera porta post fuori servizio",
+      "date": [
+        "2026-10-07"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-07T20:29:24.965Z",
       "order": null
     },
     {
