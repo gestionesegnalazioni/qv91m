@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-10-08T01:05:36.831Z",
-  "numeroSegnalazioni": 251,
+  "aggiornatoIl": "2026-10-08T07:19:58.490Z",
+  "numeroSegnalazioni": 250,
   "segnalazioni": [
     {
       "id": "1TrRqez4bvkT038FDI5d",
@@ -1651,20 +1651,6 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-25T16:19:35.130Z",
-      "order": null
-    },
-    {
-      "id": "N2DhKje0Ti3v6KN2DPI2",
-      "bus": "L2917",
-      "desc": "Clacson fuori servizio",
-      "date": [
-        "2026-10-07"
-      ],
-      "stato": "aperta",
-      "pregressa": false,
-      "standby": false,
-      "urgente": false,
-      "createdAt": "2026-10-07T20:28:22.848Z",
       "order": null
     },
     {
