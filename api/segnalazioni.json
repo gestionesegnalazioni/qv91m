@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-10-10T08:47:28.618Z",
-  "numeroSegnalazioni": 250,
+  "aggiornatoIl": "2026-10-10T14:49:15.259Z",
+  "numeroSegnalazioni": 256,
   "segnalazioni": [
     {
       "id": "1TrRqez4bvkT038FDI5d",
@@ -892,7 +892,9 @@
         "2026-09-08",
         "2026-09-28",
         "2026-10-02",
-        "2026-10-07"
+        "2026-10-07",
+        "2026-10-09",
+        "2026-10-10"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -2145,6 +2147,20 @@
       "order": null
     },
     {
+      "id": "UCBthLiENn8Qc6YcHAS6",
+      "bus": "A4149",
+      "desc": "Aria fredda da sbrinatore e riscaldamento",
+      "date": [
+        "2026-10-09"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-10T10:32:26.436Z",
+      "order": null
+    },
+    {
       "id": "UjpfRb5cY47lIOYh4WWU",
       "bus": "K1123",
       "desc": "Rotto supporto metallico Tip Tap",
@@ -2573,7 +2589,9 @@
       "bus": "A5046",
       "desc": "Telecamera porta post fuori servizio",
       "date": [
-        "2026-10-07"
+        "2026-10-07",
+        "2026-10-09",
+        "2026-10-10"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -2652,6 +2670,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-10-04T21:19:54.011Z",
+      "order": null
+    },
+    {
+      "id": "aJEcOCZzeIcmJrByol42",
+      "bus": "A5046",
+      "desc": "La porta posteriore si riapre in fase di chiusura",
+      "date": [
+        "2026-10-09"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-10T10:30:30.280Z",
       "order": null
     },
     {
@@ -3187,6 +3219,20 @@
       "order": null
     },
     {
+      "id": "hKj0wfbD85aXLHlGHu0U",
+      "bus": "A5046",
+      "desc": "Non c'è modo di chiudere la mandata di aria dalle bocchette del cruscotto",
+      "date": [
+        "2026-10-09"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-10T10:31:17.469Z",
+      "order": null
+    },
+    {
       "id": "hT7DcXcxovhwBlAwxk1k",
       "bus": "K1092",
       "desc": "Sbrinatore fuori servizio",
@@ -3386,7 +3432,8 @@
         "2026-07-18",
         "2026-07-22",
         "2026-09-17",
-        "2026-10-08"
+        "2026-10-08",
+        "2026-10-09"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -3576,7 +3623,8 @@
         "2025-10-17",
         "2025-11-08",
         "2026-09-01",
-        "2026-09-15"
+        "2026-09-15",
+        "2026-10-09"
       ],
       "stato": "aperta",
       "pregressa": true,
@@ -3624,6 +3672,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-22T16:05:10.648Z",
+      "order": null
+    },
+    {
+      "id": "nEb5TeZlPBLKPNGNKstU",
+      "bus": "K2131",
+      "desc": "Leva regolazione volante fuori servizio",
+      "date": [
+        "2026-10-09"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-10T10:26:58.144Z",
       "order": null
     },
     {
@@ -3696,6 +3758,20 @@
       "urgente": false,
       "createdAt": "2026-09-10T16:04:59.335Z",
       "order": 2
+    },
+    {
+      "id": "oB54Sl3EbEIAC90E5QTf",
+      "bus": "K2131",
+      "desc": "Manca il fermo di gomma porta abitacolo",
+      "date": [
+        "2026-10-09"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-10T10:27:47.700Z",
+      "order": null
     },
     {
       "id": "oLfSI5xvr25tMeVMRdFp",
@@ -3788,6 +3864,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-25T16:24:00.525Z",
+      "order": null
+    },
+    {
+      "id": "pv2WISCpjt4naVxhFJdC",
+      "bus": "A5046",
+      "desc": "Aria fredda da sbrinatore e riscaldamento",
+      "date": [
+        "2026-10-09"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-10T10:29:31.770Z",
       "order": null
     },
     {
@@ -4251,7 +4341,9 @@
         "2026-10-07",
         "2026-10-07",
         "2026-10-08",
-        "2026-10-08"
+        "2026-10-08",
+        "2026-10-10",
+        "2026-10-10"
       ],
       "stato": "aperta",
       "pregressa": false,
