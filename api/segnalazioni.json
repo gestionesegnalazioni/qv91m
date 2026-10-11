@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-10-11T01:10:28.996Z",
-  "numeroSegnalazioni": 256,
+  "aggiornatoIl": "2026-10-11T07:14:25.518Z",
+  "numeroSegnalazioni": 257,
   "segnalazioni": [
     {
       "id": "1TrRqez4bvkT038FDI5d",
@@ -133,7 +133,8 @@
         "2026-08-07",
         "2026-09-29",
         "2026-10-01",
-        "2026-10-05"
+        "2026-10-05",
+        "2026-10-09"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -2906,10 +2907,11 @@
       "bus": "A5046",
       "desc": "Il sedile si abbassa e si rialza di continuo",
       "date": [
-        "2026-10-02"
+        "2026-10-02",
+        "2026-10-10"
       ],
       "stato": "aperta",
-      "pregressa": true,
+      "pregressa": false,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-10-02T16:45:11.282Z",
@@ -3223,7 +3225,8 @@
       "bus": "A5046",
       "desc": "Non c'è modo di chiudere la mandata di aria dalle bocchette del cruscotto",
       "date": [
-        "2026-10-09"
+        "2026-10-09",
+        "2026-10-10"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -3871,7 +3874,8 @@
       "bus": "A5046",
       "desc": "Aria fredda da sbrinatore e riscaldamento",
       "date": [
-        "2026-10-09"
+        "2026-10-09",
+        "2026-10-10"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -4107,6 +4111,18 @@
       "order": 1
     },
     {
+      "id": "saF1szelLBo793ia1GGM",
+      "bus": "K2093",
+      "desc": "Posizione post dx fuori servizio",
+      "date": [],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-11T07:10:52.074Z",
+      "order": null
+    },
+    {
       "id": "slq4Wnyy8bJ1oE5Rxu0C",
       "bus": "A5122",
       "desc": "Malfunzionamento impianto di climatizzazione",
@@ -4158,9 +4174,10 @@
       "bus": "K3089",
       "desc": "Quando si richiudono le porte salta la marcia",
       "date": [
+        "2026-09-29",
         "2026-10-01",
         "2026-10-05",
-        "2029-09-29"
+        "2026-10-09"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -4369,7 +4386,8 @@
         "2026-09-28",
         "2026-09-29",
         "2026-10-01",
-        "2026-10-05"
+        "2026-10-05",
+        "2026-10-09"
       ],
       "stato": "aperta",
       "pregressa": false,
