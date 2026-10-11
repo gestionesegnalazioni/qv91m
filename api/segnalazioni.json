@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-10-11T18:54:55.314Z",
-  "numeroSegnalazioni": 261,
+  "aggiornatoIl": "2026-10-11T22:43:20.893Z",
+  "numeroSegnalazioni": 262,
   "segnalazioni": [
     {
       "id": "0ekhPDoB5tW9NAgE8KpC",
@@ -623,7 +623,8 @@
       "bus": "A4097",
       "desc": "Riscaldamento e sbrinatore fuori servizio",
       "date": [
-        "2026-09-23"
+        "2026-09-23",
+        "2026-09-24"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -942,7 +943,7 @@
         "2026-09-25"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-25T16:37:01.551Z",
@@ -1476,7 +1477,8 @@
       "bus": "A5154",
       "desc": "Porta centrale sfrenata",
       "date": [
-        "2026-08-28"
+        "2026-08-28",
+        "2026-10-09"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -1897,7 +1899,9 @@
         "2026-08-07",
         "2026-08-11",
         "2026-09-07",
-        "2026-09-28"
+        "2026-09-28",
+        "2026-09-29",
+        "2026-10-01"
       ],
       "stato": "aperta",
       "pregressa": true,
@@ -2020,6 +2024,22 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-11T17:38:23.857Z",
+      "order": null
+    },
+    {
+      "id": "R7w6ZzNnyzOKS4h8u4Rs",
+      "bus": "A5116",
+      "desc": "Plurimus fuori servizio",
+      "date": [
+        "2026-10-06",
+        "2026-10-09",
+        "2026-10-10"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-11T21:19:29.483Z",
       "order": null
     },
     {
@@ -2811,7 +2831,9 @@
       "bus": "K4121",
       "desc": "Spia ABS",
       "date": [
-        "2026-07-31"
+        "2026-07-31",
+        "2026-10-03",
+        "2026-10-10"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -3116,7 +3138,12 @@
         "2026-09-03",
         "2026-09-04",
         "2026-09-05",
-        "2026-09-07"
+        "2026-09-07",
+        "2026-09-21",
+        "2026-09-23",
+        "2026-09-29",
+        "2026-09-29",
+        "2026-10-10"
       ],
       "stato": "aperta",
       "pregressa": true,
@@ -3179,7 +3206,7 @@
         "2026-10-06"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-10-06T19:33:35.957Z",
@@ -3792,6 +3819,10 @@
       "date": [
         "2026-09-28",
         "2026-09-28",
+        "2026-09-29",
+        "2026-09-29",
+        "2026-09-30",
+        "2026-10-01",
         "2026-10-06"
       ],
       "stato": "aperta",
@@ -4433,7 +4464,8 @@
         "2026-10-08",
         "2026-10-08",
         "2026-10-10",
-        "2026-10-10"
+        "2026-10-10",
+        "2026-10-11"
       ],
       "stato": "aperta",
       "pregressa": false,
