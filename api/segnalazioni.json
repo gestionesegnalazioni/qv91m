@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-10-11T07:14:25.518Z",
-  "numeroSegnalazioni": 257,
+  "aggiornatoIl": "2026-10-11T14:09:05.639Z",
+  "numeroSegnalazioni": 258,
   "segnalazioni": [
     {
       "id": "1TrRqez4bvkT038FDI5d",
@@ -134,7 +134,8 @@
         "2026-09-29",
         "2026-10-01",
         "2026-10-05",
-        "2026-10-09"
+        "2026-10-09",
+        "2026-10-10"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -2363,10 +2364,11 @@
     {
       "id": "X54V91vi8cIN1S9VfNoR",
       "bus": "K1105",
-      "desc": "Sbrinatore fuori servizio",
+      "desc": "Malfunzionamento sbrinatore e riscaldamento",
       "date": [
         "2026-09-17",
-        "2026-09-19"
+        "2026-09-19",
+        "2026-10-10"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -2896,7 +2898,7 @@
         "2026-10-05"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-10-06T19:21:33.829Z",
@@ -3549,6 +3551,20 @@
       "order": null
     },
     {
+      "id": "lAKT1XoJ16buKnpUoskj",
+      "bus": "K3089",
+      "desc": "Luce autista fuori servizio",
+      "date": [
+        "2026-10-10"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-11T07:26:41.368Z",
+      "order": null
+    },
+    {
       "id": "lJj8YuMilJkSFZpIpa9u",
       "bus": "K2093",
       "desc": "Telecamera retromarcia fuori servizio",
@@ -3682,7 +3698,8 @@
       "bus": "K2131",
       "desc": "Leva regolazione volante fuori servizio",
       "date": [
-        "2026-10-09"
+        "2026-10-09",
+        "2026-10-10"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -3767,7 +3784,8 @@
       "bus": "K2131",
       "desc": "Manca il fermo di gomma porta abitacolo",
       "date": [
-        "2026-10-09"
+        "2026-10-09",
+        "2026-10-10"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -4172,12 +4190,13 @@
     {
       "id": "u3kqYNAGXxNPResumyj8",
       "bus": "K3089",
-      "desc": "Quando si richiudono le porte salta la marcia",
+      "desc": "Guasto cambio, quando si richiudono le porte salta la marcia",
       "date": [
         "2026-09-29",
         "2026-10-01",
         "2026-10-05",
-        "2026-10-09"
+        "2026-10-09",
+        "2026-10-10"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -4387,7 +4406,8 @@
         "2026-09-29",
         "2026-10-01",
         "2026-10-05",
-        "2026-10-09"
+        "2026-10-09",
+        "2026-10-10"
       ],
       "stato": "aperta",
       "pregressa": false,
