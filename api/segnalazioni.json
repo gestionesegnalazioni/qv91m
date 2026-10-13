@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-10-13T07:03:03.453Z",
-  "numeroSegnalazioni": 262,
+  "aggiornatoIl": "2026-10-13T14:58:16.246Z",
+  "numeroSegnalazioni": 263,
   "segnalazioni": [
     {
       "id": "0ekhPDoB5tW9NAgE8KpC",
@@ -290,10 +290,12 @@
     {
       "id": "411Jz4wsyYaV2oV6JlMV",
       "bus": "A5063",
-      "desc": "Spia punto esclamativo e spia stabilità",
-      "date": [],
+      "desc": "Spia slittamento e spia freni (punto esclamativo)",
+      "date": [
+        "2026-10-12"
+      ],
       "stato": "aperta",
-      "pregressa": true,
+      "pregressa": false,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-07-13T10:16:57.068Z",
@@ -1433,7 +1435,7 @@
         "2026-08-28"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-28T17:42:29.823Z",
@@ -1481,7 +1483,7 @@
         "2026-10-09"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-28T17:43:00.433Z",
@@ -1684,7 +1686,7 @@
         "2026-09-17"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-25T16:19:35.130Z",
@@ -3191,7 +3193,8 @@
       "bus": "K2095",
       "desc": "Non sempre si riesce a regolare i retrovisori",
       "date": [
-        "2026-09-22"
+        "2026-09-22",
+        "2026-09-29"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -3212,6 +3215,22 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-10-06T19:33:35.957Z",
+      "order": null
+    },
+    {
+      "id": "gZq47Uqp2h9ltWPyQjKZ",
+      "bus": "A5154",
+      "desc": "Maniglia porta abitacolo rotta",
+      "date": [
+        "2026-10-12",
+        "2026-10-13",
+        "2026-10-13"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-13T13:17:06.632Z",
       "order": null
     },
     {
@@ -4041,7 +4060,8 @@
         "2026-09-28",
         "2026-09-29",
         "2026-10-09",
-        "2026-10-11"
+        "2026-10-11",
+        "2026-10-13"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -4469,7 +4489,9 @@
         "2026-10-08",
         "2026-10-10",
         "2026-10-10",
-        "2026-10-11"
+        "2026-10-11",
+        "2026-10-12",
+        "2026-10-13"
       ],
       "stato": "aperta",
       "pregressa": false,
