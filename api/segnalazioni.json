@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-10-15T05:02:24.222Z",
-  "numeroSegnalazioni": 263,
+  "aggiornatoIl": "2026-10-15T09:48:50.651Z",
+  "numeroSegnalazioni": 264,
   "segnalazioni": [
     {
       "id": "0ekhPDoB5tW9NAgE8KpC",
@@ -379,9 +379,10 @@
     {
       "id": "4lgc1BdP4V3i49CvxCxH",
       "bus": "K2130",
-      "desc": "Specchio retrovisore dx non si regola",
+      "desc": "Specchio retrovisore dx non tiene la posizione",
       "date": [
-        "2026-09-07"
+        "2026-09-07",
+        "2026-10-14"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -614,7 +615,7 @@
         "2026-09-30"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-30T15:55:57.759Z",
@@ -1822,6 +1823,20 @@
       "order": null
     },
     {
+      "id": "OczwW9CHFNrK4KX9u6sI",
+      "bus": "K1043",
+      "desc": "Spia airbag",
+      "date": [
+        "2026-10-14"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-15T07:10:57.112Z",
+      "order": null
+    },
+    {
       "id": "PLGIHeZrcEOe83wMOshl",
       "bus": "A5121",
       "desc": "Spia anomalia porta",
@@ -2749,7 +2764,8 @@
       "bus": "K1043",
       "desc": "Pomello cambio si stacca",
       "date": [
-        "2026-09-30"
+        "2026-09-30",
+        "2026-10-14"
       ],
       "stato": "aperta",
       "pregressa": false,
