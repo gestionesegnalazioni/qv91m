@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-10-16T20:05:58.888Z",
-  "numeroSegnalazioni": 266,
+  "aggiornatoIl": "2026-10-16T22:48:44.323Z",
+  "numeroSegnalazioni": 267,
   "segnalazioni": [
     {
       "id": "0ekhPDoB5tW9NAgE8KpC",
@@ -1196,6 +1196,20 @@
       "urgente": false,
       "createdAt": "2026-07-20T17:12:19.828Z",
       "order": 0
+    },
+    {
+      "id": "HlTGR6uxlosX1Sv5jBti",
+      "bus": "A5115",
+      "desc": "La tendina parasole non si blocca",
+      "date": [
+        "2026-10-16"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-16T22:27:16.917Z",
+      "order": null
     },
     {
       "id": "Hy820a8PKeZaqf49yC1S",
