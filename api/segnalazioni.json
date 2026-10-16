@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-10-16T03:49:44.724Z",
-  "numeroSegnalazioni": 264,
+  "aggiornatoIl": "2026-10-16T08:34:06.823Z",
+  "numeroSegnalazioni": 266,
   "segnalazioni": [
     {
       "id": "0ekhPDoB5tW9NAgE8KpC",
@@ -3838,6 +3838,20 @@
       "order": null
     },
     {
+      "id": "nOKKKqNrow2M7QZ9vR1A",
+      "bus": "A5058",
+      "desc": "Caduto pannello dal corridoio",
+      "date": [
+        "2026-10-15"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-16T07:39:01.118Z",
+      "order": null
+    },
+    {
       "id": "nxpQz8dhSTOIkM2OSI63",
       "bus": "A5155",
       "desc": "Rivestimento in plastica aggancio cintura rotto, con parti sporgenti. Pericolo di lesioni",
@@ -4629,6 +4643,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-28T18:16:46.095Z",
+      "order": null
+    },
+    {
+      "id": "yM6rXwiHBqezBEtR95de",
+      "bus": "A5058",
+      "desc": "Malfunzionamento sbrinatore e riscaldamento",
+      "date": [
+        "2026-10-15"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-16T07:38:27.683Z",
       "order": null
     },
     {
