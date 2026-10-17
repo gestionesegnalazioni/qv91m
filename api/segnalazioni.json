@@ -1,5 +1,5 @@
 {
-  "aggiornatoIl": "2026-10-17T09:23:45.854Z",
+  "aggiornatoIl": "2026-10-17T13:05:15.712Z",
   "numeroSegnalazioni": 267,
   "segnalazioni": [
     {
@@ -929,7 +929,8 @@
         "2026-10-02",
         "2026-10-07",
         "2026-10-09",
-        "2026-10-10"
+        "2026-10-10",
+        "2026-10-17"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -2681,7 +2682,7 @@
         "2026-10-10"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-10-07T20:29:24.965Z",
@@ -4030,7 +4031,9 @@
       "desc": "Aria fredda da sbrinatore e riscaldamento",
       "date": [
         "2026-10-09",
-        "2026-10-10"
+        "2026-10-10",
+        "2026-10-14",
+        "2026-10-15"
       ],
       "stato": "aperta",
       "pregressa": false,
