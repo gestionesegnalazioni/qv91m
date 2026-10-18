@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-10-18T05:41:26.273Z",
-  "numeroSegnalazioni": 267,
+  "aggiornatoIl": "2026-10-18T09:55:11.881Z",
+  "numeroSegnalazioni": 270,
   "segnalazioni": [
     {
       "id": "0ekhPDoB5tW9NAgE8KpC",
@@ -3867,6 +3867,20 @@
       "order": null
     },
     {
+      "id": "nYJ7w8eKXkXWUhelU2BR",
+      "bus": "L2912",
+      "desc": "Entrambi i retrovisori non si regolano orizzontalmente",
+      "date": [
+        "2026-10-17"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-18T07:02:35.072Z",
+      "order": null
+    },
+    {
       "id": "nxpQz8dhSTOIkM2OSI63",
       "bus": "A5155",
       "desc": "Rivestimento in plastica aggancio cintura rotto, con parti sporgenti. Pericolo di lesioni",
@@ -4380,6 +4394,20 @@
       "order": null
     },
     {
+      "id": "v1yF6rIxVrAGGO5v7B4E",
+      "bus": "A5115",
+      "desc": "Sterzo piuttosto duro",
+      "date": [
+        "2026-10-17"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-18T07:03:35.874Z",
+      "order": null
+    },
+    {
       "id": "vdCfnm7DBnTzYFmAShTX",
       "bus": "A5116",
       "desc": "Spia motore",
@@ -4634,6 +4662,20 @@
       "urgente": false,
       "createdAt": "2026-09-08T06:54:56.273Z",
       "order": 1
+    },
+    {
+      "id": "y31GSiNExwppOdJf5WwP",
+      "bus": "L2912",
+      "desc": "Perdita gasolio",
+      "date": [
+        "2026-10-17"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-18T07:02:55.715Z",
+      "order": null
     },
     {
       "id": "yANaTCckIo8gBmugIknm",
