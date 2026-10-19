@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-10-19T14:34:52.378Z",
-  "numeroSegnalazioni": 271,
+  "aggiornatoIl": "2026-10-19T20:11:09.755Z",
+  "numeroSegnalazioni": 272,
   "segnalazioni": [
     {
       "id": "0ekhPDoB5tW9NAgE8KpC",
@@ -563,6 +563,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-07-01T18:38:05.770Z",
+      "order": null
+    },
+    {
+      "id": "6D8uBYW7tbIvgeY4Ryfv",
+      "bus": "A5120",
+      "desc": "La tendina parasole non tiene la posizione",
+      "date": [
+        "2026-10-19"
+      ],
+      "stato": "aperta",
+      "pregressa": true,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-19T16:15:13.547Z",
       "order": null
     },
     {
