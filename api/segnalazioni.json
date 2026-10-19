@@ -1,5 +1,5 @@
 {
-  "aggiornatoIl": "2026-10-19T01:46:21.683Z",
+  "aggiornatoIl": "2026-10-19T06:58:07.629Z",
   "numeroSegnalazioni": 271,
   "segnalazioni": [
     {
@@ -930,7 +930,8 @@
         "2026-10-07",
         "2026-10-09",
         "2026-10-10",
-        "2026-10-17"
+        "2026-10-17",
+        "2026-10-19"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -2771,7 +2772,7 @@
         "2026-10-09"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-10-10T10:30:30.280Z",
@@ -3004,7 +3005,8 @@
       "desc": "Il sedile si abbassa e si rialza di continuo",
       "date": [
         "2026-10-02",
-        "2026-10-10"
+        "2026-10-10",
+        "2026-10-19"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -3347,7 +3349,7 @@
         "2026-10-10"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-10-10T10:31:17.469Z",
@@ -4067,7 +4069,8 @@
         "2026-10-10",
         "2026-10-14",
         "2026-10-15",
-        "2026-10-17"
+        "2026-10-17",
+        "2026-10-19"
       ],
       "stato": "aperta",
       "pregressa": false,
