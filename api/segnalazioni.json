@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-10-24T10:08:18.675Z",
-  "numeroSegnalazioni": 273,
+  "aggiornatoIl": "2026-10-24T14:00:33.207Z",
+  "numeroSegnalazioni": 274,
   "segnalazioni": [
     {
       "id": "0ekhPDoB5tW9NAgE8KpC",
@@ -2560,6 +2560,20 @@
       "order": null
     },
     {
+      "id": "XmJUEpCjEbBVnK8QBHZr",
+      "bus": "A5137",
+      "desc": "Retrovisore dx nn si regola lateralmente",
+      "date": [
+        "2026-10-24"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-24T12:25:22.729Z",
+      "order": null
+    },
+    {
       "id": "XrJpjqFycuilU77r84YS",
       "bus": "A5153",
       "desc": "Nel plurimus frontale non compare il numero di linea",
@@ -3572,7 +3586,7 @@
         "2026-09-24"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": true,
       "createdAt": "2026-07-09T21:57:56.729Z",
