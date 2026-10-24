@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-10-24T19:38:33.961Z",
-  "numeroSegnalazioni": 274,
+  "aggiornatoIl": "2026-10-24T21:54:37.557Z",
+  "numeroSegnalazioni": 276,
   "segnalazioni": [
     {
       "id": "0ekhPDoB5tW9NAgE8KpC",
@@ -644,7 +644,7 @@
         "2026-09-24"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-25T16:20:30.647Z",
@@ -692,6 +692,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-06-15T07:16:04.105Z",
+      "order": null
+    },
+    {
+      "id": "8GXW7LoX3Nt0H6mEfUIJ",
+      "bus": "A5123",
+      "desc": "Indicatore di direzione laterale sx fuori servizio",
+      "date": [
+        "2026-10-24"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-24T20:02:51.110Z",
       "order": null
     },
     {
@@ -945,7 +959,8 @@
         "2026-10-09",
         "2026-10-10",
         "2026-10-17",
-        "2026-10-19"
+        "2026-10-19",
+        "2026-10-21"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -1857,7 +1872,8 @@
       "bus": "K1043",
       "desc": "Spia airbag",
       "date": [
-        "2026-10-14"
+        "2026-10-14",
+        "2026-10-21"
       ],
       "stato": "aperta",
       "pregressa": true,
@@ -2242,7 +2258,7 @@
         "2026-10-09"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-26T16:08:12.699Z",
@@ -3545,6 +3561,20 @@
       "order": 0
     },
     {
+      "id": "k34Y46Ns9p2dINpYdh4D",
+      "bus": "K1043",
+      "desc": "Entrambi i retrovisori non si regolano",
+      "date": [
+        "2026-10-21"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-24T20:01:34.193Z",
+      "order": null
+    },
+    {
       "id": "kNgR0j8xLTwkXB3ch7LV",
       "bus": "A5137",
       "desc": "Spia rossa gomme + segnale acustico di pericolo",
@@ -4115,6 +4145,7 @@
         "2026-10-15",
         "2026-10-17",
         "2026-10-19",
+        "2026-10-21",
         "2026-10-22",
         "2026-10-23",
         "2026-10-24"
