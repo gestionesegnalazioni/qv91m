@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-10-25T13:48:54.346Z",
-  "numeroSegnalazioni": 276,
+  "aggiornatoIl": "2026-10-25T17:16:40.989Z",
+  "numeroSegnalazioni": 277,
   "segnalazioni": [
     {
       "id": "0ekhPDoB5tW9NAgE8KpC",
@@ -1485,6 +1485,21 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-28T17:42:29.823Z",
+      "order": null
+    },
+    {
+      "id": "KgejgSMLClBQJiIcPllB",
+      "bus": "A5149",
+      "desc": "Il braccio rotto della tenda parasole copre retrovisore dx, visibilità limitata",
+      "date": [
+        "2026-10-25",
+        "2026-10-25"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-25T16:03:06.055Z",
       "order": null
     },
     {
