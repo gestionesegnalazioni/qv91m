@@ -1,5 +1,5 @@
 {
-  "aggiornatoIl": "2026-10-25T17:16:40.989Z",
+  "aggiornatoIl": "2026-10-25T19:45:35.691Z",
   "numeroSegnalazioni": 277,
   "segnalazioni": [
     {
@@ -1492,6 +1492,8 @@
       "bus": "A5149",
       "desc": "Il braccio rotto della tenda parasole copre retrovisore dx, visibilità limitata",
       "date": [
+        "2026-09-29",
+        "2026-10-13",
         "2026-10-25",
         "2026-10-25"
       ],
