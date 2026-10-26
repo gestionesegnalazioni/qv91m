@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-10-26T05:01:19.952Z",
-  "numeroSegnalazioni": 277,
+  "aggiornatoIl": "2026-10-26T10:59:21.447Z",
+  "numeroSegnalazioni": 281,
   "segnalazioni": [
     {
       "id": "0ekhPDoB5tW9NAgE8KpC",
@@ -1900,6 +1900,20 @@
       "order": null
     },
     {
+      "id": "P8TaxGoxTevZoKFOq13R",
+      "bus": "K2092",
+      "desc": "Aria fredda da sbrinatore e riscaldamento",
+      "date": [
+        "2026-10-26"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-26T08:14:16.425Z",
+      "order": null
+    },
+    {
       "id": "PLGIHeZrcEOe83wMOshl",
       "bus": "A5121",
       "desc": "Spia anomalia porta",
@@ -2260,7 +2274,7 @@
         "2026-09-11"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-07T07:59:39.110Z",
@@ -2478,7 +2492,7 @@
         "2026-09-19"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-18T16:17:13.355Z",
@@ -2522,7 +2536,7 @@
         "2026-10-10"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-18T16:16:44.783Z",
@@ -3143,6 +3157,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-07-12T00:34:46.654Z",
+      "order": null
+    },
+    {
+      "id": "e8GzQLrfOMgR2J5GDxn9",
+      "bus": "K2092",
+      "desc": "Sedile autista rumoroso e con continui sobbalzi",
+      "date": [
+        "2026-10-26"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-26T08:02:10.026Z",
       "order": null
     },
     {
@@ -4255,6 +4283,18 @@
       "order": 0
     },
     {
+      "id": "qPiHUPhe2FO7Uj7DO7W3",
+      "bus": "A5118",
+      "desc": "Rotto cavo tenda parasole",
+      "date": [],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-26T07:04:39.325Z",
+      "order": null
+    },
+    {
       "id": "qRgFWHmAgg8k5eob8WT7",
       "bus": "A4098",
       "desc": "Sospensioni ant scariche",
@@ -4446,6 +4486,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-07-28T18:24:36.008Z",
+      "order": null
+    },
+    {
+      "id": "tDC3jYhnSYKubknS14wr",
+      "bus": "K1109",
+      "desc": "Aria fredda da sbrinatore e riscaldamento",
+      "date": [
+        "2026-10-26"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-26T06:52:15.200Z",
       "order": null
     },
     {
