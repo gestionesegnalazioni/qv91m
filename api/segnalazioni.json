@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-10-26T10:59:21.447Z",
-  "numeroSegnalazioni": 281,
+  "aggiornatoIl": "2026-10-26T17:16:49.802Z",
+  "numeroSegnalazioni": 283,
   "segnalazioni": [
     {
       "id": "0ekhPDoB5tW9NAgE8KpC",
@@ -1129,6 +1129,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-28T17:44:23.073Z",
+      "order": null
+    },
+    {
+      "id": "FcdTgiUmSzvPX8FhcnCa",
+      "bus": "K2130",
+      "desc": "Clima in blocco",
+      "date": [
+        "2026-10-26"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-26T16:45:18.279Z",
       "order": null
     },
     {
@@ -2900,6 +2914,20 @@
       "order": null
     },
     {
+      "id": "bBkuh66ORWeUegWwnD2A",
+      "bus": "A4098",
+      "desc": "Spia rossa FAP",
+      "date": [
+        "2026-10-26"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-26T16:47:48.094Z",
+      "order": null
+    },
+    {
       "id": "bCmRyhQDT2xBfltKVzOh",
       "bus": "K1106",
       "desc": "Spia livello acqua",
@@ -3289,7 +3317,8 @@
         "2026-09-23",
         "2026-09-29",
         "2026-09-29",
-        "2026-10-10"
+        "2026-10-10",
+        "2026-10-26"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -4286,7 +4315,10 @@
       "id": "qPiHUPhe2FO7Uj7DO7W3",
       "bus": "A5118",
       "desc": "Rotto cavo tenda parasole",
-      "date": [],
+      "date": [
+        "2026-10-20",
+        "2026-10-26"
+      ],
       "stato": "aperta",
       "pregressa": false,
       "standby": false,
@@ -4311,7 +4343,8 @@
         "2026-09-25",
         "2026-09-26",
         "2026-09-27",
-        "2026-09-28"
+        "2026-09-28",
+        "2026-10-26"
       ],
       "stato": "aperta",
       "pregressa": false,
