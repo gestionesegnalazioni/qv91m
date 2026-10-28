@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-10-28T06:12:12.959Z",
-  "numeroSegnalazioni": 283,
+  "aggiornatoIl": "2026-10-28T13:03:18.293Z",
+  "numeroSegnalazioni": 284,
   "segnalazioni": [
     {
       "id": "0ekhPDoB5tW9NAgE8KpC",
@@ -2308,6 +2308,18 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-26T16:08:12.699Z",
+      "order": null
+    },
+    {
+      "id": "TeYJry3Kozh4kmsVvcqJ",
+      "bus": "K2125",
+      "desc": "Clima in blocco",
+      "date": [],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-28T08:21:50.236Z",
       "order": null
     },
     {
