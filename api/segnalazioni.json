@@ -1,5 +1,5 @@
 {
-  "aggiornatoIl": "2026-10-29T02:08:34.094Z",
+  "aggiornatoIl": "2026-10-29T08:28:11.547Z",
   "numeroSegnalazioni": 284,
   "segnalazioni": [
     {
@@ -2638,7 +2638,8 @@
       "bus": "A5137",
       "desc": "Retrovisore dx nn si regola lateralmente",
       "date": [
-        "2026-10-24"
+        "2026-10-24",
+        "2026-10-29"
       ],
       "stato": "aperta",
       "pregressa": false,
