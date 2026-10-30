@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-10-29T20:30:06.576Z",
-  "numeroSegnalazioni": 284,
+  "aggiornatoIl": "2026-10-30T00:14:57.983Z",
+  "numeroSegnalazioni": 286,
   "segnalazioni": [
     {
       "id": "0ekhPDoB5tW9NAgE8KpC",
@@ -869,6 +869,20 @@
       "urgente": false,
       "createdAt": "2026-07-25T18:18:27.083Z",
       "order": 2
+    },
+    {
+      "id": "BGZbvQ2hPba8zT78ooyB",
+      "bus": "A5155",
+      "desc": "Spia rossa gomme",
+      "date": [
+        "2026-10-29"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-29T20:37:17.892Z",
+      "order": null
     },
     {
       "id": "BJMVLK9iVIXDAWLDB9b1",
@@ -3258,6 +3272,20 @@
       "order": null
     },
     {
+      "id": "eWxhVbyad9z4AYNS7OT3",
+      "bus": "A5155",
+      "desc": "Spie gas di scarico e potenza motore",
+      "date": [
+        "2026-10-28"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-10-29T20:41:32.172Z",
+      "order": null
+    },
+    {
       "id": "f3xhMFM6mSmmRjFjVph6",
       "bus": "A4149",
       "desc": "Leva sedile autista",
@@ -4543,7 +4571,8 @@
       "desc": "Aria fredda da sbrinatore e riscaldamento",
       "date": [
         "2026-10-26",
-        "2026-10-28"
+        "2026-10-28",
+        "2026-10-29"
       ],
       "stato": "aperta",
       "pregressa": false,
