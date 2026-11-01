@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-11-01T13:47:27.181Z",
-  "numeroSegnalazioni": 287,
+  "aggiornatoIl": "2026-11-01T18:37:42.010Z",
+  "numeroSegnalazioni": 291,
   "segnalazioni": [
     {
       "id": "0ekhPDoB5tW9NAgE8KpC",
@@ -10,7 +10,7 @@
         "2026-10-07"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-10-11T15:06:07.826Z",
@@ -450,6 +450,20 @@
       "order": null
     },
     {
+      "id": "5OlwQ0CZuYN9blMVjtrB",
+      "bus": "A5122",
+      "desc": "Il volante tira a dx",
+      "date": [
+        "2026-10-31"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-01T14:45:08.015Z",
+      "order": null
+    },
+    {
       "id": "5OwpzLwj5aX18qxCnLmJ",
       "bus": "A5121",
       "desc": "Malfunzionamento impianto di climatizzazione",
@@ -587,7 +601,7 @@
         "2026-09-20"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-10-11T15:11:33.970Z",
@@ -1024,6 +1038,20 @@
       "order": null
     },
     {
+      "id": "CleKZPXghJLqAiabUuT8",
+      "bus": "K4121",
+      "desc": "Sopra i 50 km orari lo sterzo vibra",
+      "date": [
+        "2026-10-31"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-01T14:47:04.881Z",
+      "order": null
+    },
+    {
       "id": "CmXEaUf677Mv0HrEehnv",
       "bus": "A5045",
       "desc": "In fase di chiusura a volte le porte si riaprono",
@@ -1230,7 +1258,8 @@
       "bus": "K4121",
       "desc": "Entrambi i retrovisori non si regolano",
       "date": [
-        "2026-07-18"
+        "2026-07-18",
+        "2026-10-31"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -1524,7 +1553,8 @@
         "2026-09-29",
         "2026-10-13",
         "2026-10-25",
-        "2026-10-25"
+        "2026-10-25",
+        "2026-11-01"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -1591,7 +1621,7 @@
         "2026-10-12"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-15T16:32:34.547Z",
@@ -2328,13 +2358,15 @@
       "id": "TeYJry3Kozh4kmsVvcqJ",
       "bus": "K2125",
       "desc": "Clima in blocco",
-      "date": [],
+      "date": [
+        "2026-10-31"
+      ],
       "stato": "aperta",
       "pregressa": false,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-10-28T08:21:50.236Z",
-      "order": null
+      "order": 0
     },
     {
       "id": "UCBthLiENn8Qc6YcHAS6",
@@ -2415,7 +2447,7 @@
         "2026-09-15"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-06-12T10:09:28.353Z",
@@ -2565,6 +2597,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-05T17:49:53.690Z",
+      "order": null
+    },
+    {
+      "id": "WuBP8IwUqKU8TFEv4A0N",
+      "bus": "A4190",
+      "desc": "Aria fredda da riscaldamento e sbrinatore",
+      "date": [
+        "2026-10-31"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-01T14:54:17.703Z",
       "order": null
     },
     {
@@ -3035,7 +3081,7 @@
         "2026-10-10"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-08T14:48:20.791Z",
@@ -3071,6 +3117,20 @@
       "urgente": false,
       "createdAt": "2026-08-26T16:13:37.669Z",
       "order": null
+    },
+    {
+      "id": "caOf4XQ5wGYnxNehKRPp",
+      "bus": "K2125",
+      "desc": "Spia motore",
+      "date": [
+        "2026-10-31"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-01T14:48:41.467Z",
+      "order": 1
     },
     {
       "id": "ceztdiMwYgT9YbJWeRvZ",
@@ -3252,7 +3312,7 @@
         "2026-09-15"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-15T16:32:55.090Z",
@@ -3288,7 +3348,8 @@
       "bus": "A5155",
       "desc": "Spie gas di scarico e potenza motore",
       "date": [
-        "2026-10-28"
+        "2026-10-28",
+        "2026-10-30"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -3684,7 +3745,7 @@
         "2026-09-15"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-06-12T10:30:46.093Z",
@@ -4225,14 +4286,15 @@
       "bus": "K2125",
       "desc": "Retrovisore destro non si regola verticalmente",
       "date": [
-        "2026-09-16"
+        "2026-09-16",
+        "2026-10-31"
       ],
       "stato": "aperta",
       "pregressa": false,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-16T07:09:55.329Z",
-      "order": null
+      "order": 2
     },
     {
       "id": "pKRsbjMQ7p8gnmGEG2kW",
@@ -4670,7 +4732,9 @@
       "bus": "A5115",
       "desc": "Sterzo piuttosto duro",
       "date": [
-        "2026-10-17"
+        "2026-10-17",
+        "2026-10-19",
+        "2026-10-31"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -5049,7 +5113,7 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-05T08:06:03.704Z",
-      "order": null
+      "order": 3
     },
     {
       "id": "yqqv0eX8hPPrKj03apgD",
