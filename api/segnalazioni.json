@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-11-02T08:23:16.599Z",
-  "numeroSegnalazioni": 291,
+  "aggiornatoIl": "2026-11-02T18:40:20.317Z",
+  "numeroSegnalazioni": 292,
   "segnalazioni": [
     {
       "id": "0ekhPDoB5tW9NAgE8KpC",
@@ -2606,7 +2606,8 @@
       "bus": "A4190",
       "desc": "Aria fredda da riscaldamento e sbrinatore",
       "date": [
-        "2026-10-31"
+        "2026-10-31",
+        "2026-11-02"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -3445,6 +3446,21 @@
       "urgente": false,
       "createdAt": "2026-07-02T22:20:59.336Z",
       "order": 0
+    },
+    {
+      "id": "fovvKQWbzE3rgcC2xR7X",
+      "bus": "K3143",
+      "desc": "Aria fredda sbrinatore e riscaldamento",
+      "date": [
+        "2026-10-27",
+        "2026-11-02"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-02T08:41:43.192Z",
+      "order": null
     },
     {
       "id": "fqHfOwpVcjvcFSN3tvY3",
