@@ -1,5 +1,5 @@
 {
-  "aggiornatoIl": "2026-11-01T22:26:24.553Z",
+  "aggiornatoIl": "2026-11-02T01:44:15.716Z",
   "numeroSegnalazioni": 291,
   "segnalazioni": [
     {
@@ -2359,6 +2359,8 @@
       "bus": "K2125",
       "desc": "Clima in blocco",
       "date": [
+        "2026-10-16",
+        "2026-10-28",
         "2026-10-31"
       ],
       "stato": "aperta",
