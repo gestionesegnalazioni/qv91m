@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-11-02T18:40:20.317Z",
-  "numeroSegnalazioni": 292,
+  "aggiornatoIl": "2026-11-03T01:18:36.544Z",
+  "numeroSegnalazioni": 297,
   "segnalazioni": [
     {
       "id": "0ekhPDoB5tW9NAgE8KpC",
@@ -785,6 +785,20 @@
       "order": null
     },
     {
+      "id": "9Ff7YtVnWWtjrkJT2hnu",
+      "bus": "K1130",
+      "desc": "Hill holder non disponibile",
+      "date": [
+        "2026-11-02"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-02T23:37:30.839Z",
+      "order": null
+    },
+    {
       "id": "9eHL0LF4LOaQWeYhMT1K",
       "bus": "K2125",
       "desc": "Aria condizionata insufficiente",
@@ -1009,6 +1023,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-25T16:37:01.551Z",
+      "order": null
+    },
+    {
+      "id": "Bo94ASNYikV45XdIrrwE",
+      "bus": "K1130",
+      "desc": "Spia ESP",
+      "date": [
+        "2026-11-02"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-02T23:38:06.973Z",
       "order": null
     },
     {
@@ -1354,7 +1382,7 @@
         "2026-09-08"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-08T17:40:46.685Z",
@@ -3144,7 +3172,7 @@
         "2026-09-26"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-25T16:38:08.507Z",
@@ -3359,6 +3387,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-10-29T20:41:32.172Z",
+      "order": null
+    },
+    {
+      "id": "en0Cvj2zutOFyXsa1OQR",
+      "bus": "K1130",
+      "desc": "Anomalia cambio",
+      "date": [
+        "2026-11-02"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-02T23:37:49.600Z",
       "order": null
     },
     {
@@ -4155,6 +4197,20 @@
       "order": null
     },
     {
+      "id": "nPvruFRUwFSoMaMyIWf5",
+      "bus": "K1130",
+      "desc": "Spia AEBS",
+      "date": [
+        "2026-11-02"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-02T23:36:54.821Z",
+      "order": null
+    },
+    {
       "id": "nYJ7w8eKXkXWUhelU2BR",
       "bus": "L2912",
       "desc": "Entrambi i retrovisori non si regolano orizzontalmente",
@@ -4498,6 +4554,20 @@
       "order": null
     },
     {
+      "id": "qfstmpnNfSKmbShWI05b",
+      "bus": "A5064",
+      "desc": "Spia motore",
+      "date": [
+        "2026-11-02"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-02T23:32:19.807Z",
+      "order": null
+    },
+    {
       "id": "qpKLJdwnVlux8teMZ5kH",
       "bus": "A5118",
       "desc": "Malfunzionamento bocchette autista",
@@ -4523,7 +4593,8 @@
         "2026-08-18",
         "2026-08-20",
         "2026-08-22",
-        "2026-08-24"
+        "2026-08-24",
+        "2026-11-02"
       ],
       "stato": "aperta",
       "pregressa": true,
@@ -4672,7 +4743,9 @@
       "date": [
         "2026-10-26",
         "2026-10-28",
-        "2026-10-29"
+        "2026-10-29",
+        "2026-11-02",
+        "2026-11-02"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -5228,7 +5301,8 @@
       "desc": "Spia motore",
       "date": [
         "2026-09-21",
-        "2026-09-23"
+        "2026-09-23",
+        "2026-11-02"
       ],
       "stato": "aperta",
       "pregressa": false,
