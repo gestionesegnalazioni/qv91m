@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-11-03T16:07:15.870Z",
-  "numeroSegnalazioni": 297,
+  "aggiornatoIl": "2026-11-03T21:45:35.473Z",
+  "numeroSegnalazioni": 299,
   "segnalazioni": [
     {
       "id": "0ekhPDoB5tW9NAgE8KpC",
@@ -389,6 +389,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-07T17:29:16.565Z",
+      "order": null
+    },
+    {
+      "id": "4pVouZaQV1zautikcvrL",
+      "bus": "K3140",
+      "desc": "Aria fredda da sbrinatore e riscaldamento",
+      "date": [
+        "2026-11-03"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-03T18:07:37.342Z",
       "order": null
     },
     {
@@ -789,7 +803,8 @@
       "bus": "K1130",
       "desc": "Hill holder non disponibile",
       "date": [
-        "2026-11-02"
+        "2026-11-02",
+        "2026-11-03"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -1030,7 +1045,8 @@
       "bus": "K1130",
       "desc": "Spia ESP",
       "date": [
-        "2026-11-02"
+        "2026-11-02",
+        "2026-11-03"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -1379,10 +1395,11 @@
       "bus": "K1130",
       "desc": "Spia sospensioni",
       "date": [
-        "2026-09-08"
+        "2026-09-08",
+        "2026-11-03"
       ],
       "stato": "aperta",
-      "pregressa": true,
+      "pregressa": false,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-08T17:40:46.685Z",
@@ -2474,7 +2491,8 @@
         "2026-07-21",
         "2026-09-04",
         "2026-09-05",
-        "2026-09-15"
+        "2026-09-15",
+        "2026-11-03"
       ],
       "stato": "aperta",
       "pregressa": true,
@@ -3394,7 +3412,8 @@
       "bus": "K1130",
       "desc": "Anomalia cambio",
       "date": [
-        "2026-11-02"
+        "2026-11-02",
+        "2026-11-03"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -4201,7 +4220,8 @@
       "bus": "K1130",
       "desc": "Spia AEBS",
       "date": [
-        "2026-11-02"
+        "2026-11-02",
+        "2026-11-03"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -4745,7 +4765,8 @@
         "2026-10-28",
         "2026-10-29",
         "2026-11-02",
-        "2026-11-02"
+        "2026-11-02",
+        "2026-11-03"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -5162,6 +5183,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-07-01T18:36:33.174Z",
+      "order": null
+    },
+    {
+      "id": "yO7HZuQ5MFjE0qskiKtB",
+      "bus": "K3136",
+      "desc": "In fase di chiusura la porta post si riapre",
+      "date": [
+        "2026-11-03"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-03T21:02:01.198Z",
       "order": null
     },
     {
