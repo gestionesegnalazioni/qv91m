@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-11-04T16:15:24.792Z",
-  "numeroSegnalazioni": 299,
+  "aggiornatoIl": "2026-11-04T21:58:08.229Z",
+  "numeroSegnalazioni": 300,
   "segnalazioni": [
     {
       "id": "0ekhPDoB5tW9NAgE8KpC",
@@ -846,6 +846,20 @@
       "urgente": false,
       "createdAt": "2026-09-04T15:28:07.623Z",
       "order": 2
+    },
+    {
+      "id": "AZ1XbOUOIAtgF4HiW4Ay",
+      "bus": "A4097",
+      "desc": "Entrambi i retrovisori non si regolano",
+      "date": [
+        "2026-11-04"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-04T20:54:18.732Z",
+      "order": null
     },
     {
       "id": "AeQyNuj4Ylu85gSqNVaZ",
@@ -2424,7 +2438,7 @@
         "2026-10-11"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-10-10T10:32:26.436Z",
@@ -5191,7 +5205,8 @@
       "bus": "K3136",
       "desc": "In fase di chiusura la porta post si riapre",
       "date": [
-        "2026-11-03"
+        "2026-11-03",
+        "2026-11-04"
       ],
       "stato": "aperta",
       "pregressa": false,
