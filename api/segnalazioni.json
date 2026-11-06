@@ -1,7 +1,21 @@
 {
-  "aggiornatoIl": "2026-11-06T10:45:16.995Z",
-  "numeroSegnalazioni": 300,
+  "aggiornatoIl": "2026-11-06T17:42:30.833Z",
+  "numeroSegnalazioni": 304,
   "segnalazioni": [
+    {
+      "id": "0cYEr5uo7sRHBgS3OJiH",
+      "bus": "K1105",
+      "desc": "Spia diagnosi motore",
+      "date": [
+        "2026-11-06"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-06T15:46:48.962Z",
+      "order": null
+    },
     {
       "id": "0ekhPDoB5tW9NAgE8KpC",
       "bus": "A4190",
@@ -1031,7 +1045,8 @@
         "2026-10-10",
         "2026-10-17",
         "2026-10-19",
-        "2026-10-21"
+        "2026-10-21",
+        "2026-11-06"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -1356,6 +1371,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-10-16T22:27:16.917Z",
+      "order": null
+    },
+    {
+      "id": "HqULoxU8ocIYwNxMtMSH",
+      "bus": "A5118",
+      "desc": "Pulsante porta centrale in fase di distacco",
+      "date": [
+        "2026-11-05"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-06T15:44:20.789Z",
       "order": null
     },
     {
@@ -2421,6 +2450,8 @@
         "2026-10-16",
         "2026-10-28",
         "2026-10-31",
+        "2026-11-05",
+        "2026-11-05",
         "2026-11-06"
       ],
       "stato": "aperta",
@@ -2764,7 +2795,8 @@
       "date": [
         "2026-10-24",
         "2026-10-29",
-        "2026-11-04"
+        "2026-11-04",
+        "2026-11-06"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -2934,6 +2966,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-10-07T20:29:24.965Z",
+      "order": null
+    },
+    {
+      "id": "Z1xR85o2SLTHHlJ4hj6Y",
+      "bus": "K1105",
+      "desc": "Quando si attiva la valvola EDC in salita non cammina",
+      "date": [
+        "2026-11-06"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-06T15:46:30.439Z",
       "order": null
     },
     {
@@ -4553,7 +4599,8 @@
       "desc": "Rotto cavo tenda parasole",
       "date": [
         "2026-10-20",
-        "2026-10-26"
+        "2026-10-26",
+        "2026-11-05"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -4919,6 +4966,20 @@
       "order": null
     },
     {
+      "id": "vvYnVkfUzN5Mdxx7R6UL",
+      "bus": "K1105",
+      "desc": "Luce posizione sx bruciata",
+      "date": [
+        "2026-11-06"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-06T15:47:07.489Z",
+      "order": null
+    },
+    {
       "id": "woRqaAFc4uevkSsWFE2L",
       "bus": "A4188",
       "desc": "Problemi apertura porta ant",
@@ -5207,7 +5268,9 @@
       "desc": "In fase di chiusura la porta post si riapre",
       "date": [
         "2026-11-03",
-        "2026-11-04"
+        "2026-11-04",
+        "2026-11-05",
+        "2026-11-06"
       ],
       "stato": "aperta",
       "pregressa": false,
