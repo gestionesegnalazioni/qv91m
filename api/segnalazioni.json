@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-11-08T16:04:43.404Z",
-  "numeroSegnalazioni": 303,
+  "aggiornatoIl": "2026-11-08T20:25:55.816Z",
+  "numeroSegnalazioni": 304,
   "segnalazioni": [
     {
       "id": "0cYEr5uo7sRHBgS3OJiH",
@@ -4254,7 +4254,8 @@
         "2026-08-22",
         "2026-08-24",
         "2026-09-05",
-        "2026-09-24"
+        "2026-09-24",
+        "2026-11-07"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -4749,7 +4750,8 @@
         "2026-08-22",
         "2026-08-24",
         "2026-09-05",
-        "2026-09-24"
+        "2026-09-24",
+        "2026-11-07"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -4866,6 +4868,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-15T12:09:47.175Z",
+      "order": null
+    },
+    {
+      "id": "txPkcXn8suwYllVASxJ6",
+      "bus": "A5058",
+      "desc": "Spia livello acqua",
+      "date": [
+        "2026-11-07"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-08T19:41:16.043Z",
       "order": null
     },
     {
