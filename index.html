@@ -3148,6 +3148,16 @@
   .verification-home-item span { flex:1; min-width:0; overflow-wrap:anywhere; }
   .verification-home-empty { color:var(--muted); font-size:.88rem; }
   .verify-active { color:#111827 !important; background:#f5c84b !important; }
+  .simple-list-panel { width:100%; min-height:130px; margin-top:14px; border:1px solid rgba(255,255,255,.26); border-radius:22px; background:#151d2c; padding:16px; }
+  .simple-list-entries { display:flex; flex-direction:column; gap:5px; }
+  .simple-list-empty { color:var(--muted); padding:14px 4px; font-size:.92rem; }
+  .simple-list-row { display:flex; align-items:center; gap:12px; min-height:54px; border-bottom:1px solid rgba(255,255,255,.10); }
+  .simple-list-check { width:28px; height:28px; flex:0 0 28px; border:2px solid #b7c0cc; border-radius:50%; background:transparent; color:#34d399; font-size:18px; }
+  .simple-list-text { flex:1; min-width:0; overflow-wrap:anywhere; padding:12px 0; color:white; text-align:left; cursor:pointer; }
+  .simple-list-row.done .simple-list-text { text-decoration:line-through; opacity:.55; }
+  .simple-list-delete { flex:0 0 36px; height:36px; color:#fca5a5; background:transparent; font-size:25px; }
+  .simple-list-controls { display:flex; justify-content:flex-end; margin-top:12px; }
+  .simple-list-plus { width:56px; height:56px; border-radius:50%; background:#34d399; color:#082119; font-size:36px; line-height:1; font-weight:500; }
 </style>
 <script>
   (async function verificaVersioneApp() {
@@ -3182,10 +3192,7 @@
 <div class="wrapper" id="appShell" aria-hidden="false">
   <div id="homeView">
     <div class="category-home" id="busGrid"><div class="loading">Caricamento...</div></div>
-    <section class="verification-home verification-home-fixed" id="verificationHomePanel" aria-label="Da verificare">
-      <div class="verification-home-title">DA VERIFICARE <span id="verificationHomeCount">(0)</span></div>
-      <div id="verificationHomeEntries" class="verification-home-empty">Nessuna anomalia da verificare.</div>
-    </section>
+
   </div>
 
   <div class="category-view" id="categoryView">
@@ -3210,17 +3217,11 @@
       </div>
 
 
-      <section class="attention-report-panel open" id="attentionReportPanel" aria-label="Matricole e anomalie">
-        <div class="attention-report-title">Matricole e anomalie</div>
-        <label class="attention-report-label" for="attentionReportBus">Autobus</label>
-        <select class="attention-report-select" id="attentionReportBus" onchange="renderAttentionReportAnomalies()"></select>
-
-        <label class="attention-report-label" for="attentionReportAnomaly">Anomalia da inserire</label>
-        <select class="attention-report-select" id="attentionReportAnomaly"></select>
-
-        <button class="attention-report-add" onclick="addAttentionReportEntry()">+ Aggiungi</button>
-
-        <div class="attention-report-list" id="attentionReportList"></div>
+      <section class="simple-list-panel" aria-label="Lista matricole e anomalie">
+        <div id="simpleListEntries" class="simple-list-entries"></div>
+        <div class="simple-list-controls">
+          <button class="simple-list-plus" onclick="addSimpleListEntry()" aria-label="Aggiungi una voce">+</button>
+        </div>
       </section>
 
     </div>
@@ -3829,7 +3830,7 @@ function renderAll() {
   renderBusGrid();
   renderTopics();
   renderStops();
-  renderAttentionReport();
+  renderSimpleList();
   if (currentCategory) renderCategoryView();
   if (selectedBus) showBusDetail(selectedBus);
 }
@@ -4101,7 +4102,7 @@ window.toggleAttentionReport = function() {
   const panel = document.getElementById('attentionReportPanel');
   if (!panel) return;
   panel.classList.toggle('open');
-  renderAttentionReport();
+  renderSimpleList();
 };
 
 function attentionReportBusOptions() {
@@ -4125,6 +4126,43 @@ window.renderAttentionReportAnomalies = function() {
     ? anomalies.map(s => '<option value="' + esc(s.id) + '">' + esc(s.desc || 'Anomalia senza descrizione') + '</option>').join('')
     : '<option value="">Nessuna anomalia attiva</option>';
   anomalySelect.disabled = !anomalies.length;
+};
+
+function renderSimpleList() {
+  const root = document.getElementById('simpleListEntries');
+  if (!root) return;
+  root.innerHTML = attentionReportEntries.length
+    ? attentionReportEntries.map(entry => {
+        const id = esc(entry.id);
+        const done = !!entry.completed;
+        return `<div class="simple-list-row ${done ? 'done' : ''}">
+          <button class="simple-list-check" onclick="toggleSimpleListEntry('${id}')" aria-label="Completa voce">${done ? '✓' : ''}</button>
+          <div class="simple-list-text" onclick="editSimpleListEntry('${id}')">${esc(entry.testo || ((entry.bus || '') + ' ' + (segnalazioni.find(s => s.id === entry.segId)?.desc || '')) || 'Nuova voce')}</div>
+          <button class="simple-list-delete" onclick="removeSimpleListEntry('${id}')" aria-label="Elimina voce">×</button>
+        </div>`;
+      }).join('')
+    : '<div class="simple-list-empty">La lista è vuota. Premi + per aggiungere una voce.</div>';
+}
+window.addSimpleListEntry = async function() {
+  const testo = prompt('Matricola e anomalia:');
+  if (!testo || !testo.trim()) return;
+  await addDoc(collection(db, 'reportAttenzione'), { testo:testo.trim(), completed:false, createdAt:new Date().toISOString() });
+};
+window.editSimpleListEntry = async function(id) {
+  const entry = attentionReportEntries.find(x => x.id === id);
+  if (!entry) return;
+  const old = entry.testo || ((entry.bus || '') + ' ' + (segnalazioni.find(s => s.id === entry.segId)?.desc || '')).trim();
+  const testo = prompt('Modifica voce:', old);
+  if (testo === null || !testo.trim()) return;
+  await updateDoc(doc(db, 'reportAttenzione', id), { testo:testo.trim() });
+};
+window.toggleSimpleListEntry = async function(id) {
+  const entry = attentionReportEntries.find(x => x.id === id);
+  if (entry) await updateDoc(doc(db, 'reportAttenzione', id), { completed:!entry.completed });
+};
+window.removeSimpleListEntry = async function(id) {
+  if (!confirm('Eliminare questa voce?')) return;
+  await deleteDoc(doc(db, 'reportAttenzione', id));
 };
 
 function renderAttentionReport() {
@@ -4262,7 +4300,6 @@ function renderBusGrid() {
     suppressedStopsCategoryCard() +
     plurimusCategoryCard() +
     recentChangesCategoryCard();
-  renderVerificationHome();
 }
 
 function renderVerificationHome() {
