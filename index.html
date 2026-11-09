@@ -3139,8 +3139,8 @@
     .attention-report-panel { padding:20px; }
   }
 
-  .verification-home { grid-column:1/-1; width:100%; margin-top:12px; padding:14px; border:1px solid var(--border); border-radius:12px; background:var(--panel); }
-  .verification-home-title { font-weight:800; margin-bottom:10px; color:var(--text); }
+  .verification-home { grid-column:1/-1; display:block; width:100%; margin-top:16px; padding:16px; border:2px solid #f5c84b; border-radius:12px; background:var(--panel); box-shadow:0 0 0 1px rgba(245,200,75,.15); }
+  .verification-home-title { font-weight:900; font-size:1.1rem; margin-bottom:10px; color:#f5c84b; text-transform:uppercase; letter-spacing:.4px; }
   .verification-home-title span { color:var(--muted); font-weight:600; }
   .verification-home-item { display:flex; width:100%; align-items:flex-start; gap:12px; text-align:left; padding:11px; margin:6px 0; border:1px solid var(--border); border-radius:9px; background:var(--card); color:var(--text); cursor:pointer; }
   .verification-home-item strong { flex:0 0 65px; }
@@ -3204,7 +3204,7 @@
         <button class="btn-ghost" onclick="toggleAddForm()">Annulla</button>
       </div>
 
-      <button class="attention-report-toggle" onclick="toggleAttentionReport()">Report autobus</button>
+
       <section class="attention-report-panel" id="attentionReportPanel" aria-label="Report autobus da attenzionare">
         <label class="attention-report-label" for="attentionReportBus">Autobus</label>
         <select class="attention-report-select" id="attentionReportBus" onchange="renderAttentionReportAnomalies()"></select>
