@@ -3139,6 +3139,14 @@
     .attention-report-panel { padding:20px; }
   }
 
+  .verification-home { grid-column:1/-1; width:100%; margin-top:12px; padding:14px; border:1px solid var(--border); border-radius:12px; background:var(--panel); }
+  .verification-home-title { font-weight:800; margin-bottom:10px; color:var(--text); }
+  .verification-home-title span { color:var(--muted); font-weight:600; }
+  .verification-home-item { display:flex; width:100%; align-items:flex-start; gap:12px; text-align:left; padding:11px; margin:6px 0; border:1px solid var(--border); border-radius:9px; background:var(--card); color:var(--text); cursor:pointer; }
+  .verification-home-item strong { flex:0 0 65px; }
+  .verification-home-item span { flex:1; min-width:0; overflow-wrap:anywhere; }
+  .verification-home-empty { color:var(--muted); font-size:.88rem; }
+  .verify-active { color:#111827 !important; background:#f5c84b !important; }
 </style>
 <script>
   (async function verificaVersioneApp() {
@@ -4247,7 +4255,19 @@ function renderBusGrid() {
     topicCategoryCard() +
     suppressedStopsCategoryCard() +
     plurimusCategoryCard() +
-    recentChangesCategoryCard();
+    recentChangesCategoryCard() +
+    verificationHomePanel();
+}
+
+function verificationHomePanel() {
+  const pending = segnalazioni.filter(s => s.daVerificare === true && !s.pregressa)
+    .sort((a,b) => String(a.bus || '').localeCompare(String(b.bus || ''), 'it', { numeric:true }));
+  return `<section class="verification-home">
+    <div class="verification-home-title">Da verificare <span>(${pending.length})</span></div>
+    ${pending.length ? pending.map(s => `<button class="verification-home-item" onclick="selectBus('${esc(s.bus)}')">
+      <strong>${esc(s.bus)}</strong><span>${esc(s.desc || 'Anomalia senza descrizione')}</span>
+    </button>`).join('') : '<div class="verification-home-empty">Nessuna anomalia da verificare.</div>'}
+  </section>`;
 }
 
 function topicCategoryCard() {
@@ -4974,6 +4994,7 @@ function renderSeg(s, pregressa = false, hasArchive = false) {
           ` : `
             <button class="small-action restore" onclick="ripristinaSeg('${s.id}')">Ripristina</button>
           `}
+          <button class="small-action ${s.daVerificare ? 'verify-active' : 'verify-action'}" onclick="toggleSegDaVerificare('${s.id}')">${s.daVerificare ? 'Da verificare ✓' : 'Da verificare'}</button>
           <button class="small-action notes ${String(s.note || '').trim() ? 'has-note' : ''}" onclick="toggleNote('${s.id}')">Note</button>
           <button class="small-action edit-action" onclick="editSeg('${s.id}')">Modifica</button>
           <button class="small-action delete-action" onclick="deleteSeg('${s.id}')">Cestino</button>
@@ -5269,6 +5290,15 @@ window.ripristinaSeg = async function(id) {
   await updateDoc(doc(db, 'segnalazioni', id), { pregressa:false, standby:false });
   await registraModifica(s?.bus || selectedBus, 'Anomalia ripristinata', 'Anomalia: ' + (s?.desc || ''));
   showToast('Anomalia ripristinata');
+};
+
+window.toggleSegDaVerificare = async function(id) {
+  const s = segnalazioni.find(x => x.id === id);
+  if (!s) return;
+  const daVerificare = !s.daVerificare;
+  await updateDoc(doc(db, 'segnalazioni', id), { daVerificare });
+  await registraModifica(s.bus, daVerificare ? 'Anomalia da verificare' : 'Verifica anomalia rimossa', 'Anomalia: ' + (s.desc || ''));
+  showToast(daVerificare ? 'Aggiunta a Da verificare' : 'Rimossa da Da verificare');
 };
 
 window.toggleBusUrgent = async function() {
