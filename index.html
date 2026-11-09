@@ -4129,47 +4129,64 @@ window.renderAttentionReportAnomalies = function() {
   anomalySelect.disabled = !anomalies.length;
 };
 
+const SIMPLE_LIST_STORAGE_KEY = 'gestione_bus_lista_matricole_v1';
+function getSimpleListEntries() {
+  try {
+    const value = JSON.parse(localStorage.getItem(SIMPLE_LIST_STORAGE_KEY) || '[]');
+    return Array.isArray(value) ? value : [];
+  } catch (_) { return []; }
+}
+function saveSimpleListEntries(entries) {
+  localStorage.setItem(SIMPLE_LIST_STORAGE_KEY, JSON.stringify(entries));
+  renderSimpleList();
+}
 function renderSimpleList() {
   const root = document.getElementById('simpleListEntries');
   if (!root) return;
-  root.innerHTML = attentionReportEntries.length
-    ? attentionReportEntries.map(entry => {
+  const entries = getSimpleListEntries();
+  root.innerHTML = entries.length
+    ? entries.map(entry => {
         const id = esc(entry.id);
-        const done = !!entry.completed;
-        return `<div class="simple-list-row ${done ? 'done' : ''}">
-          <button class="simple-list-check" onclick="toggleSimpleListEntry('${id}')" aria-label="Completa voce">${done ? '✓' : ''}</button>
-          <div class="simple-list-text" onclick="editSimpleListEntry('${id}')">${esc(entry.testo || ((entry.bus || '') + ' ' + (segnalazioni.find(s => s.id === entry.segId)?.desc || '')) || 'Nuova voce')}</div>
+        return `<div class="simple-list-row ${entry.completed ? 'done' : ''}">
+          <button class="simple-list-check" onclick="toggleSimpleListEntry('${id}')" aria-label="Completa voce">${entry.completed ? '✓' : ''}</button>
+          <div class="simple-list-text" onclick="editSimpleListEntry('${id}')">${esc(entry.testo || '')}</div>
           <button class="simple-list-delete" onclick="removeSimpleListEntry('${id}')" aria-label="Elimina voce">×</button>
         </div>`;
       }).join('')
     : '<div class="simple-list-empty">La lista è vuota. Premi + per aggiungere una voce.</div>';
 }
-window.addSimpleListEntry = async function() {
+window.addSimpleListEntry = function() {
   const testo = prompt('Matricola e anomalia:');
   if (!testo || !testo.trim()) return;
   try {
-    await addDoc(collection(db, 'reportAttenzione'), { testo:testo.trim(), completed:false, createdAt:new Date().toISOString() });
-    showToast('Voce salvata');
+    const entries = getSimpleListEntries();
+    entries.push({ id:String(Date.now()) + '-' + Math.random().toString(36).slice(2), testo:testo.trim(), completed:false });
+    saveSimpleListEntries(entries);
+    showToast('Voce aggiunta alla lista');
   } catch (err) {
-    console.error('Impossibile salvare la voce', err);
-    showToast('Errore salvataggio: ' + (err.code || err.message || 'riprova'));
+    console.error('Errore lista', err);
+    showToast('Impossibile salvare sul dispositivo');
   }
 };
-window.editSimpleListEntry = async function(id) {
-  const entry = attentionReportEntries.find(x => x.id === id);
+window.editSimpleListEntry = function(id) {
+  const entries = getSimpleListEntries();
+  const entry = entries.find(x => x.id === id);
   if (!entry) return;
-  const old = entry.testo || ((entry.bus || '') + ' ' + (segnalazioni.find(s => s.id === entry.segId)?.desc || '')).trim();
-  const testo = prompt('Modifica voce:', old);
+  const testo = prompt('Modifica voce:', entry.testo);
   if (testo === null || !testo.trim()) return;
-  await updateDoc(doc(db, 'reportAttenzione', id), { testo:testo.trim() });
+  entry.testo = testo.trim();
+  saveSimpleListEntries(entries);
 };
-window.toggleSimpleListEntry = async function(id) {
-  const entry = attentionReportEntries.find(x => x.id === id);
-  if (entry) await updateDoc(doc(db, 'reportAttenzione', id), { completed:!entry.completed });
+window.toggleSimpleListEntry = function(id) {
+  const entries = getSimpleListEntries();
+  const entry = entries.find(x => x.id === id);
+  if (!entry) return;
+  entry.completed = !entry.completed;
+  saveSimpleListEntries(entries);
 };
-window.removeSimpleListEntry = async function(id) {
+window.removeSimpleListEntry = function(id) {
   if (!confirm('Eliminare questa voce?')) return;
-  await deleteDoc(doc(db, 'reportAttenzione', id));
+  saveSimpleListEntries(getSimpleListEntries().filter(x => x.id !== id));
 };
 
 function renderAttentionReport() {
