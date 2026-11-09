@@ -3974,9 +3974,10 @@ function startDataSubscriptions() {
         const anomalyB = segnalazioni.find(s => s.id === b.segId)?.desc || '';
         return String(anomalyA).localeCompare(String(anomalyB), 'it', { sensitivity:'base' });
       });
-    renderAttentionReport();
+    renderSimpleList();
   }, err => {
-    console.error('Report autobus non disponibile', err);
+    console.error('Lista matricole non disponibile', err);
+    showToast('Errore caricamento lista');
   }));
 
   dataUnsubscribers.push(onSnapshot(collection(db, 'temi'), snap => {
@@ -4146,7 +4147,13 @@ function renderSimpleList() {
 window.addSimpleListEntry = async function() {
   const testo = prompt('Matricola e anomalia:');
   if (!testo || !testo.trim()) return;
-  await addDoc(collection(db, 'reportAttenzione'), { testo:testo.trim(), completed:false, createdAt:new Date().toISOString() });
+  try {
+    await addDoc(collection(db, 'reportAttenzione'), { testo:testo.trim(), completed:false, createdAt:new Date().toISOString() });
+    showToast('Voce salvata');
+  } catch (err) {
+    console.error('Impossibile salvare la voce', err);
+    showToast('Errore salvataggio: ' + (err.code || err.message || 'riprova'));
+  }
 };
 window.editSimpleListEntry = async function(id) {
   const entry = attentionReportEntries.find(x => x.id === id);
