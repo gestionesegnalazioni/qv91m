@@ -3140,6 +3140,7 @@
   }
 
   .verification-home { grid-column:1/-1; display:block; width:100%; margin-top:16px; padding:16px; border:2px solid #f5c84b; border-radius:12px; background:var(--panel); box-shadow:0 0 0 1px rgba(245,200,75,.15); }
+  .verification-home-fixed { margin:20px 0 34px; min-height:115px; }
   .verification-home-title { font-weight:900; font-size:1.1rem; margin-bottom:10px; color:#f5c84b; text-transform:uppercase; letter-spacing:.4px; }
   .verification-home-title span { color:var(--muted); font-weight:600; }
   .verification-home-item { display:flex; width:100%; align-items:flex-start; gap:12px; text-align:left; padding:11px; margin:6px 0; border:1px solid var(--border); border-radius:9px; background:var(--card); color:var(--text); cursor:pointer; }
@@ -3181,6 +3182,10 @@
 <div class="wrapper" id="appShell" aria-hidden="false">
   <div id="homeView">
     <div class="category-home" id="busGrid"><div class="loading">Caricamento...</div></div>
+    <section class="verification-home verification-home-fixed" id="verificationHomePanel" aria-label="Da verificare">
+      <div class="verification-home-title">DA VERIFICARE <span id="verificationHomeCount">(0)</span></div>
+      <div id="verificationHomeEntries" class="verification-home-empty">Nessuna anomalia da verificare.</div>
+    </section>
   </div>
 
   <div class="category-view" id="categoryView">
@@ -4255,19 +4260,23 @@ function renderBusGrid() {
     topicCategoryCard() +
     suppressedStopsCategoryCard() +
     plurimusCategoryCard() +
-    recentChangesCategoryCard() +
-    verificationHomePanel();
+    recentChangesCategoryCard();
+  renderVerificationHome();
 }
 
-function verificationHomePanel() {
+function renderVerificationHome() {
+  const entries = document.getElementById('verificationHomeEntries');
+  const count = document.getElementById('verificationHomeCount');
+  if (!entries || !count) return;
   const pending = segnalazioni.filter(s => s.daVerificare === true && !s.pregressa)
     .sort((a,b) => String(a.bus || '').localeCompare(String(b.bus || ''), 'it', { numeric:true }));
-  return `<section class="verification-home">
-    <div class="verification-home-title">Da verificare <span>(${pending.length})</span></div>
-    ${pending.length ? pending.map(s => `<button class="verification-home-item" onclick="selectBus('${esc(s.bus)}')">
+  count.textContent = '(' + pending.length + ')';
+  entries.className = pending.length ? '' : 'verification-home-empty';
+  entries.innerHTML = pending.length
+    ? pending.map(s => `<button class="verification-home-item" onclick="selectBus('${esc(s.bus)}')">
       <strong>${esc(s.bus)}</strong><span>${esc(s.desc || 'Anomalia senza descrizione')}</span>
-    </button>`).join('') : '<div class="verification-home-empty">Nessuna anomalia da verificare.</div>'}
-  </section>`;
+    </button>`).join('')
+    : 'Nessuna anomalia da verificare.';
 }
 
 function topicCategoryCard() {
