@@ -5065,7 +5065,6 @@ function renderSeg(s, pregressa = false, hasArchive = false) {
           ` : `
             <button class="small-action restore" onclick="ripristinaSeg('${s.id}')">Ripristina</button>
           `}
-          <button class="small-action ${s.daVerificare ? 'verify-active' : 'verify-action'}" onclick="toggleSegDaVerificare('${s.id}')">${s.daVerificare ? 'Da verificare ✓' : 'Da verificare'}</button>
           <button class="small-action notes ${String(s.note || '').trim() ? 'has-note' : ''}" onclick="toggleNote('${s.id}')">Note</button>
           <button class="small-action edit-action" onclick="editSeg('${s.id}')">Modifica</button>
           <button class="small-action delete-action" onclick="deleteSeg('${s.id}')">Cestino</button>
