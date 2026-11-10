@@ -3587,7 +3587,7 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-import { getFirestore, collection, doc, onSnapshot, addDoc, updateDoc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+import { getFirestore, collection, doc, onSnapshot, addDoc, setDoc, updateDoc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 import { initializeAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, browserPopupRedirectResolver } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
 
 const firebaseConfig = {
@@ -3974,10 +3974,15 @@ function startDataSubscriptions() {
         const anomalyB = segnalazioni.find(s => s.id === b.segId)?.desc || '';
         return String(anomalyA).localeCompare(String(anomalyB), 'it', { sensitivity:'base' });
       });
+    simpleListRemoteReady = true;
+    simpleListRemoteError = false;
     renderSimpleList();
+    migrateSimpleList();
   }, err => {
+    simpleListRemoteError = true;
     console.error('Lista matricole non disponibile', err);
-    showToast('Errore caricamento lista');
+    renderSimpleList();
+    showToast('Sincronizzazione non disponibile: note locali conservate');
   }));
 
   dataUnsubscribers.push(onSnapshot(collection(db, 'temi'), snap => {
@@ -4130,6 +4135,10 @@ window.renderAttentionReportAnomalies = function() {
 };
 
 const SIMPLE_LIST_STORAGE_KEY = 'gestione_bus_lista_matricole_v1';
+const SIMPLE_LIST_MIGRATED_KEY = 'gestione_bus_lista_matricole_migrata_v1';
+let simpleListRemoteReady = false;
+let simpleListRemoteError = false;
+let simpleListMigrating = false;
 function getSimpleListEntries() {
   try {
     const value = JSON.parse(localStorage.getItem(SIMPLE_LIST_STORAGE_KEY) || '[]');
@@ -4140,53 +4149,88 @@ function saveSimpleListEntries(entries) {
   localStorage.setItem(SIMPLE_LIST_STORAGE_KEY, JSON.stringify(entries));
   renderSimpleList();
 }
+function simpleListDisplayEntries() {
+  const remote = attentionReportEntries.filter(e => e.testo || e.bus || e.segId);
+  const local = getSimpleListEntries();
+  const byId = new Map(remote.map(e => [String(e.id), e]));
+  if (localStorage.getItem(SIMPLE_LIST_MIGRATED_KEY) !== '1' || simpleListRemoteError) {
+    for (const e of local) if (!byId.has(String(e.id))) byId.set(String(e.id), e);
+  }
+  return [...byId.values()].sort((a,b) => String(a.createdAt || a.id).localeCompare(String(b.createdAt || b.id)));
+}
 function renderSimpleList() {
   const root = document.getElementById('simpleListEntries');
   if (!root) return;
-  const entries = getSimpleListEntries();
+  const entries = simpleListDisplayEntries();
   root.innerHTML = entries.length
     ? entries.map(entry => {
         const id = esc(entry.id);
+        const testo = entry.testo || ((entry.bus || '') + ' ' + (segnalazioni.find(s => s.id === entry.segId)?.desc || '')).trim();
         return `<div class="simple-list-row ${entry.completed ? 'done' : ''}">
           <button class="simple-list-check" onclick="toggleSimpleListEntry('${id}')" aria-label="Completa voce">${entry.completed ? '✓' : ''}</button>
-          <div class="simple-list-text" onclick="editSimpleListEntry('${id}')">${esc(entry.testo || '')}</div>
+          <div class="simple-list-text" onclick="editSimpleListEntry('${id}')">${esc(testo)}</div>
           <button class="simple-list-delete" onclick="removeSimpleListEntry('${id}')" aria-label="Elimina voce">×</button>
         </div>`;
       }).join('')
     : '<div class="simple-list-empty">La lista è vuota. Premi + per aggiungere una voce.</div>';
 }
-window.addSimpleListEntry = function() {
+async function migrateSimpleList() {
+  if (!simpleListRemoteReady || simpleListMigrating || localStorage.getItem(SIMPLE_LIST_MIGRATED_KEY) === '1') return;
+  const local = getSimpleListEntries();
+  if (!local.length) { localStorage.setItem(SIMPLE_LIST_MIGRATED_KEY, '1'); return; }
+  simpleListMigrating = true;
+  try {
+    for (const entry of local) {
+      if (!entry.testo || !entry.id) continue;
+      if (attentionReportEntries.some(e => e.id === String(entry.id))) continue;
+      await setDoc(doc(db, 'reportAttenzione', String(entry.id)), {
+        testo:String(entry.testo), completed:!!entry.completed,
+        createdAt:entry.createdAt || new Date().toISOString()
+      });
+    }
+    localStorage.setItem(SIMPLE_LIST_MIGRATED_KEY, '1');
+    showToast('Note trasferite e sincronizzate');
+  } catch (err) {
+    console.error('Migrazione note non riuscita', err);
+    simpleListRemoteError = true;
+    showToast('Sincronizzazione non riuscita: note locali conservate');
+  } finally { simpleListMigrating = false; renderSimpleList(); }
+}
+window.addSimpleListEntry = async function() {
   const testo = prompt('Matricola e anomalia:');
   if (!testo || !testo.trim()) return;
+  const entry = {id:String(Date.now()) + '-' + Math.random().toString(36).slice(2), testo:testo.trim(), completed:false, createdAt:new Date().toISOString()};
+  if (!simpleListRemoteReady || simpleListRemoteError) {
+    showToast('Sincronizzazione non disponibile: riprova più tardi');
+    return;
+  }
   try {
-    const entries = getSimpleListEntries();
-    entries.push({ id:String(Date.now()) + '-' + Math.random().toString(36).slice(2), testo:testo.trim(), completed:false });
-    saveSimpleListEntries(entries);
-    showToast('Voce aggiunta alla lista');
+    await setDoc(doc(db,'reportAttenzione',entry.id), {testo:entry.testo, completed:false, createdAt:entry.createdAt});
+    showToast('Voce sincronizzata');
   } catch (err) {
-    console.error('Errore lista', err);
-    showToast('Impossibile salvare sul dispositivo');
+    console.error('Salvataggio nota non riuscito',err);
+    showToast('Errore sincronizzazione: nessuna nota cancellata');
   }
 };
-window.editSimpleListEntry = function(id) {
-  const entries = getSimpleListEntries();
-  const entry = entries.find(x => x.id === id);
+window.editSimpleListEntry = async function(id) {
+  const entry = simpleListDisplayEntries().find(x => String(x.id) === id);
   if (!entry) return;
-  const testo = prompt('Modifica voce:', entry.testo);
+  const old = entry.testo || ((entry.bus || '') + ' ' + (segnalazioni.find(s => s.id === entry.segId)?.desc || '')).trim();
+  const testo = prompt('Modifica voce:', old);
   if (testo === null || !testo.trim()) return;
-  entry.testo = testo.trim();
-  saveSimpleListEntries(entries);
+  try { await updateDoc(doc(db,'reportAttenzione',id), {testo:testo.trim()}); }
+  catch(err) { console.error(err); showToast('Modifica non sincronizzata'); }
 };
-window.toggleSimpleListEntry = function(id) {
-  const entries = getSimpleListEntries();
-  const entry = entries.find(x => x.id === id);
+window.toggleSimpleListEntry = async function(id) {
+  const entry = simpleListDisplayEntries().find(x => String(x.id) === id);
   if (!entry) return;
-  entry.completed = !entry.completed;
-  saveSimpleListEntries(entries);
+  try { await updateDoc(doc(db,'reportAttenzione',id), {completed:!entry.completed}); }
+  catch(err) { console.error(err); showToast('Modifica non sincronizzata'); }
 };
-window.removeSimpleListEntry = function(id) {
+window.removeSimpleListEntry = async function(id) {
   if (!confirm('Eliminare questa voce?')) return;
-  saveSimpleListEntries(getSimpleListEntries().filter(x => x.id !== id));
+  try { await deleteDoc(doc(db,'reportAttenzione',id)); }
+  catch(err) { console.error(err); showToast('Eliminazione non sincronizzata'); }
 };
 
 function renderAttentionReport() {
