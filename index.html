@@ -4161,15 +4161,14 @@ function simpleListDisplayEntries() {
 function renderSimpleList() {
   const root = document.getElementById('simpleListEntries');
   if (!root) return;
-  const entries = simpleListDisplayEntries();
+  const entries = simpleListDisplayEntries().filter(entry => !entry.completed);
   root.innerHTML = entries.length
     ? entries.map(entry => {
         const id = esc(entry.id);
         const testo = entry.testo || ((entry.bus || '') + ' ' + (segnalazioni.find(s => s.id === entry.segId)?.desc || '')).trim();
         return `<div class="simple-list-row ${entry.completed ? 'done' : ''}">
-          <button class="simple-list-check" onclick="toggleSimpleListEntry('${id}')" aria-label="Completa voce">${entry.completed ? '✓' : ''}</button>
+          <button class="simple-list-check" onclick="toggleSimpleListEntry('${id}')" aria-label="Completa e nascondi nota">${entry.completed ? '✓' : ''}</button>
           <div class="simple-list-text" onclick="editSimpleListEntry('${id}')">${esc(testo)}</div>
-          <button class="simple-list-delete" onclick="removeSimpleListEntry('${id}')" aria-label="Elimina voce">×</button>
         </div>`;
       }).join('')
     : '<div class="simple-list-empty">La lista è vuota. Premi + per aggiungere una voce.</div>';
