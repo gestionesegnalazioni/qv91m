@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-11-09T14:20:49.843Z",
-  "numeroSegnalazioni": 304,
+  "aggiornatoIl": "2026-11-10T20:26:25.135Z",
+  "numeroSegnalazioni": 309,
   "segnalazioni": [
     {
       "id": "0cYEr5uo7sRHBgS3OJiH",
@@ -485,7 +485,7 @@
         "2026-10-31"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-11-01T14:45:08.015Z",
@@ -624,12 +624,13 @@
     {
       "id": "6EigQyzUfkt5FCQJPNp9",
       "bus": "A5122",
-      "desc": "Regolazione retrovisore dx",
+      "desc": "Il retrovisore destro non si regola e si muove durante la marcia",
       "date": [
-        "2026-09-20"
+        "2026-09-20",
+        "2026-11-10"
       ],
       "stato": "aperta",
-      "pregressa": true,
+      "pregressa": false,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-10-11T15:11:33.970Z",
@@ -866,7 +867,9 @@
       "bus": "A4097",
       "desc": "Entrambi i retrovisori non si regolano",
       "date": [
-        "2026-11-04"
+        "2026-11-04",
+        "2026-11-08",
+        "2026-11-09"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -1171,6 +1174,20 @@
       "order": null
     },
     {
+      "id": "DVdQK06LajzjrK2nQZam",
+      "bus": "A4097",
+      "desc": "Il mezzo rimane basso sull’asse ant",
+      "date": [
+        "2026-11-09"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-10T08:40:46.148Z",
+      "order": null
+    },
+    {
       "id": "DqPy8wjTBfoMvXvmryhP",
       "bus": "K1105",
       "desc": "Luci diurne fuori servizio",
@@ -1367,7 +1384,7 @@
         "2026-10-16"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-10-16T22:27:16.917Z",
@@ -1461,6 +1478,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-05T08:05:20.395Z",
+      "order": null
+    },
+    {
+      "id": "IXpWtpgzsuBbyEcLy7fc",
+      "bus": "A4188",
+      "desc": "Spia anomalia motore",
+      "date": [
+        "2026-11-10"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-10T20:01:03.116Z",
       "order": null
     },
     {
@@ -2428,6 +2459,20 @@
       "order": null
     },
     {
+      "id": "TBm31px0vEZrSZd1knEN",
+      "bus": "A4097",
+      "desc": "Luce pulsante porta ant",
+      "date": [
+        "2026-11-09"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-10T08:41:10.421Z",
+      "order": null
+    },
+    {
       "id": "Tdzbg9PcRaHIYOxHYKxZ",
       "bus": "A5064",
       "desc": "Riscaldamento e sbrinatore fuori servizio",
@@ -3075,7 +3120,7 @@
       "desc": "Forti rumori nella cabina autista",
       "date": [],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-10-30T08:06:39.179Z",
@@ -4131,7 +4176,7 @@
         "2026-09-30"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-29T09:04:13.451Z",
@@ -4157,6 +4202,20 @@
       "standby": false,
       "urgente": true,
       "createdAt": "2026-07-15T19:45:14.450Z",
+      "order": null
+    },
+    {
+      "id": "mWjBc11p6P8MlUB54gAq",
+      "bus": "K3152",
+      "desc": "Riscaldamento solo con webasto",
+      "date": [
+        "2026-11-10"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-10T20:00:01.322Z",
       "order": null
     },
     {
@@ -4229,7 +4288,8 @@
       "desc": "Leva regolazione volante fuori servizio",
       "date": [
         "2026-10-09",
-        "2026-10-10"
+        "2026-10-10",
+        "2026-11-09"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -4256,7 +4316,8 @@
         "2026-08-24",
         "2026-09-05",
         "2026-09-24",
-        "2026-11-07"
+        "2026-11-07",
+        "2026-11-10"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -4273,7 +4334,7 @@
         "2026-10-15"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-10-16T07:39:01.118Z",
@@ -4879,7 +4940,7 @@
         "2026-11-07"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-11-08T19:41:16.043Z",
@@ -4929,10 +4990,24 @@
         "2026-10-31"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-10-18T07:03:35.874Z",
+      "order": null
+    },
+    {
+      "id": "v2EwdHmSFS0sZoAdfR7Y",
+      "bus": "K3152",
+      "desc": "In fase di chiusura la porta ant si riapre",
+      "date": [
+        "2026-11-10"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-10T20:00:24.400Z",
       "order": null
     },
     {
@@ -5245,7 +5320,7 @@
         "2026-10-15"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-10-16T07:38:27.683Z",
@@ -5423,7 +5498,7 @@
         "2026-11-02"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-23T16:31:21.437Z",
