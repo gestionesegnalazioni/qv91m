@@ -3153,6 +3153,8 @@
   .simple-list-empty { color:var(--muted); padding:14px 4px; font-size:.92rem; }
   .simple-list-row { display:flex; align-items:center; gap:12px; min-height:54px; border-bottom:1px solid rgba(255,255,255,.10); }
   .simple-list-check { width:28px; height:28px; flex:0 0 28px; border:2px solid #b7c0cc; border-radius:50%; background:transparent; color:#34d399; font-size:18px; }
+  .simple-list-row.completing .simple-list-check { background:#34d399; border-color:#34d399; color:#082119; }
+  .simple-list-row.completing .simple-list-text { opacity:.65; }
   .simple-list-text { flex:1; min-width:0; overflow-wrap:anywhere; padding:12px 0; color:white; text-align:left; cursor:pointer; }
   .simple-list-row.done .simple-list-text { text-decoration:line-through; opacity:.55; }
   .simple-list-delete { flex:0 0 36px; height:36px; color:#fca5a5; background:transparent; font-size:25px; }
@@ -4220,11 +4222,30 @@ window.editSimpleListEntry = async function(id) {
   try { await updateDoc(doc(db,'reportAttenzione',id), {testo:testo.trim()}); }
   catch(err) { console.error(err); showToast('Modifica non sincronizzata'); }
 };
-window.toggleSimpleListEntry = async function(id) {
+const simpleListCompleting = new Set();
+window.toggleSimpleListEntry = function(id) {
   const entry = simpleListDisplayEntries().find(x => String(x.id) === id);
-  if (!entry) return;
-  try { await updateDoc(doc(db,'reportAttenzione',id), {completed:!entry.completed}); }
-  catch(err) { console.error(err); showToast('Modifica non sincronizzata'); }
+  if (!entry || entry.completed || simpleListCompleting.has(id)) return;
+  simpleListCompleting.add(id);
+  const row = [...document.querySelectorAll('.simple-list-row')].find(el =>
+    el.querySelector('.simple-list-check')?.getAttribute('onclick') === "toggleSimpleListEntry('" + id + "')");
+  if (row) {
+    row.classList.add('completing');
+    const check = row.querySelector('.simple-list-check');
+    if (check) { check.textContent = '✓'; check.disabled = true; }
+  }
+  setTimeout(async () => {
+    try {
+      await updateDoc(doc(db,'reportAttenzione',id), {completed:true});
+    } catch(err) {
+      console.error(err);
+      showToast('Completamento non sincronizzato');
+      if (row) { row.classList.remove('completing'); const check=row.querySelector('.simple-list-check'); if(check){check.textContent='';check.disabled=false;} }
+    } finally {
+      simpleListCompleting.delete(id);
+      renderSimpleList();
+    }
+  }, 2000);
 };
 window.removeSimpleListEntry = async function(id) {
   if (!confirm('Eliminare questa voce?')) return;
