@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-11-11T22:12:29.681Z",
-  "numeroSegnalazioni": 309,
+  "aggiornatoIl": "2026-11-12T03:05:50.870Z",
+  "numeroSegnalazioni": 316,
   "segnalazioni": [
     {
       "id": "0cYEr5uo7sRHBgS3OJiH",
@@ -313,6 +313,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-07-13T10:16:57.068Z",
+      "order": null
+    },
+    {
+      "id": "48ifIN1pqlpyPHGun5UX",
+      "bus": "A4191",
+      "desc": "Spia anomalia motore",
+      "date": [
+        "2026-11-12"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-11T23:05:10.953Z",
       "order": null
     },
     {
@@ -829,6 +843,20 @@
       "order": null
     },
     {
+      "id": "9TxB2bXnn5jockBA4VaD",
+      "bus": "K1097",
+      "desc": "Spia anomalia motore",
+      "date": [
+        "2026-11-11"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-11T22:56:37.464Z",
+      "order": null
+    },
+    {
       "id": "9eHL0LF4LOaQWeYhMT1K",
       "bus": "K2125",
       "desc": "Aria condizionata insufficiente",
@@ -1180,6 +1208,7 @@
       "bus": "A4097",
       "desc": "Il mezzo rimane basso sull’asse ant",
       "date": [
+        "2025-11-03",
         "2026-11-09"
       ],
       "stato": "aperta",
@@ -1294,6 +1323,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-12T15:29:40.144Z",
+      "order": null
+    },
+    {
+      "id": "Gtt0fNorNLS6B1zI7HN6",
+      "bus": "K3136",
+      "desc": "Sbrinatore parabrezza parte di dx non funziona",
+      "date": [
+        "2026-11-12"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-11T23:03:49.585Z",
       "order": null
     },
     {
@@ -3018,6 +3061,20 @@
       "order": null
     },
     {
+      "id": "Z08P1w4OxZRCpUjCM5sk",
+      "bus": "K1097",
+      "desc": "Controllare equilibratura asse posteriore, vibrazioni del mezzo durante la marcia",
+      "date": [
+        "2026-11-11"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-11T22:57:37.070Z",
+      "order": null
+    },
+    {
       "id": "Z1xR85o2SLTHHlJ4hj6Y",
       "bus": "K1105",
       "desc": "Quando si attiva la valvola EDC in salita non cammina",
@@ -3071,6 +3128,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-25T16:26:27.358Z",
+      "order": null
+    },
+    {
+      "id": "a0RcXvoBw7cwfi6dtVZ2",
+      "bus": "K3136",
+      "desc": "Spazzole tergicristallo molto rumorose",
+      "date": [
+        "2026-11-12"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-11T23:04:14.981Z",
       "order": null
     },
     {
@@ -3364,6 +3435,22 @@
       "urgente": false,
       "createdAt": "2026-06-27T07:03:03.172Z",
       "order": 1
+    },
+    {
+      "id": "dIBUppBy64ZzjydtRhg1",
+      "bus": "K1106",
+      "desc": "Spia EDC, motore non cammina",
+      "date": [
+        "2026-10-15",
+        "2026-11-02",
+        "2026-11-11"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-11T23:01:05.054Z",
+      "order": null
     },
     {
       "id": "dJli54IZcFPggfENA6FZ",
@@ -4542,7 +4629,7 @@
         "2026-09-16"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-10-18T15:05:30.457Z",
@@ -4650,7 +4737,8 @@
         "2026-10-23",
         "2026-10-24",
         "2026-10-28",
-        "2026-10-31"
+        "2026-10-31",
+        "2026-11-11"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -4887,6 +4975,20 @@
       "order": null
     },
     {
+      "id": "su43SmOSW9CyiA8ppCl6",
+      "bus": "A4191",
+      "desc": "Forti cigolii nell’abitacolo",
+      "date": [
+        "2026-11-12"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-11T23:05:29.284Z",
+      "order": null
+    },
+    {
       "id": "tDC3jYhnSYKubknS14wr",
       "bus": "K1109",
       "desc": "Aria fredda da sbrinatore e riscaldamento",
@@ -5004,7 +5106,8 @@
       "bus": "K3152",
       "desc": "In fase di chiusura la porta ant si riapre",
       "date": [
-        "2026-11-10"
+        "2026-11-10",
+        "2026-11-11"
       ],
       "stato": "aperta",
       "pregressa": false,
