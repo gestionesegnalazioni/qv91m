@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-11-15T10:07:39.064Z",
-  "numeroSegnalazioni": 316,
+  "aggiornatoIl": "2026-11-15T17:07:25.115Z",
+  "numeroSegnalazioni": 322,
   "segnalazioni": [
     {
       "id": "0cYEr5uo7sRHBgS3OJiH",
@@ -167,7 +167,7 @@
         "2026-10-10"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-06-09T23:03:02.908Z",
@@ -320,6 +320,7 @@
       "bus": "A4191",
       "desc": "Spia anomalia motore",
       "date": [
+        "2026-11-11",
         "2026-11-12"
       ],
       "stato": "aperta",
@@ -427,7 +428,7 @@
         "2026-11-03"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-11-03T18:07:37.342Z",
@@ -873,6 +874,20 @@
       "order": null
     },
     {
+      "id": "9eHjiDBLOoAUc37UEZEf",
+      "bus": "A4097",
+      "desc": "Riscaldamento passeggeri fuori servizio",
+      "date": [
+        "2026-11-12"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-15T12:00:36.318Z",
+      "order": null
+    },
+    {
       "id": "A8sqI0l4gzigxaNE6EFl",
       "bus": "K1092",
       "desc": "Freccia ant sx",
@@ -899,7 +914,8 @@
         "2026-11-08",
         "2026-11-09",
         "2026-11-10",
-        "2026-11-11"
+        "2026-11-11",
+        "2026-11-12"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -1093,10 +1109,11 @@
       "bus": "K1092",
       "desc": "Il motore perde colpi",
       "date": [
-        "2026-09-25"
+        "2026-09-25",
+        "2026-11-13"
       ],
       "stato": "aperta",
-      "pregressa": true,
+      "pregressa": false,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-25T16:37:01.551Z",
@@ -1212,7 +1229,7 @@
         "2026-11-09"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-11-10T08:40:46.148Z",
@@ -1330,6 +1347,7 @@
       "bus": "K3136",
       "desc": "Sbrinatore parabrezza parte di dx non funziona",
       "date": [
+        "2026-11-11",
         "2026-11-12"
       ],
       "stato": "aperta",
@@ -1530,7 +1548,8 @@
       "bus": "A4188",
       "desc": "Spia anomalia motore",
       "date": [
-        "2026-11-10"
+        "2026-11-10",
+        "2026-11-14"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -1891,13 +1910,14 @@
     {
       "id": "MSJXkNuWCB4IdCsXRctA",
       "bus": "K3089",
-      "desc": "Aria condizionata passeggeri fuori servizio",
+      "desc": "Clima passeggeri fuori servizio",
       "date": [
         "2026-05-28",
         "2026-06-09",
         "2026-07-06",
         "2026-07-11",
-        "2026-07-19"
+        "2026-07-19",
+        "2026-11-13"
       ],
       "stato": "aperta",
       "pregressa": true,
@@ -2261,6 +2281,20 @@
       "order": null
     },
     {
+      "id": "QQfedA18EWSZw4sEcepI",
+      "bus": "L3306",
+      "desc": "Spia motore",
+      "date": [
+        "2026-11-14"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-15T12:22:51.233Z",
+      "order": null
+    },
+    {
       "id": "QQqboakdHzhD4d2qaBmK",
       "bus": "K1092",
       "desc": "Malfunzionamento climatizzatore",
@@ -2508,7 +2542,8 @@
       "bus": "A4097",
       "desc": "Luce pulsante porta ant",
       "date": [
-        "2026-11-09"
+        "2026-11-09",
+        "2026-11-12"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -2544,7 +2579,10 @@
         "2026-11-05",
         "2026-11-05",
         "2026-11-06",
-        "2026-11-11"
+        "2026-11-11",
+        "2026-11-12",
+        "2026-11-12",
+        "2026-11-12"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -3135,7 +3173,7 @@
       "bus": "K3136",
       "desc": "Spazzole tergicristallo molto rumorose",
       "date": [
-        "2026-11-12"
+        "2026-11-11"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -3350,11 +3388,24 @@
       "order": null
     },
     {
+      "id": "cWIW24UGVexGraFI0o1w",
+      "bus": "A5149",
+      "desc": "Controllare gomma post esterna lato sx",
+      "date": [],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-15T11:58:59.602Z",
+      "order": null
+    },
+    {
       "id": "caOf4XQ5wGYnxNehKRPp",
       "bus": "K2125",
       "desc": "Spia motore",
       "date": [
-        "2026-10-31"
+        "2026-10-31",
+        "2026-11-12"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -3712,7 +3763,9 @@
       "desc": "Aria fredda sbrinatore e riscaldamento",
       "date": [
         "2026-10-27",
-        "2026-11-02"
+        "2026-11-02",
+        "2026-11-12",
+        "2026-11-13"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -4081,7 +4134,8 @@
         "2026-09-15",
         "2026-09-19",
         "2026-09-23",
-        "2026-09-24"
+        "2026-09-24",
+        "2026-11-14"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -4223,7 +4277,7 @@
         "2026-10-10"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-10-11T07:26:41.368Z",
@@ -4599,7 +4653,7 @@
         "2026-10-31"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-16T07:09:55.329Z",
@@ -4610,7 +4664,8 @@
       "bus": "L3306",
       "desc": "Spia ESC",
       "date": [
-        "2026-09-23"
+        "2026-09-23",
+        "2026-11-14"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -4678,9 +4733,10 @@
     {
       "id": "qO59vML2h7CEEaTnSM26",
       "bus": "K2125",
-      "desc": "Il volante tira a dx",
+      "desc": "A sterzo dritto tira a dx",
       "date": [
-        "2026-09-16"
+        "2026-09-16",
+        "2026-11-12"
       ],
       "stato": "aperta",
       "pregressa": true,
@@ -4914,6 +4970,18 @@
       "order": null
     },
     {
+      "id": "sHJO3z0cCGaW7HdET47g",
+      "bus": "K2093",
+      "desc": "Difficoltà a regolare la temperatura dell’aria calda",
+      "date": [],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-15T12:06:58.073Z",
+      "order": null
+    },
+    {
       "id": "sPRCrET8560YhRF9bmQU",
       "bus": "A5153",
       "desc": "Malfunzionamento impianto di climatizzazione",
@@ -4935,7 +5003,9 @@
       "id": "saF1szelLBo793ia1GGM",
       "bus": "K2093",
       "desc": "Posizione post dx fuori servizio",
-      "date": [],
+      "date": [
+        "2026-11-12"
+      ],
       "stato": "aperta",
       "pregressa": false,
       "standby": false,
@@ -4979,6 +5049,7 @@
       "bus": "A4191",
       "desc": "Forti cigolii nell’abitacolo",
       "date": [
+        "2026-11-11",
         "2026-11-12"
       ],
       "stato": "aperta",
@@ -5015,7 +5086,7 @@
         "2026-10-10"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-10-11T15:01:24.994Z",
@@ -5065,7 +5136,7 @@
         "2026-10-10"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-07T18:37:57.476Z",
@@ -5143,6 +5214,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-16T07:08:55.433Z",
+      "order": null
+    },
+    {
+      "id": "vgKx5swnIscMJ3NCqyBh",
+      "bus": "L3306",
+      "desc": "Filtro antiparticolato da controllare",
+      "date": [
+        "2026-11-14"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-15T12:23:41.081Z",
       "order": null
     },
     {
@@ -5328,7 +5413,8 @@
         "2026-10-07",
         "2026-10-08",
         "2026-10-09",
-        "2026-10-10"
+        "2026-10-10",
+        "2026-11-13"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -5454,7 +5540,8 @@
         "2026-11-03",
         "2026-11-04",
         "2026-11-05",
-        "2026-11-06"
+        "2026-11-06",
+        "2026-11-14"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -5560,6 +5647,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-06T17:04:32.482Z",
+      "order": null
+    },
+    {
+      "id": "zU1NA21r7vZd8zgWr7ZH",
+      "bus": "A4097",
+      "desc": "Entra acqua dal parabrezza interno posizione centrale",
+      "date": [
+        "2026-11-12"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-15T12:01:35.060Z",
       "order": null
     },
     {
