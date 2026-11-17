@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-11-17T10:48:32.324Z",
-  "numeroSegnalazioni": 322,
+  "aggiornatoIl": "2026-11-17T19:26:42.470Z",
+  "numeroSegnalazioni": 330,
   "segnalazioni": [
     {
       "id": "0cYEr5uo7sRHBgS3OJiH",
@@ -73,6 +73,20 @@
       "urgente": false,
       "createdAt": "2026-08-15T15:34:31.905Z",
       "order": 1
+    },
+    {
+      "id": "1eeMrOAoDPwliGMPdsg8",
+      "bus": "K1101",
+      "desc": "Freno a mano non tiene",
+      "date": [
+        "2026-11-16"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-17T15:44:20.120Z",
+      "order": null
     },
     {
       "id": "1ltdEBBONJR8yuiqNZxG",
@@ -453,6 +467,20 @@
       "urgente": false,
       "createdAt": "2026-07-16T21:43:09.649Z",
       "order": 0
+    },
+    {
+      "id": "51hQaQ0N8YFmePex0XAl",
+      "bus": "A5124",
+      "desc": "Non rileva pressione pneumatici",
+      "date": [
+        "2026-11-17"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-17T15:50:53.948Z",
+      "order": null
     },
     {
       "id": "5G1RxFPcIQHC842TFk9d",
@@ -848,7 +876,8 @@
       "bus": "K1097",
       "desc": "Spia anomalia motore",
       "date": [
-        "2026-11-11"
+        "2026-11-11",
+        "2026-11-16"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -1144,6 +1173,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-18T16:18:22.475Z",
+      "order": null
+    },
+    {
+      "id": "C51RctXpDzTKzYNBijRs",
+      "bus": "L3306",
+      "desc": "Controllo trazione",
+      "date": [
+        "2026-11-17"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-17T16:19:06.028Z",
       "order": null
     },
     {
@@ -1691,7 +1734,8 @@
         "2025-10-22",
         "2025-12-30",
         "2026-09-27",
-        "2026-09-30"
+        "2026-09-30",
+        "2026-11-17"
       ],
       "stato": "aperta",
       "pregressa": true,
@@ -1737,7 +1781,8 @@
         "2026-10-13",
         "2026-10-25",
         "2026-10-25",
-        "2026-11-01"
+        "2026-11-01",
+        "2026-11-17"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -1999,6 +2044,20 @@
       "order": null
     },
     {
+      "id": "N8IwAsXJak0JUCQzqJpy",
+      "bus": "K1097",
+      "desc": "Controllare luci di arresto",
+      "date": [
+        "2026-11-16"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-17T15:48:11.530Z",
+      "order": null
+    },
+    {
       "id": "Nc4nm3HOSKAGrK6xSc0R",
       "bus": "A5115",
       "desc": "Anomalia sistema frenante",
@@ -2121,7 +2180,7 @@
         "2026-09-18"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-07-14T09:38:55.913Z",
@@ -2140,6 +2199,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-10-15T07:10:57.112Z",
+      "order": null
+    },
+    {
+      "id": "OsZekdrISeyLSmh8HP3n",
+      "bus": "A5045",
+      "desc": "Serbatoio in riserva, galleggiante difettoso",
+      "date": [
+        "2026-11-17"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-17T16:20:15.893Z",
       "order": null
     },
     {
@@ -2285,7 +2358,8 @@
       "bus": "L3306",
       "desc": "Spia motore",
       "date": [
-        "2026-11-14"
+        "2026-11-14",
+        "2026-11-17"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -2387,7 +2461,16 @@
         "2026-10-09",
         "2026-10-10",
         "2026-10-18",
-        "2026-10-20"
+        "2026-10-20",
+        "2026-10-21",
+        "2026-11-07",
+        "2026-11-08",
+        "2026-11-11",
+        "2026-11-13",
+        "2026-11-14",
+        "2026-11-16",
+        "2026-11-17",
+        "2026-11-17"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -2981,6 +3064,20 @@
       "order": null
     },
     {
+      "id": "YF1dT2BRbgHWFKqDLxKA",
+      "bus": "A5124",
+      "desc": "Maniglia interna autista rotta",
+      "date": [
+        "2026-11-17"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-17T15:51:35.629Z",
+      "order": null
+    },
+    {
       "id": "YUr2CfuZmtyfTwg5DTWt",
       "bus": "K3140",
       "desc": "La fermata prenotata rimane accesa non suonando il campanello",
@@ -3059,27 +3156,14 @@
       "bus": "A4188",
       "desc": "Fermata prenotata non si stacca",
       "date": [
-        "2026-08-15"
+        "2026-08-15",
+        "2026-11-16"
       ],
       "stato": "aperta",
       "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-16T09:30:37.660Z",
-      "order": null
-    },
-    {
-      "id": "YwBr4GC3EJjKee6d9lim",
-      "bus": "K2093",
-      "desc": "Malfunzionamento ventilazione",
-      "date": [
-        "2026-09-23"
-      ],
-      "stato": "aperta",
-      "pregressa": false,
-      "standby": false,
-      "urgente": false,
-      "createdAt": "2026-09-25T16:30:15.232Z",
       "order": null
     },
     {
@@ -3104,7 +3188,8 @@
       "bus": "K1097",
       "desc": "Controllare equilibratura asse posteriore, vibrazioni del mezzo durante la marcia",
       "date": [
-        "2026-11-11"
+        "2026-11-11",
+        "2026-11-16"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -4253,6 +4338,20 @@
       "order": null
     },
     {
+      "id": "l0V3rPT2bVP6vNxEPY16",
+      "bus": "K1097",
+      "desc": "Trombe fuori servizio",
+      "date": [
+        "2026-11-16"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-17T15:47:46.446Z",
+      "order": null
+    },
+    {
       "id": "l2sLEwvqDtLh9x0jbLqZ",
       "bus": "K3122",
       "desc": "Anab sx",
@@ -4265,6 +4364,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-01T18:13:46.573Z",
+      "order": null
+    },
+    {
+      "id": "l6SKYDCG34CZ78P5wACQ",
+      "bus": "A5116",
+      "desc": "Difficoltà a regolare i retrovisori",
+      "date": [
+        "2026-11-16"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-17T15:50:00.374Z",
       "order": null
     },
     {
@@ -4974,7 +5087,9 @@
       "id": "sHJO3z0cCGaW7HdET47g",
       "bus": "K2093",
       "desc": "Difficoltà a regolare la temperatura dell’aria calda",
-      "date": [],
+      "date": [
+        "2026-09-23"
+      ],
       "stato": "aperta",
       "pregressa": false,
       "standby": false,
@@ -5073,7 +5188,7 @@
         "2026-11-03"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-10-26T06:52:15.200Z",
@@ -5134,7 +5249,8 @@
         "2026-10-07",
         "2026-10-08",
         "2026-10-09",
-        "2026-10-10"
+        "2026-10-10",
+        "2026-11-17"
       ],
       "stato": "aperta",
       "pregressa": true,
@@ -5279,7 +5395,8 @@
         "2026-08-25",
         "2026-08-27",
         "2026-08-28",
-        "2026-08-31"
+        "2026-08-31",
+        "2026-11-16"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -5415,7 +5532,8 @@
         "2026-10-08",
         "2026-10-09",
         "2026-10-10",
-        "2026-11-13"
+        "2026-11-13",
+        "2026-11-17"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -5592,6 +5710,20 @@
       "urgente": false,
       "createdAt": "2026-08-05T08:06:03.704Z",
       "order": 3
+    },
+    {
+      "id": "ymBkeZ7M8vq9TKraKf15",
+      "bus": "K1101",
+      "desc": "Controllare clacson, non funziona",
+      "date": [
+        "2026-11-16"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-17T15:44:58.725Z",
+      "order": null
     },
     {
       "id": "yqqv0eX8hPPrKj03apgD",
