@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-11-17T19:26:42.470Z",
-  "numeroSegnalazioni": 330,
+  "aggiornatoIl": "2026-11-18T01:49:29.860Z",
+  "numeroSegnalazioni": 332,
   "segnalazioni": [
     {
       "id": "0cYEr5uo7sRHBgS3OJiH",
@@ -2477,7 +2477,7 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-10-11T21:19:29.483Z",
-      "order": null
+      "order": 0
     },
     {
       "id": "RM6w5f9OR64HUkGbRaBN",
@@ -3644,6 +3644,21 @@
       "order": 1
     },
     {
+      "id": "dcsYfR6AXRSr2gSFdBEs",
+      "bus": "K1104",
+      "desc": "Frizione molto dura",
+      "date": [
+        "2026-10-31",
+        "2026-11-09"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-17T22:23:08.030Z",
+      "order": null
+    },
+    {
       "id": "dzkzd9x5PaPQcwlB8Aeo",
       "bus": "F4006",
       "desc": "Aria condizionata fuori servizio",
@@ -4374,11 +4389,11 @@
         "2026-11-16"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-11-17T15:50:00.374Z",
-      "order": null
+      "order": 1
     },
     {
       "id": "lAKT1XoJ16buKnpUoskj",
@@ -4805,6 +4820,20 @@
       "order": null
     },
     {
+      "id": "pjxPlJVmBlAQQCnXubne",
+      "bus": "A5149",
+      "desc": "Spia motore",
+      "date": [
+        "2026-11-17"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-17T22:11:32.673Z",
+      "order": null
+    },
+    {
       "id": "pv2WISCpjt4naVxhFJdC",
       "bus": "A5046",
       "desc": "Aria fredda da sbrinatore e riscaldamento",
@@ -5120,7 +5149,9 @@
       "bus": "K2093",
       "desc": "Posizione post dx fuori servizio",
       "date": [
-        "2026-11-12"
+        "2026-11-02",
+        "2026-11-12",
+        "2026-11-16"
       ],
       "stato": "aperta",
       "pregressa": false,
