@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-11-18T09:23:08.358Z",
-  "numeroSegnalazioni": 333,
+  "aggiornatoIl": "2026-11-18T18:17:52.843Z",
+  "numeroSegnalazioni": 335,
   "segnalazioni": [
     {
       "id": "0cYEr5uo7sRHBgS3OJiH",
@@ -1319,7 +1319,7 @@
         "2026-09-13"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-12T15:27:37.570Z",
@@ -1379,7 +1379,7 @@
         "2026-09-13"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-12T15:29:40.144Z",
@@ -2030,6 +2030,20 @@
       "order": null
     },
     {
+      "id": "MpLCjtcuJOo5Hvil6TqU",
+      "bus": "A5154",
+      "desc": "Specchio retrovisore dx non tiene la posizione",
+      "date": [
+        "2026-11-18"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-18T17:45:40.207Z",
+      "order": null
+    },
+    {
       "id": "MyulHsGufTgem8Effz0j",
       "bus": "A5154",
       "desc": "Pulsante sbrinatore serpentine non funzionante",
@@ -2470,7 +2484,8 @@
         "2026-11-14",
         "2026-11-16",
         "2026-11-17",
-        "2026-11-17"
+        "2026-11-17",
+        "2026-11-18"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -3109,7 +3124,7 @@
         "2026-01-26"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-11-18T07:40:27.792Z",
@@ -5331,6 +5346,21 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-07T18:37:57.476Z",
+      "order": null
+    },
+    {
+      "id": "uUWaAukHhrGqnrsBQRpO",
+      "bus": "K1098",
+      "desc": "Plurimus nn prende i codici",
+      "date": [
+        "2026-11-18",
+        "2026-11-18"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-18T17:43:57.736Z",
       "order": null
     },
     {
