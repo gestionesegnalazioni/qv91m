@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-11-18T01:49:29.860Z",
-  "numeroSegnalazioni": 332,
+  "aggiornatoIl": "2026-11-18T09:23:08.358Z",
+  "numeroSegnalazioni": 333,
   "segnalazioni": [
     {
       "id": "0cYEr5uo7sRHBgS3OJiH",
@@ -226,7 +226,7 @@
         "2026-07-10"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-06-09T23:00:28.280Z",
@@ -745,7 +745,7 @@
         "2026-09-23"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-18T16:20:10.385Z",
@@ -2432,7 +2432,7 @@
         "2026-07-10"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-06-09T23:00:39.550Z",
@@ -2653,7 +2653,7 @@
     {
       "id": "TeYJry3Kozh4kmsVvcqJ",
       "bus": "K2125",
-      "desc": "Clima in blocco",
+      "desc": "Non si regola la temperatura del clima",
       "date": [
         "2026-10-16",
         "2026-10-28",
@@ -2666,7 +2666,8 @@
         "2026-11-12",
         "2026-11-12",
         "2026-11-12",
-        "2026-11-13"
+        "2026-11-13",
+        "2026-11-18"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -3092,6 +3093,29 @@
       "order": 1
     },
     {
+      "id": "YYwzKeqa2NjQyhHPtlLa",
+      "bus": "K2093",
+      "desc": "Entrambi i retrovisori non si regolano",
+      "date": [
+        "2025-04-11",
+        "2025-11-11",
+        "2025-12-11",
+        "2025-12-12",
+        "2025-12-17",
+        "2025-12-31",
+        "2026-01-05",
+        "2026-01-07",
+        "2026-01-20",
+        "2026-01-26"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-18T07:40:27.792Z",
+      "order": null
+    },
+    {
       "id": "YdfTjcJyZieIMXIZMmgY",
       "bus": "A2052",
       "desc": "Regolazione sterzo fuori servizio",
@@ -3467,7 +3491,7 @@
         "2026-04-02"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-26T16:13:37.669Z",
@@ -3490,8 +3514,11 @@
       "bus": "K2125",
       "desc": "Spia motore",
       "date": [
+        "2026-08-11",
+        "2026-09-16",
         "2026-10-31",
-        "2026-11-12"
+        "2026-11-12",
+        "2026-11-18"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -3812,7 +3839,7 @@
         "2026-03-26"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-26T16:12:37.142Z",
@@ -4417,7 +4444,8 @@
       "bus": "K2093",
       "desc": "Telecamera retromarcia fuori servizio",
       "date": [
-        "2026-09-23"
+        "2026-09-23",
+        "2026-11-18"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -4779,10 +4807,11 @@
       "desc": "Retrovisore destro non si regola verticalmente",
       "date": [
         "2026-09-16",
-        "2026-10-31"
+        "2026-10-31",
+        "2026-11-18"
       ],
       "stato": "aperta",
-      "pregressa": true,
+      "pregressa": false,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-16T07:09:55.329Z",
@@ -4874,12 +4903,25 @@
       "order": 3
     },
     {
+      "id": "qL3ECByF3MHdMqp5LJBP",
+      "bus": "K2131",
+      "desc": "Clima in blocco",
+      "date": [],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-18T07:46:58.652Z",
+      "order": null
+    },
+    {
       "id": "qO59vML2h7CEEaTnSM26",
       "bus": "K2125",
       "desc": "A sterzo dritto tira a dx",
       "date": [
         "2026-09-16",
-        "2026-11-12"
+        "2026-11-12",
+        "2026-11-18"
       ],
       "stato": "aperta",
       "pregressa": true,
@@ -5120,7 +5162,7 @@
         "2026-09-23"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-11-15T12:06:58.073Z",
@@ -5151,7 +5193,8 @@
       "date": [
         "2026-11-02",
         "2026-11-12",
-        "2026-11-16"
+        "2026-11-16",
+        "2026-11-18"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -5347,21 +5390,6 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-13T22:05:41.091Z",
-      "order": null
-    },
-    {
-      "id": "vetU0uFJFC93v9mR4GWV",
-      "bus": "K2125",
-      "desc": "Spia motore",
-      "date": [
-        "2026-08-11",
-        "2026-09-16"
-      ],
-      "stato": "aperta",
-      "pregressa": true,
-      "standby": false,
-      "urgente": false,
-      "createdAt": "2026-09-16T07:08:55.433Z",
       "order": null
     },
     {
@@ -5736,7 +5764,7 @@
         "2026-08-01"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-05T08:06:03.704Z",
