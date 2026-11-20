@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-11-20T13:08:40.634Z",
-  "numeroSegnalazioni": 336,
+  "aggiornatoIl": "2026-11-20T21:04:58.346Z",
+  "numeroSegnalazioni": 340,
   "segnalazioni": [
     {
       "id": "0cYEr5uo7sRHBgS3OJiH",
@@ -28,6 +28,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-10-11T15:06:07.826Z",
+      "order": null
+    },
+    {
+      "id": "161i7GRrptHP9w97W1gT",
+      "bus": "A5137",
+      "desc": "Fendinebbia ant sx",
+      "date": [
+        "2026-11-20"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-20T19:03:03.568Z",
       "order": null
     },
     {
@@ -269,6 +283,20 @@
       "order": null
     },
     {
+      "id": "2uyS6oH5kGher2vzV3Nf",
+      "bus": "A5124",
+      "desc": "Fendinebbia ant dx",
+      "date": [
+        "2026-11-20"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-20T18:58:12.160Z",
+      "order": null
+    },
+    {
       "id": "32h7ovcp6F4cuYbluOWf",
       "bus": "A5115",
       "desc": "Sospensioni rigide, sollecitazioni su buchi e dossi",
@@ -477,7 +505,7 @@
         "2026-11-19"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-11-17T15:50:53.948Z",
@@ -1372,6 +1400,23 @@
       "order": null
     },
     {
+      "id": "G03YExWHMTden0pa2L2o",
+      "bus": "A5124",
+      "desc": "AVM si riavvia in continuazione",
+      "date": [
+        "2026-10-21",
+        "2026-10-23",
+        "2026-11-10",
+        "2026-11-20"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-20T19:36:03.296Z",
+      "order": null
+    },
+    {
       "id": "GJNaiwGylk8k74I3sUOb",
       "bus": "K1098",
       "desc": "Spia anomalia motore",
@@ -1772,6 +1817,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-28T17:42:29.823Z",
+      "order": null
+    },
+    {
+      "id": "KecgYwgwJr0tG83V2nBt",
+      "bus": "K1043",
+      "desc": "Spia anomalia luci",
+      "date": [
+        "2026-11-20"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-20T19:02:02.797Z",
       "order": null
     },
     {
@@ -2208,7 +2267,8 @@
       "desc": "Spia airbag",
       "date": [
         "2026-10-14",
-        "2026-10-21"
+        "2026-10-21",
+        "2026-11-20"
       ],
       "stato": "aperta",
       "pregressa": true,
@@ -3101,8 +3161,13 @@
       "bus": "A5124",
       "desc": "Maniglia interna autista rotta",
       "date": [
+        "2026-10-29",
+        "2026-11-03",
         "2026-11-17",
-        "2026-11-19"
+        "2026-11-18",
+        "2026-11-19",
+        "2026-11-20",
+        "2026-11-20"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -4248,7 +4313,8 @@
       "bus": "K1043",
       "desc": "Entrambi i retrovisori non si regolano",
       "date": [
-        "2026-10-21"
+        "2026-10-21",
+        "2026-11-20"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -4300,7 +4366,7 @@
         "2026-11-14"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": true,
       "createdAt": "2026-07-09T21:57:56.729Z",
@@ -5372,6 +5438,8 @@
       "bus": "K1098",
       "desc": "Plurimus nn prende i codici",
       "date": [
+        "2026-11-12",
+        "2026-11-16",
         "2026-11-18",
         "2026-11-18"
       ],
