@@ -1,5 +1,5 @@
 {
-  "aggiornatoIl": "2026-11-23T03:17:00.834Z",
+  "aggiornatoIl": "2026-11-23T13:15:28.013Z",
   "numeroSegnalazioni": 340,
   "segnalazioni": [
     {
@@ -698,7 +698,7 @@
     {
       "id": "6EigQyzUfkt5FCQJPNp9",
       "bus": "A5122",
-      "desc": "Il retrovisore destro non si regola e si muove durante la marcia",
+      "desc": "Comandi invertiti regolazione specchio dx",
       "date": [
         "2026-09-20",
         "2026-11-10"
