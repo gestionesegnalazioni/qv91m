@@ -1,5 +1,5 @@
 {
-  "aggiornatoIl": "2026-11-23T13:15:28.013Z",
+  "aggiornatoIl": "2026-11-24T01:01:05.349Z",
   "numeroSegnalazioni": 340,
   "segnalazioni": [
     {
@@ -701,7 +701,8 @@
       "desc": "Comandi invertiti regolazione specchio dx",
       "date": [
         "2026-09-20",
-        "2026-11-10"
+        "2026-11-10",
+        "2026-11-23"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -2619,7 +2620,7 @@
         "2026-11-19"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-11-19T18:28:03.383Z",
@@ -3171,7 +3172,8 @@
         "2026-11-19",
         "2026-11-20",
         "2026-11-20",
-        "2026-11-21"
+        "2026-11-21",
+        "2026-11-23"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -5680,7 +5682,9 @@
         "2026-10-18",
         "2026-10-22",
         "2026-10-26",
-        "2026-10-29"
+        "2026-10-29",
+        "2026-11-23",
+        "2026-11-23"
       ],
       "stato": "aperta",
       "pregressa": false,
