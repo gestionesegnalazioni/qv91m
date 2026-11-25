@@ -2336,14 +2336,16 @@
     border:1px solid rgba(96,165,250,.82);
   }
 
-  .combined-fleet-group.out-service { color:#fff; background:linear-gradient(145deg,#682b32,#391b24); border:1px solid #c66b72; }
-  .out-service-list { display:grid; gap:8px; }
+  .combined-fleet-group.out-service { color:#201800; background:linear-gradient(145deg,#ffe477,#eab308); border:1px solid #facc15; }
+  .out-service-list { display:grid; grid-template-columns:repeat(auto-fill,minmax(100px,1fr)); gap:8px; }
   .out-service-row,.out-service-add { display:flex; align-items:center; gap:10px; }
   .out-service-add { margin-top:14px; }
   .out-service-add select { flex:1; min-width:0; padding:12px; border-radius:12px; background:#241820; color:#fff; border:1px solid #a96b72; font-size:16px; }
-  .out-service-bus { flex:1; text-align:left; padding:12px; border-radius:12px; background:rgba(255,255,255,.1); color:white; font-weight:800; border:1px solid #a96b72; }
+  .out-service-bus { text-align:center; padding:14px 6px; border-radius:12px; background:rgba(255,255,255,.35); color:#201800; font-weight:800; border:1px solid #a67c00; }
   .out-service-return { padding:10px; color:#fff; background:rgba(255,255,255,.1); border:1px solid #a96b72; border-radius:12px; }
-  .out-service-empty { padding:8px; opacity:.8; }
+  .out-service-empty { grid-column:1/-1; padding:8px; opacity:.8; }
+  .btn-out-service { width:100%; padding:14px; border-radius:14px; font-weight:800; font-size:1rem; background:#facc15; color:#201800; border:1px solid #eab308; }
+  .btn-out-service.active { background:#34d399; color:#082119; border-color:#34d399; }
   .combined-fleet-title {
     display:flex;
     align-items:baseline;
@@ -4829,8 +4831,7 @@ function renderCategoryView() {
       ? renderUrbanDirectory(urbanItems)
       : '<div class="empty">Nessun autobus urbano.</div>';
 
-    const fuoriContent = fuori.length ? fuori.map(b => '<div class="out-service-row"><button class="out-service-bus" onclick="selectBus(\'' + esc(b.matricola) + '\')">' + esc(b.matricola) + '</button><button class="out-service-return" onclick="setBusOutOfService(\'' + esc(b.id) + '\',false)" aria-label="Rimetti in servizio">Rientrato</button></div>').join('') : '<div class="out-service-empty">Nessun autobus fuori servizio.</div>';
-    const fuoriOptions = buses.filter(b => !b.fuoriServizio).sort(byMat).map(b => '<option value="' + esc(b.id) + '">' + esc(b.matricola) + '</option>').join('');
+    const fuoriContent = fuori.length ? fuori.map(b => `<button class="out-service-bus" onclick="selectBus('${esc(b.matricola)}')">${esc(b.matricola)}</button>`).join('') : '<div class="out-service-empty">Nessun autobus fuori servizio.</div>';
     const extraurbanContent = extraurbanItems.length
       ? renderExtraurbanDirectory(extraurbanItems)
       : '<div class="empty">Nessun autobus extraurbano.</div>';
@@ -4847,7 +4848,6 @@ function renderCategoryView() {
       '<section class="combined-fleet-group out-service">' +
         '<div class="combined-fleet-title"><span>Fuori servizio</span><span class="combined-fleet-count">' + fuori.length + ' autobus</span></div>' +
         '<div class="out-service-list">' + fuoriContent + '</div>' +
-        '<div class="out-service-add"><select id="outServiceBus" aria-label="Matricola autobus"><option value="">Seleziona matricola</option>' + fuoriOptions + '</select><button class="btn-primary" onclick="addOutOfServiceBus()">Aggiungi</button></div>' +
       '</section>';
     return;
   }
@@ -4878,10 +4878,9 @@ function renderCategoryView() {
       : items.map(b => busTile(b, tipo)).join('');
 }
 
-window.addOutOfServiceBus = function() {
-  const id = document.getElementById('outServiceBus')?.value;
-  if (id) setBusOutOfService(id,true);
-  else showToast('Seleziona una matricola');
+window.toggleSelectedBusOutOfService = function() {
+  const bus = buses.find(b => b.matricola === selectedBus);
+  if (bus) setBusOutOfService(bus.id, !bus.fuoriServizio);
 };
 window.setBusOutOfService = async function(id, value) {
   const bus = buses.find(b => b.id === id);
@@ -5228,6 +5227,7 @@ function showBusDetail(mat) {
           <button class="return-save" onclick="saveBusReturn()">Aggiungi rientro</button>
         </div>
       </div>
+      <button class="btn-out-service ${bus?.fuoriServizio ? 'active' : ''}" onclick="toggleSelectedBusOutOfService()">${bus?.fuoriServizio ? 'Metti in servizio' : 'Fuori servizio'}</button>
       <button class="btn-urgent-bus ${bus?.urgente ? 'active' : ''}" onclick="toggleBusUrgent()">${bus?.urgente ? 'Da monitorare ✓' : 'Da monitorare'}</button>
       <button class="btn-share-main" onclick="openShareModal()">Condividi anomalie</button>
     </div>`;
