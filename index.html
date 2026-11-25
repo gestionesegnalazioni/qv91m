@@ -2337,7 +2337,9 @@
   }
 
   .combined-fleet-group.out-service { color:#201800; background:linear-gradient(145deg,#ffe477,#eab308); border:1px solid #facc15; }
-  .out-service-list { display:grid; grid-template-columns:repeat(auto-fill,minmax(100px,1fr)); gap:8px; }
+  .out-service-list { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px 5px; width:100%; padding:10px 6px 12px; border:1px solid rgba(100,75,0,.25); border-radius:18px; box-sizing:border-box; }
+  .combined-fleet-group.out-service .urban-directory-bus { background:linear-gradient(145deg,#fff4b5,#f8d95d); color:#201800; border-color:#a67c00; }
+  .combined-fleet-group.out-service .urban-directory-bus.has-alerts { border-color:rgba(239,68,68,.72); }
   .out-service-row,.out-service-add { display:flex; align-items:center; gap:10px; }
   .out-service-add { margin-top:14px; }
   .out-service-add select { flex:1; min-width:0; padding:12px; border-radius:12px; background:#241820; color:#fff; border:1px solid #a96b72; font-size:16px; }
@@ -4330,7 +4332,7 @@ window.removeAttentionReportEntry = async function(id) {
 };
 
 function getBusGroups() {
-  const tutti = buses;
+  const tutti = buses.filter(b => b.fuoriServizio !== true);
 
   const urbani = tutti.filter(b => {
     const iniziale = String(b.matricola || '').trim().charAt(0).toUpperCase();
@@ -4347,7 +4349,7 @@ function getBusGroups() {
     return !['A', 'B', 'F', 'K', 'L'].includes(iniziale);
   });
 
-  return { urbani, extraurbani, altri, fuori:tutti.filter(b => b.fuoriServizio === true).sort(byMat) };
+  return { urbani, extraurbani, altri, fuori:buses.filter(b => b.fuoriServizio === true).sort(byMat) };
 }
 
 function busTile(bus, tipo) {
@@ -4394,7 +4396,7 @@ function renderBusGrid() {
   if (!grid) return;
 
   const { urbani, extraurbani, altri } = getBusGroups();
-  const numeroAutobus = urbani.length + altri.length + extraurbani.length;
+  const numeroAutobus = buses.length;
 
   grid.innerHTML =
     categoryCard('autobus', 'Autobus', numeroAutobus, 'autobus') +
@@ -4831,7 +4833,7 @@ function renderCategoryView() {
       ? renderUrbanDirectory(urbanItems)
       : '<div class="empty">Nessun autobus urbano.</div>';
 
-    const fuoriContent = fuori.length ? fuori.map(b => `<button class="out-service-bus" onclick="selectBus('${esc(b.matricola)}')">${esc(b.matricola)}</button>`).join('') : '<div class="out-service-empty">Nessun autobus fuori servizio.</div>';
+    const fuoriContent = fuori.length ? renderDirectoryButtons(fuori) : '<div class="out-service-empty">Nessun autobus fuori servizio.</div>';
     const extraurbanContent = extraurbanItems.length
       ? renderExtraurbanDirectory(extraurbanItems)
       : '<div class="empty">Nessun autobus extraurbano.</div>';
