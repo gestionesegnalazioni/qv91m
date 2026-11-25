@@ -2336,6 +2336,14 @@
     border:1px solid rgba(96,165,250,.82);
   }
 
+  .combined-fleet-group.out-service { color:#fff; background:linear-gradient(145deg,#682b32,#391b24); border:1px solid #c66b72; }
+  .out-service-list { display:grid; gap:8px; }
+  .out-service-row,.out-service-add { display:flex; align-items:center; gap:10px; }
+  .out-service-add { margin-top:14px; }
+  .out-service-add select { flex:1; min-width:0; padding:12px; border-radius:12px; background:#241820; color:#fff; border:1px solid #a96b72; font-size:16px; }
+  .out-service-bus { flex:1; text-align:left; padding:12px; border-radius:12px; background:rgba(255,255,255,.1); color:white; font-weight:800; border:1px solid #a96b72; }
+  .out-service-return { padding:10px; color:#fff; background:rgba(255,255,255,.1); border:1px solid #a96b72; border-radius:12px; }
+  .out-service-empty { padding:8px; opacity:.8; }
   .combined-fleet-title {
     display:flex;
     align-items:baseline;
@@ -3228,12 +3236,7 @@
       </div>
 
 
-      <section class="simple-list-panel" aria-label="Lista matricole e anomalie">
-        <div id="simpleListEntries" class="simple-list-entries"></div>
-        <div class="simple-list-controls">
-          <button class="simple-list-plus" onclick="addSimpleListEntry()" aria-label="Aggiungi una voce">+</button>
-        </div>
-      </section>
+
 
     </div>
   </div>
@@ -4342,7 +4345,7 @@ function getBusGroups() {
     return !['A', 'B', 'F', 'K', 'L'].includes(iniziale);
   });
 
-  return { urbani, extraurbani, altri, fuori:[] };
+  return { urbani, extraurbani, altri, fuori:tutti.filter(b => b.fuoriServizio === true).sort(byMat) };
 }
 
 function busTile(bus, tipo) {
@@ -4826,6 +4829,8 @@ function renderCategoryView() {
       ? renderUrbanDirectory(urbanItems)
       : '<div class="empty">Nessun autobus urbano.</div>';
 
+    const fuoriContent = fuori.length ? fuori.map(b => '<div class="out-service-row"><button class="out-service-bus" onclick="selectBus(\'' + esc(b.matricola) + '\')">' + esc(b.matricola) + '</button><button class="out-service-return" onclick="setBusOutOfService(\'' + esc(b.id) + '\',false)" aria-label="Rimetti in servizio">Rientrato</button></div>').join('') : '<div class="out-service-empty">Nessun autobus fuori servizio.</div>';
+    const fuoriOptions = buses.filter(b => !b.fuoriServizio).sort(byMat).map(b => '<option value="' + esc(b.id) + '">' + esc(b.matricola) + '</option>').join('');
     const extraurbanContent = extraurbanItems.length
       ? renderExtraurbanDirectory(extraurbanItems)
       : '<div class="empty">Nessun autobus extraurbano.</div>';
@@ -4838,6 +4843,11 @@ function renderCategoryView() {
       '<section class="combined-fleet-group extraurban">' +
         '<div class="combined-fleet-title"><span>Extraurbani</span><span class="combined-fleet-count">' + extraurbanLabel + '</span></div>' +
         '<div class="combined-fleet-body">' + extraurbanContent + '</div>' +
+      '</section>' +
+      '<section class="combined-fleet-group out-service">' +
+        '<div class="combined-fleet-title"><span>Fuori servizio</span><span class="combined-fleet-count">' + fuori.length + ' autobus</span></div>' +
+        '<div class="out-service-list">' + fuoriContent + '</div>' +
+        '<div class="out-service-add"><select id="outServiceBus" aria-label="Matricola autobus"><option value="">Seleziona matricola</option>' + fuoriOptions + '</select><button class="btn-primary" onclick="addOutOfServiceBus()">Aggiungi</button></div>' +
       '</section>';
     return;
   }
@@ -4867,6 +4877,20 @@ function renderCategoryView() {
       ? renderExtraurbanDirectory(items)
       : items.map(b => busTile(b, tipo)).join('');
 }
+
+window.addOutOfServiceBus = function() {
+  const id = document.getElementById('outServiceBus')?.value;
+  if (id) setBusOutOfService(id,true);
+  else showToast('Seleziona una matricola');
+};
+window.setBusOutOfService = async function(id, value) {
+  const bus = buses.find(b => b.id === id);
+  if (!bus) return;
+  try {
+    await updateDoc(doc(db,'buses',id), {fuoriServizio:value});
+    showToast(value ? 'Autobus fuori servizio' : 'Autobus rientrato in servizio');
+  } catch(err) { console.error(err); showToast('Modifica non salvata'); }
+};
 
 function hardResetSwipeVisual() {
   const resetElement = element => {
