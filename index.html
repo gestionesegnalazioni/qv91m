@@ -2345,6 +2345,7 @@
   .out-service-add select { flex:1; min-width:0; padding:12px; border-radius:12px; background:#241820; color:#fff; border:1px solid #a96b72; font-size:16px; }
   .out-service-bus { text-align:center; padding:14px 6px; border-radius:12px; background:rgba(255,255,255,.35); color:#201800; font-weight:800; border:1px solid #a67c00; }
   .out-service-return { padding:10px; color:#fff; background:rgba(255,255,255,.1); border:1px solid #a96b72; border-radius:12px; }
+  .out-service-column-title { text-align:center; font-family:var(--font-mono); font-weight:800; font-size:.85rem; color:#201800; padding:4px 0; }
   .out-service-empty { grid-column:1/-1; padding:8px; opacity:.8; }
   .btn-out-service { width:100%; min-height:40px; padding:11px 18px; border-radius:999px; font-weight:800; font-size:.82rem; background:linear-gradient(135deg,#fdba74,#f97316); color:#431407; border:1px solid #fb923c; }
   .btn-out-service.active { background:linear-gradient(135deg,#2563eb,#1d4ed8); color:#fff; border-color:#60a5fa; }
@@ -4833,7 +4834,10 @@ function renderCategoryView() {
       ? renderUrbanDirectory(urbanItems)
       : '<div class="empty">Nessun autobus urbano.</div>';
 
-    const fuoriContent = fuori.length ? renderDirectoryButtons(fuori) : '<div class="out-service-empty">Nessun autobus fuori servizio.</div>';
+    const fuoriPrefixes = ['A','B','K','F','L'];
+    const otherPrefixes = [...new Set(fuori.map(b => String(b.matricola || '').trim().charAt(0).toUpperCase()))].filter(p => !fuoriPrefixes.includes(p));
+    const fuoriGroups = [...fuoriPrefixes, ...otherPrefixes];
+    const fuoriContent = fuoriGroups.map(prefix => '<div class="urban-directory-column"><div class="out-service-column-title">' + esc(prefix) + '</div>' + renderDirectoryButtons(fuori.filter(b => String(b.matricola || '').trim().toUpperCase().startsWith(prefix))) + '</div>').join('');
     const extraurbanContent = extraurbanItems.length
       ? renderExtraurbanDirectory(extraurbanItems)
       : '<div class="empty">Nessun autobus extraurbano.</div>';
@@ -4849,7 +4853,7 @@ function renderCategoryView() {
       '</section>' +
       '<section class="combined-fleet-group out-service">' +
         '<div class="combined-fleet-title"><span>Fuori servizio</span><span class="combined-fleet-count">' + fuori.length + ' autobus</span></div>' +
-        '<div class="out-service-list">' + fuoriContent + '</div>' +
+        '<div class="out-service-list" style="grid-template-columns:repeat(' + fuoriGroups.length + ',minmax(0,1fr))">' + fuoriContent + '</div>' +
       '</section>';
     return;
   }
