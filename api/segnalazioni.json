@@ -1,5 +1,5 @@
 {
-  "aggiornatoIl": "2026-11-27T05:25:51.489Z",
+  "aggiornatoIl": "2026-11-27T15:29:01.886Z",
   "numeroSegnalazioni": 345,
   "segnalazioni": [
     {
@@ -1687,7 +1687,10 @@
       "desc": "Spia anomalia motore",
       "date": [
         "2026-11-10",
-        "2026-11-14"
+        "2026-11-12",
+        "2026-11-14",
+        "2026-11-15",
+        "2026-11-27"
       ],
       "stato": "aperta",
       "pregressa": false,
