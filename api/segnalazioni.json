@@ -1,6 +1,6 @@
 {
-  "aggiornatoIl": "2026-11-27T15:29:01.886Z",
-  "numeroSegnalazioni": 345,
+  "aggiornatoIl": "2026-11-27T23:41:05.732Z",
+  "numeroSegnalazioni": 349,
   "segnalazioni": [
     {
       "id": "0cYEr5uo7sRHBgS3OJiH",
@@ -729,7 +729,9 @@
         "2026-09-20",
         "2026-11-10",
         "2026-11-23",
-        "2026-11-25"
+        "2026-11-25",
+        "2026-11-26",
+        "2026-11-27"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -769,9 +771,10 @@
     {
       "id": "6nR77z3gP3zhBbXRTjcT",
       "bus": "K1097",
-      "desc": "Verificare luci interne",
+      "desc": "Verificare luci diurne",
       "date": [
-        "2026-11-25"
+        "2026-11-25",
+        "2026-11-27"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -951,7 +954,8 @@
       "date": [
         "2026-11-11",
         "2026-11-16",
-        "2026-11-25"
+        "2026-11-25",
+        "2026-11-27"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -1370,11 +1374,12 @@
     {
       "id": "ENtyP3Xp94PuQvKOo4Ia",
       "bus": "K2096",
-      "desc": "Entrambi i retrovisori non si regolano",
+      "desc": "Retrovisore dx nn si regola",
       "date": [
         "2025-10-01",
         "2026-01-19",
-        "2026-11-25"
+        "2026-11-25",
+        "2026-11-27"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -2175,7 +2180,8 @@
       "desc": "Controllare luci di arresto",
       "date": [
         "2026-11-16",
-        "2026-11-25"
+        "2026-11-25",
+        "2026-11-27"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -2220,7 +2226,7 @@
         "2026-11-25"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-11-25T18:26:40.471Z",
@@ -2624,6 +2630,20 @@
       "order": 0
     },
     {
+      "id": "RGTq13jStA3zZ09WheZ0",
+      "bus": "K2096",
+      "desc": "Campanello fuori servizio",
+      "date": [
+        "2026-11-27"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-27T22:03:55.449Z",
+      "order": null
+    },
+    {
       "id": "RM6w5f9OR64HUkGbRaBN",
       "bus": "K3122",
       "desc": "Tendina parasole bloccata",
@@ -2686,6 +2706,29 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-11-19T18:28:03.383Z",
+      "order": null
+    },
+    {
+      "id": "RrZvHQLdbAaAfN3rea4U",
+      "bus": "K1104",
+      "desc": "Plurimus fuori servizio",
+      "date": [
+        "2025-05-29",
+        "2025-06-03",
+        "2025-06-27",
+        "2025-08-10",
+        "2025-11-08",
+        "2026-01-19",
+        "2026-05-25",
+        "2026-05-26",
+        "2026-07-11",
+        "2026-11-27"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-27T21:54:05.623Z",
       "order": null
     },
     {
@@ -3442,6 +3485,20 @@
       "standby": false,
       "urgente": false,
       "createdAt": "2026-09-25T16:26:27.358Z",
+      "order": null
+    },
+    {
+      "id": "ZlUWpMGFmXSzBCsXuSE7",
+      "bus": "K1097",
+      "desc": "Anabbagliante dx f.s.",
+      "date": [
+        "2026-11-27"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-27T22:00:50.489Z",
       "order": null
     },
     {
@@ -4224,7 +4281,7 @@
         "2026-11-24"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-11-25T16:47:08.277Z",
@@ -4578,7 +4635,8 @@
       "bus": "K1097",
       "desc": "Trombe fuori servizio",
       "date": [
-        "2026-11-16"
+        "2026-11-16",
+        "2026-11-27"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -4784,7 +4842,8 @@
       "date": [
         "2026-10-09",
         "2026-10-10",
-        "2026-11-09"
+        "2026-11-09",
+        "2026-11-26"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -5349,6 +5408,20 @@
       "order": null
     },
     {
+      "id": "sFQMUWyewn86LzYr3dSy",
+      "bus": "K1092",
+      "desc": "Odore di gas di scarico nell’abitacolo",
+      "date": [
+        "2026-11-26"
+      ],
+      "stato": "aperta",
+      "pregressa": false,
+      "standby": false,
+      "urgente": false,
+      "createdAt": "2026-11-27T22:05:47.323Z",
+      "order": null
+    },
+    {
       "id": "sHJO3z0cCGaW7HdET47g",
       "bus": "K2093",
       "desc": "Difficoltà a regolare la temperatura dell’aria calda",
@@ -5537,7 +5610,9 @@
         "2026-11-16",
         "2026-11-18",
         "2026-11-18",
-        "2026-11-25"
+        "2026-11-25",
+        "2026-11-26",
+        "2026-11-27"
       ],
       "stato": "aperta",
       "pregressa": false,
@@ -5671,7 +5746,7 @@
         "2026-11-16"
       ],
       "stato": "aperta",
-      "pregressa": false,
+      "pregressa": true,
       "standby": false,
       "urgente": false,
       "createdAt": "2026-08-16T09:31:13.620Z",
@@ -5775,7 +5850,11 @@
         "2026-10-29",
         "2026-11-23",
         "2026-11-23",
-        "2026-11-24"
+        "2026-11-24",
+        "2026-11-26",
+        "2026-11-26",
+        "2026-11-26",
+        "2026-11-27"
       ],
       "stato": "aperta",
       "pregressa": false,
