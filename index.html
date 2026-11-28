@@ -4715,7 +4715,7 @@ function renderDirectoryButtons(groupItems) {
       ? '<span class="urban-directory-badge">' + count + '</span>'
       : '';
 
-    const orangeBus = ['B5033','B5035','B5037'].includes(String(bus.matricola || '').trim().toUpperCase());
+    const orangeBus = ['B5033','B5035','B5036','B5037'].includes(String(bus.matricola || '').trim().toUpperCase());
     return '<button class="urban-directory-bus' + (orangeBus ? ' orange-bus' : '') + (count ? ' has-alerts' : '') + (bus.urgente ? ' urgente' : '') +
       '" onclick="selectBus(&quot;' + esc(bus.matricola) + '&quot;)" ' +
       'aria-label="Apri autobus ' + esc(bus.matricola) + '">' +
