@@ -2430,6 +2430,7 @@
     box-shadow:0 12px 18px #080b12;
   }
 
+  .primary-directory-head .urban-directory-head-item:nth-child(4) { font-size:clamp(9px,2.5vw,13px); white-space:nowrap; }
   .urban-directory-head-item {
     color:#06150d;
     font-family:var(--font-mono);
@@ -4718,13 +4719,16 @@ function renderUrbanDirectory(items) {
     { label:'A2', prefix:'A2' },
     { label:'A3', prefix:'A3' },
     { label:'A4', prefix:'A4' },
-    { label:'A50', prefix:'A50' },
+    { label:'A50-B50', prefix:'A50' },
     { label:'A51', prefix:'A51' }
   ];
 
   const primaryColumns = primaryGroups.map(group => {
     const groupItems = items
-      .filter(bus => String(bus.matricola || '').trim().toUpperCase().startsWith(group.prefix))
+      .filter(bus => {
+        const mat = String(bus.matricola || '').trim().toUpperCase();
+        return mat.startsWith(group.prefix) || (group.prefix === 'A50' && mat.startsWith('B'));
+      })
       .sort(byMat);
 
     return '<div class="urban-directory-column">' +
@@ -4732,40 +4736,20 @@ function renderUrbanDirectory(items) {
       '</div>';
   }).join('');
 
-  const stickyHead = '<div class="urban-directory-head primary-directory-head" aria-label="Gruppi delle matricole A">' +
+  const stickyHead = '<div class="urban-directory-head primary-directory-head" aria-label="Gruppi delle matricole urbane">' +
     primaryGroups.map(group => '<div class="urban-directory-head-item">' + group.label + '</div>').join('') +
     '</div>';
 
-  const primaryDirectory = '<div class="urban-directory" aria-label="Matricole urbane A divise per gruppo">' +
+  const primaryDirectory = '<div class="urban-directory" aria-label="Matricole urbane divise per gruppo">' +
     primaryColumns +
     '</div>';
 
-  const secondaryGroups = [
-    { label:'B', prefix:'B', cssClass:'urban-more-column-b' },
-    { label:'F', prefix:'F', cssClass:'urban-more-column-f' }
-  ];
-
-  const secondaryColumns = secondaryGroups.map(group => {
-    const groupItems = items
-      .filter(bus => String(bus.matricola || '').trim().toUpperCase().startsWith(group.prefix))
-      .sort(byMat);
-
-    return '<div class="urban-more-column ' + group.cssClass + '">' +
-      '<div class="urban-more-column-title">' + group.label + '</div>' +
-      '<div class="urban-directory-column">' + renderDirectoryButtons(groupItems) + '</div>' +
-    '</div>';
-  }).join('');
-
-  const secondaryAccordion =
-    '<details class="urban-more">' +
-      '<summary class="urban-more-summary">' +
-        '<strong>B e F</strong>' +
-        '<span class="urban-more-chevron" aria-hidden="true">⌄</span>' +
-      '</summary>' +
-      '<div class="urban-more-content">' + secondaryColumns + '</div>' +
-    '</details>';
-
-  return stickyHead + primaryDirectory + secondaryAccordion;
+  // Mantiene accessibili eventuali mezzi attivi non appartenenti alle cinque colonne.
+  const remaining = items.filter(bus => {
+    const mat = String(bus.matricola || '').trim().toUpperCase();
+    return !mat.startsWith('B') && !primaryGroups.some(group => mat.startsWith(group.prefix));
+  });
+  return stickyHead + primaryDirectory + (remaining.length ? '<div class="urban-directory" aria-label="Altri autobus urbani">' + renderDirectoryButtons(remaining.sort(byMat)) + '</div>' : '');
 }
 
 function renderExtraurbanDirectory(items) {
